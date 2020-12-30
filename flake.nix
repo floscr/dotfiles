@@ -20,6 +20,7 @@
         macbook-air = {
           inherit pkgs system;
           modules = [
+            ./.
             ./hosts/macbook-air/configuration.nix
           ];
         };
