@@ -13,15 +13,23 @@
 
   outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, ... }:
     let
+      inherit (lib) attrValues;
+      inherit (lib.my) mapModules mapModulesRec mapHosts;
+
       system = "x86_64-linux";
 
       mkPkgs = pkgs: extraOverlays: import pkgs {
         inherit system;
-        config.allowUnfree = true;  # forgive me Stallman senpai
+        config.allowUnfree = true;
       };
       pkgs = mkPkgs nixpkgs [];
       uPkgs = mkPkgs nixpkgs-unstable [];
+
+      lib = nixpkgs.lib.extend
+        (self: super: { my = import ./lib { inherit pkgs inputs; lib = self; }; });
     in {
+      lib = lib.my;
+
       nixosConfigurations = {
         laptop = nixpkgs.lib.nixosSystem {
           inherit pkgs system;
