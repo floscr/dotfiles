@@ -41,5 +41,4 @@
       nixosConfigurations =
         mapHosts ./hosts { inherit system; };
       };
-    };
 }
