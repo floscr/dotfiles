@@ -18,7 +18,7 @@
     in {
       nixosConfigurations = {
         macbook-air = {
-          inherit pkgs system;
+          inherit system;
           modules = [
             ./.
             ./hosts/macbook-air/configuration.nix
