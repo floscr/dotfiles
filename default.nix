@@ -5,7 +5,8 @@ with lib.my;
 with inputs;
 {
   imports =
-    [ home-manager.nixosModules.home-manager ];
+    [ home-manager.nixosModules.home-manager ]
+    ++ (mapModulesRec' (toString ./modules) import);
 
   environment.variables.DOTFILES = dotFilesDir;
 
