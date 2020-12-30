@@ -30,14 +30,16 @@
     in {
       lib = lib.my;
 
-      nixosConfigurations = {
-        laptop = nixpkgs.lib.nixosSystem {
-          inherit pkgs system;
-          modules = [
-            ./.
-            ./hosts/macbook-air/configuration.nix
-          ];
-        };
+      packages."${system}" =
+        mapModules ./packages
+          (p: pkgs.callPackage p {});
+
+      nixosModules =
+        { dotfiles = import ./.; }
+        // mapModulesRec ./modules import;
+
+      nixosConfigurations =
+        mapHosts ./hosts { inherit system; };
       };
     };
 }
