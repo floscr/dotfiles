@@ -10,6 +10,7 @@
       emacs-overlay.url  = "github:nix-community/emacs-overlay";
       nixos-hardware.url = "github:nixos/nixos-hardware";
     };
+
   outputs = inputs @ { self, nixpkgs, nixpkgs-unstable, home-manager, ... }:
     let
       system = "x86_64-linux";
@@ -17,7 +18,7 @@
       uPkgs = nixpkgs-unstable;
     in {
       nixosConfigurations = {
-        macbook-air = {
+        laptop = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
             ./.
