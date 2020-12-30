@@ -11,7 +11,7 @@
       nixos-hardware.url = "github:nixos/nixos-hardware";
     };
 
-  outputs = inputs @ { self, nixpkgs, nixpkgs-unstable, home-manager, ... }:
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, ... }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs;
