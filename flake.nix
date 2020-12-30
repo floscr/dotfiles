@@ -14,8 +14,13 @@
   outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, ... }:
     let
       system = "x86_64-linux";
-      pkgs = nixpkgs;
-      uPkgs = nixpkgs-unstable;
+
+      mkPkgs = pkgs: extraOverlays: import pkgs {
+        inherit system;
+        config.allowUnfree = true;  # forgive me Stallman senpai
+      };
+      pkgs = mkPkgs nixpkgs [];
+      uPkgs = mkPkgs nixpkgs-unstable [];
     in {
       nixosConfigurations = {
         laptop = nixpkgs.lib.nixosSystem {
