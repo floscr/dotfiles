@@ -19,7 +19,7 @@
     in {
       nixosConfigurations = {
         laptop = nixpkgs.lib.nixosSystem {
-          inherit system;
+          inherit pkgs system;
           modules = [
             ./.
             ./hosts/macbook-air/configuration.nix
