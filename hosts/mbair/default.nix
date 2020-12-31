@@ -26,6 +26,7 @@ with lib.my;
   };
 
   networking.useDHCP = false;
+
   services.xserver = {
     enable = true;
     displayManager.sddm.enable = true;
@@ -40,10 +41,6 @@ with lib.my;
     libinput.enable = true;
   };
 
-  # services.xserver.enable = true;
-  # services.xserver.displayManager.gdm.enable = true;
-  # services.xserver.desktopManager.gnome3.enable = true;
-  
   networking.networkmanager.enable = true;
 
   environment.systemPackages = with pkgs; [
