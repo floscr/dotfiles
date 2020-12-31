@@ -23,6 +23,12 @@ with lib.my;
       };
       sensors.enable = true;
     };
+    desktop = {
+      browsers = {
+        default = "firefox";
+        firefox.enable = true;
+      };
+    };
   };
 
   networking.useDHCP = false;
@@ -42,8 +48,4 @@ with lib.my;
   };
 
   networking.networkmanager.enable = true;
-
-  environment.systemPackages = with pkgs; [
-    firefox
-  ];
 }
