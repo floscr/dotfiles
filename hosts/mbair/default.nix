@@ -7,7 +7,6 @@ with lib.my;
     ./hardware-configuration.nix
   ];
 
-  # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
@@ -15,22 +14,17 @@ with lib.my;
 
   networking.useDHCP = false;
 
-  # Enable the GNOME 3 Desktop Environment.
   services.xserver.enable = true;
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome3.enable = true;
   
   users.users.floscr = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "networkmanager" ];
   };
 
   environment.systemPackages = with pkgs; [
     wget vim git
     firefox
   ];
-
-  system.stateVersion = "20.09"; # Did you read the comment?
-
 }
-

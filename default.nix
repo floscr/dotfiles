@@ -8,6 +8,7 @@ with inputs;
     [ home-manager.nixosModules.home-manager ]
     ++ (mapModulesRec' (toString ./modules) import);
 
+  # Common config for all nixos machines; and to ensure the flake operates soundly
   environment.variables.DOTFILES = dotFilesDir;
 
   # Configure nix and nixpkgs
@@ -28,4 +29,6 @@ with inputs;
     };
     useSandbox = true;
   };
+  system.configurationRevision = mkIf (self ? rev) self.rev;
+  system.stateVersion = "20.09";
 }
