@@ -14,6 +14,15 @@ with lib.my;
       pass.enable   = true;
       zsh.enable    = true;
     };
+    hardware = {
+      audio.enable = true;
+      bluetooth.enable = true;
+      fs = {
+        enable = true;
+        ssd.enable = true;
+      };
+      sensors.enable = true;
+    };
   };
 
   networking.useDHCP = false;
