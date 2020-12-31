@@ -35,6 +35,8 @@ with lib.my;
   # services.xserver.displayManager.gdm.enable = true;
   # services.xserver.desktopManager.gnome3.enable = true;
   
+  networking.networkmanager.enable = true;
+
   environment.systemPackages = with pkgs; [
     firefox
   ];
