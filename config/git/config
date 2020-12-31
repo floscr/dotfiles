@@ -1,8 +1,6 @@
 [user]
 	name = Florian Schroedl
 	email = flo.schroedl@gmail.com
-[commit]
-	gpgsign = true
 [core]
 	whitespace = trailing-space
 [github]
