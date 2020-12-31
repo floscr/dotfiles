@@ -6,6 +6,15 @@ with lib.my;
   imports = [
     ./hardware-configuration.nix
   ];
+  modules = {
+    shell = {
+      direnv.enable = true;
+      git.enable    = true;
+      gnupg.enable  = true;
+      pass.enable   = true;
+      zsh.enable    = true;
+    };
+  };
 
   networking.useDHCP = false;
 
