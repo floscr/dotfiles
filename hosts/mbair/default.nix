@@ -13,11 +13,6 @@ with lib.my;
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome3.enable = true;
   
-  users.users.floscr = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" ];
-  };
-
   environment.systemPackages = with pkgs; [
     firefox
   ];
