@@ -7,8 +7,6 @@ with lib.my;
     ./hardware-configuration.nix
   ];
 
-  nixpkgs.config.allowUnfree = true;
-
   networking.useDHCP = false;
 
   services.xserver.enable = true;
