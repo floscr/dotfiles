@@ -28,6 +28,10 @@ with lib.my;
         default = "firefox";
         firefox.enable = true;
       };
+      term = {
+        default = "termite";
+        termite.enable = true;
+      };
     };
   };
 
