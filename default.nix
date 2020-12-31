@@ -11,7 +11,6 @@ with inputs;
   # Common config for all nixos machines; and to ensure the flake operates soundly
   environment.variables.DOTFILES = dotFilesDir;
 
-  # Configure nix and nixpkgs
   environment.variables.NIXPKGS_ALLOW_UNFREE = "1";
   nix = {
     package = pkgs.nixFlakes;
@@ -37,4 +36,13 @@ with inputs;
     systemd-boot.configurationLimit = 10;
     systemd-boot.enable = mkDefault true;
   };
+
+  environment.systemPackages = with pkgs; [
+    cached-nix-shell
+    coreutils
+    git
+    vim
+    wget
+    gnumake
+  ];
 }

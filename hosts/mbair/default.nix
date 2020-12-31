@@ -19,7 +19,6 @@ with lib.my;
   };
 
   environment.systemPackages = with pkgs; [
-    wget vim git
     firefox
   ];
 }
