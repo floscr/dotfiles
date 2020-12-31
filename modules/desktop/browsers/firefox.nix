@@ -1,8 +1,3 @@
-# modules/browser/firefox.nix --- https://www.mozilla.org/en-US/firefox
-#
-# Oh firefox, gateway to the interwebs, devourer of ram. Give onto me your
-# infinite knowledge and shelter me from ads.
-
 { options, config, lib, pkgs, ... }:
 
 with lib;
