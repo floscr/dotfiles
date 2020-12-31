@@ -31,4 +31,10 @@ with inputs;
   };
   system.configurationRevision = mkIf (self ? rev) self.rev;
   system.stateVersion = "20.09";
+
+  boot.loader = {
+    efi.canTouchEfiVariables = true;
+    systemd-boot.configurationLimit = 10;
+    systemd-boot.enable = mkDefault true;
+  };
 }
