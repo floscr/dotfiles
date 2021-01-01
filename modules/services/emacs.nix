@@ -2,7 +2,7 @@
 
 with lib;
 with lib.my;
-let cfg = config.modules.services.bitwarden;
+let cfg = config.modules.services.emacs;
 in {
   options.modules.services.emacs = {
     enable = mkBoolOpt false;
