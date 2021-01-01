@@ -31,7 +31,7 @@ in {
 
       ## Module dependencies
       # :checkers spell
-      (aspellWithDicts (dicts: with dicts; [
+      (aspellWithDicts (ds: with ds; [
         de
         en en-computers en-science
       ]))
@@ -53,7 +53,7 @@ in {
       pandoc # Convert stuf
       wmctrl # Window information
       # Edb
-      (lib.mkIf (cfg.withE)
+      (lib.mkIf (config.modules.editors.emacs.withEdbi)
         perlPackages.DBI
         perlPackages.RPCEPCService
         perlPackages.DBDPg
@@ -65,9 +65,9 @@ in {
 
   modules.shell.zsh.rcFiles = [ "${configDir}/emacs/aliases.zsh" ];
 
-  fonts.fonts = with pkgs; [
-    emacs-all-the-icons-fonts
-    overpass
+  fonts.fonts = [
+    pkgs.emacs-all-the-icons-fonts
+    pkgs.overpass
   ];
 
   # home.xdg.mimeApps = {
