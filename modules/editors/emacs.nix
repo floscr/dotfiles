@@ -65,35 +65,33 @@ in {
 
     fonts.fonts = [ pkgs.emacs-all-the-icons-fonts ];
 
-    home.xdg.mimeApps = {
-      enable = true;
-      defaultApplications = {
-        "application/x-directory" = "emacs-dired.desktop";
-        "inode/directory" = "emacs-dired.desktop";
-        "text/english" = "emacs.desktop";
-        "text/plain" = "emacs.desktop";
-        "text/x-c" = "emacs.desktop";
-        "text/x-c++" = "emacs.desktop";
-        "text/x-c++hdr" = "emacs.desktop";
-        "text/x-c++src" = "emacs.desktop";
-        "text/x-chdr" = "emacs.desktop";
-        "text/x-csrc" = "emacs.desktop";
-        "text/x-java" = "emacs.desktop";
-        "text/x-makefile" = "emacs.desktop";
-        "text/x-moc" = "emacs.desktop";
-        "text/x-pascal" = "emacs.desktop";
-        "text/x-tcl" = "emacs.desktop";
-        "text/x-tex" = "emacs.desktop";
-      };
-    };
+    # home.mimeApps = {
+    #   enable = true;
+    #   defaultApplications = {
+    #     "application/x-directory" = "emacs-dired.desktop";
+    #     "inode/directory" = "emacs-dired.desktop";
+    #     "text/english" = "emacs.desktop";
+    #     "text/plain" = "emacs.desktop";
+    #     "text/x-c" = "emacs.desktop";
+    #     "text/x-c++" = "emacs.desktop";
+    #     "text/x-c++hdr" = "emacs.desktop";
+    #     "text/x-c++src" = "emacs.desktop";
+    #     "text/x-chdr" = "emacs.desktop";
+    #     "text/x-csrc" = "emacs.desktop";
+    #     "text/x-java" = "emacs.desktop";
+    #     "text/x-makefile" = "emacs.desktop";
+    #     "text/x-moc" = "emacs.desktop";
+    #     "text/x-pascal" = "emacs.desktop";
+    #     "text/x-tcl" = "emacs.desktop";
+    #     "text/x-tex" = "emacs.desktop";
+    #   };
+    # };
 
-    home.xdg.configFile = {
-      ".aspell.conf".text = ''
+    home.configFile.".aspell.conf".text = ''
       dict-dir $HOME/.nix-profile/lib/aspell
       master en_US
       extra-dicts en-computers.rws
       add-extra-dicts en_US-science.rws
     '';
-    };
   };
 }
