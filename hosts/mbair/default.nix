@@ -40,6 +40,9 @@ with lib.my;
       emacs.enable = true;
       vim.enable = true;
     };
+    services = {
+      syncthing.enable = true;
+    };
   };
 
   networking.useDHCP = false;
