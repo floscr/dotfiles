@@ -16,16 +16,16 @@ with lib.my;
   };
 
   config = {
-    # Rofi CMDer
-    home.configFile."cmder/cmd.csv"=
-      fold (cur: acc: acc + "${cur.description},,,${cur.command},,,${if ! isNull(cur.binding) then cur.binding else ""}\n") "" config.my.bindings;
-    # Sxhkd bindings
-    home.configFile."sxhkd/sxhkdrc" =
-      fold (cur: acc: if isNull cur.binding then acc else ''
-${acc}
-# ${cur.description}
-${cur.binding}
-    ${cur.command}
-'') "" config.my.bindings;
+#     # Rofi CMDer
+#     home.configFile."cmder/cmd.csv"=
+#       fold (cur: acc: acc + "${cur.description},,,${cur.command},,,${if ! isNull(cur.binding) then cur.binding else ""}\n") "" config.bindings;
+#     # Sxhkd bindings
+#     home.configFile."sxhkd/sxhkdrc" =
+#       fold (cur: acc: if isNull cur.binding then acc else ''
+# ${acc}
+# # ${cur.description}
+# ${cur.binding}
+#     ${cur.command}
+# '') "" config.bindings;
   };
 }
