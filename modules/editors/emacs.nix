@@ -6,10 +6,7 @@ let cfg = config.modules.editors.emacs;
 in {
   options.modules.editors.emacs = {
     enable = mkBoolOpt false;
-    doom = {
-      enable  = mkBoolOpt true;
-      withEdbi = mkBoolOpt false;
-    };
+    withEdbi = mkBoolOpt false;
   };
 
   config = mkIf cfg.enable {
@@ -24,16 +21,6 @@ in {
       git
       (ripgrep.override {withPCRE2 = true;})
       gnutls              # for TLS connectivity
-
-      # Offline dictionary
-      wordnet
-
-      # Edb
-      (lib.mkIf (cfg.withE)
-        perlPackages.DBI
-        perlPackages.RPCEPCService
-        perlPackages.DBDPg
-        perlPackages.DBDmysql)
 
       ## Optional dependencies
       fd                  # faster projectile indexing
@@ -50,6 +37,7 @@ in {
       ]))
       # :checkers grammar
       languagetool
+      wordnet # Offline dictionary
       # :tools editorconfig
       editorconfig-core-c # per-project style config
       # :tools lookup
@@ -64,8 +52,23 @@ in {
       zstd   # for undo-tree compression
       pandoc # Convert stuf
       wmctrl # Window information
+      # Edb
+      (lib.mkIf (cfg.withE)
+        perlPackages.DBI
+        perlPackages.RPCEPCService
+        perlPackages.DBDPg
+        perlPackages.DBDmysql)
     ];
   };
+
+  env.PATH = [ "$XDG_CONFIG_HOME/emacs/bin" ];
+
+  modules.shell.zsh.rcFiles = [ "${configDir}/emacs/aliases.zsh" ];
+
+  fonts.fonts = with pkgs; [
+    emacs-all-the-icons-fonts
+    overpass
+  ];
 
   home.xdg.mimeApps = {
     enable = true;
@@ -97,12 +100,4 @@ in {
       add-extra-dicts en_US-science.rws
     '';
   };
-
-  fonts.fonts = with pkgs; [
-    emacs-all-the-icons-fonts
-    overpass
-  ];
-
-  env.PATH = [ "$XDG_CONFIG_HOME/emacs/bin" ];
-  modules.shell.zsh.rcFiles = [ "${configDir}/emacs/aliases.zsh" ];
 }
