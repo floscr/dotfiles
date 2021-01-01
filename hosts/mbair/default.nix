@@ -5,6 +5,7 @@ with lib.my;
 {
   imports = [
     ./hardware-configuration.nix
+    ../personal.nix
   ];
   modules = {
     shell = {
@@ -56,6 +57,4 @@ with lib.my;
     # Enable touchpad support (enabled default in most desktopManager).
     libinput.enable = true;
   };
-
-  networking.networkmanager.enable = true;
 }

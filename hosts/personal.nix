@@ -2,4 +2,5 @@
 
 with lib;
 {
+  networking.networkmanager.enable = true;
 }
