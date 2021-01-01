@@ -35,14 +35,16 @@ with inputs;
     efi.canTouchEfiVariables = true;
     systemd-boot.configurationLimit = 10;
     systemd-boot.enable = mkDefault true;
+    timeout = 1;
   };
 
   environment.systemPackages = with pkgs; [
     cached-nix-shell
     coreutils
     git
+    gnumake
+    killall
     vim
     wget
-    gnumake
   ];
 }
