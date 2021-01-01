@@ -17,6 +17,7 @@ with lib.my;
     hardware = {
       audio.enable = true;
       bluetooth.enable = true;
+      keyboard.enable = true;
       fs = {
         enable = true;
         ssd.enable = true;
