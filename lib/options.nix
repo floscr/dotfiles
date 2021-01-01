@@ -15,4 +15,9 @@ rec {
     type = types.bool;
     example = true;
   };
+
+  mkOptionStr = value: mkOption {
+    type = types.str;
+    default = value;
+  };
 }
