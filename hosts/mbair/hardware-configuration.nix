@@ -28,4 +28,15 @@
     ];
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
+
+  hardware.opengl = {
+    enable = true;
+    extraPackages = with pkgs; [
+      vaapiIntel
+      vaapiVdpau
+      libvdpau-va-gl
+    ];
+    driSupport32Bit = true;
+  };
+
 }
