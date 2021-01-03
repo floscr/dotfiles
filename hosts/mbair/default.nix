@@ -45,6 +45,14 @@ with lib.my;
     };
   };
 
+  # Fix the horrible color profile on the display from linux
+  # Export your default color profile from the mac osx partition
+  # Source: https://github.com/willtim/nixos/blob/52e730ec0d8288a3862538205cd8ff0fa2d1c159/desktop.nix#L151
+  # xiccd apparently is buggy and cpu intensive
+  displayManager.sessionCommands = ''
+     {pkgs.argyllcms}/bin/dispwin -I "~/.local/macbook-air-lcd.icc"
+  '';
+
   networking.useDHCP = false;
 
   services.xserver = {
