@@ -7,7 +7,7 @@ with inputs;
   imports =
     [ home-manager.nixosModules.home-manager ]
     ++ (mapModulesRec' (toString ./modules) import)
-    ++ lib.optional (builtins.pathExists ../dotfiles-private/private.nix) ../dotfiles-private/private.nix;
+    ++ [ ./secrets.nix ];
 
   # Common config for all nixos machines; and to ensure the flake operates soundly
   environment.variables.DOTFILES = dotFilesDir;
