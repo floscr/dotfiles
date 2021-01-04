@@ -24,14 +24,9 @@ in {
     ];
 
     user.packages = with pkgs; [
-      # General
-      sxhkd
       xclip
       xdotool
-
-      dragon-drop # Create window to drop files from
-      feh         # Image viewer
-      ffmpeg      # Video conversion
+      sxhkd
     ];
 
     fonts = {
@@ -51,10 +46,6 @@ in {
         noto-fonts-cjk
         symbola
       ];
-      fontconfig.defaultFonts = {
-        sansSerif = ["Ubuntu"];
-        monospace = ["Fira Code"];
-      };
     };
 
     # Try really hard to get QT to respect my GTK theme.
