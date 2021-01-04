@@ -22,7 +22,8 @@ in {
       })
     ];
 
-    home-manager.users.${config.user.name}.programs.termite = {
+    home-manager.users.${config.user.name}.programs.termite = mkMerge [
+      {
         enable = true;
         font = "${fonts.mono.family} 12";
         scrollbackLines = -1;
@@ -32,7 +33,29 @@ in {
         dynamicTitle = true;
         geometry = "81x20";
         mouseAutohide = true;
-      };
-      # (mkIf config.modules.theme.colors {})
+      }
+      (mkIf (config.modules.theme.colorscheme != null) (with config.modules.theme.colors; {
+        backgroundColor = bg0;
+        foregroundColor = fg0;
+        colorsExtra = ''
+          color0  = ${bg0}
+          color7  = ${fg0}
+          color8  = ${fg1}
+          color1  = ${alert}
+          color9  = ${quaternary}
+          color2  = ${secondary}
+          color10 = ${fg2}
+          color3  = ${quaternary}
+          color11 = ${quinary}
+          color4  = ${primary}
+          color12 = ${septary}
+          color5  = ${senary}
+          color13 = ${tertiary}
+          color6  = ${primary}
+          color14 = ${septary}
+          color15 = ${fg0}
+        '';
+      }))
+    ];
   };
 }
