@@ -61,9 +61,9 @@ in {
 
   config = mkIf (cfg.active != null) (mkMerge [
     {
-      fonts.fonts = with pkgs; [
-        Iosevka
-      ];
+      # fonts.fonts = with pkgs; [
+      #   Iosevka
+      # ];
     }
   ]);
 }
