@@ -24,7 +24,7 @@ in {
 
     home-manager.users.${config.user.name}.programs.termite = {
         enable = true;
-        # font = mkDefault "${fonts.mono.family} 8";
+        font = "${fonts.mono.family} 12";
         scrollbackLines = -1;
         allowBold = true;
         clickableUrl = true;
