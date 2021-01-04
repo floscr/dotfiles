@@ -23,7 +23,7 @@ in {
     programs.termite = mkMerge([
       {
         enable = true;
-        font = "${font} 8";
+        font = "${config.theme.fonts.monoSpacePrimary} 8";
         scrollbackLines = -1;
         allowBold = true;
         clickableUrl = true;

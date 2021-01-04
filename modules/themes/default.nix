@@ -16,6 +16,12 @@ in {
       '';
     };
 
+    fonts = mkOption {
+      type = with types; nullOr submodule({ name, ... }: {
+        monoSpacePrimary = "Iosevka";
+      });
+    };
+
     colors = mkOption {
       type = with types; nullOr submodule({ name, ... }: {
         options.black1 = str;
@@ -51,5 +57,10 @@ in {
   };
 
   config = mkIf (cfg.active != null) (mkMerge [
+    {
+      fonts.fonts = with pkgs; [
+        Iosevka
+      ];
+    }
   ]);
 }
