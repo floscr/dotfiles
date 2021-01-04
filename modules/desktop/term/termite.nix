@@ -3,6 +3,7 @@
 with lib;
 with lib.my;
 let cfg = config.modules.desktop.term.termite;
+    inherit (config.modules.theming) fonts;
 in {
   options.modules.desktop.term.termite = {
     enable = mkBoolOpt false;
@@ -23,7 +24,7 @@ in {
 
     home-manager.users.${config.user.name}.programs.termite = {
         enable = true;
-        font = mkDefault "${config.modules.theme.primaryMonospaceFont} 8";
+        # font = mkDefault "${fonts.mono.family} 8";
         scrollbackLines = -1;
         allowBold = true;
         clickableUrl = true;

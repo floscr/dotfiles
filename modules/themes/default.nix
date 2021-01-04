@@ -1,70 +1,103 @@
-{ options, config, lib, pkgs, ... }:
+{ options, config, lib, ... }:
 
-with lib;
-with lib.my;
-let cfg = config.modules.theme;
+let
+  cfg = config.modules.theming;
+  inherit (builtins) elem filter listToAttrs pathExists readDir;
+  inherit (lib) filterAttrs mkIf mkOption nameValuePair types;
+
+  mkColorOption = name:
+    mkOption {
+      description = "${name} color of the color palette";
+      type = types.str;
+    };
+
+  mkFontOption = description:
+    mkOption {
+      inherit description;
+      type = types.submodule {
+        options = {
+          family = mkOption {
+            description = "Font family";
+            type = types.str;
+          };
+          size = mkOption {
+            description = "Font size";
+            type = types.ints.positive;
+          };
+          pkg = mkOption {
+            description = "Package containing font family";
+            type = types.package;
+          };
+        };
+      };
+    };
 in {
-  options.modules.theme = with types; {
-    active = mkOption {
-      type = nullOr str;
+  options.modules.theming = {
+    colorscheme = mkOption {
+      type = types.nullOr types.str;
       default = null;
-      apply = v: let theme = builtins.getEnv "THEME"; in
-                 if theme != "" then theme else v;
       description = ''
-        Name of the theme to enable. Can be overridden by the THEME environment
-        variable. Themes can also be hot-swapped with 'hey theme $THEME'.
+        Name of the colorscheme to apply to the config.
+        The colorscheme must be defined as a nix file in modules/themes/colors.
       '';
     };
 
-    primaryMonospaceFont = mkOptionStr "Iosevka";
-
-    # fonts = mkOption (with types; {
-    #   default = null;
-    #   type = nullOr fontSubmodule;
-    #   description = ''
-    #     Fonts used in the config.
-    #   '';
-    # });
-
+    # This option is controlled by cfg.colorscheme
     colors = mkOption {
-      type = with types; nullOr submodule({ name, ... }: {
-        options.black1 = str;
-        options.black2 = str;
-        options.white = str;
-        options.grey1 = str;
-        options.grey1blue = str;
-        options.grey2 = str;
-        options.red = str;
-        options.bred = str;
-        options.grn = str;
-        options.bgrn = str;
-        options.yellow = str;
-        options.byellow = str;
-        options.blue = str;
-        options.bblue = str;
-        options.mag = str;
-        options.bmag = str;
-        options.cyn = str;
-        options.bcyn = str;
-
-        # Aliases
-        options.terminalBackground = str;
-        options.background = str;
-        options.text = str;
-        options.fail = str;
-        options.success = str;
-      });
-      default = null;
+      description = "16-color palette for theming various apps. Based on the base16 scheme.";
+      readOnly = true;
+      type = types.submodule {
+        options = builtins.listToAttrs (map (name: nameValuePair name (mkColorOption name)) [
+          "bg0"
+          "bg1"
+          "bg2"
+          "bg3"
+          "fg0"
+          "fg1"
+          "fg2"
+          "fg3"
+          "alert"
+          "primary"
+          "secondary"
+          "tertiary"
+          "quaternary"
+          "quinary"
+          "senary"
+          "septary"
+        ]);
+      };
     };
 
-    onReload = mkOpt (attrsOf lines) {};
+    vimColorscheme = mkOption {
+      description = "Colorscheme to use in (neo)vim. Should roughly match the colorscheme option.";
+      type = types.str;
+    };
+
+    batTheme = mkOption {
+      description = "Theme to use with bat. Should roughly match the colorscheme option.";
+      type = types.str;
+    };
+
+    gitDeltaTheme = mkOption {
+      description =
+        "Theme to use with delta, the git-diff drop-in. Should roughly match the colorscheme option.";
+      type = types.str;
+    };
+
+    fonts = mkOption {
+      description = "Fonts to use throughout various apps.";
+      type = types.submodule {
+        options = {
+          sans = mkFontOption "Sans serif font";
+          serif = mkFontOption "Serif font";
+          mono = mkFontOption "Monospace font";
+          ui = mkFontOption "Font to use for UI elements";
+        };
+      };
+    };
   };
 
-  config = mkIf (cfg.active != null) (mkMerge [
-    {
-      fonts.fonts = with pkgs; [
-        Iosevka
-      ];
-    }
-  ]);
+  config = {
+    modules.theming.colors = mkIf (cfg.colorscheme != null) (cfg.colorschemes.${cfg.colorscheme});
+  };
 }

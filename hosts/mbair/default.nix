@@ -43,6 +43,31 @@ with lib.my;
     services = {
       syncthing.enable = true;
     };
+    theming = {
+      colorscheme = "gruvbox-dark";
+      vimColorscheme = "gruvbox";
+      batTheme = "gruvbox";
+      gitDeltaTheme = "gruvbox";
+
+      fonts = rec {
+        sans = {
+          family = "Source Sans Pro";
+          size = 8;
+          pkg = pkgs.source-sans-pro;
+        };
+        serif = {
+          family = "Source Serif Pro";
+          size = 8;
+          pkg = pkgs.source-serif-pro;
+        };
+        mono = {
+          family = "Iosevka";
+          size = 8;
+          pkg = pkgs.iosevka;
+        };
+        ui = sans;
+      };
+    };
   };
 
   home-manager.users.${config.user.name}.programs.termite.font = "${config.modules.theme.primaryMonospaceFont} 12";
@@ -70,4 +95,5 @@ with lib.my;
     # Enable touchpad support (enabled default in most desktopManager).
     libinput.enable = true;
   };
+  
 }
