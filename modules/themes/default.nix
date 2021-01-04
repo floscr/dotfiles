@@ -3,7 +3,7 @@
 with lib;
 with lib.my;
 let
-  cfg = config.modules.themes;
+  cfg = config.modules.theme;
   inherit (builtins) elem filter listToAttrs pathExists readDir;
   inherit (lib) filterAttrs mkIf mkOption nameValuePair types;
 
@@ -34,19 +34,19 @@ let
       };
     };
 in {
-  options.modules.themes = {
+  options.modules.theme = {
     colorscheme = mkOption {
       type = types.nullOr types.str;
       default = null;
       description = ''
         Name of the colorscheme to apply to the config.
-        The colorscheme must be defined as a nix file in modules/themes/colors.
+        The colorscheme must be defined as a nix file in modules/theme/colors.
       '';
     };
 
     # This option is controlled by cfg.colorscheme
     colors = mkOption {
-      description = "16-color palette for themes various apps. Based on the base16 scheme.";
+      description = "16-color palette for theme various apps. Based on the base16 scheme.";
       readOnly = true;
       type = types.submodule {
         options = builtins.listToAttrs (map (name: nameValuePair name (mkColorOption name)) [
@@ -104,7 +104,7 @@ in {
 
   config = mkMerge [
     {
-      modules.themes.colors = mkIf (cfg.colorscheme != null) (cfg.colorschemes.${cfg.colorscheme});
+      modules.theme.colors = mkIf (cfg.colorscheme != null) (cfg.colorschemes.${cfg.colorscheme});
     }
   ];
 }

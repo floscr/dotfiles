@@ -43,7 +43,7 @@ with lib.my;
     services = {
       syncthing.enable = true;
     };
-    themes = {
+    theme = {
       colorscheme = "gruvbox-dark";
       vimColorscheme = "gruvbox";
       batTheme = "gruvbox";

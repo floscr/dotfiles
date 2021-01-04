@@ -2,13 +2,13 @@
 
 let inherit (lib) mkOption types;
 in {
-  options.modules.themes.colorschemes = mkOption {
+  options.modules.theme.colorschemes = mkOption {
     description = "Attribute set of colorschemes.";
     type = types.attrs;
     internal = true;
   };
 
-  config.modules.themes.colorschemes = {
+  config.modules.theme.colorschemes = {
     gotham = let
       c-base0 = "#0c1014";
       c-base1 = "#11151c";
