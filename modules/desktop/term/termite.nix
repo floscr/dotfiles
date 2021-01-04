@@ -23,7 +23,7 @@ in {
     programs.termite = mkMerge([
       {
         enable = true;
-        font = "${modules.theme.fonts.monoSpacePrimary} 8";
+        font = "${config.modules.theme.fonts.monoSpacePrimary} 8";
         scrollbackLines = -1;
         allowBold = true;
         clickableUrl = true;
@@ -32,7 +32,7 @@ in {
         geometry = "81x20";
         mouseAutohide = true;
       }
-      (mkIf modules.theme.colors != null (with modules.theme.colors; {
+      (mkIf config.modules.theme.colors != null (with config.modules.theme.colors; {
         backgroundColor = terminalBackground;
         foregroundColor = text;
         colorsExtra = ''
