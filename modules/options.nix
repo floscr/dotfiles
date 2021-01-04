@@ -49,7 +49,6 @@ with lib.my;
           # Necessary for home-manager to work with flakes, otherwise it will
           # look for a nixpkgs channel.
           stateVersion = config.system.stateVersion;
-          programs = mkAliasDefinitions options.home.programs;
         };
         xdg = {
           configFile = mkAliasDefinitions options.home.configFile;
