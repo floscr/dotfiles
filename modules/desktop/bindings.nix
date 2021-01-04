@@ -3,7 +3,7 @@
 with lib;
 with lib.my;
 {
-  config.bindings = (mkIf config.modules.enableBindings) (flatten mkMerge [
+  config.modules.bindings.items = mkIf config.modules.bindings.enable (flatten (mkMerge [
     (mkIf config.modules.desktop.bspwm.enable [
       {
         binding = "super + BackSpace";
@@ -220,5 +220,5 @@ with lib.my;
         description = "Nautilus: Downloads";
       }
     ])
-  ]);
+  ]));
 }

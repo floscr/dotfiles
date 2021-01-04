@@ -3,9 +3,9 @@
 with lib;
 with lib.my;
 {
-  options = with types; {
-    enableBindings = mkBoolOpt false;
-    bindings = mkOption {
+  options.modules.bindings = with types; {
+    enable = mkBoolOpt false;
+    items = mkOption {
       type = with types; listOf (submodule({ name, ... }: {
         options.binding = mkOption { type = nullOr str; default = null; };
         options.command = mkOption { type = str; default = ""; };

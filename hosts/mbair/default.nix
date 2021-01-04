@@ -8,7 +8,7 @@ with lib.my;
     ../personal.nix
   ];
   modules = {
-    enableBindings = true;
+    bindings.enable = true;
     shell = {
       direnv.enable = true;
       git.enable    = true;
