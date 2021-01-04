@@ -18,8 +18,11 @@ in {
 
     fonts = mkOption {
       type = with types; nullOr submodule({ name, ... }: {
-        monoSpacePrimary = "Iosevka";
+        monoSpacePrimary = str;
       });
+      default = {
+        monoSpacePrimary = "Iosevka";
+      };
     };
 
     colors = mkOption {
