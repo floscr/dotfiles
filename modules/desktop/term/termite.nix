@@ -1,4 +1,4 @@
-{ options, config, lib, pkgs, ... }:
+{ config, options, lib, pkgs, inputs, home-manager, ... }:
 
 with lib;
 with lib.my;
@@ -20,8 +20,8 @@ in {
         categories = "Development;System;Utility";
       })
     ];
-    programs.termite = mkMerge([
-      {
+
+    home-manager.users.${config.user.name}.programs.termite = {
         enable = true;
         font = "${config.modules.theme.fonts.monoSpacePrimary} 8";
         scrollbackLines = -1;
