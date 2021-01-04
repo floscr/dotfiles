@@ -70,8 +70,6 @@ with lib.my;
     };
   };
 
-  home-manager.users.${config.user.name}.programs.termite.font = "${config.modules.theme.primaryMonospaceFont} 12";
-
   networking.useDHCP = false;
 
   services.xserver = {
