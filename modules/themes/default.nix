@@ -1,7 +1,9 @@
 { options, config, lib, ... }:
 
+with lib;
+with lib.my;
 let
-  cfg = config.modules.theming;
+  cfg = config.modules.themes;
   inherit (builtins) elem filter listToAttrs pathExists readDir;
   inherit (lib) filterAttrs mkIf mkOption nameValuePair types;
 
@@ -32,7 +34,7 @@ let
       };
     };
 in {
-  options.modules.theming = {
+  options.modules.themes = {
     colorscheme = mkOption {
       type = types.nullOr types.str;
       default = null;
@@ -44,7 +46,7 @@ in {
 
     # This option is controlled by cfg.colorscheme
     colors = mkOption {
-      description = "16-color palette for theming various apps. Based on the base16 scheme.";
+      description = "16-color palette for themes various apps. Based on the base16 scheme.";
       readOnly = true;
       type = types.submodule {
         options = builtins.listToAttrs (map (name: nameValuePair name (mkColorOption name)) [
@@ -95,9 +97,14 @@ in {
         };
       };
     };
+
+    onReload = mkOpt (attrsOf lines) {};
+
   };
 
-  config = {
-    modules.theming.colors = mkIf (cfg.colorscheme != null) (cfg.colorschemes.${cfg.colorscheme});
-  };
+  config = mkMerge [
+    {
+      modules.themes.colors = mkIf (cfg.colorscheme != null) (cfg.colorschemes.${cfg.colorscheme});
+    }
+  ];
 }
