@@ -4,7 +4,7 @@ with lib;
 with lib.my;
 {
   options = with types; {
-    enable = mkBoolOpt false;
+    enableBindings = mkBoolOpt false;
     bindings = mkOption {
       type = with types; listOf (submodule({ name, ... }: {
         options.binding = mkOption { type = nullOr str; default = null; };

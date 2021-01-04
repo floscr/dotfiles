@@ -3,7 +3,7 @@
 with lib;
 with lib.my;
 {
-  config.bindings = (mkIf config.modules.bindings.enable) (flatten mkMerge [
+  config.bindings = (mkIf config.modules.enableBindings) (flatten mkMerge [
     (mkIf config.modules.desktop.bspwm.enable [
       {
         binding = "super + BackSpace";
