@@ -37,6 +37,7 @@ in {
         fira-code-symbols
         ubuntu_font_family
         ibm-plex
+        iosevka
 
         # Unicode and Symbols
         font-awesome-ttf

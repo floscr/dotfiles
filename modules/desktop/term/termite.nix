@@ -23,7 +23,7 @@ in {
 
     home-manager.users.${config.user.name}.programs.termite = {
         enable = true;
-        font = "${config.modules.theme.fonts.monoSpacePrimary} 8";
+        font = mkDefault "${config.modules.theme.primaryMonospaceFont} 8";
         scrollbackLines = -1;
         allowBold = true;
         clickableUrl = true;
@@ -31,29 +31,7 @@ in {
         dynamicTitle = true;
         geometry = "81x20";
         mouseAutohide = true;
-      }
-      (mkIf config.modules.theme.colors != null (with config.modules.theme.colors; {
-        backgroundColor = terminalBackground;
-        foregroundColor = text;
-        colorsExtra = ''
-          color0  = ${terminalBackground}
-          color7  = ${text}
-          color8  = ${grey2}
-          color1  = ${red}
-          color9  = ${bred}
-          color2  = ${grn}
-          color10 = ${bgrn}
-          color3  = ${yellow}
-          color11 = ${byellow}
-          color4  = ${blue}
-          color12 = ${bblue}
-          color5  = ${mag}
-          color13 = ${bmag}
-          color6  = ${cyn}
-          color14 = ${bcyn}
-          color15 = ${white}
-        '';
-      }))
-    ]);
+      };
+      # (mkIf config.modules.theme.colors {})
   };
 }
