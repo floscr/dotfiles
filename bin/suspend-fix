@@ -1,0 +1,8 @@
+sudo swapoff -a
+sudo swapon -a
+
+modprobe msr
+sudo wrmsr -a 0x19a 0x0
+
+echo 1 | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo > /dev/null
+echo 0 | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo > /dev/null

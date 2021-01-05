@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+bspc rule -a 'Emacs:atomic-edit' \
+    state=floating \
+    center=on \
+    rectangle="$(scale_width 40)x$(scale_height 65)+0+0"
+
+emacsclient -a "" -c -F '((name . "atomic-edit") (width . 120) (height . 30) (transient . t))' -e "(progn (atomic-chrome-start-server))"
+
+sleep 0.1
+
+xdotool key --window "$(xdotool search --class Chromium | head -1)" Alt+e

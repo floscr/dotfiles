@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Toggle the monitor brightness
+
+MONITOR_BRIGHTNESS=$(ddcutil getvcp 10 | grep -o 'current value = \s*[0-9]*,' | head -1 | grep -o '[0-9]*')
+
+echo "Current Brightness $MONITOR_BRIGHTNESS"
+
+if [[ $MONITOR_BRIGHTNESS -lt 80 ]]; then
+    echo "Setting to Full Brightness"
+    ddcutil setvcp 10 85
+else
+    echo "Setting to Low Brightness"
+    ddcutil setvcp 10 30
+fi

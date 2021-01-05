@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+service="wg-quicker-ch.service"
+
+if $(systemctl is-active --quiet $service); then
+    sudo systemctl stop $service
+    notify-send "Stopped VPN Service"
+else
+    sudo systemctl start $service
+    notify-send "Started VPN Service"
+fi

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Connect to bose headphones
+# pulseaudio -k
+# pulseaudio --start
+
+bluetoothctl <<EOF
+power on
+discoverable on
+pairable on
+agent NoInputNoOutput
+default-agent
+connect 04:52:C7:C6:1B:68
+EOF
+pacmd set-card-profile bluez_card.04_52_C7_C6_1B_68 a2dp_sink_aac

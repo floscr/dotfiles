@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+service="redshift.service"
+
+if $(systemctl --user is-active --quiet $service); then
+    systemctl --user stop $service&
+    notify-send "🌙 Stopped Redshift"
+else
+    systemctl --user start $service&
+    notify-send "☀ Started Redshift"
+fi

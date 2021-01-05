@@ -1,0 +1,19 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p qrencode
+# Save a wifi config to a qr code for your router
+
+set -e
+
+_usage() {
+  cat <<EOL
+Usage: ${0##*/} WIFI_ID WIFI_PASSWORD
+EOL
+  exit 2
+}
+
+id=$1
+password=$2
+
+([ -z "$id" ] || [ -z "$password" ]) && _usage
+
+qrencode -o wifi.png "WIFI:T:WPA;S:$id;P:$password;;"
