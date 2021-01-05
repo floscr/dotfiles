@@ -19,15 +19,14 @@ in {
 
   config = mkIf cfg.enable {
     # Rofi CMDer
-    home.configFile."cmder/cmd.csv"=
-      fold (cur: acc: acc + "${cur.description},,,${cur.command},,,${if ! isNull(cur.binding) then cur.binding else ""}\n") "" cfg.items;
-#     # Sxhkd bindings
-#     home.configFile."sxhkd/sxhkdrc" =
-#       fold (cur: acc: if isNull cur.binding then acc else ''
-# ${acc}
-# # ${cur.description}
-# ${cur.binding}
-#     ${cur.command}
-# '') "" config.bindings;
+    home.configFile."cmder/cmd.csv".text =
+      fold (cur: acc: acc + "${cur.description},,,${cur.command},,,${if ! isNull(cur.binding) then cur.binding else ""}\n") "" config.modules.bindings.items;
+    home.configFile."sxhkd/sxhkdrc".text =
+      fold (cur: acc: if isNull cur.binding then acc else ''
+${acc}
+# ${cur.description}
+${cur.binding}
+    ${cur.command}
+'') "" config.modules.bindings.items;
   };
 }
