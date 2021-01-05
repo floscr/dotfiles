@@ -15,6 +15,7 @@ with lib.my;
       gnupg.enable  = true;
       pass.enable   = true;
       zsh.enable    = true;
+      youtube-dl    = true;
     };
     hardware = {
       audio.enable = true;
