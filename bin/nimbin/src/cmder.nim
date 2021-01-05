@@ -5,7 +5,6 @@ import sequtils
 import strformat
 import fp/option
 import lib/utils
-import argparse
 import sugar
 
 {.experimental.}
@@ -67,16 +66,4 @@ proc main() =
     let item = config.findIt(it.description == description)
     discard execShellCmd(item.command)
 
-var p = newParser("cmder"):
-  command("items"):
-    run:
-      parseConfig().prettyCommands() |> echo
-  command("main"):
-    run:
-      main()
-  command("exec"):
-    arg("cmd")
-    run:
-      exec(opts.cmd)
-
-p.run()
+parseConfig().prettyCommands() |> echo

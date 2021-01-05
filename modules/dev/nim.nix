@@ -13,8 +13,8 @@ in {
       nim
       (pkgs.writeScriptBin "nimx" ''
         bin=$1
-        src="$DOTFILES/bin/nimbin/src/$bin.nim"
-        dst="$DOTFILES/bin/nimbin/dst/$bin"
+        src="$HOME/.config/dotfiles/bin/nimbin/src/$bin.nim"
+        dst="$HOME/.config/dotfiles/bin/nimbin/dst/$bin"
         shift
 
         if [[ ! -f "$dst" || "$src" -nt "$dst" ]]; then
