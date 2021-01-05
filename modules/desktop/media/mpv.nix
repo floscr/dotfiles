@@ -25,7 +25,7 @@ in {
       # NoTube
       notube
       (makeDesktopItem {
-        terminal = "False";
+        terminal = false;
         name = "notube";
         desktopName = "notube";
         mimeType = "x-scheme-handler/notube";
