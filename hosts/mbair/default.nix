@@ -34,6 +34,7 @@ with lib.my;
       };
       media = {
         spotify.enable = true;
+        mpv.enable = true;
       };
       browsers = {
         default = "firefox";
