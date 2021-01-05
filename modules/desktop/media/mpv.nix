@@ -36,11 +36,11 @@ in {
       (mpv-with-scripts.override {
         scripts = [
           pkgs.mpvScripts.mpris # playerctl support
-          (fetchurl {
-            # peerflix-hook
-            url = "https://gist.githubusercontent.com/floscr/004f4b4d840a6ee0be40328744525c74/raw/903a183827d943abd4a914d0666a337f4e403f9c/peerflix-hook.lua";
-            sha256 = "945c32353f2ee16b4838f9384e8428fff9705dcfb3838ac03b4dab45c58ceef0";
-          })
+          # (fetchurl {
+          #   # peerflix-hook
+          #   url = "https://gist.githubusercontent.com/floscr/004f4b4d840a6ee0be40328744525c74/raw/903a183827d943abd4a914d0666a337f4e403f9c/peerflix-hook.lua";
+          #   sha256 = "945c32353f2ee16b4838f9384e8428fff9705dcfb3838ac03b4dab45c58ceef0";
+          # })
         ];
       })
 
