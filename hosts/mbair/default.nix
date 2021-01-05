@@ -28,6 +28,9 @@ with lib.my;
     };
     desktop = {
       plasma.enable = true;
+      apps = {
+        rofi.enable = true;
+      };
       browsers = {
         default = "firefox";
         firefox.enable = true;
