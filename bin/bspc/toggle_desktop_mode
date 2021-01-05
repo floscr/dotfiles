@@ -11,7 +11,7 @@
 #   + bspc-focus south
 #   + bspc-focus -m west
 
-source /etc/dotfiles/bash-helpers/display.sh
+source $DOTFILES/bin/bash-helpers/display.sh
 
 set -e
 
