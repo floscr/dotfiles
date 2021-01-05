@@ -2,7 +2,8 @@
 
 with lib;
 with lib.my;
-{
+let cfg = config.modules.bindings;
+in {
   options.modules.bindings = with types; {
     enable = mkBoolOpt false;
     items = mkOption {
@@ -16,10 +17,10 @@ with lib.my;
     };
   };
 
-  config = {
-#     # Rofi CMDer
-#     home.configFile."cmder/cmd.csv"=
-#       fold (cur: acc: acc + "${cur.description},,,${cur.command},,,${if ! isNull(cur.binding) then cur.binding else ""}\n") "" config.bindings;
+  config = mkIf cfg.enable {
+    # Rofi CMDer
+    home.configFile."cmder/cmd.csv"=
+      fold (cur: acc: acc + "${cur.description},,,${cur.command},,,${if ! isNull(cur.binding) then cur.binding else ""}\n") "" cfg.items;
 #     # Sxhkd bindings
 #     home.configFile."sxhkd/sxhkdrc" =
 #       fold (cur: acc: if isNull cur.binding then acc else ''
