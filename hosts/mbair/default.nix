@@ -10,12 +10,12 @@ with lib.my;
   modules = {
     bindings.enable = true;
     shell = {
-      direnv.enable = true;
-      git.enable    = true;
-      gnupg.enable  = true;
-      pass.enable   = true;
-      zsh.enable    = true;
-      youtube-dl    = true;
+      direnv.enable     = true;
+      git.enable        = true;
+      gnupg.enable      = true;
+      pass.enable       = true;
+      zsh.enable        = true;
+      youtube-dl.enable = true;
     };
     hardware = {
       audio.enable = true;
