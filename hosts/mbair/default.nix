@@ -27,6 +27,7 @@ with lib.my;
       sensors.enable = true;
     };
     desktop = {
+      plasma.enable = true;
       browsers = {
         default = "firefox";
         firefox.enable = true;
