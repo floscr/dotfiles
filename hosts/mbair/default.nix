@@ -27,6 +27,10 @@ with lib.my;
       };
       sensors.enable = true;
     };
+    dev = {
+      node.enable = true;
+      nim.enable = true;
+    };
     desktop = {
       plasma.enable = true;
       apps = {
