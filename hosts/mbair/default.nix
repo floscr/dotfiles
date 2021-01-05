@@ -71,28 +71,12 @@ with lib.my;
     };
   };
 
-  networking.useDHCP = false;
+  # Fix the horrible color profile on the display from linux
+  # Export your default color profile from the mac osx partition
+  # Source: https://github.com/willtim/nixos/blob/52e730ec0d8288a3862538205cd8ff0fa2d1c159/desktop.nix#L151
+  # xiccd apparently is buggy and cpu intensive
+  services.xserver.displayManager.sessionCommands = ''{pkgs.argyllcms}/bin/dispwin -I "~/.local/macbook-air-lcd.icc"'';
 
-  services.xserver = {
-    enable = true;
-    displayManager.sddm.enable = true;
-    desktopManager.plasma5.enable = true;
-    windowManager.bspwm.enable = true;
-
-    # Fix the horrible color profile on the display from linux
-    # Export your default color profile from the mac osx partition
-    # Source: https://github.com/willtim/nixos/blob/52e730ec0d8288a3862538205cd8ff0fa2d1c159/desktop.nix#L151
-    # xiccd apparently is buggy and cpu intensive
-    displayManager.sessionCommands = ''
-      {pkgs.argyllcms}/bin/dispwin -I "~/.local/macbook-air-lcd.icc"
-    '';
-
-    # Configure keymap in X11
-    layout = "us";
-    xkbOptions = "eurosign:e";
-
-    # Enable touchpad support (enabled default in most desktopManager).
-    libinput.enable = true;
-  };
-  
+  services.xserver.libinput.enable = true;
+  services.xserver.libinput.disableWhileTyping = true;
 }
