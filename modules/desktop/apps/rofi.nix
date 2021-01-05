@@ -21,7 +21,7 @@ in {
         #!${stdenv.shell}
         exec ${rofi}/bin/rofi -terminal xst -m -1 "$@"
       '')
-      # my.rofimoji
+      rofimoji
     ];
   };
 }
