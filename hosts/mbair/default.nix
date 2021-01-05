@@ -30,6 +30,7 @@ with lib.my;
       plasma.enable = true;
       apps = {
         rofi.enable = true;
+        transmission.enable = true;
       };
       browsers = {
         default = "firefox";
