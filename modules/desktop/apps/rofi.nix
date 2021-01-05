@@ -16,12 +16,12 @@ in {
       };
     };
 
-    packages = with pkgs; [
+    user.packages = with pkgs; [
       (writeScriptBin "rofi" ''
         #!${stdenv.shell}
         exec ${rofi}/bin/rofi -terminal xst -m -1 "$@"
       '')
-      my.rofimoji
+      # my.rofimoji
     ];
   };
 }
