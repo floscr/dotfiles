@@ -32,6 +32,9 @@ with lib.my;
         rofi.enable = true;
         transmission.enable = true;
       };
+      media = {
+        spotify.enable = true;
+      };
       browsers = {
         default = "firefox";
         firefox.enable = true;
