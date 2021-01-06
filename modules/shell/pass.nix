@@ -10,13 +10,27 @@ in {
 
   config = mkIf cfg.enable {
     user.packages = with pkgs; [
-      (pass.withExtensions (exts: [
-        exts.pass-otp
-        exts.pass-genphrase
-      ] ++ (if config.modules.shell.gnupg.enable
-            then [ exts.pass-tomb ]
-            else [])))
+        (pass.withExtensions (exts: [
+          exts.pass-otp
+          exts.pass-genphrase
+          exts.pass-tomb
+        ]))
+        pkgs.libqrencode # Generate QR code from pass
+        (lib.mkIf (config.services.xserver.enable) rofi-pass)
+
     ];
     env.PASSWORD_STORE_DIR = "$HOME/.secrets/password-store";
+    modules.bindings.items = [
+      {
+        description = "Pass";
+        categories = "Password Manager";
+        command = "rofi-pass";
+      }
+      {
+        binding = "super + apostrophe";
+        command = "rofi-pass -dmenu -theme theme/passmenu.rasi";
+        description = "Password Manager";
+      }
+    ];
   };
 }
