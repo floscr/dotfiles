@@ -4,7 +4,7 @@ with lib;
 with lib.my;
 let cfg = config.modules.desktop.graphics.gimp;
 in {
-  options.modules.desktop.media.mpv = {
+  options.modules.desktop.graphics.gimp = {
     enable = mkBoolOpt false;
   };
 
