@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+~/.config/polybar/modules/pulseaudio-control/pulseaudio-control.bash \
+    --sink-nicknames-from "device.description" \
+    --sink-nickname "alsa_output.pci-0000_00_1f.3.analog-stereo:" \
+    --sink-nickname "alsa_output.pci-0000_00_1f.3.hdmi-stereo-extra1:" \
+    --sink-nickname "bluez_sink.04_52_C7_C6_1B_68.headset_head_unit:" \
+    --sink-nickname "bluez_sink.04_52_C7_C6_1B_68.a2dp_sink:" \
+    --sink-nickname "bluez_sink.30_23_80_C0_7D_85.a2dp_sink:" \
+    --icon-muted "" \
+    --format '$ICON_SINK $SINK_NICKNAME $VOL_ICON ${VOL_LEVEL}' \
+    listen

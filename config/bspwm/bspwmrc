@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+export MONITOR=$(xrandr -q | grep primary | cut -d' ' -f1)
+export MONITORS=( $(xrandr -q | grep ' connected' | cut -d' ' -f1) )
+MONITOR=${MONITOR:-${MONITORS[0]}}
+
+bspc monitor $MONITOR -d {1,2,3,4,5,6,7}
+
+bspc config remove_disabled_monitors true
+bspc config remove_unplugged_monitors true
+bspc config merge_overlapping_monitors true
+
+bspc config window_gap 0
+bspc config borderless_monocle true
+bspc config gapless_monocle true
+bspc config border_width 1
+bspc config normal_border_color "#131519"
+bspc config active_border_color "#383c4a"
+bspc config focused_border_color "#666a72"
+
+# Rules
+bspc rule -r '*'
+
+bspc rule -a SimpleScreenRecorder state=floating
+bspc rule -a Spotify state=floating
+bspc rule -a Emacs split_ratio=0.28 state=tiled state=tiled
+bspc rule -a Emacs:doom-capture state=floating
+
+bspc rule -a Chromium split_ratio=0.32 --center
+
+bspc rule -a Pavucontrol state=floating
+bspc rule -a mpv state=floating center=on border=off
+bspc rule -a Pinentry state=floating center=on
+bspc rule -a GtkFileChooserDialog state=floating rectangle=300x300+190+134 --center --focus
+
+bspc rule -a termite-scratch state=floating follow=on focus=on rectangle=250x550 center=on border=off
