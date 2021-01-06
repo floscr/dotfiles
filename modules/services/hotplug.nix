@@ -3,9 +3,9 @@
 
 with lib;
 with lib.my;
-let cfg = config.modules.services.android;
+let cfg = config.modules.services.hotplug;
 in {
-  options.modules.services.android = {
+  options.modules.services.hotplug = {
     enable = mkBoolOpt false;
   };
 
