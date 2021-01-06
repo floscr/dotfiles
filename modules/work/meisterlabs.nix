@@ -1,11 +1,15 @@
-{ config, lib, pkgs, ... }:
+{ options, config, lib, pkgs, ... }:
 
-{
-  environment.systemPackages = with pkgs; [
-    ruby
-  ];
-  my = {
-    packages = with pkgs; [
+with lib;
+with lib.my;
+let cfg = config.modules.work.meisterlabs;
+in {
+  options.modules.work.meisterlabs = {
+    enable = mkBoolOpt false;
+  };
+
+  config = mkIf cfg.enable {
+    user.packages = with pkgs; [
       (writeShellScriptBin "mm-build-bundle" ''
         #!/usr/bin/env zsh
 
@@ -19,10 +23,19 @@
         ./mindmeister/rake "client:import_bundles_testing['$2']"
       '')
     ];
-    zsh.rc = lib.readFile ./env.zsh;
 
-    bindings = [
+    modules.shell.zsh.rcFiles = [ ./env.zsh ];
 
+    modules.bindings.items = [
+      {
+        description = "MM: Start";
+        categories = "Work";
+        command = ''cd ~/Code/Meisterlabs/docker-dev-environment; ./mindmeister/restart; notify-send "MM Docker Started"'';
+      }
+      {
+        command = "dragon --and-exit ~/Code/Meisterlabs/test-data/**/*.*";
+        description = "Dragon: Work DnD Test Data";
+      }
     ];
   };
 }
