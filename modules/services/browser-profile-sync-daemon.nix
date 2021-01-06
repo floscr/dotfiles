@@ -8,7 +8,7 @@ in {
   options.modules.services.browser-profile-sync-daemon = {
     enable = mkBoolOpt false;
     resyncTimer = mkOption {
-      type = str;
+      type = types.str;
       default = "1h";
       example = "1h 30min";
       description = ''
