@@ -103,9 +103,10 @@ in {
   };
 
   config = mkMerge [
+    (mkIf (cfg.colorscheme != null) {
+      modules.theme.colors = cfg.colorschemes.${cfg.colorscheme};
+    })
     {
-      modules.theme.colors = mkIf (cfg.colorscheme != null) (cfg.colorschemes.${cfg.colorscheme});
-
       home.configFile = {
         # GTK
         "gtk-3.0/settings.ini".text = ''
