@@ -10,6 +10,7 @@ in {
 
   config = mkIf cfg.enable {
     user.packages = with pkgs; [
+      ruby
       (writeShellScriptBin "mm-build-bundle" ''
         #!/usr/bin/env zsh
 
