@@ -119,7 +119,7 @@ with lib.my;
   services.xserver.displayManager.autoLogin.user = config.user.name;
 
   fonts = {
-    enableFontDir = true;
+    fontDir.enable = true;
     enableGhostscriptFonts = true;
     fontconfig = {
       dpi = 180;
