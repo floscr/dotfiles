@@ -76,6 +76,9 @@ with lib.my;
     services = {
       syncthing.enable = true;
       polybar.enable = true;
+      dunst.enable = true;
+      greenclip.enable = true;
+      hotplug.enable = true;
     };
     work.meisterlabs.enable = true;
     theme = {
