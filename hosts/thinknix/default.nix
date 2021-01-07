@@ -46,6 +46,7 @@ with lib.my;
     };
     desktop = {
       bspwm.enable = true;
+      gtk-emacs-bindings.enable = true;
       apps = {
         rofi.enable = true;
         font-manager.enable = true;
