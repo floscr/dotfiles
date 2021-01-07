@@ -35,14 +35,24 @@ in {
             ui = sans;
           };
         };
-      };
 
+        shell.zsh.rcFiles  = [ ./config/zsh/prompt.zsh ];
+      };
+    }
+
+    (mkIf config.services.xserver.enable {
+      user.packages = with pkgs; [
+        dracula-theme
+        paper-icon-theme # for rofi
+      ];
+    })
+
+    {
       home.configFile = with config.modules; mkMerge [
         {
           # McMojave cursor theme
           "icons" = { source = ./icons/cursor; recursive = true; };
         }
-
       ];
     }
   ]);
