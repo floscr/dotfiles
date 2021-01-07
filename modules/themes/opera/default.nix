@@ -52,6 +52,10 @@ in {
     {
       home.configFile = with config.modules; mkMerge [
         {
+          # Sourced from sessionCommands in modules/themes/default.nix
+          "xtheme/90-theme".source = ./config/Xresources;
+        }
+        {
           # McMojave cursor theme
           "icons" = { source = ./icons/cursor; recursive = true; };
         }
