@@ -8,7 +8,14 @@ in {
     {
       modules = {
         theme = {
-          colorscheme = "gotham";
+          colorscheme = "nord";
+
+          gtk = {
+            theme = "Dracula";
+            iconTheme = "Paper";
+            cursorTheme = "McMojave";
+          };
+
           fonts = rec {
             sans = {
               family = "Source Sans Pro";
@@ -29,6 +36,14 @@ in {
           };
         };
       };
+
+      home.configFile = with config.modules; mkMerge [
+        {
+          # McMojave cursor theme
+          "icons" = { source = ./icons/cursor; recursive = true; };
+        }
+
+      ];
     }
   ]);
 }
