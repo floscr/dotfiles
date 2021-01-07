@@ -90,7 +90,7 @@ in {
     };
     systemd.user.services.dunst = {
       enable = true;
-      description = "Notification daemon";
+      description = mkDefault "Notification daemon";
       after = [ "graphical-session-pre.target" ];
       wantedBy = [ "graphical-session-pre.target" ];
       partOf = [ "graphical-session-pre.target" ];
