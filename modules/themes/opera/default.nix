@@ -10,7 +10,7 @@ in {
         theme = {
           colorscheme = "nord";
 
-          backgroundColor = config.modules.theme.colors.bg0;
+          wallpaper = mkDefault ./config/wallpaper.png;
 
           gtk = {
             theme = "Arc-Dark";

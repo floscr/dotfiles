@@ -46,7 +46,7 @@ in {
       '';
     };
 
-    backgroundColor = mkOpt (either str null) null;
+    wallpaper = mkOpt (either path null) null;
 
     gtk = {
       theme = mkOpt str "";
@@ -108,6 +108,13 @@ in {
     (mkIf (cfg.colorscheme != null) {
       modules.theme.colors = cfg.colorschemes.${cfg.colorscheme};
     })
+    # Read xresources files in ~/.config/xtheme/* to allow modular
+    # configuration of Xresources.
+    (let xrdb = ''${pkgs.xorg.xrdb}/bin/xrdb -merge "$XDG_CONFIG_HOME"/xtheme/*'';
+     in {
+       services.xserver.displayManager.sessionCommands = xrdb;
+       modules.theme.onReload.xtheme = xrdb;
+     })
     {
       home.configFile = {
         # GTK
@@ -143,15 +150,25 @@ in {
       };
     }
 
-    (mkIf (cfg.backgroundColor != null)
-      (let xsetroot = "${pkgs.xorg.xsetroot}/bin/xsetroot";
+    (mkIf (cfg.wallpaper != null)
+      (let wCfg = config.services.xserver.desktopManager.wallpaper;
            command = ''
-             echo "Setting background color: ${cfg.backgroundColor}"
-             ${xsetroot} -solid "${cfg.backgroundColor}" &
+             if [ -e "$XDG_DATA_HOME/wallpaper" ]; then
+               ${pkgs.feh}/bin/feh --bg-${wCfg.mode} \
+                 ${optionalString wCfg.combineScreens "--no-xinerama"} \
+                 --no-fehbg \
+                 $XDG_DATA_HOME/wallpaper
+             fi
           '';
        in {
+         # Set the wallpaper ourselves so we don't need .background-image and/or
+         # .fehbg polluting $HOME
          services.xserver.displayManager.sessionCommands = command;
          modules.theme.onReload.wallpaper = command;
+
+         home.dataFile = mkIf (cfg.wallpaper != null) {
+           "wallpaper".source = cfg.wallpaper;
+         };
        }))
 
     (mkIf (cfg.onReload != {})
