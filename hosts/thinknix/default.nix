@@ -26,6 +26,7 @@ with lib.my;
       youtube-dl.enable = true;
     };
     hardware = {
+      trackpad.enable = true;
       audio.enable = true;
       bluetooth.enable = true;
       keyboard.enable = true;
