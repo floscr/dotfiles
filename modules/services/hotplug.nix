@@ -9,36 +9,38 @@ in {
     enable = mkBoolOpt false;
   };
 
-  config = mkIf cfg.enable {
-    systemd.user.services."hotplug-monitor@" = {
-      enable = true;
-      description = "Hotplug Monitor";
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = false;
-        ExecStart = restartHotplugServiceCmd;
+  config = mkIf cfg.enable (
+    let restartHotplugServiceCmd = "${pkgs.systemd}/bin/systemctl --user restart setup-monitor.service";
+    in {
+      systemd.user.services."hotplug-monitor@" = {
+        enable = true;
+        description = "Hotplug Monitor";
+        wantedBy = [ "multi-user.target" ];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = false;
+          ExecStart = restartHotplugServiceCmd;
+        };
       };
-    };
 
-    systemd.user.services."setup-monitor" = {
-      enable = true;
-      description = "Load my monitor modifications";
-      after = [ "graphical-session-pre.target" ];
-      wantedBy = [ "graphical-session-pre.target" ];
-      partOf = [ "graphical-session-pre.target" ];
-      path = with pkgs; [
-        bspwm
-        coreutils
-        gnugrep
-        systemd
-        xorg.xrandr
-        xorg.xsetroot
-      ];
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-        ExecStart = "${pkgs.bash}/bin/bash ${pkgs.writeScript "hotplug-monitor.sh" ''
+      systemd.user.services."setup-monitor" = {
+        enable = true;
+        description = "Load my monitor modifications";
+        after = [ "graphical-session-pre.target" ];
+        wantedBy = [ "graphical-session-pre.target" ];
+        partOf = [ "graphical-session-pre.target" ];
+        path = with pkgs; [
+          bspwm
+          coreutils
+          gnugrep
+          systemd
+          xorg.xrandr
+          xorg.xsetroot
+        ];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          ExecStart = "${pkgs.bash}/bin/bash ${pkgs.writeScript "hotplug-monitor.sh" ''
           #!${pkgs.stdenv.shell}
 
           function connectLG(){
@@ -85,19 +87,21 @@ in {
           sleep 1
           bspc config borderless_monocle true
         ''}";
+        };
       };
-    };
 
-    modules.bindings.items = [
-      {
-        binding = "F12";
-        command = restartHotplugServiceCmd;
-        description = "Hotplug Monitor (Old script)";
-      }
-    ];
+      modules.bindings.items = [
+        {
+          binding = "F12";
+          command = restartHotplugServiceCmd;
+          description = "Hotplug Monitor (Old script)";
+        }
+      ];
 
-    # Jesus christ udev
-    # https://superuser.com/a/1401322
-    services.udev.extraRules = ''ACTION=="change", KERNEL=="card0", SUBSYSTEM=="drm", ENV{HOTPLUG}=="1", ENV{SYSTEMD_USER_WANTS}+="hotplug-monitor@$env{SEQNUM}.service", TAG+="systemd"'';
-  };
+      # Jesus christ udev
+      # https://superuser.com/a/1401322
+      services.udev.extraRules = ''ACTION=="change", KERNEL=="card0", SUBSYSTEM=="drm", ENV{HOTPLUG}=="1", ENV{SYSTEMD_USER_WANTS}+="hotplug-monitor@$env{SEQNUM}.service", TAG+="systemd"'';
+
+    }
+  );
 }
