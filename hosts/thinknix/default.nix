@@ -75,6 +75,7 @@ with lib.my;
     };
     services = {
       syncthing.enable = true;
+      polybar.enable = true;
     };
     work.meisterlabs.enable = true;
     theme = {
