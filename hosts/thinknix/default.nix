@@ -83,9 +83,6 @@ with lib.my;
     work.meisterlabs.enable = true;
     theme = {
       colorscheme = "gruvbox-dark";
-      vimColorscheme = "gruvbox";
-      batTheme = "gruvbox";
-      gitDeltaTheme = "gruvbox";
 
       fonts = rec {
         sans = {

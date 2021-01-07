@@ -70,22 +70,6 @@ in {
       };
     };
 
-    vimColorscheme = mkOption {
-      description = "Colorscheme to use in (neo)vim. Should roughly match the colorscheme option.";
-      type = types.str;
-    };
-
-    batTheme = mkOption {
-      description = "Theme to use with bat. Should roughly match the colorscheme option.";
-      type = types.str;
-    };
-
-    gitDeltaTheme = mkOption {
-      description =
-        "Theme to use with delta, the git-diff drop-in. Should roughly match the colorscheme option.";
-      type = types.str;
-    };
-
     fonts = mkOption {
       description = "Fonts to use throughout various apps.";
       type = types.submodule {
@@ -99,7 +83,6 @@ in {
     };
 
     onReload = mkOpt (attrsOf lines) {};
-
   };
 
   config = mkMerge [

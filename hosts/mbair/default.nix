@@ -60,9 +60,6 @@ with lib.my;
     };
     theme = {
       colorscheme = "gruvbox-dark";
-      vimColorscheme = "gruvbox";
-      batTheme = "gruvbox";
-      gitDeltaTheme = "gruvbox";
 
       fonts = rec {
         sans = {
