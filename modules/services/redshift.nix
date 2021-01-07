@@ -17,11 +17,6 @@ in {
       };
     };
 
-    location = {
-      longitude = 12.5;
-      latitude = 55.88;
-    };
-
     modules.bindings.items = [
       {
         description = "Toggle Redshift";

@@ -8,5 +8,10 @@ with lib;
   # generated config replicates the default behaviour.
   networking.useDHCP = false;
 
+  location = {
+    latitude = 12.5;
+    longitude = 55.88;
+  };
+
   time.timeZone = mkDefault "Europe/Vienna";
 }
