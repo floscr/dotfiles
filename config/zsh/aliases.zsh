@@ -23,6 +23,7 @@ alias gurl='curl --compressed'
 alias y='xclip -selection clipboard -in'
 alias p='xclip -selection clipboard -out'
 
+alias scu=systemctl --user
 alias sc=systemctl
 alias ssc='sudo systemctl'
 alias jc='journalctl'
