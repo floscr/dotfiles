@@ -15,7 +15,7 @@ in {
       systemd.user.services."hotplug-monitor@" = {
         enable = true;
         description = "Hotplug Monitor";
-        wantedBy = [ "multi-user.target" ];
+        # wantedBy = [ "multi-user.target" ];
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = false;
@@ -26,9 +26,9 @@ in {
       systemd.user.services."setup-monitor" = {
         enable = true;
         description = "Load my monitor modifications";
-        after = [ "graphical-session-pre.target" ];
-        wantedBy = [ "graphical-session-pre.target" ];
-        partOf = [ "graphical-session-pre.target" ];
+        # after = [ "graphical-session-pre.target" ];
+        # wantedBy = [ "graphical-session-pre.target" ];
+        # partOf = [ "graphical-session-pre.target" ];
         path = with pkgs; [
           bspwm
           coreutils

@@ -34,3 +34,5 @@ bspc rule -a Pinentry state=floating center=on
 bspc rule -a GtkFileChooserDialog state=floating rectangle=300x300+190+134 --center --focus
 
 bspc rule -a termite-scratch state=floating follow=on focus=on rectangle=250x550 center=on border=off
+
+systemctl --user start polybar.service

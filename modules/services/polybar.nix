@@ -29,9 +29,6 @@ in {
 
     systemd.user.services.polybar = {
       description = "Polybar daemon";
-      after = [ "graphical-session-pre.target" ];
-      wantedBy = [ "graphical-session-pre.target" ];
-      partOf = [ "graphical-session-pre.target" ];
       restartTriggers = [ "~/.config/polybar/config" ];
       script = ''polybar main &'';
       path = with pkgs; [
