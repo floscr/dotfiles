@@ -115,8 +115,8 @@ with lib.my;
   };
 
   # Automatically log in since the disk is encrypted with a password anyway
-  services.xserver.displayManager.lightdm.autoLogin.enable = true;
-  services.xserver.displayManager.lightdm.autoLogin.user = config.user.name;
+  services.xserver.displayManager.autoLogin.enable = true;
+  services.xserver.displayManager.autoLogin.user = config.user.name;
 
   fonts = {
     enableFontDir = true;
