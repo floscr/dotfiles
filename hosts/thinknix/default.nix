@@ -79,6 +79,7 @@ with lib.my;
       dunst.enable = true;
       greenclip.enable = true;
       hotplug.enable = true;
+      browser-profile-sync-daemon.enable = true;
     };
     work.meisterlabs.enable = true;
     theme.active = "opera";

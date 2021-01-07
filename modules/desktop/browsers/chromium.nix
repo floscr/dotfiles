@@ -34,6 +34,14 @@ in {
       enableWideVine = true;
     };
 
+    modules.bindings.items = [
+      {
+        description = "Chrome";
+        categories = "Script";
+        command = "launch-chrome";
+      }
+    ];
+
     # Extensions
     programs.chromium = {
       enable = true;
