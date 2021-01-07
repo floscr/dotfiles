@@ -10,6 +10,8 @@ in {
         theme = {
           colorscheme = "nord";
 
+          backgroundColor = config.modules.theme.colors.bg0;
+
           gtk = {
             theme = "Arc-Dark";
             iconTheme = "Paper";

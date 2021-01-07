@@ -46,6 +46,8 @@ in {
       '';
     };
 
+    backgroundColor = mkOpt (either str null) null;
+
     gtk = {
       theme = mkOpt str "";
       iconTheme = mkOpt str "";
@@ -140,6 +142,17 @@ in {
         '';
       };
     }
+
+    (mkIf (cfg.backgroundColor != null)
+      (let xsetroot = "${pkgs.xorg.xsetroot}/bin/xsetroot";
+           command = ''
+             echo "Setting background color: ${cfg.backgroundColor}"
+             ${xsetroot} -solid "${cfg.backgroundColor}" &
+          '';
+       in {
+         services.xserver.displayManager.sessionCommands = command;
+         modules.theme.onReload.wallpaper = command;
+       }))
 
     (mkIf (cfg.onReload != {})
       (let reloadTheme =
