@@ -66,4 +66,4 @@ proc main() =
     let item = config.findIt(it.description == description)
     discard execShellCmd(item.command)
 
-parseConfig().prettyCommands() |> echo
+main()

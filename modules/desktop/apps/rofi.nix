@@ -23,5 +23,27 @@ in {
       '')
       rofimoji
     ];
+    modules.bindings.items = [
+      {
+        binding = "super + @space";
+        command = "nimx cmder";
+        description = "Rofi Main Menu";
+      }
+      {
+        binding = "super + shift + Tab";
+        command = "/etc/dotfiles/bin/rofi/app_switch";
+        description = "Switch application";
+      }
+      {
+        description = "drun";
+        categories = "Rofi drun";
+        command = "rofi -modi drun -show drun";
+      }
+      {
+        description = "Rofi Emoji Picker";
+        categories = "Rofi drun";
+        command = "rofimoji";
+      }
+    ];
   };
 }
