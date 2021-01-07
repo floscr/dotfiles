@@ -9,7 +9,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    user.packages = [
+    user.packages = with pkgs; [
       chromium
       (pkgs.writeScriptBin "launch-chrome" ''
         #! ${pkgs.bash}/bin/bash

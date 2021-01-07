@@ -60,7 +60,7 @@ with lib.my;
       };
       browsers = {
         default = "firefox";
-        # chromium.enable = true;
+        chromium.enable = true;
         firefox.enable = true;
       };
       term = {
