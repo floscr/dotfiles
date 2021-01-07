@@ -11,7 +11,7 @@ in {
           colorscheme = "nord";
 
           gtk = {
-            theme = "Dracula";
+            theme = "Arc-Dark";
             iconTheme = "Paper";
             cursorTheme = "McMojave";
           };
@@ -42,7 +42,7 @@ in {
 
     (mkIf config.services.xserver.enable {
       user.packages = with pkgs; [
-        dracula-theme
+        arc-theme
         paper-icon-theme # for rofi
       ];
     })
