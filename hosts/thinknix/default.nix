@@ -81,28 +81,7 @@ with lib.my;
       hotplug.enable = true;
     };
     work.meisterlabs.enable = true;
-    theme = {
-      colorscheme = "gruvbox-dark";
-
-      fonts = rec {
-        sans = {
-          family = "Source Sans Pro";
-          size = 8;
-          pkg = pkgs.source-sans-pro;
-        };
-        serif = {
-          family = "Source Serif Pro";
-          size = 8;
-          pkg = pkgs.source-serif-pro;
-        };
-        mono = {
-          family = "Iosevka";
-          size = 8;
-          pkg = pkgs.iosevka;
-        };
-        ui = sans;
-      };
-    };
+    theme.active = "opera";
   };
 
   console = {
