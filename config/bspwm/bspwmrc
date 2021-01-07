@@ -26,8 +26,6 @@ bspc rule -a Spotify state=floating
 bspc rule -a Emacs split_ratio=0.28 state=tiled state=tiled
 bspc rule -a Emacs:doom-capture state=floating
 
-bspc rule -a Chromium split_ratio=0.32 --center
-
 bspc rule -a Pavucontrol state=floating
 bspc rule -a mpv state=floating center=on border=off
 bspc rule -a Pinentry state=floating center=on
