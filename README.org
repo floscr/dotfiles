@@ -1,0 +1,3 @@
+Nixos config for declarative reproducible Systems using Flakes.
+
+Mostly copied from [[https://github.com/hlissner/dotfiles][hlissner/dotfiles]].
