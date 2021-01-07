@@ -44,23 +44,23 @@ with lib.my;
       mysql.enable = true;
     };
     desktop = {
-      plasma.enable = true;
+      bspwm.enable = true;
       apps = {
         rofi.enable = true;
         font-manager.enable = true;
         transmission.enable = true;
       };
       graphics = {
-        gimp.enable = true;
-        inkscape.enable = true;
+        # gimp.enable = true;
+        # inkscape.enable = true;
       };
       media = {
         spotify.enable = true;
         mpv.enable = true;
       };
       browsers = {
-        default = "chromium";
-        chromium.enable = true;
+        default = "firefox";
+        # chromium.enable = true;
         firefox.enable = true;
       };
       term = {
