@@ -53,4 +53,4 @@ Xcursor.size: 16
 #if X_RESOLUTION > 3840
 Xft.dpi: 144
 #endif
-Xft.dpi: 125
+Xft.dpi: 120
