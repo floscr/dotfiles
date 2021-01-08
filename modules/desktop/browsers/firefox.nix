@@ -41,10 +41,7 @@ in {
         "devtools.theme" = "dark";
         # Enable userContent.css and userChrome.css for our theme modules
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-        # Stop creating ~/Downloads!
-        "browser.download.dir" = "${homeDir}/dl";
-        # Don't use the built-in password manager; a nixos user is more likely
-        # using an external one (you are using one, right?).
+        # Don't use the built-in password manager
         "signon.rememberSignons" = false;
         # Do not check if Firefox is the default browser
         "browser.shell.checkDefaultBrowser" = false;
@@ -67,7 +64,6 @@ in {
         "browser.newtabpage.directory.ping" = "";
         "browser.newtabpage.directory.source" = "data:text/plain,{}";
         # Disable some not so useful functionality.
-        "media.videocontrols.picture-in-picture.video-toggle.enabled" = false;
         "extensions.htmlaboutaddons.recommendations.enabled" = false;
         "extensions.htmlaboutaddons.discover.enabled" = false;
         "extensions.pocket.enabled" = false;
