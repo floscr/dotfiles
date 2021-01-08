@@ -9,6 +9,7 @@ in {
   };
 
   config = mkIf (cfg.default != null) {
+    services.psd.enable = true;
     env.BROWSER = cfg.default;
   };
 }
