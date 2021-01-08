@@ -1,8 +1,25 @@
-{ options, config, lib, pkgs, ... }:
+{ options, config, lib, pkgs, inputs, ... }:
 
 with lib;
 with lib.my;
 let cfg = config.modules.desktop.browsers.firefox;
+    firefoxWrapped = pkgs.wrapFirefox pkgs.firefox-unwrapped {
+      extraPolicies = {
+        CaptivePortal = false;
+        DisableFirefoxStudies = true;
+        DisablePocket = true;
+        DisableTelemetry = true;
+        DisableFirefoxAccounts = true;
+        FirefoxHome = {
+          Pocket = false;
+          Snippets = false;
+        };
+        UserMessaging = {
+          ExtensionRecommendations = false;
+          SkipOnboarding = true;
+        };
+      };
+    };
 in {
   options.modules.desktop.browsers.firefox = with types; {
     enable = mkBoolOpt false;
@@ -22,16 +39,32 @@ in {
   config = mkIf cfg.enable (mkMerge [
     {
       user.packages = with pkgs; [
-        firefox-bin
+        firefoxWrapped
         (makeDesktopItem {
           name = "firefox-private";
           desktopName = "Firefox (Private)";
           genericName = "Open a private Firefox window";
           icon = "firefox";
-          exec = "${firefox-bin}/bin/firefox --private-window";
+          exec = "${firefoxWrapped}/bin/firefox --private-window";
           categories = "Network";
         })
       ];
+
+      home-manager.users.${config.user.name}.programs.firefox = {
+        enable = true;
+        package = firefoxWrapped;
+        extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+          # The extensions still have to be loaded manually
+          # but its still better than having to install them by hand
+          darkreader
+          https-everywhere
+          multi-account-containers
+          org-capture
+          react-devtools
+          ublock-origin
+          vimium
+        ];
+      };
 
       # Prevent auto-creation of ~/Desktop. The trailing slash is necessary; see
       # https://bugzilla.mozilla.org/show_bug.cgi?id=1082717

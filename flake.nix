@@ -23,9 +23,10 @@
       # Extras
       emacs-overlay.url  = "github:nix-community/emacs-overlay";
       nixos-hardware.url = "github:nixos/nixos-hardware";
+      nur.url            = "github:nix-community/NUR";
     };
 
-  outputs = inputs @ { self, nixpkgs, nixpkgs-unstable, home-manager, ... }:
+  outputs = inputs @ { self, nixpkgs, nixpkgs-unstable, nur, home-manager, ... }:
     let
       inherit (lib) attrValues;
       inherit (lib.my) mapModules mapModulesRec mapHosts;
@@ -37,7 +38,7 @@
         config.allowUnfree = true;
         overlays = extraOverlays ++ (attrValues self.overlays);
       };
-      pkgs  = mkPkgs nixpkgs [ self.overlay ];
+      pkgs  = mkPkgs nixpkgs [ self.overlay nur.overlay ];
       uPkgs = mkPkgs nixpkgs-unstable [];
 
       lib = nixpkgs.lib.extend
