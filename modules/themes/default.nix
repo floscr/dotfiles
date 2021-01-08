@@ -116,6 +116,9 @@ in {
        modules.theme.onReload.xtheme = xrdb;
      })
     {
+      environment.variables.XCURSOR_PATH = mkDefault (environment.variables.XCURSOR_PATH ++ [
+        "$HOME/.config/icons"
+      ]);
       home.configFile = {
         # GTK
         "gtk-3.0/settings.ini".text = ''
