@@ -53,8 +53,8 @@ with lib.my;
         transmission.enable = true;
       };
       graphics = {
-        # gimp.enable = true;
-        # inkscape.enable = true;
+        gimp.enable = true;
+        inkscape.enable = true;
       };
       media = {
         spotify.enable = true;

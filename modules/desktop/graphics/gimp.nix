@@ -11,9 +11,9 @@ in {
   config = mkIf cfg.enable {
     user.packages = with pkgs; [
       gimp
-      gimpPlugins.resynthesizer2
+      gimpPlugins.resynthesizer  # content-aware scaling in gimp
     ];
-    home.configFile = mkIf cfg.raster.enable {
+    home.configFile = mkIf cfg.enable {
       "GIMP/2.10" = { source = "${configDir}/gimp"; recursive = true; };
     };
   };
