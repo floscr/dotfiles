@@ -10,6 +10,10 @@ in {
   };
 
   config = mkIf cfg.enable {
+    modules.theme.onReload.termite = ''
+      pkill -USR1 -x termite
+    '';
+
     user.packages = with pkgs; [
       termite
       (makeDesktopItem {
