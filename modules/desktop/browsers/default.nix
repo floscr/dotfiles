@@ -6,10 +6,11 @@ let cfg = config.modules.desktop.browsers;
 in {
   options.modules.desktop.browsers = {
     default = mkOpt (with types; nullOr str) null;
+    psd = mkBoolOpt false;
   };
 
   config = mkIf (cfg.default != null) {
-    services.psd.enable = true;
+    services.psd.enable = cfg.psd;
     env.BROWSER = cfg.default;
   };
 }

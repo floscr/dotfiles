@@ -62,6 +62,7 @@ with lib.my;
       };
       browsers = {
         default = "firefox";
+        psd = true;
         chromium.enable = true;
         firefox.enable = true;
       };
