@@ -64,7 +64,7 @@ proc parseDesktopFile(f: string): ConfigItem =
     name: string
   for line in lines(f):
     if line.startsWith("Exec"):
-      exec = line.split("=")[1]
+      exec = line.split("=")[1].replace(" %u", "").replace(" %U", "")
     if line.startsWith("Name") and name.isEmptyOrWhitespace:
       name = line.split("=")[1]
   ConfigItem(
@@ -87,7 +87,8 @@ proc main() =
     let description = response
       .split(commandSplitChar)[1]
 
-    let item = config.findIt(it.description == description)
+    let item = items.findIt(it.description == description)
+    echo item
     discard execShellCmd(item.command)
 
 main()
