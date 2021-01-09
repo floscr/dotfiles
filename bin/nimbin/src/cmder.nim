@@ -10,7 +10,7 @@ import sugar
 
 {.experimental.}
 
-let desktopApplicationsDir = expandTilde "~/.nix-profile/share/applications"
+let desktopApplicationsDir = expandTilde "/etc/profiles/per-user/floscr/share/applications"
 let config = expandTilde("~/.config/cmder/cmd.csv")
 let splitChar = ",,,"
 let commandSplitChar = "​" # Zero Width Space
