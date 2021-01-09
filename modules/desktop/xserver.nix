@@ -9,5 +9,14 @@ in {
       # Fix default cursor
       xsetroot -cursor_name left_ptr
     '';
+
+    home.configFile."xtheme/80-dpi".text = ''
+      #if X_RESOLUTION > 3840
+      Xft.dpi: 144
+      #endif
+      #if X_RESOLUTION <= 3840
+      Xft.dpi: 120
+      #endif
+    '';
   };
 }

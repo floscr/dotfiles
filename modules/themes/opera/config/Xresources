@@ -49,10 +49,3 @@ Xcursor.size: 16
 *.color239: #504945
 *.color240: #544c49
 *.color241: #665c54
-
-#if X_RESOLUTION > 3840
-Xft.dpi: 144
-#endif
-#if X_RESOLUTION <= 3840
-Xft.dpi: 120
-#endif
