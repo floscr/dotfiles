@@ -100,26 +100,6 @@ with lib.my;
   services.xserver.displayManager.autoLogin.enable = true;
   services.xserver.displayManager.autoLogin.user = config.user.name;
 
-  fonts = {
-    fontDir.enable = true;
-    enableGhostscriptFonts = true;
-    fontconfig = {
-      dpi = 180;
-      defaultFonts.monospace = [ "Iosevka" ];
-      useEmbeddedBitmaps = true;
-    };
-    fonts = with pkgs; [
-      fira-code
-      fira-code-symbols
-      font-awesome_5
-      iosevka
-      noto-fonts
-      noto-fonts-cjk
-      siji
-      symbola
-    ];
-  };
-
   # Monitor backlight control
   programs.light.enable = true;
   user.extraGroups = [ "video" ];

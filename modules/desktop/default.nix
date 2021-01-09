@@ -32,38 +32,52 @@ in {
     fonts = {
       fontDir.enable = true;
       enableGhostscriptFonts = true;
-      fonts = with pkgs; [
-        dejavu_fonts
-        fira-code
-        fira-code-symbols
-        ubuntu_font_family
-        ibm-plex
-        iosevka
+      fontconfig = {
+        enable = true;
+        dpi = 180;
+        defaultFonts = with config.modules.theme.fonts; {
+          monospace = [ mono.family ];
+          sansSerif = [ sans.family ];
+          serif = [ serif.family ];
+        };
+        useEmbeddedBitmaps = true;
+      };
+      fonts =
+        with pkgs; [
+          fira-code
+          fira-code-symbols
+          iosevka
+          roboto
+          roboto-mono
+          source-code-pro
+          source-sans-pro
+          source-serif-pro
+          ubuntu_font_family
 
-        # Unicode and Symbols
-        font-awesome-ttf
-        noto-fonts
-        noto-fonts-cjk
-        symbola
-      ];
-    };
+          # Unicode and Symbols
+          font-awesome-ttf
+          noto-fonts
+          noto-fonts-cjk
+          symbola
+        ] ++ (mapAttrsToList (_: v: v.pkg) config.modules.theme.fonts);
+      };
 
-    # Try really hard to get QT to respect my GTK theme.
-    env.GTK_DATA_PREFIX = [ "${config.system.path}" ];
-    env.QT_QPA_PLATFORMTHEME = "gtk2";
-    qt5 = { style = "gtk2"; platformTheme = "gtk2"; };
+      # Try really hard to get QT to respect my GTK theme.
+      env.GTK_DATA_PREFIX = [ "${config.system.path}" ];
+      env.QT_QPA_PLATFORMTHEME = "gtk2";
+      qt5 = { style = "gtk2"; platformTheme = "gtk2"; };
 
-    services.xserver.displayManager.sessionCommands = ''
+      services.xserver.displayManager.sessionCommands = ''
       # GTK2_RC_FILES must be available to the display manager.
       export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc"
     '';
 
-    # Clean up leftovers, as much as we can
-    system.userActivationScripts.cleanupHome = ''
+      # Clean up leftovers, as much as we can
+      system.userActivationScripts.cleanupHome = ''
       pushd "${homeDir}"
       rm -rf .compose-cache .nv .pki .dbus .fehbg
       [ -s .xsession-errors ] || rm -f .xsession-errors*
       popd
     '';
-  };
-}
+    };
+  }

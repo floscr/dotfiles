@@ -30,9 +30,9 @@ in {
               pkg = pkgs.source-serif-pro;
             };
             mono = {
-              family = "Iosevka";
+              family = "Roboto Mono";
               size = 8;
-              pkg = pkgs.iosevka;
+              pkg = pkgs.roboto-mono;
             };
             ui = sans;
           };
