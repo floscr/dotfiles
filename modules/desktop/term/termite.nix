@@ -29,7 +29,7 @@ in {
     home-manager.users.${config.user.name}.programs.termite = mkMerge [
       {
         enable = true;
-        font = "${fonts.mono.family} 10";
+        font = "${fonts.mono.family} 11";
         scrollbackLines = -1;
         allowBold = true;
         clickableUrl = true;
