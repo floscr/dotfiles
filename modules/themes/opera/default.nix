@@ -30,9 +30,14 @@ in {
               pkg = pkgs.source-serif-pro;
             };
             mono = {
-              family = "Roboto Mono";
+              family = "Fira Code";
               size = 8;
-              pkg = pkgs.roboto-mono;
+              pkg = pkgs.fira-code;
+            };
+            terminal = {
+              family = "Iosevka";
+              size = 11;
+              pkg = pkgs.iosevka;
             };
             ui = sans;
           };

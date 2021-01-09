@@ -96,6 +96,7 @@ in {
           sans = mkFontOption "Sans serif font";
           serif = mkFontOption "Serif font";
           mono = mkFontOption "Monospace font";
+          terminal = mkFontOption "Terminal font";
           ui = mkFontOption "Font to use for UI elements";
         };
       };
