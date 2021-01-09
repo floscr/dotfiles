@@ -4,11 +4,13 @@ import strutils
 import sequtils
 import strformat
 import fp/option
+import fp/list
 import lib/utils
 import sugar
 
 {.experimental.}
 
+let desktopApplicationsDir = expandTilde "~/.nix-profile/share/applications"
 let config = expandTilde("~/.config/cmder/cmd.csv")
 let splitChar = ",,,"
 let commandSplitChar = "​" # Zero Width Space
@@ -56,9 +58,31 @@ proc exec(x: string, config = parseConfig()) =
     .findIt(it.description == x.split(splitChar)[1])
   echo y.command
 
+proc parseDesktopFile(f: string): ConfigItem =
+  var
+    exec: string
+    name: string
+  for line in lines(f):
+    if line.startsWith("Exec"):
+      exec = line.split("=")[1]
+    if line.startsWith("Name") and name.isEmptyOrWhitespace:
+      name = line.split("=")[1]
+  ConfigItem(
+    description: name,
+    command: exec,
+    binding: none(string),
+  )
+
+proc getDesktopApplications(): any =
+  toSeq(walkDir(desktopApplicationsDir, true))
+    .filter(x => x.path.endsWith("desktop"))
+    .map(c => joinPath(desktopApplicationsDir, c.path) |> parseDesktopFile)
+
 proc main() =
   let config = parseConfig()
-  let response = execProcess(&"echo '{config.prettyCommands()}'| rofi -i -levenshtein-sort -dmenu -p \"Run\" -markup-rows").replace("\n", "")
+  let desktopApplications = getDesktopApplications()
+  let items = config.concat(desktopApplications)
+  let response = execProcess(&"echo '{items.prettyCommands()}'| rofi -i -levenshtein-sort -dmenu -p \"Run\" -markup-rows").replace("\n", "")
   if response != "":
     let description = response
       .split(commandSplitChar)[1]
