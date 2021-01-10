@@ -8,6 +8,7 @@ in {
     enable = mkBoolOpt false;
     zfs.enable = mkBoolOpt false;
     ssd.enable = mkBoolOpt false;
+    autoMount.enable = mkBoolOpt false;
     # TODO automount.enable = mkBoolOpt false;
   };
 
@@ -23,6 +24,16 @@ in {
         hfsprogs
       ];
     }
+
+    (mkIf (cfg.autoMount.enable) {
+      user.packages = [ pkgs.udiskie ];
+      services.xserver.displayManager.sessionCommands = let
+        udiskie = "${pkgs.udiskie}/bin/udiskie";
+      in ''
+        echo "Starting udiskie..."
+        ${udiskie} --tray &
+      '';
+    })
 
     (mkIf (!cfg.zfs.enable && cfg.ssd.enable) {
       services.fstrim.enable = true;

@@ -35,6 +35,7 @@ with lib.my;
       fs = {
         enable = true;
         ssd.enable = true;
+        autoMount.enable = true;
       };
       sensors.enable = true;
     };
