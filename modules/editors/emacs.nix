@@ -59,14 +59,6 @@ in {
       #   perlPackages.DBDmysql)
     ];
 
-    modules.bindings.items = [
-      {
-        description = "Emacs";
-        categories = "Editor";
-        command = "emacs";
-      }
-    ];
-
     env.PATH = [ "$HOME/.emacs.d/bin" ];
 
     modules.shell.zsh.rcFiles = [ "${configDir}/emacs/aliases.zsh" ];
