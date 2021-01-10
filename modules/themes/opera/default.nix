@@ -20,9 +20,9 @@ in {
 
           fonts = rec {
             sans = {
-              family = "Source Sans Pro";
+              family = "Ubuntu";
               size = 8;
-              pkg = pkgs.source-sans-pro;
+              pkg = pkgs.ubuntu_font_family;
             };
             serif = {
               family = "Source Serif Pro";
