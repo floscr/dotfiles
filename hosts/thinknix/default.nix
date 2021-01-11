@@ -63,7 +63,7 @@ with lib.my;
         mpv.enable = true;
       };
       browsers = {
-        default = "firefox";
+        default = "chromium";
         psd = true;
         chromium.enable = true;
         firefox.enable = true;
