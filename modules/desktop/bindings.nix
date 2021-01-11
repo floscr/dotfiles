@@ -96,48 +96,49 @@ with lib.my;
           description = "Resize Window";
           command = "/etc/dotfiles/bin/bspc/resize {west,south,north,east}";
         }
+      ])
+      (mkIf config.modules.desktop.bspwm.enable (let bsp-layout = "$HOME/.config/dotfiles/bin/bsp-layout/src/layout.sh"; in [
         {
           description = "Layout: Tall";
-          command = "/etc/dotfiles/submodules/bsp-layout/src/layout.sh set tall";
+          command = "${bsp-layout} set tall";
         }
         {
           description = "Layout: Reverse Tall";
-          command = "/etc/dotfiles/submodules/bsp-layout/src/layout.sh set rtall";
+          command = "${bsp-layout} set rtall";
         }
         {
           description = "Layout: Wide";
-          command = "/etc/dotfiles/submodules/bsp-layout/src/layout.sh set wide";
+          command = "${bsp-layout} set wide";
         }
         {
           description = "Layout: Reverse Wide";
-          command = "/etc/dotfiles/submodules/bsp-layout/src/layout.sh set rwide";
+          command = "${bsp-layout} set rwide";
         }
         {
           description = "Layout: Grid";
-          command = "/etc/dotfiles/submodules/bsp-layout/src/layout.sh set grid";
+          command = "${bsp-layout} set grid";
         }
         {
           description = "Layout: Reverse Grid";
-          command = "/etc/dotfiles/submodules/bsp-layout/src/layout.sh set rgrid";
+          command = "${bsp-layout} set rgrid";
         }
         {
           description = "Layout: Balance Windows";
-          command = "/etc/dotfiles/submodules/bsp-layout/src/layout.sh set even";
+          command = "${bsp-layout} set even";
         }
         {
           description = "Layout: Default (tiles)";
-          command = "/etc/dotfiles/submodules/bsp-layout/src/layout.sh set tiled";
+          command = "${bsp-layout} set tiled";
         }
         {
           description = "Layout: Reset";
-          command = "/etc/dotfiles/submodules/bsp-layout/src/layout.sh remove";
+          command = "${bsp-layout} remove";
         }
         {
           description = "Layout: Cycle";
-          command = "/etc/dotfiles/submodules/bsp-layout/src/layout.sh cycle";
+          command = "${bsp-layout} cycle";
         }
-
-      ])
+      ] ))
       (mkIf config.services.xserver.enable [
         {
           binding = "super + Return";

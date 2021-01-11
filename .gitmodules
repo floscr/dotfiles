@@ -1,0 +1,3 @@
+[submodule "bsp-layout"]
+	path = bin/bsp-layout
+	url = git@github.com:floscr/bsp-layout.git
