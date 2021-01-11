@@ -4,6 +4,7 @@ with lib;
 with lib.my;
 {
   imports = [
+    ./sound.nix
     ./hardware-configuration.nix
     ../personal.nix
   ];
