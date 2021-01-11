@@ -103,7 +103,20 @@
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "nixpkgs-unstable": "nixpkgs-unstable",
-        "nur": "nur"
+        "nur": "nur",
+        "secrets": "secrets"
+      }
+    },
+    "secrets": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-ujcUj9I2m5KtORj4uWM8ImW/HN63hAwWKUZWc20uNzY=",
+        "path": "/etc/dotfiles-private/private.nix",
+        "type": "path"
+      },
+      "original": {
+        "path": "/etc/dotfiles-private/private.nix",
+        "type": "path"
       }
     }
   },

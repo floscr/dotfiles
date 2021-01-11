@@ -20,13 +20,15 @@
       home-manager.url   = "github:rycee/home-manager/master";
       home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+      secrets = { url = "/etc/dotfiles-private/private.nix"; flake = false; };
+
       # Extras
       emacs-overlay.url  = "github:nix-community/emacs-overlay";
       nixos-hardware.url = "github:nixos/nixos-hardware";
       nur.url            = "github:nix-community/NUR";
     };
 
-  outputs = inputs @ { self, nixpkgs, nixpkgs-unstable, nur, home-manager, ... }:
+  outputs = inputs @ { self, nixpkgs, nixpkgs-unstable, nur, home-manager, secrets, ... }:
     let
       inherit (lib) attrValues;
       inherit (lib.my) mapModules mapModulesRec mapHosts;
@@ -60,7 +62,10 @@
           (p: pkgs.callPackage p {});
 
       nixosModules =
-        { dotfiles = import ./.; }
+        {
+          dotfiles = import ./.;
+          secrets = import secrets;
+        }
         // mapModulesRec ./modules import;
 
       nixosConfigurations =
