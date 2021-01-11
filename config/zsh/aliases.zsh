@@ -28,6 +28,8 @@ alias sc=systemctl
 alias ssc='sudo systemctl'
 alias jc='journalctl'
 
+alias dun='notify-send "done"'
+
 if command -v exa >/dev/null; then
   alias exa="exa --group-directories-first";
   alias l="exa -1";
