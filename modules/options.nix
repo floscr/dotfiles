@@ -32,6 +32,7 @@ with lib.my;
       description = "The primary user account";
       extraGroups = [
         "wheel"
+        "video"
         "networkmanager"
       ];
       isNormalUser = true;
