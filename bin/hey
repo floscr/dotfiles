@@ -51,6 +51,7 @@ function main {
     echo "  rebuild (re)       Rebuild current system flake"
     echo "  rollback           Roll back to last generation"
     echo "  search (s)         Searches nixpkgs for a package"
+    echo "  list (l)           List user packages"
     echo "  show (sh)          Same as 'nix flake show \$DOTFILES'"
     echo "  swap               Swap nix-store link (or directory thereof) for tweaking"
     echo "  test (t)           Quickly rebuild, for quick iteration"
@@ -134,21 +135,22 @@ function main {
     # sh|shell)    _do nix-shell "$@"             ;;
     # repl)        _do nix develop "$@"           ;;
 
-    ch|check)    _do nix flake check "$@" "$DOTFILES";;
-    sh|show)     _do nix flake show "$@" "$DOTFILES" ;;
+    ch|check)    _do nix flake check "$@" "$DOTFILES"        ;;
+    sh|show)     _do nix flake show "$@" "$DOTFILES"         ;;
 
-    theme)       THEME="$1" _rebuild --fast test ;;
-    t|test)      _rebuild --fast test "$@"      ;;
-    re|rebuild)  _rebuild "${@:-switch}"        ;;
-    rollback)    _rebuild --rollback switch     ;;
-    vm)          _rebuild "$@" vm               ;;
+    theme)       THEME="$1" _rebuild --fast test             ;;
+    t|test)      _rebuild --fast test "$@"                   ;;
+    re|rebuild)  _rebuild "${@:-switch}"                     ;;
+    rollback)    _rebuild --rollback switch                  ;;
+    vm)          _rebuild "$@" vm                            ;;
 
-    u|update)    _update "$@"                   ;;
-    up|upgrade)  _update && _rebuild switch     ;;
-    s|search)    nix search nixpkgs "$@"        ;;
+    u|update)    _update "$@"                                ;;
+    up|upgrade)  _update && _rebuild switch                  ;;
+    s|search)    nix search nixpkgs "$@"                     ;;
+    l|list)      nix-env --query --description --status "$@" ;;
 
-    swap)        _swap $@                       ;;
-    gc)          _gc "$@"                       ;;
+    swap)        _swap $@                                    ;;
+    gc)          _gc "$@"                                    ;;
     push)
       rsync -avzh ./ "$1:$REMOTE/"
       ssh -t -l "$USERNAME" "$1" "$REMOTE/bin/hey re" "${@[2,-1]}"
