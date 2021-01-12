@@ -49,6 +49,10 @@ with lib.my;
     desktop = {
       bspwm.enable = true;
       gtk-emacs-bindings.enable = true;
+      vm.virtualbox = {
+        enable = true;
+        vagrant.enable = true;
+      };
       apps = {
         rofi.enable = true;
         font-manager.enable = true;
