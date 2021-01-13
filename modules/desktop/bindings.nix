@@ -205,7 +205,11 @@ with lib.my;
           command = "light -U 5";
           description = "Screen brightness: Decrease 5%";
         }
-
+        {
+          binding = "super + shift + S";
+          command = "scrcap";
+          description = "Screenshot";
+        }
       ])
     ]);
   };
