@@ -110,7 +110,7 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-ujcUj9I2m5KtORj4uWM8ImW/HN63hAwWKUZWc20uNzY=",
+        "narHash": "sha256-JXCs66V801OmK1U2lB6zZfWZTqS+5q/YRkIudoxRFjA=",
         "path": "/etc/dotfiles-private/private.nix",
         "type": "path"
       },
