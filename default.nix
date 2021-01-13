@@ -5,7 +5,10 @@ with lib.my;
 with inputs;
 {
   imports =
-    [ home-manager.nixosModules.home-manager ]
+    [
+      home-manager.nixosModules.home-manager
+      "${inputs.secrets}/private.nix"
+    ]
     ++ (mapModulesRec' (toString ./modules) import);
 
   # Common config for all nixos machines; and to ensure the flake operates soundly

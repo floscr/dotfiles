@@ -20,7 +20,7 @@
       home-manager.url   = "github:rycee/home-manager/master";
       home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-      secrets = { url = "/etc/dotfiles-private/private.nix"; flake = false; };
+      secrets = { url = "/etc/dotfiles-private"; flake = false; };
 
       # Extras
       emacs-overlay.url  = "github:nix-community/emacs-overlay";
@@ -64,7 +64,6 @@
       nixosModules =
         {
           dotfiles = import ./.;
-          secrets = import secrets;
         }
         // mapModulesRec ./modules import;
 

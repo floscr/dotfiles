@@ -110,12 +110,12 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-JXCs66V801OmK1U2lB6zZfWZTqS+5q/YRkIudoxRFjA=",
-        "path": "/etc/dotfiles-private/private.nix",
+        "narHash": "sha256-SA8MjV750ocnp1EpDhEOsdTUlh/NxDD/IDtMTPEJrIs=",
+        "path": "/etc/dotfiles-private",
         "type": "path"
       },
       "original": {
-        "path": "/etc/dotfiles-private/private.nix",
+        "path": "/etc/dotfiles-private",
         "type": "path"
       }
     }
