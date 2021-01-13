@@ -17,16 +17,6 @@ with lib.my;
           description = "Sleep";
         }
         {
-          binding = "super + alt + s";
-          command = "scrrec -s ~/Media/Screenrecording/$(date +%F-%T).mp4";
-          description = "screencast region to mp4";
-        }
-        {
-          binding = "super + ctrl + s";
-          command = "scrrec -s ~/Media/Screenrecording/$(date +%F-%T).gif";
-          description = "screencast region to mp4";
-        }
-        {
           binding = "super + grave";
           command = "bspc node -f last";
           description = "Switch to previous window";
@@ -140,6 +130,23 @@ with lib.my;
         }
       ] ))
       (mkIf config.services.xserver.enable [
+        ## Screenshots
+        {
+          binding = "super + shift + S";
+          command = "scrcap";
+          description = "Screenshot";
+        }
+        {
+          binding = "super + ctrl + s";
+          command = "scrrec -s ~/Media/Screenrecording/$(date +%F-%T).mp4";
+          description = "Record Screen (MP4)";
+        }
+        {
+          binding = "super + alt + s";
+          command = "scrrec -s ~/Media/Screenrecording/$(date +%F-%T).gif";
+          description = "Record Screen (GIF)";
+        }
+
         {
           binding = "super + Return";
           command = "termite";
@@ -204,11 +211,6 @@ with lib.my;
           binding = "XF86MonBrightnessDown";
           command = "light -U 5";
           description = "Screen brightness: Decrease 5%";
-        }
-        {
-          binding = "super + shift + S";
-          command = "scrcap";
-          description = "Screenshot";
         }
       ])
     ]);
