@@ -44,7 +44,7 @@ with lib.my;
       node.enable = true;
       nim.enable = true;
       docker.enable = true;
-      mysql.enable = true;
+      mysql.enable = false;
     };
     desktop = {
       bspwm.enable = true;
