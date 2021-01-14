@@ -43,9 +43,6 @@ in {
           })
         ];
       })
-
-      (mkIf config.services.xserver.enable
-        celluloid)  # nice GTK GUI for mpv
     ];
     home-manager.users.${config.user.name}.xdg = {
       mimeApps.defaultApplications = {
