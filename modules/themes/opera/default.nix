@@ -20,9 +20,9 @@ in {
 
           fonts = rec {
             sans = {
-              family = "Ubuntu";
+              family = "IBM Plex Sans";
               size = 8;
-              pkg = pkgs.ubuntu_font_family;
+              pkg = pkgs.ibm-plex;
             };
             serif = {
               family = "Source Serif Pro";
