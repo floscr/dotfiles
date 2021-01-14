@@ -48,7 +48,7 @@
       default-fragments = 2;
       default-fragment-size-msec = 125;
       resample-method = "soxr-vhq";
-      enable-lfe-remixing = "no";
+      remixing-consume-lfe = "no";
       high-priority = "yes";
       nice-level = -11;
       realtime-scheduling = "yes";
