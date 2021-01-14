@@ -53,6 +53,7 @@ in {
           source-sans-pro
           source-serif-pro
           ubuntu_font_family
+          ibm-plex
 
           # Unicode and Symbols
           font-awesome-ttf
