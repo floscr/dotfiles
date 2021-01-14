@@ -24,19 +24,29 @@ in {
           start = [
             vim-airline
             fzfWrapper fzf-vim
-            deoplete-nvim LanguageClient-neovim
-            vim-nix # vim-addon-nix?
-            vim-go # TODO move to go-dev.nix
           ];
           opt = [ ];
         };
+
         customRC = ''
-          set undodir=$XDG_DATA_HOME/vim/undo
-          set directory=$XDG_DATA_HOME/vim/swap
-          set backupdir=$XDG_DATA_HOME/vim/backup
+          " -*-vimrc-*-
+          " Disable any state from vim
+          set nobackup
+          set noswapfile
+          set hidden
+          let g:netrw_dirhistmax = 0
+
+          let mapleader=" "
+          nnoremap <leader>ff <cmd>Telescope find_files<cr>
+          nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+
+          " Better defaults
+          set smartindent
+
+          set scrolloff=8
+          set incsearch
+
           set viewdir=$XDG_DATA_HOME/vim/view
-          set viminfo+='1000,n$XDG_DATA_HOME/vim/viminfo
-          set runtimepath=$XDG_CONFIG_HOME/vim,$VIMRUNTIME,$XDG_CONFIG_HOME/vim/after
         '';
       };
     };
