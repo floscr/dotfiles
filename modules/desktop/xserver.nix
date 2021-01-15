@@ -5,6 +5,10 @@ with lib.my;
 let cfg = config.modules.desktop;
 in {
   config = mkIf config.services.xserver.enable {
+    environment.systemPackages = with pkgs; [
+      maim
+    ];
+
     services.xserver.displayManager.sessionCommands = ''
       # Fix default cursor
       xsetroot -cursor_name left_ptr
