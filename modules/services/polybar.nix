@@ -29,7 +29,6 @@ in {
 
     systemd.user.services.polybar = {
       description = "Polybar daemon";
-      restartTriggers = [ "~/.config/polybar/config" ];
       script = ''polybar main &'';
       path = with pkgs; [
         bash
