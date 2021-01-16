@@ -5,6 +5,7 @@ with lib.my;
 {
   imports = [
     ./sound.nix
+    ./throttled.nix
     ./hardware-configuration.nix
     ../personal.nix
   ];
