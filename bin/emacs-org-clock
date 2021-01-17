@@ -5,6 +5,8 @@ emacsclient=/etc/profiles/per-user/floscr/bin/emacsclient
 export ORG_CLOCK_STRING=$($emacsclient --eval '(+org/org-clock-polybar-status)' 2>&1 )
 
 case "$ORG_CLOCK_STRING" in
+    *"Connection refused"*)
+        exit ;;
     *"can\'t find socket"*)
         exit ;;
     "-1")
