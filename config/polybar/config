@@ -40,6 +40,7 @@ height = 36
 radius = 0
 padding = 2
 
+modules-center = org-clock
 modules-right = cpu memory filesystem wireguard-status wlan battery date pulseaudio-control
 modules-left = bspwm
 module-margin = 1
@@ -341,6 +342,12 @@ fixed-values = true
 type = custom/script
 interval = 30
 exec = /etc/dotfiles/nimbin/dst/mail;
+
+[module/org-clock]
+type = custom/script
+interval = 5
+exec = ~/.config/dotfiles/bin/emacs-org-clock
+click-left = "emacsclient --eval '(org-clock-out)' && echo 'Org Clock Stopped!'";
 
 [module/network-up]
 type = internal/network

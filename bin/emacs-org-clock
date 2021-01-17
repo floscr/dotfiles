@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+
+emacsclient=/etc/profiles/per-user/floscr/bin/emacsclient
+
+export ORG_CLOCK_STRING=$($emacsclient --eval '(+org/org-clock-polybar-status)' 2>&1 )
+
+case "$ORG_CLOCK_STRING" in
+    *"can\'t find socket"*)
+        exit ;;
+    "-1")
+        exit ;;
+    *"server-start"*)
+        exit ;;
+    *"-1"*)
+        exit ;;
+    *)
+        echo $ORG_CLOCK_STRING ;
+esac
