@@ -1,5 +1,5 @@
 # To mount android devices
-{ options, config, lib, pkgs, ... }:
+{ options, config, lib, pkgs, inputs, ... }:
 
 with lib;
 with lib.my;
@@ -36,6 +36,7 @@ in {
           systemd
           xorg.xrandr
           xorg.xsetroot
+          emacsPgtkGcc
         ];
         serviceConfig = {
           Type = "oneshot";
@@ -69,6 +70,8 @@ in {
               --dpi 92 \
               --auto
           }
+
+          emacsclient -e "(+ui|adjust-ui-to-display)"
 
           if [[ $(xrandr | grep "^DP2 connected") ]]; then
             connectLG
