@@ -89,6 +89,7 @@ with lib.my;
       dunst.enable = true;
       greenclip.enable = true;
       hotplug.enable = true;
+      emacs.enable = true;
     };
     work.meisterlabs.enable = true;
     theme.active = "opera";
