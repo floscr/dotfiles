@@ -71,8 +71,6 @@ in {
               --auto
           }
 
-          xrdb -merge ~/.config/xtheme/80-dpi
-
           if [[ $(xrandr | grep "^DP2 connected") ]]; then
             connectLG
           else
@@ -89,6 +87,7 @@ in {
           # Reset windows overlaying polybar
           sleep 1
           emacsclient -e "(+ui|adjust-ui-to-display)"
+          xrdb -merge ~/.config/xtheme/80-dpi
           bspc config borderless_monocle true
         ''}";
         };
