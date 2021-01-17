@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-has_nodes=$(bspc query --desktop focused --nodes)
-if [[ ! -z "$has_nodes" ]]; then
-    echo "has nodes"
-fi
