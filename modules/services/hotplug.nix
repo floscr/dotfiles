@@ -71,8 +71,6 @@ in {
               --auto
           }
 
-          emacsclient -e "(+ui|adjust-ui-to-display)"
-
           xrdb -merge ~/.config/xtheme/80-dpi
 
           if [[ $(xrandr | grep "^DP2 connected") ]]; then
@@ -90,6 +88,7 @@ in {
 
           # Reset windows overlaying polybar
           sleep 1
+          emacsclient -e "(+ui|adjust-ui-to-display)"
           bspc config borderless_monocle true
         ''}";
         };
