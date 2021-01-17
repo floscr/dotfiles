@@ -73,6 +73,8 @@ in {
 
           emacsclient -e "(+ui|adjust-ui-to-display)"
 
+          xrdb -merge ~/.config/xtheme/80-dpi
+
           if [[ $(xrandr | grep "^DP2 connected") ]]; then
             connectLG
           else
