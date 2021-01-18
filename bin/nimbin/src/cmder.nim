@@ -7,6 +7,7 @@ import fp/option
 import fp/list
 import lib/utils
 import sugar
+import regex
 
 {.experimental.}
 
@@ -64,12 +65,12 @@ proc parseDesktopFile(f: string): ConfigItem =
     name: string
   for line in lines(f):
     if line.startsWith("Exec"):
-      exec = line.split("=")[1].replace(" %u", "").replace(" %U", "")
+      exec = line.split("=")[1]
     if line.startsWith("Name") and name.isEmptyOrWhitespace:
       name = line.split("=")[1]
   ConfigItem(
     description: name,
-    command: exec,
+    command: exec.replace(re"%.", ""),
     binding: none(string),
   )
 
