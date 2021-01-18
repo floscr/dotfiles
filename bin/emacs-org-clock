@@ -6,15 +6,15 @@ export ORG_CLOCK_STRING=$($emacsclient --eval '(+org/org-clock-polybar-status)' 
 
 case "$ORG_CLOCK_STRING" in
     *"Connection refused"*)
-        exit ;;
+        exit 1;;
     *"can\'t find socket"*)
-        exit ;;
+        exit 1;;
     "-1")
-        exit ;;
+        exit 1;;
     *"server-start"*)
-        exit ;;
+        exit 1;;
     *"-1"*)
-        exit ;;
+        exit 1;;
     *)
         echo $ORG_CLOCK_STRING ;
 esac
