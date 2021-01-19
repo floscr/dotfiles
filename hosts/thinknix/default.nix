@@ -13,6 +13,7 @@ with lib.my;
   user.packages = with pkgs; [
     gparted
     jq
+    screenkey
     unrar
     unzip
   ];
