@@ -142,6 +142,11 @@ with lib.my;
           description = "Record Screen (MP4)";
         }
         {
+          binding = "super + ctrl + alt + s";
+          command = "scrrec -s -w ~/Media/Screenrecording/$(date +%F-%T).mp4";
+          description = "Record Screen (MP4) + Screenkey";
+        }
+        {
           binding = "super + alt + s";
           command = "scrrec -s ~/Media/Screenrecording/$(date +%F-%T).gif";
           description = "Record Screen (GIF)";

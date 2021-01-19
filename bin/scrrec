@@ -1,5 +1,5 @@
 #!/usr/bin/env cached-nix-shell
-#! nix-shell -i bash -p ffmpeg slop
+#! nix-shell -i bash -p ffmpeg slop screenkey
 
 # Select a region and record it.
 #
@@ -16,7 +16,9 @@ delay=1
 count=3
 fps=30
 stopfile=/tmp/_stop
-while getopts c:d:f:g:ps opt; do
+with_screenkey=
+screenkey_height=400
+while getopts c:d:f:g:psw opt; do
   case $opt in
     c) count=$OPTARG ;;
     d) delay="$OPTARG" ;;
@@ -24,6 +26,7 @@ while getopts c:d:f:g:ps opt; do
     g) geom="$OPTARG" ;;
     p) compton= ;;
     s) is_script=1 ;;
+    w) with_screenkey=1 ;;
   esac
 done
 shift $((OPTIND-1))
@@ -59,6 +62,7 @@ recording-start() {
   local dest=${1:-./rec.mp4}
   local mp4dest=
   [[ $dest == *.gif ]] && mp4dest="${dest%.*}.mp4"
+  [[ $with_screenkey ]] && screenkey --geometry $4x$screenkey_height+$2+$(( $3 + $5 - $screenkey_height )) &
   countdown
   ffmpeg $ffmpeg_opts "${mp4dest:-$dest}" &
   pid=$!
@@ -90,7 +94,10 @@ if systemctl is-enabled --user compton >/dev/null; then
   systemctl --user stop compton
   compton=1
 fi
-cleanup() { [[ $compton ]] && systemctl --user start compton; }
+cleanup() {
+  [[ $compton ]] && systemctl --user start compton;
+  [[ $with_screenkey ]] && pkill screenkey
+}
 trap cleanup EXIT
 
 # Let 'er rip
