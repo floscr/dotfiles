@@ -25,7 +25,7 @@ in {
     ];
 
     services = {
-      picom.enable = true;
+      # picom.enable = true;
       redshift.enable = true;
       xserver = {
         enable = true;
