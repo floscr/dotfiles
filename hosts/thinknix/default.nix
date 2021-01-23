@@ -73,6 +73,7 @@ with lib.my;
         psd = true;
         chromium.enable = true;
         firefox.enable = true;
+        brave.enable = true;
       };
       term = {
         default = "termite";
