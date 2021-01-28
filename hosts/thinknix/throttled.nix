@@ -12,6 +12,10 @@ with lib.my;
     conflicts = [ "lenovo_fix.service" "thinkfan.service" ];
     serviceConfig = {
       ExecStart = "${pkgs.throttled}/bin/lenovo_fix.py --config ${config.environment.etc."lenovo_fix_performance.conf".source.outPath}";
+      ExecStop = [
+        "${pkgs.systemd}/bin/systemctl start lenovo_fix.service"
+        "${pkgs.systemd}/bin/systemctl start thinkfan.service"
+      ];
     };
   };
 
