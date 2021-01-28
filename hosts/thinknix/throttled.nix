@@ -13,11 +13,30 @@ with lib.my;
     serviceConfig = {
       ExecStart = "${pkgs.throttled}/bin/lenovo_fix.py --config ${config.environment.etc."lenovo_fix_performance.conf".source.outPath}";
       ExecStop = [
-        "${pkgs.systemd}/bin/systemctl start lenovo_fix.service"
-        "${pkgs.systemd}/bin/systemctl start thinkfan.service"
+        "${pkgs.sudo}/bin/sudo ${pkgs.systemd}/bin/systemctl start lenovo_fix.service"
+        "${pkgs.sudo}/bin/sudo ${pkgs.systemd}/bin/systemctl start thinkfan.service"
       ];
     };
   };
+
+  modules.bindings.items = [
+      {
+          description = "Performance Mode On";
+          categories = "Script";
+          command = "sudo ${pkgs.systemd}/bin/systemctl start lenovo_fix_performance.service";
+      }
+      {
+          description = "Performance Mode Off";
+          categories = "Script";
+          command = "sudo ${pkgs.systemd}/bin/systemctl stop lenovo_fix_performance.service";
+      }
+  ];
+
+  security.sudo.enable = true;
+  security.sudo.extraConfig = ''
+    %wheel      ALL=(ALL:ALL) NOPASSWD: ${pkgs.systemd}/bin/systemctl start lenovo_fix_performance.service
+    %wheel      ALL=(ALL:ALL) NOPASSWD: ${pkgs.systemd}/bin/systemctl stop lenovo_fix_performance.service
+  '';
 
   environment.etc."lenovo_fix_performance.conf".text = ''
     [GENERAL]
