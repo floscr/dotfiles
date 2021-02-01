@@ -59,6 +59,11 @@ in {
       #   perlPackages.DBDmysql)
     ];
 
+    services.emacs = {
+      enable = true;
+      package = pkgs.emacsPgtkGcc;
+    };
+
     env.PATH = [ "$HOME/.emacs.d/bin" ];
 
     modules.shell.zsh.rcFiles = [ "${configDir}/emacs/aliases.zsh" ];
