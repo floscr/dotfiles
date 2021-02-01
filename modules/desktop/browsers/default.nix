@@ -12,5 +12,19 @@ in {
   config = mkIf (cfg.default != null) {
     services.psd.enable = true;
     env.BROWSER = cfg.default;
+    home.configFile = {
+      "browser/home.html".text = ''
+        <html>
+          <head>
+            <style type="text/css" media="screen">
+              html {
+                  background-color: ${config.modules.theme.colors.bg0};
+              }
+            </style>
+          </head>
+        </html>
+      '';
+    };
+
   };
 }
