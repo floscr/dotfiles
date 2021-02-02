@@ -11,6 +11,12 @@
   boot.initrd.kernelModules = [ "dm-snapshot" ];
   boot.kernelModules = [ "kvm-intel" "acpi_call" ];
   boot.extraModulePackages = with config.boot.kernelPackages; [ acpi_call ];
+  boot.kernelParams = [
+    "i915.enable_psr=1"
+    "i915.enable_guc=2"
+    "i915.nuclear_pageflip=Y"
+    "i915.enable_dc=2"
+  ];
 
   environment.systemPackages = with pkgs; [
     fwupd
