@@ -1,30 +1,34 @@
 #!/usr/bin/env cached-nix-shell
-#! nix-shell -i bash -p libtiff scantailor libtiff pdftk tesseract
+#! nix-shell -i bash -p scantailor ocrmypdf
 
-DEBUG=
-FILENAME="$1"
 TMPDIR=$(mktemp --suffix scan2pdf --directory)
 cd "$TMPDIR"
 
-[[ $DEBUG ]] && echo "Scanning..."
+[[ $DEBUG ]] && echo "Scanning to $TMPDIR..."
 
 scanimage \
     --mode Color \
     --resolution 600 \
     --format pnm \
-    > out.pnm
+    --output out.pnm \
+    > /dev/null 2>&1
 
-[[ $DEBUG ]] && echo "Processing..."
+[[ $DEBUG ]] && echo "Processing original scan..."
 
-scantailor-cli \
-    --color-mode=black_and_white \
-    --despeckle=normal \
+scantailor-cli --color-mode=mixed out.pnm ./ > /dev/null 2>&1
+
+[[ $DEBUG ]] && echo "Creating OCRed PDF..."
+
+ocrmypdf ./out.tif out.pdf > /dev/null 2>&1
+
+[[ $DEBUG ]] && echo "Cleaning Up..."
+
+rm -rf \
+    out.tif \
     out.pnm \
-    ./
+    cache
 
-tesseract -l deu -psm 1 "out.pnm" out
-
-[[ $DEBUG ]] && echo "Copying..."
+[[ $DEBUG ]] && echo "Finished!"
 
 cd -
-echo "$TMPDIR"
+echo "$TMPDIR/out.pdf"
