@@ -1,11 +1,12 @@
 #!/usr/bin/env cached-nix-shell
 #! nix-shell -i bash -p libtiff scantailor libtiff pdftk tesseract
 
+DEBUG=
 FILENAME="$1"
 TMPDIR=$(mktemp --suffix scan2pdf --directory)
 cd "$TMPDIR"
 
-echo "Scanning..."
+[[ $DEBUG ]] && echo "Scanning..."
 
 scanimage \
     --mode Color \
@@ -13,7 +14,7 @@ scanimage \
     --format pnm \
     > out.pnm
 
-echo "Processing..."
+[[ $DEBUG ]] && echo "Processing..."
 
 scantailor-cli \
     --color-mode=black_and_white \
@@ -23,8 +24,7 @@ scantailor-cli \
 
 tesseract -l deu -psm 1 "out.pnm" out
 
-echo "Copying..."
+[[ $DEBUG ]] && echo "Copying..."
 
 cd -
-mv "$TMPDIR/out.tif" "$FILENAME.tif"
-mv "$TMPDIR/out.txt" "$FILENAME.txt"
+echo "$TMPDIR"
