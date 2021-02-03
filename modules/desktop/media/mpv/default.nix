@@ -108,10 +108,14 @@ in {
             a cycle audio
             s cycle sub
 
+            + add window-scale +0.08
+            - add window-scale -0.08
+            = set window-scale 1.0
+
             ### Video Modifications
-            + add video-zoom 0.5
-            - add video-zoom -0.5; script-message reset-pan-if-visible
-            = no-osd set video-zoom 0; script-message reset-pan-if-visible
+            CTRL++ add video-zoom 0.5
+            CTRL+- add video-zoom -0.5; script-message reset-pan-if-visible
+            CTRL+= no-osd set video-zoom 0; script-message reset-pan-if-visible
 
             # Toggle Pixel Interpolation
             # a cycle-values scale nearest ewa_lanczossharp
