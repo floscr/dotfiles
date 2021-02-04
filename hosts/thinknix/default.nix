@@ -16,6 +16,7 @@ with lib.my;
     screenkey
     unrar
     unzip
+    blender
   ];
 
   modules = {
