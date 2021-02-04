@@ -19,6 +19,14 @@ with lib.my;
     blender
   ];
 
+  hardware.usb.wakeupDisabled = [
+    {
+      # Logitech, Inc. G3 (MX518) Optical Mouse
+      vendor = "046d";
+      product = "c051";
+    }
+  ];
+
   modules = {
     bindings.enable = true;
     shell = {
