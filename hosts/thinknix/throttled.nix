@@ -3,23 +3,72 @@
 
 with lib;
 with lib.my;
-{
+let thinkfanConfigFile = pkgs.writeText "thinkfan.conf" ''
+  tp_fan /proc/acpi/ibm/fan
+  tp_thermal /proc/acpi/ibm/thermal (0,0,10)
+
+  { "level 3"
+      (0 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
+      (35 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
+  }
+
+  { "level 4"
+      (0 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
+      (40 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
+  }
+
+  { "level 5"
+      (0 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
+      (50 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
+  }
+
+  { "level 6"
+      (0 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
+      (60 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
+  }
+
+  { "level 7"
+      (0 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
+      (70 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
+  }
+  { "level disengaged"
+      (0 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
+      (32767 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
+  }
+'';
+in {
   systemd.services."lenovo_fix_performance" = {
     description = "Intel Throttling Performance Mode";
     environment = {
       PYTHONBUFFERED = "1";
     };
-    conflicts = [ "lenovo_fix.service" "thinkfan.service" ];
+    conflicts = [ "lenovo_fix.service" ];
     serviceConfig = {
       ExecStart = "${pkgs.throttled}/bin/lenovo_fix.py --config ${config.environment.etc."lenovo_fix_performance.conf".source.outPath}";
       ExecStop = [
+        "${pkgs.sudo}/bin/sudo ${pkgs.systemd}/bin/systemctl stop thinkfan_blast"
         "${pkgs.sudo}/bin/sudo ${pkgs.systemd}/bin/systemctl start lenovo_fix.service"
         "${pkgs.sudo}/bin/sudo ${pkgs.systemd}/bin/systemctl start thinkfan.service"
       ];
     };
   };
 
+  systemd.services."thinkfan_blast" = {
+    description = "Thinkfan on high blast mode";
+    conflicts = [ "thinkfan.service" ];
+    after = [ "lenovo_fix_performance.service" ];
+    path = [ pkgs.thinkfan ];
+    serviceConfig = {
+      ExecStart = "${pkgs.thinkfan}/bin/thinkfan -c ${thinkfanConfigFile}";
+    };
+  };
+
   modules.bindings.items = [
+    {
+      binding = "super + shift + d";
+      command = "flameshot gui";
+      description = "Flameshot";
+    }
       {
           description = "Performance Mode On";
           categories = "Script";
