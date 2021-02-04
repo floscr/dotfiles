@@ -23,10 +23,7 @@ ocrmypdf ./out.tif out.pdf > /dev/null 2>&1
 
 [[ $DEBUG ]] && echo "Cleaning Up..."
 
-rm -rf \
-    out.tif \
-    out.pnm \
-    cache
+rm -rf out.tif out.pnm cache
 
 [[ $DEBUG ]] && echo "Finished!"
 
