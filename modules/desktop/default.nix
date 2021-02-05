@@ -25,6 +25,7 @@ in {
 
     user.packages = with pkgs; [
       xclip
+      feh
       xdotool
       sxhkd
       user.xcolor
