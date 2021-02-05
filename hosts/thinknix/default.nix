@@ -11,6 +11,7 @@ with lib.my;
   ];
 
   user.packages = with pkgs; [
+    flameshot
     gparted
     jq
     screenkey
