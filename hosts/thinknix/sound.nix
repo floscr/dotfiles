@@ -76,6 +76,15 @@
     unstable.playerctl
     pavucontrol
     blueman
+    (pkgs.writeScriptBin "prepare-video-call" ''
+      #!${stdenv.shell}
+
+      # Accept Input + Output from internal hardware
+      pacmd set-card-profile 0 output:analog-stereo+input:analog-stereo
+
+      # Unmute the microphone
+      amixer set Capture cap
+    '')
   ];
 
   modules.bindings.items = [
@@ -93,6 +102,11 @@
       description = "Connect Bluetooth Headphones";
       categories = "Script";
       command = "bose_connect";
+    }
+    {
+      description = "Prepare video call";
+      categories = "Script";
+      command = "prepare-video-call";
     }
     {
       binding = "{ super + alt + t }";
