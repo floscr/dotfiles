@@ -46,8 +46,8 @@ in {
 
           function connectLG(){
             xrandr \
-              --output eDP1 --off \
-              --output DP2 \
+              --output eDP-1 --off \
+              --output DP-2 \
               --primary \
               --dpi 110 \
               --panning 3840x2160 \
@@ -60,18 +60,18 @@ in {
           function disconnect(){
             xrandr \
               --output VIRTUAL1 --off \
-              --output DP1 --off \
-              --output DP2 --off \
-              --output DP1 --off \
-              --output HDMI1 --off \
-              --output HDMI2 --off \
-              --output eDP1 \
+              --output DP-1 --off \
+              --output DP-2 --off \
+              --output DP-1 --off \
+              --output HDMI-1 --off \
+              --output HDMI-2 --off \
+              --output eDP-1 \
               --primary \
               --dpi 92 \
               --auto
           }
 
-          if [[ $(xrandr | grep "^DP2 connected") ]]; then
+          if [[ $(xrandr | grep "^DP-2 connected") ]]; then
             connectLG
           else
             disconnect

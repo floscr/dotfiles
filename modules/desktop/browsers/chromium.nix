@@ -17,7 +17,7 @@ in {
 
         export DEFAULT_ARGS="--enable-native-notifications --restore-last-session"
 
-        if [[ $(xrandr | grep "^eDP1 connected primary") ]]; then
+        if [[ $(xrandr | grep "^eDP-1 connected primary") ]]; then
           chromium-browser $DEFAULT_ARGS --force-device-scale-factor=1.2 $@
         else
           chromium-browser $DEFAULT_ARGS --force-device-scale-factor=1.5 $@
