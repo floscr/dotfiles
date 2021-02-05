@@ -16,5 +16,5 @@ case "$ORG_CLOCK_STRING" in
     *"-1"*)
         exit 1;;
     *)
-        echo $ORG_CLOCK_STRING ;
+        echo $ORG_CLOCK_STRING | sed -e 's/^"//' -e 's/"$//';
 esac
