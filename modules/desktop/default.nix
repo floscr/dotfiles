@@ -1,4 +1,4 @@
-{ config, options, lib, pkgs, ... }:
+{ config, options, lib, pkgs, my, ... }:
 
 with lib;
 with lib.my;
@@ -27,6 +27,11 @@ in {
       xclip
       xdotool
       sxhkd
+      user.xcolor
+      (pkgs.writeScriptBin "xcolor-yank" ''
+        #!${stdenv.shell}
+        xcolor | tr -d '\n' | xclip -selection clipboard -in
+      '')
     ];
 
     fonts = {

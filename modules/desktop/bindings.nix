@@ -151,6 +151,11 @@ with lib.my;
           command = "scrrec -s ~/Media/Screenrecording/$(date +%F-%T).gif";
           description = "Record Screen (GIF)";
         }
+        {
+          binding = "super + j";
+          command = "xcolor-yank";
+          description = "Xcolor";
+        }
 
         {
           binding = "super + Return";
