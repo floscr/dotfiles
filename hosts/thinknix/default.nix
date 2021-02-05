@@ -1,4 +1,4 @@
-{ config, options, lib, pkgs, ... }:
+{ config, options, lib, pkgs, my, ... }:
 
 with lib;
 with lib.my;
@@ -18,6 +18,7 @@ with lib.my;
     unrar
     unzip
     blender
+    vlc
   ];
 
   hardware.usb.wakeupDisabled = [
