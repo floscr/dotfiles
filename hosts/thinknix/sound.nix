@@ -76,6 +76,12 @@
     unstable.playerctl
     pavucontrol
     blueman
+    (pkgs.writeScriptBin "switch-sound-monitor" ''
+      #!${stdenv.shell}
+
+      # Accept Input + Output from internal hardware
+      pacmd set-card-profile 0 output:hdmi-stereo-extra1
+    '')
     (pkgs.writeScriptBin "prepare-video-call" ''
       #!${stdenv.shell}
 
@@ -107,6 +113,11 @@
       description = "Prepare video call";
       categories = "Script";
       command = "prepare-video-call";
+    }
+    {
+      description = "Play Monitor Sound";
+      categories = "Script";
+      command = "switch-sound-monitor";
     }
     {
       binding = "{ super + alt + t }";
