@@ -55,7 +55,7 @@ in {
 
   systemd.services."thinkfan_blast" = {
     description = "Thinkfan on high blast mode";
-    conflicts = [ "thinkfan.service" ];
+    # conflicts = [ "thinkfan.service" ];
     after = [ "lenovo_fix_performance.service" ];
     path = [ pkgs.thinkfan ];
     serviceConfig = {
