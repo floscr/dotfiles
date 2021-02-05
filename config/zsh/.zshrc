@@ -7,6 +7,7 @@ if ! zgen saved; then
   zgen load zdharma/history-search-multi-word
   zgen load zsh-users/zsh-completions src
   zgen load junegunn/fzf shell
+  zgen load kutsan/zsh-system-clipboard
   [ -z "$SSH_CONNECTION" ] && zgen load zdharma/fast-syntax-highlighting
   zgen save
 fi
