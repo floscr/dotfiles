@@ -19,6 +19,7 @@ with lib.my;
     unzip
     blender
     vlc
+    user.scdl
   ];
 
   hardware.usb.wakeupDisabled = [
