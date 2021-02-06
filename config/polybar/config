@@ -348,6 +348,7 @@ type = custom/script
 interval = 5
 exec = ~/.config/dotfiles/bin/emacs-org-clock
 click-left = "emacsclient --eval '(org-clock-out)' && echo 'Org Clock Stopped!'";
+format-foreground = "#7e8389"
 
 [module/network-up]
 type = internal/network
