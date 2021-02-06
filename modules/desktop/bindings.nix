@@ -17,6 +17,10 @@ with lib.my;
           description = "Sleep";
         }
         {
+          command = "caffeine";
+          description = "Caffeine";
+        }
+        {
           binding = "super + grave";
           command = "bspc node -f last";
           description = "Switch to previous window";

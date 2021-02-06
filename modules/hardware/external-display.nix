@@ -29,10 +29,6 @@ in {
         categories = "Script";
         command = "ddcutil setvcp 10 100";
       }
-      {
-        description = "Turn off display";
-        command = "xset dpms force off";
-      }
     ];
   };
 }
