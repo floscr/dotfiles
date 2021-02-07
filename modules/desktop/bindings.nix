@@ -156,7 +156,7 @@ with lib.my;
           description = "Record Screen (GIF)";
         }
         {
-          binding = "super + j";
+          binding = "super + u";
           command = "xcolor-yank";
           description = "Xcolor";
         }
