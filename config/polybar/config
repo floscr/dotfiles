@@ -41,7 +41,7 @@ radius = 0
 padding = 2
 
 modules-center = org-clock
-modules-right = cpu memory filesystem wireguard-status wlan battery date pulseaudio-control
+modules-right = caffeine cpu memory filesystem wireguard-status wlan battery date pulseaudio-control
 modules-left = bspwm
 module-margin = 1
 
@@ -377,3 +377,11 @@ format-connected-underline =
 format-disconnected-prefix = " "
 format-disconnected-prefix-foreground = ${colors.icons}
 format-disconnected-foreground = ${colors.icons}
+
+[module/caffeine]
+type = custom/script
+exec = echo ""
+interval = 10
+exec-if = xset q | grep "DPMS is Disabled"
+click-left = "caffeine"
+format-foreground = ${colors.ylw}

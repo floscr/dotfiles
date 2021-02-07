@@ -36,6 +36,7 @@ in {
         networkmanager
         polybar
         pulseaudio
+        xlibs.xset
       ];
       serviceConfig = {
         Type = "forking";
