@@ -40,6 +40,11 @@ in {
         categories = "Script";
         command = "launch-chrome";
       }
+      {
+        description = "Chrome (Private)";
+        categories = "Script";
+        command = "launch-chrome --incognito";
+      }
     ];
 
     # Extensions
