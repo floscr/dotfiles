@@ -46,7 +46,6 @@ in {
     serviceConfig = {
       ExecStart = "${pkgs.throttled}/bin/lenovo_fix.py --config ${config.environment.etc."lenovo_fix_performance.conf".source.outPath}";
       ExecStop = [
-        "${pkgs.sudo}/bin/sudo ${pkgs.systemd}/bin/systemctl stop thinkfan_blast"
         "${pkgs.sudo}/bin/sudo ${pkgs.systemd}/bin/systemctl start lenovo_fix.service"
         "${pkgs.sudo}/bin/sudo ${pkgs.systemd}/bin/systemctl start thinkfan.service"
       ];
@@ -55,8 +54,8 @@ in {
 
   systemd.services."thinkfan_blast" = {
     description = "Thinkfan on high blast mode";
-    # conflicts = [ "thinkfan.service" ];
     after = [ "lenovo_fix_performance.service" ];
+    conflicts = [ "lenovo_fix.service" ];
     path = [ pkgs.thinkfan ];
     serviceConfig = {
       ExecStart = "${pkgs.thinkfan}/bin/thinkfan -c ${thinkfanConfigFile}";
