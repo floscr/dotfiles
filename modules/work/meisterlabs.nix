@@ -11,6 +11,7 @@ in {
   config = mkIf cfg.enable {
     user.packages = with pkgs; [
       ruby
+      dragon-drop
       (writeShellScriptBin "mm-build-bundle" ''
         #!/usr/bin/env zsh
 
@@ -34,7 +35,7 @@ in {
         command = ''cd ~/Code/Meisterlabs/docker-dev-environment; ./mindmeister/restart; notify-send "MM Docker Started"'';
       }
       {
-        command = "dragon --and-exit ~/Code/Meisterlabs/test-data/**/*.*";
+        command = "${pkgs.dragon-drop}/bin/dragon --and-exit ~/Code/Meisterlabs/test-data/**/*.*";
         description = "Dragon: Work DnD Test Data";
       }
     ];
