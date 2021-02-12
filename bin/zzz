@@ -16,7 +16,7 @@ sleep_prepare () {
   systemctl --user stop hhpc
 
   lockscreen &
-  sleep 3
+  sleep 1
 }
 
 if [[ $1 == -h ]]; then
