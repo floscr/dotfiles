@@ -137,48 +137,6 @@ in {
         '';
 
         "mpv/mpv.conf".text = ''
-            # MPV config
-
-            # Every possible settings are explained here:
-            # https://github.com/mpv-player/mpv/tree/master/DOCS/man
-
-            ## VIDEO
-
-            hwdec=auto-safe
-            vo=gpu
-            profile=gpu-hq
-
-            # X11
-            # x11-bypass-compositor=yes
-            # demuxer-thread=yes
-
-            # The default profile you use for your stuff. Always use this one
-            # profile=gpu-hq
-
-            # The called API. Vulkan is highly recommended.
-            # Use "opengl" if you have compatibility problems
-            # gpu-api=vulkan
-
-            # The backend with the API. Leave it "auto"
-            # Or use "winvk" with "gpu-api=vulkan" or "win" / "angle" with "gpu-api=opengl"
-            # gpu-context=x11vk
-
-            # Choose the compiler for translating glsl code for Vulkan. Leave it "auto"
-            # Or use "shaderc" with a nVidia/AMD/Intel GPU or "nvidia" with a nVidia GPU
-            # spirv-compiler=auto
-
-            # Scaling method
-            # ewa_lanczossharp is the most processor heavy, but also the prettiest
-            # scale=ewa_lanczossharp
-            # cscale=ewa_lanczossoft
-            # # scale-radius=3
-            # fbo-format=rgba16f
-
-            # Reduce stuttering caused by mismatches in the video fps
-            video-sync=display-resample
-            interpolation
-            tscale=oversample
-
             # Sync up video with audio
             autosync=30
             framedrop=vo # Skip some frames to maintain A/V sync on slow systems
