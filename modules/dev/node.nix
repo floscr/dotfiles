@@ -10,7 +10,7 @@ in {
 
   config = mkIf cfg.enable {
     user.packages = with pkgs; [
-      nodejs-10_x
+      nodejs-14_x
       yarn
     ];
 
