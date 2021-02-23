@@ -11,6 +11,4 @@ trap "rm -f '$tmp'" EXIT
 if maim --delay=${2:-0.1} -us >"$tmp"; then
   xclip -selection clipboard -t image/png "$tmp" &&
     notify-send "Screenshot saved" "Copied image to clipboard"
-else
-  notify-send -u low "Aborted screenshot"
 fi
