@@ -1,7 +1,7 @@
 #!/usr/bin/env cached-nix-shell
 #! nix-shell -i bash -p scantailor ocrmypdf
 
-TMPDIR=$(mktemp --suffix scan2pdf --directory)
+TMPDIR=$(mktemp --suffix scan2pdf -p /tmp --directory)
 cd "$TMPDIR"
 
 [[ $DEBUG ]] && echo "Scanning to $TMPDIR..."
