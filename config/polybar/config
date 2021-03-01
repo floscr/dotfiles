@@ -45,7 +45,7 @@ modules-right = caffeine cpu memory filesystem wireguard-status wlan battery dat
 modules-left = bspwm
 module-margin = 1
 
-background = #191c21
+background = #1a1e25
 foreground = ${colors.fg}
 
 font-0 = "Iosevka:weight=regular:size=13;4"
