@@ -2,7 +2,7 @@
 #! nix-shell -i bash -p qpdf
 # Join pdfs together use the name of the first pdf
 
-TMPFILE=$(mktemp --suffix pdf)
+TMPFILE=$(mktemp -p /tmp --suffix pdf)
 
 BACKUPDIR=/tmp/concat-pdfs-backup-dir
 mkdir -p "$BACKUPDIR"
