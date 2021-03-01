@@ -156,19 +156,22 @@ in {
 
     (mkIf (cfg.wallpaper != null)
       (let wCfg = config.services.xserver.desktopManager.wallpaper;
-           command = ''
-             if [ -e "$XDG_DATA_HOME/wallpaper" ]; then
-               ${pkgs.feh}/bin/feh --bg-${wCfg.mode} \
-                 ${optionalString wCfg.combineScreens "--no-xinerama"} \
-                 --no-fehbg \
-                 $XDG_DATA_HOME/wallpaper
-             fi
-          '';
+           reloadWallpaper = with pkgs; (pkgs.writeScriptBin "reloadWallpaper" ''
+              #!${stdenv.shell}
+              if [ -e "$XDG_DATA_HOME/wallpaper" ]; then
+                ${pkgs.feh}/bin/feh --bg-${wCfg.mode} \
+                ${optionalString wCfg.combineScreens "--no-xinerama"} \
+                --no-fehbg \
+                $XDG_DATA_HOME/wallpaper
+              fi
+          '');
        in {
          # Set the wallpaper ourselves so we don't need .background-image and/or
          # .fehbg polluting $HOME
-         services.xserver.displayManager.sessionCommands = command;
-         modules.theme.onReload.wallpaper = command;
+         user.packages = [ reloadWallpaper ];
+
+         services.xserver.displayManager.sessionCommands = "reloadWallpaper";
+         modules.theme.onReload.wallpaper = "reloadWallpaper";
 
          home.dataFile = mkIf (cfg.wallpaper != null) {
            "wallpaper".source = cfg.wallpaper;

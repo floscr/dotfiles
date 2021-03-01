@@ -87,7 +87,11 @@ in {
           # Reset windows overlaying polybar
           sleep 1
           emacsclient -e "(+ui|adjust-ui-to-display)"
-          xrdb -merge ~/.config/xtheme/80-dpi
+
+          # Hacky way to call the script, but it works
+          /etc/profiles/per-user/$(whoami)/bin/reloadWallpaper
+
+          ${pkgs.xorg.xrdb}/bin/xrdb -merge ~/.config/xtheme/80-dpi
           bspc config borderless_monocle true
         ''}";
         };
