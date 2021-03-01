@@ -15,6 +15,7 @@ with lib.my;
     gparted
     jq
     screenkey
+    signal-desktop
     unrar
     unzip
     blender
