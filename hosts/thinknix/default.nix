@@ -40,6 +40,7 @@ with lib.my;
       pass.enable = true;
       zsh.enable = true;
       youtube-dl.enable = true;
+      color-optimization.enable = true;
     };
     hardware = {
       trackpad.enable = true;
