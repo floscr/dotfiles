@@ -44,6 +44,14 @@ in {
         ];
       })
     ];
+
+    modules.bindings.items = [
+      {
+        command = "nimx mpvHistory";
+        description = "MPV History";
+      }
+    ];
+
     home-manager.users.${config.user.name}.xdg = {
       mimeApps.defaultApplications = {
         "audio/x-mp3" = [ "mpv.desktop" ];
