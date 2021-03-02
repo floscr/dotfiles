@@ -5,7 +5,7 @@
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;
-    config = {
+    settings = {
       Headset = {
         FastConnectable = "true";
         HFP = "true";

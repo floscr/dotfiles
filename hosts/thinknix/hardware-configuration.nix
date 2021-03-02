@@ -58,54 +58,17 @@
   # https://gist.github.com/Yatoom/1c80b8afe7fa47a938d3b667ce234559
   services.thinkfan.enable = true;
   services.thinkfan.smartSupport = true;
-  services.thinkfan.levels = ''
-        { "level 0"
-            (0 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
-            (68 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
-        }
-
-        { "level 1"
-            (60 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
-            (65 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
-        }
-
-        { "level 2"
-            (65 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
-            (70 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
-        }
-
-        { "level 3"
-            (70 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
-            (75 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
-        }
-
-        { "level 4"
-            (75 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
-            (80 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
-        }
-
-        { "level 5"
-            (80 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
-            (85 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
-        }
-
-        { "level 6"
-            (85 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
-            (90 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
-        }
-
-        { "level 7"
-            (90 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
-            (95 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
-        }
-
-        { "level disengaged" # nice idea: "level auto" can also be used.
-                             # but again: only numbers for sysfs.
-            (95 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
-            (32767 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
-        }
-
-  '';
+  services.thinkfan.levels = [
+    [0 0 68]
+    [1 60 65]
+    [2 65 70]
+    [3 70 75]
+    [4 75 80]
+    [5 80 85]
+    [6 85 90]
+    [7 90 95]
+    [127 95 32767 ]
+  ];
 
   # Undervolting & Throttling
   services.throttled = {
