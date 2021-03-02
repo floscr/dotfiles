@@ -1,0 +1,7 @@
+#!/usr/bin/env cached-nix-shell
+#! nix-shell -i bash -p maim
+
+TMPFILE=$(mktemp -p /tmp --suffix ".png")
+echo $TMPFILE
+maim -us "$TMPFILE"
+notify-send "Measured Dimensions" "$(identify -ping -format '%w x %h' $TMPFILE)"
