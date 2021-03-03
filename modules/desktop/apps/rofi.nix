@@ -17,6 +17,7 @@ in {
     };
 
     user.packages = with pkgs; [
+      user.frece # Maintain a database sorted by frecency
       (writeScriptBin "rofi" ''
         #!${stdenv.shell}
         exec ${rofi}/bin/rofi -terminal xst -m -1 "$@"
