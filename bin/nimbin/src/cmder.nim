@@ -8,6 +8,7 @@ import fp/list
 import lib/utils
 import sugar
 import regex
+import lib/fpUtils
 
 {.experimental.}
 
@@ -83,13 +84,16 @@ proc main() =
   let config = parseConfig()
   let desktopApplications = getDesktopApplications()
   let items = config.concat(desktopApplications)
-  let response = execProcess(&"echo '{items.prettyCommands()}'| rofi -i -levenshtein-sort -dmenu -p \"Run\" -markup-rows").replace("\n", "")
-  if response != "":
-    let description = response
-      .split(commandSplitChar)[1]
+  let index = execProcess(&"echo '{items.prettyCommands()}'| rofi -i -levenshtein-sort -dmenu -p \"Run\" -markup-rows  -format d").replace("\n", "")
 
-    let item = items.findIt(it.description == description)
-    echo item
-    discard execShellCmd(item.command)
+  discard index
+    .some
+    .notEmpty
+    .map(parseInt)
+    .map((x) => items[x])
+    .tap(
+      proc(x: ConfigItem) =
+        discard execShellCmd(x.command)
+    )
 
 main()
