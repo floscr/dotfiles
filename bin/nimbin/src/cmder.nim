@@ -84,7 +84,7 @@ proc main() =
   let config = parseConfig()
   let desktopApplications = getDesktopApplications()
   let items = config.concat(desktopApplications)
-  let index = execProcess(&"echo '{items.prettyCommands()}'| rofi -i -levenshtein-sort -dmenu -p \"Run\" -markup-rows  -format d").replace("\n", "")
+  let index = execProcess(&"echo '{items.prettyCommands()}'| rofi -i -levenshtein-sort -dmenu -p \"Run\" -markup-rows  -format i").replace("\n", "")
 
   discard index
     .some

@@ -37,7 +37,7 @@ proc main(): any =
     .map(x => x.title)
     .join("\n")
 
-  let index = execProcess(&"echo '{rofi}'| rofi -i -levenshtein-sort -dmenu -p \"Play\" -format d").replace("\n", "")
+  let index = execProcess(&"echo '{rofi}'| rofi -i -levenshtein-sort -dmenu -p \"Play\" -format i").replace("\n", "")
 
   discard index
     .some
