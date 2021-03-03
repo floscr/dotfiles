@@ -33,7 +33,8 @@ proc getFileNames(): seq[LogFile] =
 proc main(): any =
   let items = getFileNames()
 
-  let rofi = items.map(x => x.title)
+  let rofi = items
+    .map(x => x.title)
     .join("\n")
 
   let index = execProcess(&"echo '{rofi}'| rofi -i -levenshtein-sort -dmenu -p \"Play\" -format d").replace("\n", "")
