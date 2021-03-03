@@ -3,6 +3,9 @@ import fp/list
 import fp/either
 import sugar
 
+proc noop*() = discard
+proc noop*(a: auto) = discard
+
 proc bitap*[T](xs: Option[T], errFn: () -> void, succFn: T -> void): Option[T] =
   if (xs.isDefined):
     succFn(xs.get)
