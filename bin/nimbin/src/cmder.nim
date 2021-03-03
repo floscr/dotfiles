@@ -1,4 +1,5 @@
 import os
+import system
 import osproc
 import strutils
 import sequtils
@@ -16,6 +17,9 @@ let desktopApplicationsDir = expandTilde "/etc/profiles/per-user/floscr/share/ap
 let config = expandTilde("~/.config/cmder/cmd.csv")
 let splitChar = ",,,"
 let commandSplitChar = "​" # Zero Width Space
+
+const freceDb = getEnv("XDG_CACHE_HOME").joinPath("cmder_history.db")
+const freceTxt = getEnv("XDG_CACHE_HOME").joinPath("cmder_history.txt")
 
 type
   ConfigItem = ref object
@@ -35,10 +39,8 @@ proc renderBinding(x: Option[string]): string =
       (x) => &"<span gravity=\"east\" size=\"x-small\" font_style=\"italic\" foreground=\"#5c606b\"> {x}</span>",
     )
 
-proc prettyCommands*(xs: seq[ConfigItem]): string =
-  xs
-    .mapIt(&"<span>{commandSplitChar}{it.description}{commandSplitChar}</span>{renderBinding(it.binding)}")
-    .join("\n")
+proc prettyCommands*(xs: seq[ConfigItem]): seq[string] =
+  xs.mapIt(&"<span>{commandSplitChar}{it.description}{commandSplitChar}</span>{renderBinding(it.binding)}")
 
 proc parseConfigLine(x:string): ConfigItem =
   let line = x.split(splitChar)
@@ -84,16 +86,21 @@ proc main() =
   let config = parseConfig()
   let desktopApplications = getDesktopApplications()
   let items = config.concat(desktopApplications)
-  let index = execProcess(&"echo '{items.prettyCommands()}'| rofi -i -levenshtein-sort -dmenu -p \"Run\" -markup-rows  -format i").replace("\n", "")
+  let printedItems = items.prettyCommands()
 
-  discard index
-    .some
-    .notEmpty
-    .map(parseInt)
-    .map((x) => items[x])
-    .tap(
-      proc(x: ConfigItem) =
-        discard execShellCmd(x.command)
-    )
+  writeFile(freceTxt, printedItems.join("\n"))
+
+  if (fileExists(freceDB)):
+    discard execProcess(&"frece update \"{freceDb}\" \"{freceTxt}\" --purge-old")
+  else:
+    discard execProcess(&"frece init \"{freceDb}\" \"{freceTxt}\"")
+
+  let response = execProcess(&"frece print \"{freceDb}\" | rofi -i -dmenu -p \"Run\" -markup-rows").replace("\n", "")
+  if response != "":
+    let index = printedItems.find(response)
+    let escaped = response.replace("\"", "\\\"")
+
+    discard execShellCmd(&"frece increment \"{freceDb}\" \"{escaped}\"")
+    discard execShellCmd(items[index].command)
 
 main()
