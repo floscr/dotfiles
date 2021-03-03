@@ -14,7 +14,7 @@ proc bitap*[T](xs: Option[T], errFn: () -> void, succFn: T -> void): Option[T] =
   xs
 
 proc tap*[T](x: Option[T], f: T -> void): Option[T] =
-  f(x)
+  f(x.get)
   x
 
 proc log*[T](x: any): void =
