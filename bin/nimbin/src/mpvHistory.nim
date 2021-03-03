@@ -6,6 +6,8 @@ import strformat
 import sugar
 import algorithm
 import lib/utils
+import fp/option
+import lib/fpUtils
 
 const splitChar = ";;;;"
 const logFile = expandtilde("~/.cache/mpv_history.log");
@@ -34,11 +36,16 @@ proc main(): any =
   let rofi = items.map(x => x.title)
     .join("\n")
 
-  let response = execProcess(&"echo '{rofi}'| rofi -i -levenshtein-sort -dmenu -p \"Play\"").replace("\n", "")
+  let index = execProcess(&"echo '{rofi}'| rofi -i -levenshtein-sort -dmenu -p \"Play\" -format d").replace("\n", "")
 
-  if response != "":
-    let item = items.findIt(it.title == response)
-    echo item.path
-    discard execShellCmd(&"mpv \"{item.path}\"")
+  discard index
+    .some
+    .notEmpty
+    .map(parseInt)
+    .map((x) => items[x])
+    .tap(
+      proc(x: LogFile) =
+        discard execShellCmd(&"mpv \"{x.path}\"")
+    )
 
 main()
