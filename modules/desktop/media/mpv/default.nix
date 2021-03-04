@@ -50,6 +50,11 @@ in {
         command = "nimx mpvHistory";
         description = "MPV History";
       }
+      {
+        command = "nimx mpvToggle";
+        binding = "super + m";
+        description = "Toggle last mpv video";
+      }
     ];
 
     home-manager.users.${config.user.name}.xdg = {
