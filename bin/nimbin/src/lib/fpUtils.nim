@@ -20,10 +20,6 @@ proc tap*[T](x: Option[T], f: T -> void): Option[T] =
 proc log*[T](x: any): void =
   discard echo(x)
 
-proc tap*[E,A](xs: Either[E,A], f: A -> void): Either[E, A] =
-  f(xs)
-  xs
-
 proc tap*[T](xs: List[T], f: T -> void): List[T] =
   f(xs)
   xs
@@ -31,3 +27,11 @@ proc tap*[T](xs: List[T], f: T -> void): List[T] =
 proc orElse*[T](x: Option[T], noneX: T): T =
   if (x.isSome): return x.get
   else: noneX
+
+proc tap*[E,A,B](e: Either[E,A], f: A -> B): Either[E,A] =
+  if e.isRight: discard f(e.get)
+  e
+
+proc log*[E,A](e: Either[E,A]): Either[E,A] =
+  echo $e
+  e
