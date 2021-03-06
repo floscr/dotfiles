@@ -1,6 +1,8 @@
 import times
 import os
+import osproc
 import sugar
+import strformat
 import fp/either
 import tempfile
 import lib/shUtils
@@ -16,6 +18,8 @@ proc saveScreenshot(): any =
 
   let dst = imagesPath.joinPath("screencapture-" & t.format("yyyy-MM-dd-HH-mm:ss") & ".png")
   copyFile(tmpPath, dst)
+
+  discard execShellCmd(&"notify-send \"Screenshot saved\" \"Copied to clipboard\n{dst}\"")
 
   dst
 

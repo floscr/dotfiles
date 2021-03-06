@@ -137,7 +137,7 @@ with lib.my;
         ## Screenshots
         {
           binding = "super + shift + S";
-          command = "scrcap";
+          command = "nimx screenCapture";
           description = "Screenshot";
         }
         {
