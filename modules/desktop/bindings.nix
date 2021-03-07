@@ -227,6 +227,16 @@ with lib.my;
           description = "Screen brightness: Decrease 5%";
         }
       ])
+      [
+        {
+          command = "sudo ${pkgs.linuxPackages.cpupower}/bin/cpupower frequency-set -g performance";
+          description = "CPUPower: Performance";
+        }
+        {
+          command = "sudo ${pkgs.linuxPackages.cpupower}/bin/cpupower frequency-set -g powersave";
+          description = "CPUPower: Powersave";
+        }
+      ]
     ]);
   };
 }

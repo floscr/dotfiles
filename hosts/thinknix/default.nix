@@ -42,6 +42,9 @@ with lib.my;
       youtube-dl.enable = true;
       color-optimization.enable = true;
     };
+    shared = {
+      sudoers.enable = true;
+    };
     hardware = {
       trackpad.enable = true;
       audio.enable = true;
