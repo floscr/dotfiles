@@ -57,14 +57,12 @@ proc wifiSsid(): any =
     # .map(x => x.getColumn(0))
     # .notEmpty
 
-echo wifiSsid()
-.fold(
-  x => "Error:\n" & x,
-  (x: ConfigItem) => x.name,
-)
+proc main(cmd="name"): any =
+  if cmd == "name":
+    echo wifiSsid()
+    .fold(
+      x => "Error:\n" & x,
+      (x: ConfigItem) => x.name,
+    )
 
-
-# echo @[1, 2]
-#     .asList.findMe((x: int) => false)
-
-# echo @[1.some, 2.some, 3.some].traverse((x: Option[int]) => x)
+import cligen; dispatch(main)
