@@ -21,6 +21,7 @@ with lib.my;
     unzip
     blender
     vlc
+    appimage-run
     user.scdl
   ];
 
