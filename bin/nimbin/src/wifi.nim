@@ -2,7 +2,6 @@ import sugar
 import system
 import strutils
 import sequtils
-# import unpack
 import fp/either
 import fp/list
 import fp/option
