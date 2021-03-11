@@ -15,6 +15,7 @@ with lib.my;
     gparted
     jq
     screenkey
+    weechat
     signal-desktop
     unrar
     unzip
