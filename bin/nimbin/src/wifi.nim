@@ -33,31 +33,24 @@ proc extractNetworkData(xs: seq[string]): Option[ConfigItem] =
 proc wifiSsid(): any =
   sh("nmcli con show --active")
   .flatMap((x: string) => x
-       .split("\n")
-       .map((x: string) => x
-            .rsplit(" ")
-            .filter(x => x != "")
-            .some
-            .flatMap((x: seq[string]) => extractNetworkData(x))
-       )
-       .traverse((x: Option[ConfigItem]) => x)
-       .asEither("Could not parse \n\n" & x)
+    .split("\n")
+    .map((x: string) => x
+      .rsplit(" ")
+      .filter(x => x != "")
+      .some
+      .flatMap((x: seq[string]) => extractNetworkData(x))
+    )
+    .traverse((x: Option[ConfigItem]) => x)
+    .asEither("Could not parse \n\n" & x)
   )
   .flatMap((xs: seq[ConfigItem]) => xs
-           .asList
-           # .map((x: ConfigItem) => x.typeId)
-           .findX((x: ConfigItem) => x.typeId == "wifi")
-           .asEither("No wifi row found")
+    .asList
+    # .map((x: ConfigItem) => x.typeId)
+    .findX((x: ConfigItem) => x.typeId == "wifi")
+    .asEither("No wifi row found")
   )
 
-    # .grep("wifi")
-    # .asList
-    # .headOption
-    # .notEmpty
-    # .map(x => x.getColumn(0))
-    # .notEmpty
-
-proc main(cmd="name"): any =
+proc main(cmd = "name"): any =
   if cmd == "name":
     echo wifiSsid()
     .fold(
@@ -65,4 +58,5 @@ proc main(cmd="name"): any =
       (x: ConfigItem) => x.name,
     )
 
-import cligen; dispatch(main)
+when isMainModule:
+  import cligen; dispatch(main)
