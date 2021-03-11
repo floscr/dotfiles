@@ -44,7 +44,6 @@ proc wifiSsid(): any =
   )
   .flatMap((xs: seq[ConfigItem]) => xs
     .asList
-    # .map((x: ConfigItem) => x.typeId)
     .findX((x: ConfigItem) => x.typeId == "wifi")
     .asEither("No wifi row found")
   )

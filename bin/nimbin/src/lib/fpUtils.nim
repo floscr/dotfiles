@@ -35,3 +35,11 @@ proc tap*[E,A,B](e: Either[E,A], f: A -> B): Either[E,A] =
 proc log*[E,A](e: Either[E,A]): Either[E,A] =
   echo $e
   e
+
+## find gets overwritten by system and there is no way to shadow it...
+proc findX*[T](xs: List[T], p: T -> bool): Option[T] =
+  ## Finds the first element that satisfies the predicate `p`
+  if xs.isEmpty:
+    T.none
+  else:
+    if p(xs.head): xs.head.some else: xs.tail.find(p)
