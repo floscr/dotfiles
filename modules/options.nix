@@ -6,9 +6,9 @@ with lib.my;
   options = with types; {
     user = mkOpt attrs {};
 
-    username = mkOptionStr "floscr";
-    email = mkOptionStr "hello@florianschroedl.com";
-    workEmail = mkOptionStr "";
+    username = mkStrOpt "floscr";
+    email = mkStrOpt "hello@florianschroedl.com";
+    workEmail = mkStrOpt "";
 
     home = {
       file       = mkOpt' attrs {} "Files to place directly in $HOME";

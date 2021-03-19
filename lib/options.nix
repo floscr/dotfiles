@@ -16,7 +16,7 @@ rec {
     example = true;
   };
 
-  mkOptionStr = value: mkOption {
+  mkStrOpt = value: mkOption {
     type = types.str;
     default = value;
   };
