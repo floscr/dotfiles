@@ -12,7 +12,8 @@ in {
 
   config = mkIf cfg.enable {
     home-manager.users.${config.user.name}.xdg.mimeApps = let
-      browser = [ "chromium-browser.desktop" ];
+      browser = [ cfg.browser ];
+      images = [ cfg.images ];
     in {
       enable = true;
       defaultApplications = {
@@ -26,9 +27,9 @@ in {
         "x-scheme-handler/https" = browser;
         "image/svg+xml" = browser;
 
-        "image/gif" = cfg.images;
-        "image/jpeg" = cfg.images;
-        "image/png" = cfg.images;
+        "image/gif" = images;
+        "image/jpeg" = images;
+        "image/png" = images;
       };
     };
   };
