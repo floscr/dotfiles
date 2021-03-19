@@ -81,6 +81,21 @@
         "type": "indirect"
       }
     },
+    "nixpkgs-virtualbox": {
+      "locked": {
+        "lastModified": 1618358406,
+        "narHash": "sha256-BTdYXQqBjyBfw1BkkGHW+EPHY6IPGGguAPvEbmAWmGA=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "ccabc238a8bd142e58c2cd8db8ebd78ab38555d9",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "ref": "master",
+        "type": "indirect"
+      }
+    },
     "nur": {
       "locked": {
         "lastModified": 1618152829,
@@ -103,6 +118,7 @@
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "nixpkgs-unstable": "nixpkgs-unstable",
+        "nixpkgs-virtualbox": "nixpkgs-virtualbox",
         "nur": "nur",
         "secrets": "secrets"
       }

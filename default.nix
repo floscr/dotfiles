@@ -21,6 +21,7 @@ with inputs;
     nixPath = [
       "nixpkgs=${nixpkgs}"
       "nixpkgs-unstable=${nixpkgs-unstable}"
+      "nixpkgs-virtualbox=${nixpkgs-virtualbox}"
       "nixpkgs-overlays=${dotFilesDir}/overlays"
       "home-manager=${home-manager}"
       "dotfiles=${dotFilesDir}"
@@ -28,6 +29,7 @@ with inputs;
     registry = {
       nixos.flake = nixpkgs;
       nixpkgs.flake = nixpkgs-unstable;
+      virtualboxPkgs.flake = nixpkgs-virtualbox;
     };
     useSandbox = true;
   };

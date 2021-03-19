@@ -1,4 +1,4 @@
-{ options, config, lib, pkgs, ... }:
+{ options, config, lib, pkgs, virtualboxPkgs, ... }:
 
 with lib;
 with lib.my;
@@ -16,6 +16,7 @@ in {
 
       virtualisation.virtualbox.host = {
         enable = true;
+        package = pkgs.virtualboxPkgs.virtualbox;
         enableExtensionPack = true;
       };
 

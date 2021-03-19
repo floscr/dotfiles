@@ -1,34 +1,23 @@
-# flake.nix --- the heart of my dotfiles
-#
-# Author:  Henrik Lissner <henrik@lissner.net>
-# URL:     https://github.com/hlissner/dotfiles
-# License: MIT
-#
-# Welcome to ground zero. Where the whole flake gets set up and all its modules
-# are loaded.
-
 {
   description = "A grossly incandescent nixos config.";
 
   inputs =
     {
-      # Core dependencies.
-      # Two inputs so I can track them separately at different rates.
-      nixpkgs.url          = "nixpkgs/master";
+      nixpkgs.url = "nixpkgs/master";
       nixpkgs-unstable.url = "nixpkgs/master";
+      nixpkgs-virtualbox.url = "nixpkgs/master";
 
-      home-manager.url   = "github:rycee/home-manager/master";
+      home-manager.url = "github:rycee/home-manager/master";
       home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
       secrets = { url = "/etc/dotfiles-private"; flake = false; };
 
-      # Extras
-      emacs-overlay.url  = "github:nix-community/emacs-overlay";
+      emacs-overlay.url = "github:nix-community/emacs-overlay";
       nixos-hardware.url = "github:nixos/nixos-hardware";
-      nur.url            = "github:nix-community/NUR";
+      nur.url = "github:nix-community/NUR";
     };
 
-  outputs = inputs @ { self, nixpkgs, nixpkgs-unstable, nur, home-manager, secrets, ... }:
+  outputs = inputs @ { self, nixpkgs, nixpkgs-unstable, nixpkgs-virtualbox, nur, home-manager, secrets, ... }:
     let
       inherit (lib) attrValues;
       inherit (lib.my) mapModules mapModulesRec mapHosts;
@@ -40,8 +29,9 @@
         config.allowUnfree = true;
         overlays = extraOverlays ++ (attrValues self.overlays);
       };
-      pkgs  = mkPkgs nixpkgs [ self.overlay nur.overlay ];
+      pkgs = mkPkgs nixpkgs [ self.overlay nur.overlay ];
       uPkgs = mkPkgs nixpkgs-unstable [];
+      vPkgs = mkPkgs nixpkgs-virtualbox [];
 
       lib = nixpkgs.lib.extend
         (self: super: { my = import ./lib { inherit pkgs inputs; lib = self; }; });
@@ -51,6 +41,7 @@
       overlay =
         final: prev: {
           unstable = uPkgs;
+          virtualboxPkgs = vPkgs;
           user = self.packages."${system}";
         };
 
