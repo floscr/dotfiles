@@ -12,5 +12,11 @@ in {
     user.packages = with pkgs; [
       brave
     ];
+    modules.bindings.items = [
+      {
+        description = "Brave";
+        command = "brave";
+      }
+    ];
   };
 }
