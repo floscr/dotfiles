@@ -69,6 +69,7 @@ with lib.my;
     };
     desktop = {
       bspwm.enable = true;
+      mime.enable = true;
       gtk-emacs-bindings.enable = true;
       vm = {
         virtualbox = {
