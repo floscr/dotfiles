@@ -78,7 +78,6 @@ with lib.my;
       };
       apps = {
         rofi.enable = true;
-        font-manager.enable = true;
         transmission.enable = true;
       };
       graphics = {
