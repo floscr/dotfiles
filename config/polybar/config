@@ -123,9 +123,7 @@ interval = 5
 
 label = %date% %time%
 date =  %a %d.%m
-date-alt = %Y-%m-%d
 time =   %H:%M
-time-alt = %I:%M %p
 format-prefix-padding = 1
 format-prefix-foreground = ${colors.icons}
 
