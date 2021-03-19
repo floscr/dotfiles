@@ -70,6 +70,16 @@
     [127 95 32767 ]
   ];
 
+  systemd.services."thinkfan-restart-resume" = {
+    description = "Restart thinkfan after suspend.";
+    after = [ "suspend.target" ];
+    wantedBy = [ "suspend.target" ];
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${pkgs.sudo}/bin/sudo ${pkgs.systemd}/bin/systemctl restart thinkfan.service";
+    };
+  };
+
   # Undervolting & Throttling
   services.throttled = {
     enable = true;
