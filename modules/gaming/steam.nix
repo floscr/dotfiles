@@ -22,12 +22,12 @@ in {
         # Get steam to keep its garbage out of $HOME
         (writeScriptBin "steam" ''
           #!${stdenv.shell}
-          HOME="${cfg.libDir}" exec ${steam}/bin/steam "$@"
+          HOME="${cfg.libDir}" exec ${unstable.steam}/bin/steam "$@"
         '')
         # for running GOG and humble bundle games
         (writeScriptBin "steam-run" ''
           #!${stdenv.shell}
-          HOME="${cfg.libDir}" exec ${steam-run-native}/bin/steam-run "$@"
+          HOME="${cfg.libDir}" exec ${unstable.steam-run-native}/bin/steam-run "$@"
         '')
         (makeDesktopItem {
           name = "steam";
