@@ -80,6 +80,9 @@ with lib.my;
         rofi.enable = true;
         transmission.enable = true;
       };
+      gaming = {
+        steam.enable = true;
+      };
       graphics = {
         gimp.enable = true;
         inkscape.enable = true;
