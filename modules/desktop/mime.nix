@@ -11,17 +11,25 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home-manager.users.${config.user.name}.xdg.mimeApps.defaultApplications = {
-      "application/xhtml+xml" = cfg.browser;
-      "text/html" = cfg.browser;
-      "text/xml" = cfg.chromium;
-      "x-scheme-handler/http" = cfg.chromium;
-      "x-scheme-handler/https" = cfg.chromium;
-      "image/svg+xml" = cfg.chromium;
+    home-manager.users.${config.user.name}.xdg.mimeApps = let
+      browser = [ "chromium-browser.desktop" ];
+    in {
+      enable = true;
+      defaultApplications = {
+        "application/xhtml+xml" = browser;
+        "text/html" = browser;
+        "text/xml" = browser;
+        "x-scheme-handler/about" = browser;
+        "x-scheme-handler/unknown" = browser;
+        "x-scheme-handler/mailto" = browser;
+        "x-scheme-handler/http" = browser;
+        "x-scheme-handler/https" = browser;
+        "image/svg+xml" = browser;
 
-      "image/gif" = cfg.images;
-      "image/jpeg" = cfg.images;
-      "image/png" = cfg.images;
+        "image/gif" = cfg.images;
+        "image/jpeg" = cfg.images;
+        "image/png" = cfg.images;
+      };
     };
   };
 }
