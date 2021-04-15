@@ -3,16 +3,16 @@
 
   inputs =
     {
-      nixpkgs.url = "nixpkgs/master";
+      nixpkgs.url = "nixpkgs/nixos-unstable";
       nixpkgs-unstable.url = "nixpkgs/master";
-      nixpkgs-virtualbox.url = "nixpkgs/master";
+      nixpkgs-virtualbox.url = "github:nixos/nixpkgs/e754546ef7c3a7d5890f17dab7e6d03db16c1e1f";
 
       home-manager.url = "github:rycee/home-manager/master";
       home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
       secrets = { url = "/etc/dotfiles-private"; flake = false; };
 
-      emacs-overlay.url = "github:nix-community/emacs-overlay";
+      emacs-overlay.url = "github:nix-community/emacs-overlay/d9530a7048f4b1c0f65825202a0ce1d111a1d39a";
       nixos-hardware.url = "github:nixos/nixos-hardware";
       nur.url = "github:nix-community/NUR";
     };
