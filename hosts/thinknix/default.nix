@@ -23,6 +23,7 @@ with lib.my;
     vlc
     appimage-run
     user.scdl
+    user.based-connect
   ];
 
   hardware.usb.wakeupDisabled = [
