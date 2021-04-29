@@ -30,7 +30,7 @@ proc intToBatteryIcon(level: int): string =
       ""
 
 proc main(): any =
-  sh(&"/home/floscr/.nix-profile/bin/bt-device -i {device}")
+  let res = sh(&"/home/floscr/.nix-profile/bin/bt-device -i {device}")
   .flatMap((x: string) => x
            .split("\n")
            .asList
@@ -44,9 +44,11 @@ proc main(): any =
        .map(intToBatteryIcon)
        .getOrElse(&"Could not parse input from based connect {x}")
   )
-  .fold(
-    err => &"Error: {err}",
-    x => x
-  )
+
+  if res.isLeft:
+    # stderr.writeLine("Error: ", res.errorMsg)
+    ""
+  else:
+    res.get
 
 echo main()
