@@ -41,3 +41,8 @@ function clonecd {
 }
 
 alias gccd='clonecd'
+
+# Go to the top level dir of the repository
+function groot() {
+  cd "$(git rev-parse --show-toplevel)"
+}
