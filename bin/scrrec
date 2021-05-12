@@ -1,6 +1,9 @@
 #!/usr/bin/env cached-nix-shell
 #! nix-shell -i bash -p ffmpeg slop screenkey
 
+# Required packages for non-nix users
+# ffmpeg slop screenkey mov2gif
+
 # Select a region and record it.
 #
 # If given a gif, it will record an mp4 and convert it afterwards using the
