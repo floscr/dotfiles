@@ -9,6 +9,12 @@
 #
 # Usage: scrrec somefile.mp4
 #        scrrec another.gif
+#
+#        Add -s to define a recording area interactively
+#        scrreec -s somefile.mp4
+#
+#        Add -w flag to display screenkey in the selection
+#        scrrec -w somefile.mp4
 
 is_script=
 geom=
