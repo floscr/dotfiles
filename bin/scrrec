@@ -78,8 +78,10 @@ recording-start() {
 
   local dest=${1:-./rec.mp4}
   local mp4dest=
+
   [[ $dest == *.gif ]] && mp4dest="${dest%.*}.mp4"
   [[ $with_screenkey ]] && screenkey --geometry $4x$screenkey_height+$2+$(( $3 + $5 - $screenkey_height )) &
+
   countdown
   ffmpeg $ffmpeg_opts "${mp4dest:-$dest}" &
   pid=$!
