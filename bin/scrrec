@@ -22,8 +22,8 @@
 is_script=
 geom=
 delay=1
-count=3
 fps=30
+count=1
 stopfile=/tmp/_stop
 with_screenkey=
 screenkey_height=400
