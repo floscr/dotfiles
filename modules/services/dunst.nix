@@ -60,12 +60,6 @@ in {
           mouse_middle_click = do_action
           mouse_right_click = close_all
 
-        [shortcuts]
-          close = shift+space
-          close_all = ctrl+shift+space
-          history = ctrl+period
-          context = ctrl+shift+period
-
         [urgency_low]
           background = "#1E2029"
           foreground = "#bbc2cf"
@@ -88,6 +82,25 @@ in {
         unset pkillVerbose
       '';
     };
+
+    modules.bindings.items = [
+      {
+        description = "Dunst: Close Last";
+        binding = "shift + space";
+        command = "dunstctl close";
+      }
+      {
+        description = "Dunst: Close All";
+        binding = "ctrl + shift + space";
+        command = "dunstctl close-all";
+      }
+      {
+        description = "Dunst: Show recent history item";
+        binding = "ctrl + grave";
+        command = "dunstctl history-pop";
+      }
+    ];
+
     systemd.user.services.dunst = {
       enable = true;
       description = mkDefault "Notification daemon";
