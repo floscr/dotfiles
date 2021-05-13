@@ -18,6 +18,9 @@
 #
 #        Add -w flag to display screenkey in the selection
 #        scrrec -w somefile.mp4
+#
+#        Add -a flag to record audio output
+#        scrrec -a somefile.mp4
 
 is_script=
 geom=
@@ -25,9 +28,10 @@ delay=1
 fps=30
 count=1
 stopfile=/tmp/_stop
+record_audio=
 with_screenkey=
 screenkey_height=400
-while getopts c:d:f:g:psw opt; do
+while getopts c:d:f:g:a:psw opt; do
   case $opt in
     c) count=$OPTARG ;;
     d) delay="$OPTARG" ;;
@@ -35,6 +39,7 @@ while getopts c:d:f:g:psw opt; do
     g) geom="$OPTARG" ;;
     p) compton= ;;
     s) is_script=1 ;;
+    a) record_audio=1 ;;
     w) with_screenkey=1 ;;
   esac
 done
@@ -67,6 +72,8 @@ countdown() {
 
 recording-start() {
   local ffmpeg_opts="-y -f x11grab -show_region 1 -ss $delay -s ${4}x${5} -i :0.0+${2},${3} -framerate ${fps}"
+  [[ $record_audio ]] && ffmpeg_opts="-f pulse -i default -threads 4 -acodec pcm_s16le -async 1 $ffmpeg_opts"
+
   local dest=${1:-./rec.mp4}
   local mp4dest=
   [[ $dest == *.gif ]] && mp4dest="${dest%.*}.mp4"
