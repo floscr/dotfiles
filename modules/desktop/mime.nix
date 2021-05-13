@@ -6,7 +6,7 @@ let cfg = config.modules.desktop.mime;
 in {
   options.modules.desktop.mime = with types; {
     enable = mkBoolOpt false;
-    browser = mkStrOpt "chromium-browser.desktop";
+    browser = mkStrOpt "brave-browser.desktop";
     images = mkStrOpt "feh.desktop";
   };
 

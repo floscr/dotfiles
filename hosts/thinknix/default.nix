@@ -95,7 +95,7 @@ with lib.my;
         mpv.enable = true;
       };
       browsers = {
-        default = "chromium";
+        default = "brave";
         psd = true;
         chromium.enable = true;
         firefox.enable = true;
