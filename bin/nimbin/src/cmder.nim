@@ -66,11 +66,13 @@ proc parseDesktopFile(f: string): ConfigItem =
   var
     exec: string
     name: string
+
   for line in lines(f):
-    if line.startsWith("Exec"):
+    if line.startsWith("Exec") and exec.isEmptyOrWhitespace:
       exec = line.split("=")[1]
     if line.startsWith("Name") and name.isEmptyOrWhitespace:
       name = line.split("=")[1]
+
   ConfigItem(
     description: name,
     command: exec.replace(re"%.", ""),
