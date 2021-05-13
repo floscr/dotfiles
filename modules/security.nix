@@ -2,7 +2,7 @@
 
 {
   ## System security tweaks
-  # boot.tmpOnTmpfs = true;
+  boot.tmpOnTmpfs = true;
   # security.hideProcessInformation = true;
   security.protectKernelImage = true;
 
