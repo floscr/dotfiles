@@ -74,6 +74,8 @@ recording-start() {
   local ffmpeg_opts="-y -f x11grab -show_region 1 -ss $delay -s ${4}x${5} -i :0.0+${2},${3} -framerate ${fps}"
   [[ $record_audio ]] && ffmpeg_opts="-f pulse -i default -threads 4 -acodec pcm_s16le -async 1 $ffmpeg_opts"
 
+  echo $ffmpeg_opts
+
   local dest=${1:-./rec.mp4}
   local mp4dest=
   [[ $dest == *.gif ]] && mp4dest="${dest%.*}.mp4"
