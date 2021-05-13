@@ -121,6 +121,9 @@ in {
             a cycle audio
             s cycle sub
 
+            ctrl+a add audio-delay 0.100
+            ctrl+A add audio-delay -0.100
+
             + add window-scale +0.08
             - add window-scale -0.08
             = set window-scale 1.0
