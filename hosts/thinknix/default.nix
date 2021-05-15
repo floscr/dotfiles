@@ -12,6 +12,7 @@ with lib.my;
 
   user.packages = with pkgs; [
     flameshot
+    ffmpeg
     gparted
     jq
     screenkey
