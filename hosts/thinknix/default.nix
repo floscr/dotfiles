@@ -109,7 +109,10 @@ with lib.my;
     };
     editors = {
       default = "nvim";
-      emacs.enable = true;
+      emacs = {
+        enable = true;
+        enableMail = true;
+      };
       vim.enable = true;
     };
     services = {

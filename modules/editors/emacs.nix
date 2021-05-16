@@ -6,6 +6,7 @@ let cfg = config.modules.editors.emacs;
 in {
   options.modules.editors.emacs = {
     enable = mkBoolOpt false;
+    enableMail = mkBoolOpt false;
   };
 
   config = mkIf cfg.enable {
@@ -24,6 +25,10 @@ in {
       ## Optional dependencies
       fd                  # faster projectile indexing
       imagemagickBig      # for image-dired
+
+      (mkIf (cfg.enableMail) mu)
+      (mkIf (cfg.enableMail) isync)
+
       (mkIf (config.programs.gnupg.agent.enable)
         pinentry_emacs)   # in-emacs gnupg prompts
       zstd                # for undo-fu-session/undo-tree compression
