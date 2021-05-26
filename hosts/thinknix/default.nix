@@ -116,6 +116,7 @@ with lib.my;
       vim.enable = true;
     };
     services = {
+      screendrawing.enable = true;
       syncthing.enable = true;
       polybar.enable = true;
       dunst.enable = true;
