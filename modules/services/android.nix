@@ -10,6 +10,10 @@ in {
   };
 
   config = mkIf cfg.enable {
+    # Dev tools
+    programs.adb.enable = true;
+    user.extraGroups = ["adbusers"];
+
     user.packages = with pkgs; [
       jmtpfs
     ];
