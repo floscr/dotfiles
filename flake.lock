@@ -128,7 +128,7 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-SA8MjV750ocnp1EpDhEOsdTUlh/NxDD/IDtMTPEJrIs=",
+        "narHash": "sha256-hMwb87fOCdF6hll4VczKSd9fLFo6eU3yeAswaHTLCRM=",
         "path": "/etc/dotfiles-private",
         "type": "path"
       },
