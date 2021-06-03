@@ -6,6 +6,7 @@
       nixpkgs.url = "nixpkgs/nixos-unstable";
       nixpkgs-unstable.url = "nixpkgs/master";
       nixpkgs-virtualbox.url = "github:nixos/nixpkgs/e754546ef7c3a7d5890f17dab7e6d03db16c1e1f";
+      org_print_scan.url = "github:floscr/org_print_scan";
 
       home-manager.url = "github:rycee/home-manager/master";
       home-manager.inputs.nixpkgs.follows = "nixpkgs";
