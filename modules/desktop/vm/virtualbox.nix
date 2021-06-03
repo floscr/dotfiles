@@ -13,10 +13,9 @@ in {
     {
       users.groups.vboxusers.members = [ config.user.name ];
 
-
       virtualisation.virtualbox.host = {
         enable = true;
-        # package = pkgs.virtualboxPkgs.virtualbox;
+        package = pkgs.virtualboxPkgs.virtualbox;
         enableExtensionPack = true;
       };
 
@@ -24,7 +23,7 @@ in {
     }
     (mkIf cfg.vagrant.enable {
       environment.systemPackages = with pkgs; [
-        vagrant
+        pkgs.virtualboxPkgs.vagrant
       ];
       environment.shellAliases = {
         v  = "vagrant";
