@@ -15,6 +15,7 @@ with lib.my;
     ffmpeg
     gparted
     jq
+    nethogs
     screenkey
     weechat
     signal-desktop
