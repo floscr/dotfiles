@@ -183,7 +183,7 @@ with lib.my;
         }
         {
           binding = "super + Escape";
-          command = "pkill -USR1 -x sxhkd";
+          command = ''pkill -USR1 -x sxhkd; notify-send "Reloaded shortcuts"'';
           description = "Reload Shortcuts";
         }
         {
