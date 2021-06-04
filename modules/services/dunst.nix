@@ -86,17 +86,17 @@ in {
     modules.bindings.items = [
       {
         description = "Dunst: Close Last";
-        binding = "ctrl + Return";
+        binding = "ctrl + grave";
         command = "dunstctl close";
       }
       {
         description = "Dunst: Close All";
-        binding = "ctrl + shift + return";
+        binding = "ctrl + shift + grave";
         command = "dunstctl close-all";
       }
       {
         description = "Dunst: Show recent history item";
-        binding = "ctrl + grave";
+        binding = "ctrl + alt + grave";
         command = "dunstctl history-pop";
       }
     ];
