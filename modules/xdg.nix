@@ -31,7 +31,6 @@
       HISTFILE        = "$XDG_DATA_HOME/bash/history";
       INPUTRC         = "$XDG_CONFIG_HOME/readline/inputrc";
       LESSHISTFILE    = "$XDG_CACHE_HOME/lesshst";
-      WGETRC          = "$XDG_CONFIG_HOME/wgetrc";
 
       # Tools I don't use
       # SUBVERSION_HOME = "$XDG_CONFIG_HOME/subversion";

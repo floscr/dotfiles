@@ -45,6 +45,7 @@ with lib.my;
       pass.enable = true;
       zsh.enable = true;
       youtube-dl.enable = true;
+      wget.enable = true;
       color-optimization.enable = true;
     };
     shared = {
