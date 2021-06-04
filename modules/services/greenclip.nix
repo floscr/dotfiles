@@ -9,7 +9,7 @@ in {
   };
 
   config = mkIf cfg.enable (
-    let greenclip = pkgs.haskellPackages.greenclip;
+    let greenclip = pkgs.unstable.haskellPackages.greenclip;
     in {
       user.packages = with pkgs; [
         greenclip
