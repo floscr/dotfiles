@@ -86,12 +86,12 @@ in {
     modules.bindings.items = [
       {
         description = "Dunst: Close Last";
-        binding = "shift + space";
+        binding = "ctrl + Return";
         command = "dunstctl close";
       }
       {
         description = "Dunst: Close All";
-        binding = "ctrl + shift + space";
+        binding = "ctrl + shift + return";
         command = "dunstctl close-all";
       }
       {
