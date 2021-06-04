@@ -17,7 +17,6 @@ with lib.my;
     jq
     nethogs
     screenkey
-    weechat
     signal-desktop
     unrar
     unzip
@@ -45,6 +44,7 @@ with lib.my;
       pass.enable = true;
       zsh.enable = true;
       youtube-dl.enable = true;
+      weechat.enable = true;
       wget.enable = true;
       color-optimization.enable = true;
     };
