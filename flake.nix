@@ -6,7 +6,7 @@
       nixpkgs.url = "nixpkgs/nixos-unstable";
       nixpkgs-unstable.url = "nixpkgs/master";
       nixpkgs-virtualbox.url = "github:nixos/nixpkgs/e754546ef7c3a7d5890f17dab7e6d03db16c1e1f";
-      org_print_scan.url = "github:floscr/org_print_scan";
+      nixos-hardware.url = "github:nixos/nixos-hardware";
 
       home-manager.url = "github:rycee/home-manager/master";
       home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -14,11 +14,24 @@
       secrets = { url = "/etc/dotfiles-private"; flake = false; };
 
       emacs-overlay.url = "github:nix-community/emacs-overlay";
-      nixos-hardware.url = "github:nixos/nixos-hardware";
       nur.url = "github:nix-community/NUR";
+
+      flake-utils.url = "github:ursi/flake-utils/d939d2e5d73cd3468a05661e4471838b64547e6b";
+      org_print_scan.url = "github:floscr/org_print_scan";
     };
 
-  outputs = inputs @ { self, nixpkgs, nixpkgs-unstable, nixpkgs-virtualbox, nur, home-manager, secrets, ... }:
+  outputs = inputs @ {
+      home-manager,
+      nixpkgs,
+      nixpkgs-unstable,
+      nixpkgs-virtualbox,
+      nur,
+      org_print_scan,
+      secrets,
+      self,
+      flake-utils,
+      ...
+  }:
     let
       inherit (lib) attrValues;
       inherit (lib.my) mapModules mapModulesRec mapHosts;
@@ -28,7 +41,12 @@
       mkPkgs = pkgs: extraOverlays: import pkgs {
         inherit system;
         config.allowUnfree = true;
-        overlays = extraOverlays ++ (attrValues self.overlays);
+        overlays = extraOverlays ++ (attrValues self.overlays) ++ [(_: super:
+          {
+            flake-packages = flake-utils.defaultPackages system
+              { inherit org_print_scan; };
+          }
+        )];
       };
       pkgs = mkPkgs nixpkgs [ self.overlay nur.overlay ];
       uPkgs = mkPkgs nixpkgs-unstable [];

@@ -16,6 +16,41 @@
       }
     },
     "flake-utils": {
+      "inputs": {
+        "flake-utils": "flake-utils_2",
+        "make-shell": "make-shell"
+      },
+      "locked": {
+        "lastModified": 1621733845,
+        "narHash": "sha256-k7SQFZi64rTqNWBkKrGahCtQHBXi8RWlPq3OKRDzano=",
+        "owner": "ursi",
+        "repo": "flake-utils",
+        "rev": "d939d2e5d73cd3468a05661e4471838b64547e6b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ursi",
+        "repo": "flake-utils",
+        "rev": "d939d2e5d73cd3468a05661e4471838b64547e6b",
+        "type": "github"
+      }
+    },
+    "flake-utils_2": {
+      "locked": {
+        "lastModified": 1622445595,
+        "narHash": "sha256-m+JRe6Wc5OZ/mKw2bB3+Tl0ZbtyxxxfnAWln8Q5qs+Y=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "7d706970d94bc5559077eb1a6600afddcd25a7c8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flake-utils_3": {
       "locked": {
         "lastModified": 1622445595,
         "narHash": "sha256-m+JRe6Wc5OZ/mKw2bB3+Tl0ZbtyxxxfnAWln8Q5qs+Y=",
@@ -48,6 +83,22 @@
         "owner": "rycee",
         "ref": "master",
         "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "make-shell": {
+      "locked": {
+        "lastModified": 1619482051,
+        "narHash": "sha256-HM5lFiBKKfy/L7Ifk6mKRTT1UfQfSSzIMLBzDnPkH6Q=",
+        "owner": "ursi",
+        "repo": "nix-make-shell",
+        "rev": "ed72df45d0a81784eee8603e366e1f1ae9da6950",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ursi",
+        "ref": "1",
+        "repo": "nix-make-shell",
         "type": "github"
       }
     },
@@ -101,11 +152,11 @@
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1622791604,
-        "narHash": "sha256-xOt7Tf1pDIQQ2IwmhvWno2xrjncxEszXfpgNE2I6AFA=",
+        "lastModified": 1622793898,
+        "narHash": "sha256-V3iP8ADXa0gbFnm4RmNStz5EOt8e3TkB1mrdP63ZRlo=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "83d078209528f3c9ba29b4857d9725e761dc2f2c",
+        "rev": "d0b98f8d413f3898dd26e0792bfc3f0eef98797d",
         "type": "github"
       },
       "original": {
@@ -177,7 +228,7 @@
     },
     "org_print_scan": {
       "inputs": {
-        "flake-utils": "flake-utils",
+        "flake-utils": "flake-utils_3",
         "nimble": "nimble",
         "nixpkgs": "nixpkgs_3"
       },
@@ -198,6 +249,7 @@
     "root": {
       "inputs": {
         "emacs-overlay": "emacs-overlay",
+        "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",

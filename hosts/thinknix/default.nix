@@ -25,7 +25,7 @@ with lib.my;
     appimage-run
     user.scdl
     user.based-connect
-  ];
+  ] ++ flake-packages;
 
   hardware.usb.wakeupDisabled = [
     {
