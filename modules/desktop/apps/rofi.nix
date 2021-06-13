@@ -45,6 +45,10 @@ in {
         categories = "Rofi drun";
         command = "rofimoji";
       }
+      {
+        description = "Org Bookmarks";
+        command = "rofi_org_bookmarks";
+      }
     ];
   };
 }

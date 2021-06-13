@@ -18,18 +18,20 @@
 
       flake-utils.url = "github:ursi/flake-utils/d939d2e5d73cd3468a05661e4471838b64547e6b";
       org_print_scan.url = "github:floscr/org_print_scan";
+      rofi_org_bookmarks.url = "github:floscr/rofi_org_bookmarks";
     };
 
   outputs = inputs @ {
+      flake-utils,
       home-manager,
       nixpkgs,
       nixpkgs-unstable,
       nixpkgs-virtualbox,
       nur,
       org_print_scan,
+      rofi_org_bookmarks,
       secrets,
       self,
-      flake-utils,
       ...
   }:
     let
@@ -44,7 +46,7 @@
         overlays = extraOverlays ++ (attrValues self.overlays) ++ [(_: super:
           {
             flake-packages = flake-utils.defaultPackages system
-              { inherit org_print_scan; };
+              { inherit org_print_scan rofi_org_bookmarks; };
           }
         )];
       };
