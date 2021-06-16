@@ -148,6 +148,7 @@ function main {
     up|upgrade)  _update && _rebuild switch                  ;;
     s|search)    nix search nixpkgs "$@"                     ;;
     l|list)      nix-env --query --description --status "$@" ;;
+    d|diff)      ls /nix/var/nix/profiles | tail -n 2 | awk '{print "/nix/var/nix/profiles/" $0}' - | xargs nvd diff ;;
 
     swap)        _swap $@                                    ;;
     gc)          _gc "$@"                                    ;;
