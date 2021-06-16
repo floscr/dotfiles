@@ -15,6 +15,7 @@ with lib.my;
     ffmpeg
     gparted
     jq
+    termdown
     nethogs
     screenkey
     signal-desktop
