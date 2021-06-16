@@ -60,11 +60,16 @@ function main {
     echo "  vm                 Build flake into a VM image"
   }
 
+  function _diff() {
+    ls /nix/var/nix/profiles | tail -n 2 | awk '{print "/nix/var/nix/profiles/" $0}' - | xargs nvd diff
+  }
+
   function _rebuild {
     # Move to $DOTFILES to prevent polluting the system with result links
     pushd $DOTFILES >/dev/null
     _do sudo nixos-rebuild --flake ".#$HOST" ${@:-build}
     popd >/dev/null
+    _diff
   }
 
   function _update {
@@ -148,7 +153,7 @@ function main {
     up|upgrade)  _update && _rebuild switch                  ;;
     s|search)    nix search nixpkgs "$@"                     ;;
     l|list)      nix-env --query --description --status "$@" ;;
-    d|diff)      ls /nix/var/nix/profiles | tail -n 2 | awk '{print "/nix/var/nix/profiles/" $0}' - | xargs nvd diff ;;
+    d|diff)      _diff                                       ;;
 
     swap)        _swap $@                                    ;;
     gc)          _gc "$@"                                    ;;
