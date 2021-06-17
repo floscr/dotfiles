@@ -54,6 +54,12 @@ in {
       description = "Load my keyboard modifications";
       # after = [ "graphical.target" ];
       # wantedBy = [ "default.target" ];
+      path = with pkgs; [
+        killall
+        xcape
+        xorg.xkbcomp
+        xorg.xmodmap
+      ];
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
@@ -62,26 +68,25 @@ in {
 
           # Stop previous xcape processes, otherwise xcape is launched multiple times
           # And buttons get implemented multiple times
-          ${pkgs.killall}/bin/killall xcape
+          killall xcape
 
           # Load keyboard layout
-          ${pkgs.xorg.xkbcomp}/bin/xkbcomp /etc/X11/keymap.xkb $DISPLAY
+          xkbcomp /etc/X11/keymap.xkb $DISPLAY
 
           # Capslock to control
-          ${pkgs.xcape}/bin/xcape -e 'Control_L=Escape'
+          xcape -e 'Control_L=Escape'
 
           # Make space Control L whenn pressed.
           spare_modifier="Hyper_L"
-          ${pkgs.xorg.xmodmap}/bin/xmodmap -e "keycode 65 = $spare_modifier"
-          ${pkgs.xorg.xmodmap}/bin/xmodmap -e "remove mod4 = $spare_modifier"
-          ${pkgs.xorg.xmodmap}/bin/xmodmap -e "add Control = $spare_modifier"
+          xmodmap -e "keycode 65 = $spare_modifier"
+          xmodmap -e "remove mod4 = $spare_modifier"
+          xmodmap -e "add Control = $spare_modifier"
 
-          # Map space to an unused keycode (to keep it around for xcape to
-          # use).
-          ${pkgs.xorg.xmodmap}/bin/xmodmap -e "keycode any = space"
+          # Map space to an unused keycode (to keep it around for xcape to use).
+          xmodmap -e "keycode any = space"
 
           # Finally use xcape to cause the space bar to generate a space when tapped.
-          ${pkgs.xcape}/bin/xcape -e "$spare_modifier=space"
+          xcape -e "$spare_modifier=space"
 
           echo "Keyboard setup done!"
         ''}";
