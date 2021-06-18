@@ -1,4 +1,3 @@
-# To mount android devices
 { options, config, lib, pkgs, inputs, ... }:
 
 with lib;
@@ -22,6 +21,7 @@ in {
           Type = "oneshot";
           RemainAfterExit = false;
           ExecStart = restartHotplugServiceCmd;
+
         };
       };
 
