@@ -48,6 +48,7 @@ with lib.my;
       weechat.enable = true;
       wget.enable = true;
       color-optimization.enable = true;
+      bpytop.enable = true;
     };
     shared = {
       sudoers.enable = true;
