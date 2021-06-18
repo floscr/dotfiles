@@ -74,7 +74,7 @@ in {
           xkbcomp /etc/X11/keymap.xkb $DISPLAY
 
           # Capslock to control
-          xcape -e 'Control_L=Escape'
+          ${pkgs.xcape}/bin/xcape -e 'Control_L=Escape'
 
           # Make space Control L whenn pressed.
           spare_modifier="Hyper_L"
@@ -82,11 +82,12 @@ in {
           xmodmap -e "remove mod4 = $spare_modifier"
           xmodmap -e "add Control = $spare_modifier"
 
+
           # Map space to an unused keycode (to keep it around for xcape to use).
           xmodmap -e "keycode any = space"
 
           # Finally use xcape to cause the space bar to generate a space when tapped.
-          xcape -e "$spare_modifier=space"
+          ${pkgs.xcape}/bin/xcape -e "$spare_modifier=space"
 
           echo "Keyboard setup done!"
         ''}";
