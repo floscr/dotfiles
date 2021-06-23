@@ -22,11 +22,16 @@ in {
         # Get steam to keep its garbage out of $HOME
         (writeScriptBin "steam" ''
           #!${stdenv.shell}
+          # For some reason this file prevents steam from launching
+          rm -rf ~/.local/share/Steam/bootstrap.tar.xz;
           HOME="${cfg.libDir}" exec ${unstable.steam}/bin/steam "$@"
         '')
         # for running GOG and humble bundle games
         (writeScriptBin "steam-run" ''
           #!${stdenv.shell}
+          # For some reason this file prevents steam from launching
+          rm -rf ~/.local/share/Steam/bootstrap.tar.xz;
+
           HOME="${cfg.libDir}" exec ${unstable.steam-run-native}/bin/steam-run "$@"
         '')
         (makeDesktopItem {
@@ -40,6 +45,17 @@ in {
         })
       ];
       system.userActivationScripts.setupSteamDir = ''mkdir -p "${cfg.libDir}"'';
+
+      modules.bindings.items = [
+        {
+          description = "Binding of Isaac";
+          command = "steam steam://rungameid/250900";
+        }
+        {
+          description = "FTL: Faster Than Light";
+          command = "steam steam://rungameid/212680";
+        }
+      ];
 
       # better for steam proton games
       systemd.extraConfig = "DefaultLimitNOFILE=1048576";

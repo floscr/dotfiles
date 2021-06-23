@@ -90,7 +90,6 @@ with lib.my;
       };
       gaming = {
         steam.enable = true;
-        isaac.enable = true;
       };
       graphics = {
         gimp.enable = true;
