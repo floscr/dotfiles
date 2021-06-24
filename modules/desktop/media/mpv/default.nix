@@ -62,6 +62,13 @@ in {
         "audio/x-mp3" = [ "mpv.desktop" ];
       };
       configFile = {
+        # bookmarks
+        "mpv/scripts/bookmarker-menu.lua".source = (pkgs.fetchurl {
+            url = "https://raw.githubusercontent.com/NurioHin/mpv-bookmarker/2fb1496c5a8c58f0af1379b380ae13170b242705/bookmarker-menu.lua";
+            sha256 = "sha256-WmajuGvCiOQXddiqEEzvPpOxoYwlGrLfvjDm7+m2DFc=";
+            passthru.scriptName = "bookmarker-menu.lua";
+        });
+
         # Copy url with time stamp of web videos
         # "mpv/scripts/copy-timestamp.lua".source = ./scripts/input-copy-timestamped-url.lua;
         "mpv/scripts/lib-copy-paste.lua".source = ./scripts/lib-copy-paste.lua;
@@ -108,6 +115,10 @@ in {
             Ctrl+7 seek 70 absolute-percent
             Ctrl+8 seek 80 absolute-percent
             Ctrl+9 seek 90 absolute-percent
+
+            B script_message bookmarker-menu
+            b script_message bookmarker-quick-save
+            ctrl+b script_message bookmarker-quick-load
 
             k add volume 5
             j add volume -5
