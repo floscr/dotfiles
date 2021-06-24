@@ -344,12 +344,10 @@ fixed-values = false
 spacing = 0
 
 format-mounted = <label-mounted>
-format-mounted-prefix = 
 format-mounted-background = ${color.mb}
 format-mounted-padding = ${layout.module-padding}
 
 format-unmounted = <label-unmounted>
-format-unmounted-prefix = 
 format-unmounted-background = ${color.mb}
 format-unmounted-padding = ${layout.module-padding}
 
