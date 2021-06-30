@@ -160,7 +160,10 @@ with lib.my;
           command = "xcolor-yank";
           description = "Xcolor";
         }
-
+        {
+          command = "dragon_downloads";
+          description = "Dragon: Downloads";
+        }
         {
           binding = "super + Return";
           command = "termite";
