@@ -23,7 +23,6 @@ with lib.my;
     signal-desktop
     unrar
     unzip
-    blender
     vlc
     appimage-run
     user.scdl
