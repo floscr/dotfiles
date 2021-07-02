@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.services.syncthing;
-in {
+in
+{
   options.modules.services.syncthing = { enable = mkBoolOpt false; };
 
   config = mkIf cfg.enable {

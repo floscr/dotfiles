@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.theme;
-in {
+in
+{
   config = mkIf (cfg.active == "opera") (mkMerge [
     {
       modules = {
@@ -43,7 +44,7 @@ in {
           };
         };
 
-        shell.zsh.rcFiles  = [ ./config/zsh/prompt.zsh ];
+        shell.zsh.rcFiles = [ ./config/zsh/prompt.zsh ];
       };
     }
 

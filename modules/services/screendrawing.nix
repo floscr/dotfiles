@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.services.screendrawing;
-in {
+in
+{
   options.modules.services.screendrawing = {
     enable = mkBoolOpt false;
   };

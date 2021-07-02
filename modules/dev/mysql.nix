@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.dev.mysql;
-in {
+in
+{
   options.modules.dev.mysql = {
     enable = mkBoolOpt false;
   };

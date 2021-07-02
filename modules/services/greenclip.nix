@@ -3,28 +3,34 @@
 with lib;
 with lib.my;
 let cfg = config.modules.services.greenclip;
-in {
+in
+{
   options.modules.services.greenclip = {
     enable = mkBoolOpt false;
   };
 
   config = mkIf cfg.enable (
     let greenclip = pkgs.unstable.haskellPackages.greenclip;
-    in {
+    in
+    {
       user.packages = with pkgs; [
         greenclip
         xorg.libXdmcp
-        (let rofi = "${pkgs.rofi}/bin/rofi";
-             xdotool = "${pkgs.xdotool}/bin/xdotool";
-             xclip = "${pkgs.xclip}/bin/xclip";
-         in pkgs.writeShellScriptBin "rofi-greenclip" ''
+        (
+          let
+            rofi = "${pkgs.rofi}/bin/rofi";
+            xdotool = "${pkgs.xdotool}/bin/xdotool";
+            xclip = "${pkgs.xclip}/bin/xclip";
+          in
+          pkgs.writeShellScriptBin "rofi-greenclip" ''
             #!${pkgs.stdenv.shell}
             ${rofi} -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
             if [[ "$1" == "type" ]]; then
                 sleep 0.5
                 ${xdotool} type "$(${xclip} -o -selection clipboard)"
             fi
-      '')
+          ''
+        )
       ];
       modules.bindings.items = [
         {
@@ -41,7 +47,7 @@ in {
         }
       ];
       systemd.user.services.greenclip = {
-        enable= true;
+        enable = true;
         description = "greenclip daemon";
         wantedBy = [ "graphical-session.target" ];
         after = [ "graphical-session.target" ];
@@ -49,5 +55,6 @@ in {
           ExecStart = "${greenclip}/bin/greenclip daemon";
         };
       };
-    });
+    }
+  );
 }

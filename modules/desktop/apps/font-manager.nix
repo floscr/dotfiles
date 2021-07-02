@@ -3,8 +3,9 @@
 with lib;
 with lib.my;
 let cfg = config.modules.desktop.apps.font-manager;
-in {
-  options.modules.desktop.apps.font-manager= {
+in
+{
+  options.modules.desktop.apps.font-manager = {
     enable = mkBoolOpt false;
   };
 

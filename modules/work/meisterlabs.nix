@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.work.meisterlabs;
-in {
+in
+{
   options.modules.work.meisterlabs = {
     enable = mkBoolOpt false;
   };

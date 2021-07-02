@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.dev.elixir;
-in {
+in
+{
   options.modules.dev.elixir = {
     enable = mkBoolOpt false;
   };

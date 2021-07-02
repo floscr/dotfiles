@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.editors.vscode;
-in {
+in
+{
   options.modules.editors.vscode = {
     enable = mkBoolOpt false;
   };

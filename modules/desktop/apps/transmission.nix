@@ -3,8 +3,9 @@
 with lib;
 with lib.my;
 let cfg = config.modules.desktop.apps.transmission;
-in {
-  options.modules.desktop.apps.transmission= {
+in
+{
+  options.modules.desktop.apps.transmission = {
     enable = mkBoolOpt false;
   };
 
@@ -13,7 +14,7 @@ in {
       transmission-gtk
     ];
     home-manager.users.${config.user.name}.xdg.mimeApps = {
-      associations.added= {
+      associations.added = {
         "x-scheme-handler/magnet" = "transmission-gtk.desktop";
       };
       defaultApplications = {

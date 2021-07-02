@@ -43,12 +43,12 @@
   services.tlp = {
     enable = true;
     extraConfig = ''
-    START_CHARGE_THRESH_BAT0=75
-    STOP_CHARGE_THRESH_BAT0=92
-    CPU_SCALING_GOVERNOR_ON_AC=performance
-    CPU_BOOST_ON_AC=1
-    CPU_SCALING_GOVERNOR_ON_BAT=powersave
-    ENERGY_PERF_POLICY_ON_BAT=powersave
+      START_CHARGE_THRESH_BAT0=75
+      STOP_CHARGE_THRESH_BAT0=92
+      CPU_SCALING_GOVERNOR_ON_AC=performance
+      CPU_BOOST_ON_AC=1
+      CPU_SCALING_GOVERNOR_ON_BAT=powersave
+      ENERGY_PERF_POLICY_ON_BAT=powersave
     '';
   };
 
@@ -59,15 +59,15 @@
   services.thinkfan.enable = true;
   services.thinkfan.smartSupport = true;
   services.thinkfan.levels = [
-    [0 0 68]
-    [1 60 65]
-    [2 65 70]
-    [3 70 75]
-    [4 75 80]
-    [5 80 85]
-    [6 85 90]
-    [7 90 95]
-    [127 95 32767 ]
+    [ 0 0 68 ]
+    [ 1 60 65 ]
+    [ 2 65 70 ]
+    [ 3 70 75 ]
+    [ 4 75 80 ]
+    [ 5 80 85 ]
+    [ 6 85 90 ]
+    [ 7 90 95 ]
+    [ 127 95 32767 ]
   ];
 
   systemd.services."thinkfan-restart-resume" = {
@@ -178,14 +178,15 @@
     };
   };
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/1256e32a-46cd-443e-9bb7-8fd910cc5b32";
+    {
+      device = "/dev/disk/by-uuid/1256e32a-46cd-443e-9bb7-8fd910cc5b32";
       fsType = "ext4";
     };
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/18B0-385A";
+    {
+      device = "/dev/disk/by-uuid/18B0-385A";
       fsType = "vfat";
     };
   swapDevices =
-    [ { device = "/dev/disk/by-uuid/03ad0fe9-be47-438f-a5c0-88eca0287fde"; }
-    ];
+    [{ device = "/dev/disk/by-uuid/03ad0fe9-be47-438f-a5c0-88eca0287fde"; }];
 }

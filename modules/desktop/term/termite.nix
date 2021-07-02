@@ -3,8 +3,9 @@
 with lib;
 with lib.my;
 let cfg = config.modules.desktop.term.termite;
-    inherit (config.modules.theme) fonts;
-in {
+  inherit (config.modules.theme) fonts;
+in
+{
   options.modules.desktop.term.termite = {
     enable = mkBoolOpt false;
   };

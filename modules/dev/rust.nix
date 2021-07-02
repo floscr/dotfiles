@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.dev.rust;
-in {
+in
+{
   options.modules.dev.rust = {
     enable = mkBoolOpt false;
   };
@@ -18,9 +19,9 @@ in {
     env.PATH = [ "$CARGO_HOME/bin" ];
 
     environment.shellAliases = {
-      rs  = "rustc";
+      rs = "rustc";
       rsp = "rustup";
-      ca  = "cargo";
+      ca = "cargo";
     };
   };
 }

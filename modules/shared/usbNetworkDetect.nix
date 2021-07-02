@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.shared.usbNetworkDetect;
-in {
+in
+{
   options.modules.shared.usbNetworkDetect = {
     enable = mkBoolOpt false;
   };

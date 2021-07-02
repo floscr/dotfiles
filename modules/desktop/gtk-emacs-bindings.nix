@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.desktop.gtk-emacs-bindings;
-in {
+in
+{
   options.modules.desktop.gtk-emacs-bindings = with types; {
     enable = mkBoolOpt false;
   };

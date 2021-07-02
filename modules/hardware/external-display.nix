@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.hardware.external-display;
-in {
+in
+{
   options.modules.hardware.external-display = {
     enable = mkBoolOpt false;
   };

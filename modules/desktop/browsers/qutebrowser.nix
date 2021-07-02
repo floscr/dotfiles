@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.desktop.browsers.qutebrowser;
-in {
+in
+{
   options.modules.desktop.browsers.qutebrowser = with types; {
     enable = mkBoolOpt false;
     userStyles = mkOpt lines "";

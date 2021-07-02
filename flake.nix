@@ -21,19 +21,19 @@
       rofi_org_bookmarks.url = "github:floscr/rofi_org_bookmarks";
     };
 
-  outputs = inputs @ {
-      flake-utils,
-      home-manager,
-      nixpkgs,
-      nixpkgs-unstable,
-      nixpkgs-virtualbox,
-      nur,
-      org_print_scan,
-      rofi_org_bookmarks,
-      secrets,
-      self,
-      ...
-  }:
+  outputs =
+    inputs @ { flake-utils
+    , home-manager
+    , nixpkgs
+    , nixpkgs-unstable
+    , nixpkgs-virtualbox
+    , nur
+    , org_print_scan
+    , rofi_org_bookmarks
+    , secrets
+    , self
+    , ...
+    }:
     let
       inherit (lib) attrValues;
       inherit (lib.my) mapModules mapModulesRec mapHosts;
@@ -43,20 +43,23 @@
       mkPkgs = pkgs: extraOverlays: import pkgs {
         inherit system;
         config.allowUnfree = true;
-        overlays = extraOverlays ++ (attrValues self.overlays) ++ [(_: super:
-          {
-            flake-packages = flake-utils.defaultPackages system
-              { inherit org_print_scan rofi_org_bookmarks; };
-          }
-        )];
+        overlays = extraOverlays ++ (attrValues self.overlays) ++ [
+          (_: super:
+            {
+              flake-packages = flake-utils.defaultPackages system
+                { inherit org_print_scan rofi_org_bookmarks; };
+            }
+          )
+        ];
       };
       pkgs = mkPkgs nixpkgs [ self.overlay nur.overlay ];
-      uPkgs = mkPkgs nixpkgs-unstable [];
-      vPkgs = mkPkgs nixpkgs-virtualbox [];
+      uPkgs = mkPkgs nixpkgs-unstable [ ];
+      vPkgs = mkPkgs nixpkgs-virtualbox [ ];
 
       lib = nixpkgs.lib.extend
         (self: super: { my = import ./lib { inherit pkgs inputs; lib = self; }; });
-    in {
+    in
+    {
       lib = lib.my;
 
       overlay =
@@ -71,7 +74,7 @@
 
       packages."${system}" =
         mapModules ./packages
-          (p: pkgs.callPackage p {});
+          (p: pkgs.callPackage p { });
 
       nixosModules =
         {

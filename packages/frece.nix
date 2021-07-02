@@ -13,7 +13,7 @@ rustPlatform.buildRustPackage rec {
     sha256 = "sha256-KuFj6qTwgplIuXb/d05ibp2uovxhhi0L61eYgx+rSPo=";
   };
 
-  buildInputs = [];
+  buildInputs = [ ];
 
   checkPhase = null;
   cargoSha256 = "sha256-FEPRDZjbmiU6+M7J1YnWT5n0pQ7VLlPPIc87BvEtvi8=";

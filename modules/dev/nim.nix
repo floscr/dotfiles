@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.dev.nim;
-in {
+in
+{
   options.modules.dev.nim = {
     enable = mkBoolOpt false;
   };

@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.dev.docker;
-in {
+in
+{
   options.modules.dev.docker = {
     enable = mkBoolOpt false;
   };

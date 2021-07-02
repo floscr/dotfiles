@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.shell.wget;
-in {
+in
+{
   options.modules.shell.wget = {
     enable = mkBoolOpt false;
   };

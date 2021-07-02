@@ -5,7 +5,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.shell.bpytop;
-in {
+in
+{
   options.modules.shell.bpytop = {
     enable = mkBoolOpt false;
   };

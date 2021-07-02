@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let system = "x86_64-linux";
-in {
+in
+{
   mkHost = path: attrs @ { system ? system, ... }:
     nixosSystem {
       inherit system;

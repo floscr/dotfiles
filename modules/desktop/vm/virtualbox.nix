@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.desktop.vm.virtualbox;
-in {
+in
+{
   options.modules.desktop.vm.virtualbox = {
     enable = mkBoolOpt false;
     vagrant.enable = mkBoolOpt false;
@@ -26,7 +27,7 @@ in {
         pkgs.virtualboxPkgs.vagrant
       ];
       environment.shellAliases = {
-        v  = "vagrant";
+        v = "vagrant";
       };
     })
   ]);

@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.services.redshift;
-in {
+in
+{
   options.modules.services.redshift = {
     enable = mkBoolOpt false;
   };

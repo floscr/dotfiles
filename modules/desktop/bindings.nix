@@ -91,48 +91,51 @@ with lib.my;
           command = "${binDir}/bspc/resize {west,south,north,east}";
         }
       ])
-      (mkIf config.modules.desktop.bspwm.enable (let bsp-layout = "$HOME/.config/dotfiles/bin/bsp-layout/src/layout.sh"; in [
-        {
-          description = "Layout: Tall";
-          command = "${bsp-layout} set tall";
-        }
-        {
-          description = "Layout: Reverse Tall";
-          command = "${bsp-layout} set rtall";
-        }
-        {
-          description = "Layout: Wide";
-          command = "${bsp-layout} set wide";
-        }
-        {
-          description = "Layout: Reverse Wide";
-          command = "${bsp-layout} set rwide";
-        }
-        {
-          description = "Layout: Grid";
-          command = "${bsp-layout} set grid";
-        }
-        {
-          description = "Layout: Reverse Grid";
-          command = "${bsp-layout} set rgrid";
-        }
-        {
-          description = "Layout: Balance Windows";
-          command = "${bsp-layout} set even";
-        }
-        {
-          description = "Layout: Default (tiles)";
-          command = "${bsp-layout} set tiled";
-        }
-        {
-          description = "Layout: Reset";
-          command = "${bsp-layout} remove";
-        }
-        {
-          description = "Layout: Cycle";
-          command = "${bsp-layout} cycle";
-        }
-      ] ))
+      (mkIf config.modules.desktop.bspwm.enable (
+        let bsp-layout = "$HOME/.config/dotfiles/bin/bsp-layout/src/layout.sh"; in
+        [
+          {
+            description = "Layout: Tall";
+            command = "${bsp-layout} set tall";
+          }
+          {
+            description = "Layout: Reverse Tall";
+            command = "${bsp-layout} set rtall";
+          }
+          {
+            description = "Layout: Wide";
+            command = "${bsp-layout} set wide";
+          }
+          {
+            description = "Layout: Reverse Wide";
+            command = "${bsp-layout} set rwide";
+          }
+          {
+            description = "Layout: Grid";
+            command = "${bsp-layout} set grid";
+          }
+          {
+            description = "Layout: Reverse Grid";
+            command = "${bsp-layout} set rgrid";
+          }
+          {
+            description = "Layout: Balance Windows";
+            command = "${bsp-layout} set even";
+          }
+          {
+            description = "Layout: Default (tiles)";
+            command = "${bsp-layout} set tiled";
+          }
+          {
+            description = "Layout: Reset";
+            command = "${bsp-layout} remove";
+          }
+          {
+            description = "Layout: Cycle";
+            command = "${bsp-layout} cycle";
+          }
+        ]
+      ))
       (mkIf config.services.xserver.enable [
         ## Screenshots
         {

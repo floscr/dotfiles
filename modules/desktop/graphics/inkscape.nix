@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.desktop.graphics.inkscape;
-in {
+in
+{
   options.modules.desktop.graphics.inkscape = {
     enable = mkBoolOpt false;
   };

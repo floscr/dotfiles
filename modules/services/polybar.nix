@@ -2,13 +2,15 @@
 
 with lib;
 with lib.my;
-let cfg = config.modules.services.polybar;
-    polybar = pkgs.polybar.override {
-      mpdSupport = true;
-      pulseSupport = true;
-      nlSupport = true;
-    };
-in {
+let
+  cfg = config.modules.services.polybar;
+  polybar = pkgs.polybar.override {
+    mpdSupport = true;
+    pulseSupport = true;
+    nlSupport = true;
+  };
+in
+{
   options.modules.services.polybar = {
     enable = mkBoolOpt false;
   };

@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.desktop.browsers.chromium;
-in {
+in
+{
   options.modules.desktop.browsers.chromium = with types; {
     enable = mkBoolOpt false;
   };

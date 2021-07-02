@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.dev.reason;
-in {
+in
+{
   options.modules.dev.reason = {
     enable = mkBoolOpt false;
   };

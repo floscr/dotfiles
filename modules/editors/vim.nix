@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.editors.vim;
-in {
+in
+{
   options.modules.editors.vim = {
     enable = mkBoolOpt false;
   };
@@ -23,7 +24,8 @@ in {
         packages.metalogical = with pkgs.vimPlugins; {
           start = [
             vim-airline
-            fzfWrapper fzf-vim
+            fzfWrapper
+            fzf-vim
           ];
           opt = [ ];
         };

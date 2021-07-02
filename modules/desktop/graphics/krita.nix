@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.desktop.graphics.krita;
-in {
+in
+{
   options.modules.desktop.graphics.krita = {
     enable = mkBoolOpt false;
   };

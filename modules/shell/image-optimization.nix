@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.shell.color-optimization;
-in {
+in
+{
   options.modules.shell.color-optimization = {
     enable = mkBoolOpt false;
   };

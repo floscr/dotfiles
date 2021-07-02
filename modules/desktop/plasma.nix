@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.desktop.plasma;
-in {
+in
+{
   options.modules.desktop.plasma = with types; {
     enable = mkBoolOpt false;
   };

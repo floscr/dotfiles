@@ -4,7 +4,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.services.dunst;
-in {
+in
+{
   options.modules.services.dunst = {
     enable = mkBoolOpt false;
   };
@@ -72,7 +73,7 @@ in {
           background = "#cc6666"
           foreground = "#1E2029"
           timeout = 0
-        '';
+      '';
       onChange = ''
         pkillVerbose=""
         if [[ -v VERBOSE ]]; then

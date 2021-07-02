@@ -4,7 +4,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.services.android;
-in {
+in
+{
   options.modules.services.android = {
     enable = mkBoolOpt false;
   };
@@ -12,7 +13,7 @@ in {
   config = mkIf cfg.enable {
     # Dev tools
     programs.adb.enable = true;
-    user.extraGroups = ["adbusers"];
+    user.extraGroups = [ "adbusers" ];
 
     user.packages = with pkgs; [
       jmtpfs

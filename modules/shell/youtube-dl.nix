@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.shell.youtube-dl;
-in {
+in
+{
   options.modules.shell.youtube-dl = {
     enable = mkBoolOpt false;
   };

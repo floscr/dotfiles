@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.hardware.scanner;
-in {
+in
+{
   options.modules.hardware.scanner = {
     enable = mkBoolOpt false;
   };

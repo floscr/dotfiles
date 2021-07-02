@@ -3,20 +3,21 @@
 with lib;
 with lib.my;
 let cfg = config.modules.shell.pass;
-in {
+in
+{
   options.modules.shell.pass = {
     enable = mkBoolOpt false;
   };
 
   config = mkIf cfg.enable {
     user.packages = with pkgs; [
-        (pass.withExtensions (exts: [
-          exts.pass-otp
-          exts.pass-genphrase
-          exts.pass-tomb
-        ]))
-        pkgs.libqrencode # Generate QR code from pass
-        (lib.mkIf (config.services.xserver.enable) rofi-pass)
+      (pass.withExtensions (exts: [
+        exts.pass-otp
+        exts.pass-genphrase
+        exts.pass-tomb
+      ]))
+      pkgs.libqrencode # Generate QR code from pass
+      (lib.mkIf (config.services.xserver.enable) rofi-pass)
 
     ];
     env.PASSWORD_STORE_DIR = "$HOME/.secrets/password-store";

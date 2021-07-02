@@ -2,25 +2,27 @@
 
 with lib;
 with lib.my;
-let cfg = config.modules.hardware.keyboard;
-    keymap = pkgs.writeText "keymap.xkb" ''
-      xkb_keymap {
-        xkb_keycodes  { include "evdev+aliases(qwerty)"	};
-        xkb_types     { include "complete"	};
-        xkb_compat    { include "complete"	};
-          xkb_symbols   {
-              include "pc+us+inet(evdev)+ctrl(nocaps)+terminate(ctrl_alt_bksp)"
-              key <AC01> { [ a, A, adiaeresis, Adiaeresis ] };
-              key <AC02> { [ s, S, ssharp, U03A3 ] };
-              key <AD03> { [ e, E, EuroSign ] };
-              key <AD09> { [ o, O, odiaeresis, Odiaeresis ] };
-              key <AD07> { [ u, U, udiaeresis, Udiaeresis ] };
-              include "level3(ralt_switch)"
-          };
-        xkb_geometry  { include "pc(pc104)"	};
-      };
-    '';
-in {
+let
+  cfg = config.modules.hardware.keyboard;
+  keymap = pkgs.writeText "keymap.xkb" ''
+    xkb_keymap {
+      xkb_keycodes  { include "evdev+aliases(qwerty)"  };
+      xkb_types     { include "complete"  };
+      xkb_compat    { include "complete"  };
+        xkb_symbols   {
+            include "pc+us+inet(evdev)+ctrl(nocaps)+terminate(ctrl_alt_bksp)"
+            key <AC01> { [ a, A, adiaeresis, Adiaeresis ] };
+            key <AC02> { [ s, S, ssharp, U03A3 ] };
+            key <AD03> { [ e, E, EuroSign ] };
+            key <AD09> { [ o, O, odiaeresis, Odiaeresis ] };
+            key <AD07> { [ u, U, udiaeresis, Udiaeresis ] };
+            include "level3(ralt_switch)"
+        };
+      xkb_geometry  { include "pc(pc104)"  };
+    };
+  '';
+in
+{
   options.modules.hardware.keyboard = {
     enable = mkBoolOpt false;
   };

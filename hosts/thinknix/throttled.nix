@@ -36,7 +36,8 @@ let thinkfanConfigFile = pkgs.writeText "thinkfan.conf" ''
       (32767 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .)
   }
 '';
-in {
+in
+{
   systemd.services."toggle_performance_mode" = {
     enable = true;
     description = "Toggle Performance mode";
@@ -91,16 +92,16 @@ in {
       command = "flameshot gui";
       description = "Flameshot";
     }
-      {
-          description = "Performance Mode On";
-          categories = "Script";
-          command = "sudo ${pkgs.systemd}/bin/systemctl start lenovo_fix_performance.service";
-      }
-      {
-          description = "Performance Mode Off";
-          categories = "Script";
-          command = "sudo ${pkgs.systemd}/bin/systemctl stop lenovo_fix_performance.service";
-      }
+    {
+      description = "Performance Mode On";
+      categories = "Script";
+      command = "sudo ${pkgs.systemd}/bin/systemctl start lenovo_fix_performance.service";
+    }
+    {
+      description = "Performance Mode Off";
+      categories = "Script";
+      command = "sudo ${pkgs.systemd}/bin/systemctl stop lenovo_fix_performance.service";
+    }
   ];
 
   security.sudo.enable = true;

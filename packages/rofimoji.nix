@@ -1,5 +1,12 @@
-{ stdenv, lib, fetchFromGitHub, rofi, xdotool
-, xsel, python3, makeWrapper }:
+{ stdenv
+, lib
+, fetchFromGitHub
+, rofi
+, xdotool
+, xsel
+, python3
+, makeWrapper
+}:
 
 stdenv.mkDerivation rec {
   pname = "rofimoji";

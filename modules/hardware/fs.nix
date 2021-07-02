@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.hardware.fs;
-in {
+in
+{
   options.modules.hardware.fs = {
     enable = mkBoolOpt false;
     zfs.enable = mkBoolOpt false;
@@ -27,12 +28,14 @@ in {
 
     (mkIf (cfg.autoMount.enable) {
       user.packages = [ pkgs.udiskie ];
-      services.xserver.displayManager.sessionCommands = let
-        udiskie = "${pkgs.udiskie}/bin/udiskie";
-      in ''
-        echo "Starting udiskie..."
-        ${udiskie} --tray &
-      '';
+      services.xserver.displayManager.sessionCommands =
+        let
+          udiskie = "${pkgs.udiskie}/bin/udiskie";
+        in
+        ''
+          echo "Starting udiskie..."
+          ${udiskie} --tray &
+        '';
     })
 
     (mkIf (!cfg.zfs.enable && cfg.ssd.enable) {

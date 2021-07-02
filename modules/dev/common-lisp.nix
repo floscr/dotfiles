@@ -3,7 +3,8 @@
 with lib;
 with lib.my;
 let cfg = config.modules.dev.common-lisp;
-in {
+in
+{
   options.modules.dev.common-lisp = {
     enable = mkBoolOpt false;
   };
