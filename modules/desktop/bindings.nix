@@ -52,12 +52,12 @@ with lib.my;
         }
         {
           binding = "super + {h,j,k,l}";
-          command = "/etc/dotfiles/bin/bspc/focus {west,south,north,east}";
+          command = "${binDir}/bspc/focus {west,south,north,east}";
           description = "Focus/Swap the node in the given direction";
         }
         {
           binding = "super + shift + {h,j,k,l}";
-          command = "/etc/dotfiles/bin/bspc/swap {west,south,north,east}";
+          command = "${binDir}/bspc/swap {west,south,north,east}";
           description = "Focus/Swap the node in the given direction";
         }
         {
@@ -72,7 +72,7 @@ with lib.my;
         }
         {
           binding = "super + shift + f";
-          command = "/etc/dotfiles/bin/bspc/toggle_desktop_mode";
+          command = "${binDir}/bspc/toggle_desktop_mode";
           description = "Toggle Desktop Mode";
         }
         {
@@ -88,7 +88,7 @@ with lib.my;
         {
           binding = "super + ctrl + {h,j,k,l}";
           description = "Resize Window";
-          command = "/etc/dotfiles/bin/bspc/resize {west,south,north,east}";
+          command = "${binDir}/bspc/resize {west,south,north,east}";
         }
       ])
       (mkIf config.modules.desktop.bspwm.enable (let bsp-layout = "$HOME/.config/dotfiles/bin/bsp-layout/src/layout.sh"; in [

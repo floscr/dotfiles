@@ -32,7 +32,7 @@ in {
       }
       {
         binding = "super + shift + Tab";
-        command = "/etc/dotfiles/bin/rofi/app_switch";
+        command = "${binDir}/rofi/app_switch";
         description = "Switch application";
       }
       {
