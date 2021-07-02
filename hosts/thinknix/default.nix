@@ -15,7 +15,7 @@ with lib.my;
     ffmpeg
     gparted
     jq
-    nixfmt
+    nixpkgs-fmt
     xvkbd
     termdown
     nethogs
