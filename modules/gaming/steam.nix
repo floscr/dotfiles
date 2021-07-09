@@ -56,6 +56,10 @@ in
           description = "FTL: Faster Than Light";
           command = "steam steam://rungameid/212680";
         }
+        {
+          description = "Into The Breach";
+          command = "steam steam://rungameid/590380";
+        }
       ];
 
       # better for steam proton games
