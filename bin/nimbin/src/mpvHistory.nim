@@ -26,7 +26,7 @@ proc main(): any =
     .map((x) => items[x])
     .tap(
       proc(x: LogFile) =
-        discard execShellCmd(&"mpv \"{x.path}\"")
+        discard execShellCmd(&"mpv --player-operation-mode=pseudo-gui \"{x.path}\"")
     )
 
 main()
