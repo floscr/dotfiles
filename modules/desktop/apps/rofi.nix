@@ -24,6 +24,7 @@ in
         exec ${rofi}/bin/rofi -terminal xst -m -1 "$@"
       '')
       rofimoji
+      user.rofi-translate
     ];
     modules.bindings.items = [
       {
@@ -45,6 +46,11 @@ in
         description = "Rofi Emoji Picker";
         categories = "Rofi drun";
         command = "rofimoji";
+      }
+      {
+        description = "Rofi Translate";
+        categories = "Rofi drun";
+        command = "${pkgs.user.rofi-translate}/bin/rofi_trans";
       }
       {
         description = "Org Bookmarks";
