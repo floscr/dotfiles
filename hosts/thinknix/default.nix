@@ -11,22 +11,25 @@ with lib.my;
   ];
 
   user.packages = with pkgs; [
-    flameshot
+    appimage-run
     ffmpeg
+    flameshot
     gparted
     jq
-    nixpkgs-fmt
-    xvkbd
-    termdown
     nethogs
+    nixpkgs-fmt
     screenkey
     signal-desktop
+    termdown
     unrar
     unzip
-    vlc
-    appimage-run
-    user.scdl
     user.based-connect
+    user.scdl
+    vlc
+    xournal
+    xvkbd
+    xorg.xwininfo
+    xtitle
   ] ++ flake-packages;
 
   hardware.usb.wakeupDisabled = [
