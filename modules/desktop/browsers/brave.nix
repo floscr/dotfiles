@@ -18,6 +18,10 @@ in
         description = "Brave";
         command = "brave";
       }
+      {
+        description = "Brave (Private)";
+        command = "brave --incognito";
+      }
     ];
   };
 }
