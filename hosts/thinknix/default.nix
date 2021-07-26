@@ -21,6 +21,7 @@ with lib.my;
     nixpkgs-fmt
     screenkey
     signal-desktop
+    magic-wormhole
     termdown
     unrar
     unzip
