@@ -27,10 +27,10 @@ with lib.my;
     user.based-connect
     user.scdl
     vlc
-    xournal
-    xvkbd
     xorg.xwininfo
+    xournal
     xtitle
+    xvkbd
   ] ++ flake-packages;
 
   hardware.usb.wakeupDisabled = [
