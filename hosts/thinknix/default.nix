@@ -16,6 +16,7 @@ with lib.my;
     ffmpeg
     flameshot
     gparted
+    gnome3.nautilus
     s-tui
     jq
     nethogs
