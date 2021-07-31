@@ -16,6 +16,7 @@ with lib.my;
     ffmpeg
     flameshot
     gparted
+    s-tui
     jq
     nethogs
     nixpkgs-fmt
