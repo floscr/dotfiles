@@ -113,8 +113,8 @@ with lib.my;
         brave.enable = true;
       };
       term = {
-        default = "termite";
-        termite.enable = true;
+        default = "alacritty";
+        alacritty.enable = true;
       };
     };
     editors = {

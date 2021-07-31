@@ -36,6 +36,6 @@ function mm_start {
 }
 
 function mm_serve {
-    termite --hold -d ~/Code/Meisterlabs/Vagrant -e "bash -c \"vagrant up; vagrant ssh -c 'cd mindmeister; rails s; /bin/bash' -- -L 3001:localhost:3001\"" &
-    termite --hold -d ~/Code/Meisterlabs/mindmeister-web &
+    alacritty --hold -d ~/Code/Meisterlabs/Vagrant -e "bash -c \"vagrant up; vagrant ssh -c 'cd mindmeister; rails s; /bin/bash' -- -L 3001:localhost:3001\"" &
+    alacritty --hold -d ~/Code/Meisterlabs/mindmeister-web &
 }

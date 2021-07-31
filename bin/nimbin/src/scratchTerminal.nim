@@ -28,7 +28,7 @@ proc scratchWindows(): Option[string] =
     .headOption
 
 proc createTerm(): void =
-  discard startProcess("/home/floscr/.nix-profile/bin/termite", args = ["--class", "termite-scratch"])
+  discard startProcess("/home/floscr/.nix-profile/bin/alacritty", args = ["--class", "alacritty-scratch"])
 
 proc hide(id: string): void =
   discard execShellCmd(&"xdotool windowunmap {id}")

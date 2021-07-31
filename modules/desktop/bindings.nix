@@ -169,7 +169,7 @@ with lib.my;
         }
         {
           binding = "super + Return";
-          command = "termite";
+          command = config.modules.desktop.term.default;
           description = "New Terminal";
         }
         {
