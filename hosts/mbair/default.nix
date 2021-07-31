@@ -14,8 +14,8 @@ with lib.my;
       git.enable = true;
       gnupg.enable = true;
       pass.enable = true;
-      zsh.enable = true;
       youtube-dl.enable = true;
+      zsh.enable = true;
     };
     hardware = {
       audio.enable = true;
@@ -32,7 +32,7 @@ with lib.my;
       nim.enable = true;
     };
     desktop = {
-      plasma.enable = true;
+      xmonad.enable = true;
       apps = {
         rofi.enable = true;
         transmission.enable = true;
@@ -42,12 +42,15 @@ with lib.my;
         mpv.enable = true;
       };
       browsers = {
-        default = "firefox";
+        default = "brave";
+        psd = true;
+        chromium.enable = true;
         firefox.enable = true;
+        brave.enable = true;
       };
       term = {
-        default = "termite";
-        termite.enable = true;
+        default = "alacritty";
+        alacritty.enable = true;
       };
     };
     editors = {
