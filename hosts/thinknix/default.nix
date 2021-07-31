@@ -47,16 +47,16 @@ with lib.my;
   modules = {
     bindings.enable = true;
     shell = {
+      bpytop.enable = true;
+      color-optimization.enable = true;
       direnv.enable = true;
       git.enable = true;
       gnupg.enable = true;
       pass.enable = true;
-      zsh.enable = true;
-      youtube-dl.enable = true;
       weechat.enable = true;
       wget.enable = true;
-      color-optimization.enable = true;
-      bpytop.enable = true;
+      youtube-dl.enable = true;
+      zsh.enable = true;
     };
     shared = {
       sudoers.enable = true;
