@@ -30,7 +30,6 @@ in
       feh
       xdotool
       sxhkd
-      user.xcolor
       (pkgs.writeScriptBin "dragon_downloads" ''
         #!${stdenv.shell}
         cd ~/Downloads
