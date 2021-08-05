@@ -3,12 +3,14 @@ import           System.Exit
 import           System.IO
 import           XMonad
 import           XMonad.Actions.CycleWS
+import           XMonad.Actions.Navigation2D
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.EwmhDesktops
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.SetWMName
 import           XMonad.Layout.Decoration
 import           XMonad.Layout.MultiToggle
+
 import           XMonad.Layout.MultiToggle.Instances (StdTransformers (FULL, MIRROR, NOBORDERS))
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.Reflect
@@ -18,6 +20,7 @@ import           XMonad.Layout.ThreeColumns
 import           XMonad.Layout.WindowArranger
 import           XMonad.Util.EZConfig                (additionalKeys)
 import           XMonad.Util.Run                     (spawnPipe)
+
 
 
 import qualified Data.Map                            as M
@@ -119,11 +122,15 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
     -- Move focus to the next window
        , ((modMask, xK_Tab), toggleWS)
 
-    -- Move focus to the next window
-       , ((modMask, xK_j), windows W.focusDown)
-
-    -- Move focus to the previous window
-       , ((modMask, xK_k), windows W.focusUp)
+       -- Vim window switching
+       , ((modMask, xK_h), windowGo L False)
+       , ((modMask, xK_l), windowGo R False)
+       , ((modMask, xK_j), windowGo D False)
+       , ((modMask, xK_k), windowGo U False)
+       , ((modMask .|. shiftMask, xK_j), windowSwap D False)
+       , ((modMask .|. shiftMask, xK_k), windowSwap U False)
+       , ((modMask .|. shiftMask, xK_h), windowSwap L False)
+       , ((modMask .|. shiftMask, xK_l), windowSwap R False)
 
     -- Move focus to the master window
        , ((modMask, xK_m), windows W.focusMaster)
@@ -137,12 +144,6 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
     -- Swap the focused window with the previous window
        , ((modMask .|. shiftMask, xK_k), windows W.swapUp)
 
-    -- Shrink the master area
-       , ((modMask, xK_h), sendMessage Shrink)
-
-    -- Expand the master area
-       , ((modMask, xK_l), sendMessage Expand)
-
     -- Push window back into tiling
        , ((modMask, xK_t), withFocused $ windows . W.sink)
 
@@ -154,8 +155,8 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
 
     -- Mirror, reflect around x or y axis
        , ((modMask, xK_m), sendMessage $ Toggle MIRROR)
-       , ((modMask, xK_x), sendMessage $ Toggle REFLECTX)
-       , ((modMask, xK_y), sendMessage $ Toggle REFLECTY)
+       , ((modMask, xK_v), sendMessage $ Toggle REFLECTY)
+       , ((modMask .|. shiftMask, xK_v), sendMessage $ Toggle REFLECTY)
        , ((modMask, xK_f), sendMessage $ Toggle FULL)
        , ((modMask .|. shiftMask, xK_f), toggleFloat)
 
@@ -165,7 +166,7 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
          )
 
     -- Reload xmonad
-       , ((modMask, xK_r), restart "xmonad" True)
+       , ((modMask .|. shiftMask, xK_r), restart "xmonad" True)
 
     -- windowArranger keybindings
        , ((modMask .|. controlMask, xK_s), sendMessage Arrange)
