@@ -291,7 +291,7 @@ myLayout =
 myManageHook = composeAll
   [ resource =? "desktop_window" --> doIgnore
   , resource =? "kdesktop" --> doIgnore
-  , className =? "mpv"  --> doFloat
+  , className =? "mpv" --> doFloat
   ]
 
 -- Whether focus follows the mouse pointer.
@@ -354,8 +354,15 @@ defaults = ewmh $ docks $ def
 -- Run xmonad with the settings you specify. No need to modify this.
 --
 main = do
+  xmproc <- spawnPipe "xmobar"
   -- xmproc <- spawnPipe "/usr/bin/xmobar ~/.xmonad/xmobar"
   -- xmproc <- spawnPipe "nitrogen --restore"
   -- xmproc <- spawnPipe "tint2"
   -- xmproc <- spawnPipe "nm-applet"
-  xmonad defaults { startupHook = setWMName "LG3D" }
+  xmonad defaults
+    { startupHook = setWMName "LG3D"
+    , logHook     = dynamicLogWithPP xmobarPP
+                      { ppOutput = hPutStrLn xmproc
+                      , ppTitle  = xmobarColor "#009688" "" . shorten 100
+                      }
+    }
