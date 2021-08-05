@@ -83,7 +83,8 @@ with lib.my;
       mysql.enable = false;
     };
     desktop = {
-      bspwm.enable = true;
+      # bspwm.enable = true;
+      xmonad.enable = true;
       mime.enable = true;
       gtk-emacs-bindings.enable = true;
       vm = {
@@ -133,7 +134,7 @@ with lib.my;
       polybar.enable = true;
       dunst.enable = true;
       greenclip.enable = true;
-      hotplug.enable = true;
+      # hotplug.enable = true;
     };
     work.meisterlabs.enable = true;
     theme.active = "opera";
