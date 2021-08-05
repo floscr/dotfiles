@@ -49,8 +49,6 @@ with lib.my;
       browsers = {
         default = "brave";
         psd = true;
-        chromium.enable = true;
-        firefox.enable = true;
         brave.enable = true;
       };
       term = {
