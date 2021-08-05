@@ -13,7 +13,12 @@ in
   };
 
   config = mkIf cfg.enable (mkMerge [
-    { hardware.bluetooth.enable = true; }
+    {
+      hardware.bluetooth.enable = true;
+      user.packages = with pkgs; [
+        bluez-tools
+      ];
+    }
 
     (mkIf cfg.audio.enable {
       hardware.pulseaudio = {
@@ -22,7 +27,9 @@ in
         # support, so it must be selected here.
         package = pkgs.pulseaudioFull;
         # Enable additional codecs
-        extraModules = [ pkgs.pulseaudio-modules-bt ];
+        extraModules = with pkgs; [
+          pulseaudio-modules-bt
+        ];
       };
 
       hardware.bluetooth.extraConfig = ''

@@ -30,7 +30,7 @@ proc intToBatteryIcon(level: int): string =
       ""
 
 proc main(): any =
-  let res = sh(&"/home/floscr/.nix-profile/bin/bt-device -i {device}")
+  let res = sh(&"/etc/profiles/per-user/floscr/bin/bt-device -i {device}")
   .flatMap((x: string) => x
            .split("\n")
            .asList
