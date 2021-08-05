@@ -291,6 +291,7 @@ myLayout =
 myManageHook = composeAll
   [ resource =? "desktop_window" --> doIgnore
   , resource =? "kdesktop" --> doIgnore
+  , className =? "mpv"  --> doFloat
   ]
 
 -- Whether focus follows the mouse pointer.
