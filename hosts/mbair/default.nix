@@ -7,6 +7,11 @@ with lib.my;
     ./hardware-configuration.nix
     ../personal.nix
   ];
+
+  user.packages = with pkgs; [
+    nixpkgs-fmt
+  ];
+
   modules = {
     bindings.enable = true;
     shell = {
