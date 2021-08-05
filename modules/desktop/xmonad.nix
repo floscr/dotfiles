@@ -18,7 +18,7 @@ in
 					enable = true;
 					enableContribAndExtras = true;
 					extraPackages = pkgs: with pkgs; [ dbus ];
-					# config = ./xmonad.hs;
+					config = ./xmonad.hs;
 				};
 			};
 		};
