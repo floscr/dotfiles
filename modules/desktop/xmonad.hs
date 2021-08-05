@@ -180,7 +180,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((modMask .|. shiftMask .|. controlMask, xK_q     ), io (exitWith ExitSuccess))
 
     -- Reload xmonad
-    , ((modMask .|. shiftMask .|.controlMask, xK_r     ), restart "xmonad" True)
+    , ((modMask , xK_r     ), restart "xmonad" True)
 
     -- windowArranger keybindings
     , ((modMask .|. controlMask              , xK_s    ), sendMessage  Arrange         )
