@@ -26,10 +26,10 @@ with lib.my;
       audio.enable = true;
       bluetooth.enable = true;
       keyboard.enable = true;
-      fs = {
-        enable = true;
-        ssd.enable = true;
-      };
+      # fs = {
+      #   enable = true;
+      #   ssd.enable = true;
+      # };
       sensors.enable = true;
     };
     dev = {
