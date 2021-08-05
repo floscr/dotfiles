@@ -32,8 +32,7 @@ in
         };
       };
     };
+
+    home.configFile."xmobar/xmobarrc".source = ./xmobar.hs;
   };
-
-
-
 }
