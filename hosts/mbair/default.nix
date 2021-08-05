@@ -7,6 +7,11 @@ with lib.my;
     ./hardware-configuration.nix
     ../personal.nix
   ];
+
+  user.packages = with pkgs; [
+    nixpkgs-fmt
+  ];
+
   modules = {
     bindings.enable = true;
     shell = {
@@ -21,10 +26,10 @@ with lib.my;
       audio.enable = true;
       bluetooth.enable = true;
       keyboard.enable = true;
-      fs = {
-        enable = true;
-        ssd.enable = true;
-      };
+      # fs = {
+      #   enable = true;
+      #   ssd.enable = true;
+      # };
       sensors.enable = true;
     };
     dev = {
@@ -44,8 +49,6 @@ with lib.my;
       browsers = {
         default = "brave";
         psd = true;
-        chromium.enable = true;
-        firefox.enable = true;
         brave.enable = true;
       };
       term = {

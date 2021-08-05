@@ -14,6 +14,7 @@ with lib.my;
   user.packages = with pkgs; [
     appimage-run
     ffmpeg
+    user.xcolor
     flameshot
     gparted
     gnome3.nautilus
