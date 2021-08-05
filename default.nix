@@ -7,8 +7,8 @@ with inputs;
   imports =
     [
       home-manager.nixosModules.home-manager
-      "${inputs.secrets}/private.nix"
     ]
+    ++ (if (pathExists inputs.secrets) then [ "${inputs.secrets}/private.nix" ] else [ ])
     ++ (mapModulesRec' (toString ./modules) import);
 
   # Common config for all nixos machines; and to ensure the flake operates soundly
