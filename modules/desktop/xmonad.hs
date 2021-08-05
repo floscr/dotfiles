@@ -6,6 +6,7 @@ import           XMonad.Actions.CycleWS
 import           XMonad.Actions.Navigation2D
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.EwmhDesktops
+import           XMonad.Hooks.InsertPosition
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.SetWMName
 import           XMonad.Layout.Decoration
@@ -343,7 +344,7 @@ defaults = ewmh $ docks $ def
 
       -- hooks, layouts
   , layoutHook         = avoidStruts $ smartBorders $ myLayout
-  , manageHook         = myManageHook <+> manageDocks
+  , manageHook = myManageHook <+> manageDocks <+> insertPosition Below Newer
   , startupHook        = myStartupHook
   , handleEventHook    = def <+> fullscreenEventHook <+> docksEventHook
   }
