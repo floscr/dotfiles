@@ -19,6 +19,8 @@ import XMonad.Layout.MultiToggle.Instances(StdTransformers(NOBORDERS))
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
 import Graphics.X11.ExtraTypes.XF86
+import XMonad.Actions.CycleWS
+
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -102,7 +104,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((modMask,               xK_n     ), refresh)
 
     -- Move focus to the next window
-    , ((modMask,               xK_Tab   ), windows W.focusDown)
+    , ((modMask,               xK_Tab   ), toggleWS)
 
     -- Move focus to the next window
     , ((modMask,               xK_j     ), windows W.focusDown)
