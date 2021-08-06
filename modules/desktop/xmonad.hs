@@ -30,8 +30,9 @@ import           XMonad.Util.EZConfig                (additionalKeys)
 import           XMonad.Util.NamedScratchpad         as NS
 import           XMonad.Util.Run                     (spawnPipe)
 
-
+import           Control.Arrow                       (second, (***))
 import qualified Data.Map                            as M
+import           Data.Maybe
 
 import qualified XMonad.StackSet                     as W
 
