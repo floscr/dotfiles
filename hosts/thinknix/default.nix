@@ -131,10 +131,10 @@ with lib.my;
     services = {
       screendrawing.enable = true;
       syncthing.enable = true;
-      polybar.enable = true;
+      polybar.enable = false;
       dunst.enable = true;
       greenclip.enable = true;
-      # hotplug.enable = true;
+      hotplug.enable = true;
     };
     work.meisterlabs.enable = true;
     theme.active = "opera";
