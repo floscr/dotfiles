@@ -1,3 +1,6 @@
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+
 import           Graphics.X11.ExtraTypes.XF86
 import           System.Exit
 import           System.IO
@@ -237,6 +240,21 @@ myMouseBindings (XConfig { XMonad.modMask = modMask }) =
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
+
+newtype Flip l a = Flip (l a) deriving (Show, Read)
+
+instance LayoutClass l a => LayoutClass (Flip l) a where
+  runLayout (W.Workspace i (Flip l) ms) r =
+    (map (second flipRect) *** fmap Flip)
+      `fmap` runLayout (W.Workspace i l ms) (flipRect r)
+   where
+    screenWidth = fromIntegral $ rect_width r
+    flipRect (Rectangle rx ry rw rh) =
+      Rectangle (screenWidth - rx - (fromIntegral rw)) ry rw rh
+  handleMessage (Flip l) = fmap (fmap Flip) . handleMessage l
+  description (Flip l) = "Flip " ++ description l
+
+
 myTabConfig = def { activeBorderColor   = "#cd8b00"
                   , activeTextColor     = "#CEFFAC"
                   , activeColor         = "#000000"
@@ -251,7 +269,8 @@ myLayout =
     $ mkToggle (NOBORDERS ?? FULL ?? EOT)
     $ windowArrange
         (   tiled
-        ||| ThreeCol 1 (3 / 100) (1 / 3)
+        ||| Flip tiled
+        ||| ThreeCol 1 (1 / 3) (3 / 100)
         ||| tabbed shrinkText myTabConfig
         ||| Full
         ||| spiral (6 / 7)
