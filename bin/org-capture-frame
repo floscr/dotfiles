@@ -19,8 +19,6 @@ shift $((OPTIND-1))
 
 [ -t 0 ] && str="$*" || str=$(cat)
 
-# HACK: Fix for weird emacs 28 behaviour where the window wouldn't float with subrules
-bspc rule -a Emacs state=floating sticky=on --one-shot
 emacsclient -a "" \
   -c -F '((name . "doom-capture") (transient . t))' \
   -e "(+org-capture|my-open-frame)"
