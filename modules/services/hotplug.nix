@@ -81,22 +81,22 @@ in
             disconnect
           fi
 
-          systemctl --user restart polybar.service;
+          # systemctl --user restart polybar.service;
 
-          bspc monitor $MONITOR -d {1,2,3,4,5,6,7}
+          # bspc monitor $MONITOR -d {1,2,3,4,5,6,7}
 
           # Fix the regular cursor for x
           xsetroot -cursor_name left_ptr
 
           # Reset windows overlaying polybar
-          sleep 1
+          # sleep 1
           emacsclient -e "(+ui|adjust-ui-to-display)"
 
           # Hacky way to call the script, but it works
           /etc/profiles/per-user/$(whoami)/bin/reloadWallpaper
 
           ${pkgs.xorg.xrdb}/bin/xrdb -merge ~/.config/xtheme/80-dpi
-          bspc config borderless_monocle true
+          # bspc config borderless_monocle true
         ''}";
         };
       };
