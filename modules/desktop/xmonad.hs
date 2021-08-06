@@ -10,9 +10,10 @@ import           XMonad.Actions.CycleWS
 import           XMonad.Actions.Navigation2D
 
 import           XMonad.Hooks.DynamicLog
-import           XMonad.Hooks.EwmhDesktops
+import           XMonad.Hooks.EwmhDesktops           as Ewmh
 import           XMonad.Hooks.InsertPosition
 import           XMonad.Hooks.ManageDocks
+import           XMonad.Hooks.ManageHelpers
 import           XMonad.Hooks.SetWMName
 
 import           XMonad.Layout.Decoration
@@ -101,6 +102,14 @@ myNumlockMask = mod2Mask
 --
 --myWorkspaces    = ["1:code","2:web","3:msg","4:vm","5:media","6","7","8","9"]
 myWorkspaces = map show [1 .. 9]
+
+myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces [1 ..] -- (,) == \x y -> (x,y)
+
+clickable ws =
+  "<action=xdotool key super+" ++ show i ++ ">" ++ ws ++ "</action>"
+  where i = fromJust $ M.lookup ws myWorkspaceIndices
+
+
 
 -- Border colors for unfocused and focused windows, respectively.
 --
@@ -326,6 +335,21 @@ myFocusFollowsMouse = True
 -- > logHook = dynamicLogDzen
 --
 
+myLogHook h = dynamicLogWithPP $ xmoPP h
+
+xmoPP :: Handle -> PP
+xmoPP h = xmobarPP { ppOutput          = hPutStrLn h
+                   , ppCurrent         = xmobarColor "#98be65" "" . wrap "[" "]"
+                   , ppVisible         = xmobarColor "#98be65" ""
+                   , ppHidden          = xmobarColor "#82AAFF" "" . wrap "*" ""
+                   , ppHiddenNoWindows = xmobarColor "#c792ea" ""
+                   , ppTitle           = xmobarColor "#b3afc2" "" . shorten 60
+                   , ppSep             = "<fc=#666666> <fn=1>|</fn> </fc>"
+                   , ppUrgent          = xmobarColor "#C45500" "" . wrap "!" "!"
+           -- , ppExtras  = [windowCount]
+                   , ppOrder = \(ws : l : t : ex) -> [ws, l] ++ ex ++ [t]
+                   }
+
 ------------------------------------------------------------------------
 -- Startup hook
 
@@ -334,7 +358,7 @@ myFocusFollowsMouse = True
 -- per-workspace layout choices.
 --
 -- By default, do nothing.
-myStartupHook = return ()
+myStartupHook = Ewmh.ewmhDesktopsStartup
 
 -- A structure containing your configuration settings, overriding
 -- fields in the default config. Any you don't override, will
@@ -342,7 +366,7 @@ myStartupHook = return ()
 --
 -- No need to modify this.
 --
-defaults = ewmh $ docks $ def
+defaults pipe = def
   {
    -- simple stuff
     terminal           = myTerminal
@@ -362,24 +386,20 @@ defaults = ewmh $ docks $ def
   , layoutHook         = avoidStruts $ smartBorders $ myLayout
   , manageHook = myManageHook <+> manageDocks <+> insertPosition Below Newer
   , startupHook        = myStartupHook
-  , handleEventHook    = def <+> fullscreenEventHook <+> docksEventHook
+  , logHook            = myLogHook pipe
+  , handleEventHook    = def
+                         <+> Ewmh.ewmhDesktopsEventHook
+                         <+> Ewmh.fullscreenEventHook
+                         <+> docksEventHook
   }
 
-------------------------------------------------------------------------
--- Now run xmonad with all the defaults we set up.
-
--- Run xmonad with the settings you specify. No need to modify this.
---
 main = do
-  xmproc <- spawnPipe "xmobar"
-  -- xmproc <- spawnPipe "/usr/bin/xmobar ~/.xmonad/xmobar"
-  -- xmproc <- spawnPipe "nitrogen --restore"
-  -- xmproc <- spawnPipe "tint2"
-  -- xmproc <- spawnPipe "nm-applet"
-  xmonad defaults
-    { startupHook = setWMName "LG3D"
-    , logHook     = dynamicLogWithPP xmobarPP
-                      { ppOutput = hPutStrLn xmproc
-                      , ppTitle  = xmobarColor "#009688" "" . shorten 100
-                      }
-    }
+  pipe <- spawnPipe "xmobar"
+  xmonad $ docks $ ewmh $ defaults pipe
+
+
+-- main = do
+--   xmproc <- spawnPipe "xmobar"
+--   xmonad defaults
+--     { startupHook = setWMName "LG3D"
+--     }
