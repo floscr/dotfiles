@@ -41,7 +41,7 @@ import qualified XMonad.StackSet                     as W
 --
 myTerminal = "alacritty"
 
-centreRect = W.RationalRect 0.25 0.25 0.5 0.5
+centreRect = W.RationalRect 0.5 0.5 0.5 0.5
 
 -- If the window is floating then (f), if tiled then (n)
 floatOrNot f n = withFocused $ \windowId -> do
