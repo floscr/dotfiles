@@ -146,12 +146,29 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
 
         -- close focused window
        , ((modMask, xK_w), kill)
+       , ((modMask, xK_comma), namedScratchpadAction myScratchPads "terminal")
 
-     -- Rotate through the available layout algorithms
-       , ((modMask, xK_space), sendMessage NextLayout)
+        -- rofi cmder
+       , ((modMask, xK_space), spawn "nimx cmder &")
+       , ( (modMask, xK_apostrophe)
+         , spawn "rofi-pass -dmenu -theme theme/passmenu.rasi &"
+         )
+       , ((modMask .|. shiftMask, xK_v), spawn "rofi-greenclip &")
+
+       -- Emacs capture
+       -- , ((modMask .|. shiftMask, xK_x), spawn "org-capture-frame &")
+       , ( (modMask .|. shiftMask, xK_x)
+         , namedScratchpadAction myScratchPads "capture"
+         )
+
+       -- Rotate through the available layout algorithms
+       , ((modMask .|. shiftMask, xK_m), sendMessage NextLayout)
 
     --  Reset the layouts on the current workspace to default
        , ((modMask .|. shiftMask, xK_space), setLayout $ XMonad.layoutHook conf)
+       , ( (modMask .|. controlMask, xK_space)
+         , setLayout $ XMonad.layoutHook conf
+         )
 
         -- Move focus to the next window
        , ((modMask, xK_Tab), toggleWS)
@@ -165,6 +182,8 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
        , ((modMask .|. shiftMask, xK_k), windowSwap U False)
        , ((modMask .|. shiftMask, xK_h), windowSwap L False)
        , ((modMask .|. shiftMask, xK_l), windowSwap R False)
+       , ((modMask .|. controlMask, xK_h), sendMessage Shrink)
+       , ((modMask .|. controlMask, xK_l), sendMessage Expand)
 
        -- Move focus to the master window
        , ((modMask, xK_m), windows W.focusMaster)
