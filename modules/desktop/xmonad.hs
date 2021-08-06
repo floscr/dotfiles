@@ -27,6 +27,7 @@ import           XMonad.Layout.ThreeColumns
 import           XMonad.Layout.WindowArranger
 
 import           XMonad.Util.EZConfig                (additionalKeys)
+import           XMonad.Util.NamedScratchpad         as NS
 import           XMonad.Util.Run                     (spawnPipe)
 
 
@@ -115,6 +116,22 @@ clickable ws =
 --
 myNormalBorderColor = "#7c7c7c"
 myFocusedBorderColor = "#ffb6b0"
+
+myScratchPads :: [NamedScratchpad]
+myScratchPads =
+  [ NS "terminal" spawnTerm     findTerm                  manageTerm
+  , NS "capture"  "org-capture" (title =? "doom-capture") orgFloat
+  ]
+ where
+  spawnTerm  = myTerminal ++ " -t scratchpad"
+  findTerm   = title =? "scratchpad"
+  orgFloat   = customFloating $ W.RationalRect (1 / 2) (1 / 2) (1 / 2) (1 / 2)
+  manageTerm = customFloating $ W.RationalRect l t w h
+   where
+    h = 0.6
+    w = 0.6
+    t = 0.7 - h
+    l = 0.8 - w
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -384,7 +401,10 @@ defaults pipe = def
 
       -- hooks, layouts
   , layoutHook         = avoidStruts $ smartBorders $ myLayout
-  , manageHook = myManageHook <+> manageDocks <+> insertPosition Below Newer
+  , manageHook         = myManageHook
+                         <+> manageDocks
+                         <+> insertPosition Below Newer
+                         <+> namedScratchpadManageHook myScratchPads
   , startupHook        = myStartupHook
   , logHook            = myLogHook pipe
   , handleEventHook    = def
