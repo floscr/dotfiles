@@ -36,10 +36,15 @@ import           Data.Maybe
 
 import qualified XMonad.StackSet                     as W
 
--- The preferred terminal program, which is used in a binding below and by
--- certain contrib modules.
---
+------------------------------------------------------------------------
+-- Utils:
+------------------------------------------------------------------------
+
 myTerminal = "alacritty"
+
+------------------------------------------------------------------------
+-- Utils:
+------------------------------------------------------------------------
 
 centreRect = W.RationalRect 0.5 0.5 0.5 0.5
 
@@ -68,55 +73,16 @@ standardSize win = do
 toggleFloat =
   floatOrNot (withFocused $ windows . W.sink) (withFocused centreFloat')
 
+------------------------------------------------------------------------
+-- Workspaces:
+------------------------------------------------------------------------
 
-myBorderWidth = 1
-
--- modMask lets you specify which modkey you want to use. The default
--- is mod1Mask ("left alt").  You may also consider using mod3Mask
--- ("right alt"), which does not conflict with emacs keybindings. The
--- "windows key" is usually mod4Mask.
---
-myModMask = mod4Mask
-
--- The mask for the numlock key. Numlock status is "masked" from the
--- current modifier status, so the keybindings will work with numlock on or
--- off. You may need to change this on some systems.
---
--- You can find the numlock modifier by running "xmodmap" and looking for a
--- modifier with Num_Lock bound to it:
---
--- > $ xmodmap | grep Num
--- > mod2        Num_Lock (0x4d)
---
--- Set numlockMask = 0 if you don't have a numlock key, or want to treat
--- numlock status separately.
---
-myNumlockMask = mod2Mask
-
--- The default number of workspaces (virtual screens) and their names.
--- By default we use numeric strings, but any string may be used as a
--- workspace name. The number of workspaces is determined by the length
--- of this list.
---
--- A tagging example:
---
--- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
---
---myWorkspaces    = ["1:code","2:web","3:msg","4:vm","5:media","6","7","8","9"]
 myWorkspaces = map show [1 .. 9]
+myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces [1 ..]
 
-myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces [1 ..] -- (,) == \x y -> (x,y)
-
-clickable ws =
-  "<action=xdotool key super+" ++ show i ++ ">" ++ ws ++ "</action>"
-  where i = fromJust $ M.lookup ws myWorkspaceIndices
-
-
-
--- Border colors for unfocused and focused windows, respectively.
---
-myNormalBorderColor = "#7c7c7c"
-myFocusedBorderColor = "#ffb6b0"
+------------------------------------------------------------------------
+-- Scratch Pads:
+------------------------------------------------------------------------
 
 myScratchPads :: [NamedScratchpad]
 myScratchPads =
@@ -135,8 +101,12 @@ myScratchPads =
     l = 0.8 - w
 
 ------------------------------------------------------------------------
--- Key bindings. Add, modify or remove key bindings here.
---
+-- Key bindings:
+------------------------------------------------------------------------
+
+myModMask = mod4Mask
+myNumlockMask = mod2Mask
+
 myKeys conf@(XConfig { XMonad.modMask = modMask }) =
   M.fromList
     $
@@ -164,13 +134,13 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
        -- Rotate through the available layout algorithms
        , ((modMask .|. shiftMask, xK_m), sendMessage NextLayout)
 
-    --  Reset the layouts on the current workspace to default
+       --  Reset the layouts on the current workspace to default
        , ((modMask .|. shiftMask, xK_space), setLayout $ XMonad.layoutHook conf)
        , ( (modMask .|. controlMask, xK_space)
          , setLayout $ XMonad.layoutHook conf
          )
 
-        -- Move focus to the next window
+       -- Move focus to the next window
        , ((modMask, xK_Tab), toggleWS)
 
        -- Vim window switching
@@ -200,16 +170,12 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
        -- Push window back into tiling
        , ((modMask, xK_t), withFocused $ windows . W.sink)
 
-       -- Increment the number of windows in the master area
-       -- , ((modMask, xK_comma), sendMessage (IncMasterN 1))
-
        -- Deincrement the number of windows in the master area
        , ((modMask, xK_period), sendMessage (IncMasterN (-1)))
 
        -- Mirror, reflect around x or y axis
        , ((modMask, xK_m), sendMessage $ Toggle MIRROR)
        , ((modMask, xK_v), sendMessage $ Toggle REFLECTY)
-       -- , ((modMask .|. shiftMask, xK_v), sendMessage $ Toggle REFLECTY)
        , ((modMask, xK_f), sendMessage $ Toggle FULL)
        , ((modMask .|. shiftMask, xK_f), toggleFloat)
 
@@ -246,19 +212,19 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
          )
        ]
     ++
-
-    --
-    -- mod-[1..9], Switch to workspace N
-    -- mod-shift-[1..9], Move client to workspace N
-    --
+       --
+       -- mod-[1..9], Switch to workspace N
+       -- mod-shift-[1..9], Move client to workspace N
+       --
        [ ((m .|. modMask, k), windows $ f i)
        | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
        ]
 
 ------------------------------------------------------------------------
--- Mouse bindings: default actions bound to mouse events
---
+-- Mouse bindings:
+------------------------------------------------------------------------
+
 myMouseBindings (XConfig { XMonad.modMask = modMask }) =
   M.fromList
     $
@@ -274,15 +240,7 @@ myMouseBindings (XConfig { XMonad.modMask = modMask }) =
 
 ------------------------------------------------------------------------
 -- Layouts:
-
--- You can specify and transform your layouts by modifying these values.
--- If you change layout bindings be sure to use 'mod-shift-space' after
--- restarting (with 'mod-q') to reset your layout state to the new
--- defaults, as xmonad preserves your old layout settings by default.
---
--- The available layouts.  Note that each layout is separated by |||,
--- which denotes layout choice.
---
+------------------------------------------------------------------------
 
 newtype Flip l a = Flip (l a) deriving (Show, Read)
 
@@ -296,7 +254,6 @@ instance LayoutClass l a => LayoutClass (Flip l) a where
       Rectangle (screenWidth - rx - (fromIntegral rw)) ry rw rh
   handleMessage (Flip l) = fmap (fmap Flip) . handleMessage l
   description (Flip l) = "Flip " ++ description l
-
 
 myTabConfig = def { activeBorderColor   = "#cd8b00"
                   , activeTextColor     = "#CEFFAC"
@@ -319,57 +276,34 @@ myLayout =
         ||| spiral (6 / 7)
         )
  where
-     -- default tiling algorithm partitions the screen into two panes
+  -- default tiling algorithm partitions the screen into two panes
   tiled   = Tall nmaster delta ratio
-
   -- The default number of windows in the master pane
   nmaster = 1
-
   -- Default proportion of screen occupied by master pane
   ratio   = 1 / 2
-
   -- Percent of screen to increment by when resizing panes
   delta   = 3 / 100
 
 ------------------------------------------------------------------------
--- Window rules:
+-- Window Rules
+------------------------------------------------------------------------
 
--- Execute arbitrary actions and WindowSet manipulations when managing
--- a new window. You can use this to, for example, always float a
--- particular program, or have a client always appear on a particular
--- workspace.
---
--- To find the property name associated with a program, use
--- > xprop | grep WM_CLASS
--- and click on the client you're interested in.
---
--- To match on the WM_NAME, you can use 'title' in the same way that
--- 'className' and 'resource' are used below.
---
 myManageHook = composeAll
   [ resource =? "desktop_window" --> doIgnore
   , resource =? "kdesktop" --> doIgnore
   , className =? "mpv" --> doFloat
   ]
 
--- Whether focus follows the mouse pointer.
-myFocusFollowsMouse :: Bool
-myFocusFollowsMouse = True
-
-
-
 ------------------------------------------------------------------------
--- Status bars and logging
+-- Xmobar & Logging
+------------------------------------------------------------------------
 
--- Perform an arbitrary action on each internal state change or X event.
--- See the 'DynamicLog' extension for examples.
---
--- To emulate dwm's status bar
---
--- > logHook = dynamicLogDzen
---
+clickable ws =
+  "<action=xdotool key super+" ++ show i ++ ">" ++ ws ++ "</action>"
+  where i = fromJust $ M.lookup ws myWorkspaceIndices
 
-myLogHook h = dynamicLogWithPP $ xmoPP h
+myLogHook pipe = dynamicLogWithPP $ xmoPP pipe
 
 xmoPP :: Handle -> PP
 xmoPP h = xmobarPP { ppOutput          = hPutStrLn h
@@ -380,49 +314,33 @@ xmoPP h = xmobarPP { ppOutput          = hPutStrLn h
                    , ppTitle           = xmobarColor "#b3afc2" "" . shorten 60
                    , ppSep             = "<fc=#666666> <fn=1>|</fn> </fc>"
                    , ppUrgent          = xmobarColor "#C45500" "" . wrap "!" "!"
-           -- , ppExtras  = [windowCount]
                    , ppOrder = \(ws : l : t : ex) -> [ws, l] ++ ex ++ [t]
                    }
 
 ------------------------------------------------------------------------
--- Startup hook
+-- Main
+------------------------------------------------------------------------
 
--- Perform an arbitrary action each time xmonad starts or is restarted
--- with mod-q.  Used by, e.g., XMonad.Layout.PerWorkspace to initialize
--- per-workspace layout choices.
---
--- By default, do nothing.
-myStartupHook = Ewmh.ewmhDesktopsStartup
-
--- A structure containing your configuration settings, overriding
--- fields in the default config. Any you don't override, will
--- use the defaults defined in xmonad/XMonad/Config.hs
---
--- No need to modify this.
---
 defaults pipe = def
-  {
-   -- simple stuff
-    terminal           = myTerminal
-  , focusFollowsMouse  = myFocusFollowsMouse
-  , borderWidth        = myBorderWidth
+  { terminal           = myTerminal
+  , focusFollowsMouse  = True
+  , borderWidth        = 1
   , modMask            = myModMask
---        numlockMask        = myNumlockMask,
   , workspaces         = myWorkspaces
-  , normalBorderColor  = myNormalBorderColor
-  , focusedBorderColor = myFocusedBorderColor
+  , normalBorderColor  = "#7c7c7c"
+  , focusedBorderColor = "#ffb6b0"
 
-      -- key bindings
+  -- keybindings
   , keys               = myKeys
   , mouseBindings      = myMouseBindings
 
-      -- hooks, layouts
+  -- hooks
   , layoutHook         = avoidStruts $ smartBorders $ myLayout
   , manageHook         = myManageHook
                          <+> manageDocks
                          <+> insertPosition Below Newer
                          <+> namedScratchpadManageHook myScratchPads
-  , startupHook        = myStartupHook
+  , startupHook        = Ewmh.ewmhDesktopsStartup
   , logHook            = myLogHook pipe
   , handleEventHook    = def
                          <+> Ewmh.ewmhDesktopsEventHook
@@ -433,10 +351,3 @@ defaults pipe = def
 main = do
   pipe <- spawnPipe "xmobar"
   xmonad $ docks $ ewmh $ defaults pipe
-
-
--- main = do
---   xmproc <- spawnPipe "xmobar"
---   xmonad defaults
---     { startupHook = setWMName "LG3D"
---     }
