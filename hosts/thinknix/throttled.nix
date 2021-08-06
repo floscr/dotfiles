@@ -38,53 +38,53 @@ let thinkfanConfigFile = pkgs.writeText "thinkfan.conf" ''
 '';
 in
 {
-  systemd.services."toggle_performance_mode" = {
-    enable = true;
-    description = "Toggle Performance mode";
-    wantedBy = [ "multi-user.target" ];
-    path = with pkgs; [
-      sudo
-      systemd
-    ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = false;
-      ExecStart = "${pkgs.bash}/bin/bash ${pkgs.writeScript "hotplug-monitor.sh" ''
-        service_status="$(systemctl is-active lenovo_fix_performance.service)"
+  # systemd.services."toggle_performance_mode" = {
+  #   enable = true;
+  #   description = "Toggle Performance mode";
+  #   wantedBy = [ "multi-user.target" ];
+  #   path = with pkgs; [
+  #     sudo
+  #     systemd
+  #   ];
+  #   serviceConfig = {
+  #     Type = "oneshot";
+  #     RemainAfterExit = false;
+  #     ExecStart = "${pkgs.bash}/bin/bash ${pkgs.writeScript "hotplug-monitor.sh" ''
+  #       service_status="$(systemctl is-active lenovo_fix_performance.service)"
 
-        if [ "$service_status" = "active" ]; then
-            echo "Stopping performance mode..."
-            sudo systemctl stop lenovo_fix_performance.service thinkfan_blast.service
-            sudo systemctl start lenovo_fix.service thinkfan.service
-        else
-            echo "Starting performance mode..."
-            sudo systemctl stop lenovo_fix.service thinkfan.service
-            sudo systemctl start lenovo_fix_performance.service thinkfan_blast.service
-        fi
-      ''}";
-    };
-  };
+  #       if [ "$service_status" = "active" ]; then
+  #           echo "Stopping performance mode..."
+  #           sudo systemctl stop lenovo_fix_performance.service thinkfan_blast.service
+  #           sudo systemctl start lenovo_fix.service thinkfan.service
+  #       else
+  #           echo "Starting performance mode..."
+  #           sudo systemctl stop lenovo_fix.service thinkfan.service
+  #           sudo systemctl start lenovo_fix_performance.service thinkfan_blast.service
+  #       fi
+  #     ''}";
+  #   };
+  # };
 
-  systemd.services."lenovo_fix_performance" = {
-    description = "Intel Throttling Performance Mode";
-    environment = {
-      PYTHONBUFFERED = "1";
-    };
-    conflicts = [ "lenovo_fix.service" ];
-    serviceConfig = {
-      ExecStart = "${pkgs.throttled}/bin/lenovo_fix.py --config ${config.environment.etc."lenovo_fix_performance.conf".source.outPath}";
-    };
-  };
+  # systemd.services."lenovo_fix_performance" = {
+  #   description = "Intel Throttling Performance Mode";
+  #   environment = {
+  #     PYTHONBUFFERED = "1";
+  #   };
+  #   conflicts = [ "lenovo_fix.service" ];
+  #   serviceConfig = {
+  #     ExecStart = "${pkgs.throttled}/bin/lenovo_fix.py --config ${config.environment.etc."lenovo_fix_performance.conf".source.outPath}";
+  #   };
+  # };
 
-  systemd.services."thinkfan_blast" = {
-    description = "Thinkfan on high blast mode";
-    after = [ "lenovo_fix_performance.service" ];
-    conflicts = [ "lenovo_fix.service" ];
-    path = [ pkgs.thinkfan ];
-    serviceConfig = {
-      ExecStart = "${pkgs.thinkfan}/bin/thinkfan -c ${thinkfanConfigFile}";
-    };
-  };
+  # systemd.services."thinkfan_blast" = {
+  #   description = "Thinkfan on high blast mode";
+  #   after = [ "lenovo_fix_performance.service" ];
+  #   conflicts = [ "lenovo_fix.service" ];
+  #   path = [ pkgs.thinkfan ];
+  #   serviceConfig = {
+  #     ExecStart = "${pkgs.thinkfan}/bin/thinkfan -c ${thinkfanConfigFile}";
+  #   };
+  # };
 
   modules.bindings.items = [
     {
