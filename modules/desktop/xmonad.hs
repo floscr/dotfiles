@@ -2,16 +2,18 @@ import           Graphics.X11.ExtraTypes.XF86
 import           System.Exit
 import           System.IO
 import           XMonad
+
 import           XMonad.Actions.CycleWS
 import           XMonad.Actions.Navigation2D
+
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.EwmhDesktops
 import           XMonad.Hooks.InsertPosition
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.SetWMName
+
 import           XMonad.Layout.Decoration
 import           XMonad.Layout.MultiToggle
-
 import           XMonad.Layout.MultiToggle.Instances (StdTransformers (FULL, MIRROR, NOBORDERS))
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.Reflect
@@ -19,12 +21,13 @@ import           XMonad.Layout.Spiral
 import           XMonad.Layout.Tabbed
 import           XMonad.Layout.ThreeColumns
 import           XMonad.Layout.WindowArranger
+
 import           XMonad.Util.EZConfig                (additionalKeys)
 import           XMonad.Util.Run                     (spawnPipe)
 
 
-
 import qualified Data.Map                            as M
+
 import qualified XMonad.StackSet                     as W
 
 -- The preferred terminal program, which is used in a binding below and by
@@ -108,10 +111,10 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
   M.fromList
     $
 
-    -- launch a terminal
+        -- launch a terminal
        [ ((modMask, xK_Return), spawn $ XMonad.terminal conf)
 
-    -- close focused window
+        -- close focused window
        , ((modMask, xK_w), kill)
 
      -- Rotate through the available layout algorithms
@@ -120,7 +123,7 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
     --  Reset the layouts on the current workspace to default
        , ((modMask .|. shiftMask, xK_space), setLayout $ XMonad.layoutHook conf)
 
-    -- Move focus to the next window
+        -- Move focus to the next window
        , ((modMask, xK_Tab), toggleWS)
 
        -- Vim window switching
@@ -133,43 +136,43 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
        , ((modMask .|. shiftMask, xK_h), windowSwap L False)
        , ((modMask .|. shiftMask, xK_l), windowSwap R False)
 
-    -- Move focus to the master window
+       -- Move focus to the master window
        , ((modMask, xK_m), windows W.focusMaster)
 
-    -- Swap the focused window and the master window
+       -- Swap the focused window and the master window
        , ((modMask .|. shiftMask, xK_Return), windows W.swapMaster)
 
-    -- Swap the focused window with the next window
+       -- Swap the focused window with the next window
        , ((modMask .|. shiftMask, xK_j), windows W.swapDown)
 
-    -- Swap the focused window with the previous window
+       -- Swap the focused window with the previous window
        , ((modMask .|. shiftMask, xK_k), windows W.swapUp)
 
-    -- Push window back into tiling
+       -- Push window back into tiling
        , ((modMask, xK_t), withFocused $ windows . W.sink)
 
-    -- Increment the number of windows in the master area
-       , ((modMask, xK_comma), sendMessage (IncMasterN 1))
+       -- Increment the number of windows in the master area
+       -- , ((modMask, xK_comma), sendMessage (IncMasterN 1))
 
-    -- Deincrement the number of windows in the master area
+       -- Deincrement the number of windows in the master area
        , ((modMask, xK_period), sendMessage (IncMasterN (-1)))
 
-    -- Mirror, reflect around x or y axis
+       -- Mirror, reflect around x or y axis
        , ((modMask, xK_m), sendMessage $ Toggle MIRROR)
        , ((modMask, xK_v), sendMessage $ Toggle REFLECTY)
-       , ((modMask .|. shiftMask, xK_v), sendMessage $ Toggle REFLECTY)
+       -- , ((modMask .|. shiftMask, xK_v), sendMessage $ Toggle REFLECTY)
        , ((modMask, xK_f), sendMessage $ Toggle FULL)
        , ((modMask .|. shiftMask, xK_f), toggleFloat)
 
-    -- Quit xmonad
+       -- Quit xmonad
        , ( (modMask .|. shiftMask .|. controlMask, xK_q)
          , io (exitWith ExitSuccess)
          )
 
-    -- Reload xmonad
+       -- Reload xmonad
        , ((modMask .|. shiftMask, xK_r), restart "xmonad" True)
 
-    -- windowArranger keybindings
+       -- windowArranger keybindings
        , ((modMask .|. controlMask, xK_s), sendMessage Arrange)
        , ((modMask .|. controlMask .|. shiftMask, xK_s), sendMessage DeArrange)
        , ((modMask .|. controlMask, xK_Left), sendMessage (MoveLeft 10))
@@ -192,14 +195,6 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
        , ( (modMask .|. controlMask .|. shiftMask, xK_Up)
          , sendMessage (DecreaseUp 10)
          )
-
-    -- Volume keys
-    -- , ((0,               xF86XK_AudioMute), spawn "amixer sset Master toggle &")
-    -- , ((0,               xF86XK_AudioLowerVolume), spawn "amixer set Master 2dB- unmute &")
-    -- , ((0,               xF86XK_AudioRaiseVolume), spawn "amixer set Master 2dB+ unmute &")
-    -- Brightness
-    -- , ((0,               xF86XK_MonBrightnessUp), spawn "light -A 5 &")
-    -- , ((0,               xF86XK_MonBrightnessDown), spawn "light -U 5 &")
        ]
     ++
 
@@ -299,6 +294,8 @@ myManageHook = composeAll
 myFocusFollowsMouse :: Bool
 myFocusFollowsMouse = True
 
+
+
 ------------------------------------------------------------------------
 -- Status bars and logging
 
@@ -328,7 +325,7 @@ myStartupHook = return ()
 --
 defaults = ewmh $ docks $ def
   {
-      -- simple stuff
+   -- simple stuff
     terminal           = myTerminal
   , focusFollowsMouse  = myFocusFollowsMouse
   , borderWidth        = myBorderWidth
