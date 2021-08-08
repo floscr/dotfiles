@@ -334,7 +334,7 @@ defaults pipe = def
   , focusedBorderColor = "#ffb6b0"
 
   -- keybindings
-  , keys               = myKeys
+  , keys               = myKeys <+> myKeybindings
   , mouseBindings      = myMouseBindings
 
   -- hooks

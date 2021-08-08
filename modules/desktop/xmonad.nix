@@ -15,7 +15,6 @@ in
       xmobar
       haskellPackages.brittany
       haskellPackages.stylish-haskell
-
     ];
 
     services = {
@@ -28,7 +27,15 @@ in
           extraPackages = pkgs: with pkgs; [
             dbus
           ];
-          config = ./xmonad.hs;
+          config = (builtins.readFile ./xmonad.hs) + (
+            let bindings = ""; in
+            ''
+              myKeybindings conf@(XConfig { XMonad.modMask = modMask }) =
+                M.fromList $ [
+                  ${bindings}
+                ]
+            ''
+          );
         };
       };
     };
