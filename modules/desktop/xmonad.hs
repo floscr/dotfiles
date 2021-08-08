@@ -16,13 +16,13 @@ import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers
 import           XMonad.Hooks.SetWMName
 
+import           XMonad.Layout.BinarySpacePartition
 import           XMonad.Layout.Decoration
 import           XMonad.Layout.Grid
 import           XMonad.Layout.MultiToggle
 import           XMonad.Layout.MultiToggle.Instances (StdTransformers (FULL, MIRROR, NOBORDERS))
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.Reflect
-import           XMonad.Layout.Spiral
 import           XMonad.Layout.Tabbed
 import           XMonad.Layout.ThreeColumns
 import           XMonad.Layout.WindowArranger
@@ -272,10 +272,10 @@ myLayout =
         (   tiled
         ||| Flip tiled
         ||| Flip Grid
+        ||| emptyBSP
         ||| ThreeCol 1 (1 / 3) (3 / 100)
         ||| tabbed shrinkText myTabConfig
         ||| Full
-        ||| spiral (6 / 7)
         )
  where
   -- default tiling algorithm partitions the screen into two panes
