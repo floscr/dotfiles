@@ -295,6 +295,7 @@ myManageHook = composeAll
   [ resource =? "desktop_window" --> doIgnore
   , resource =? "kdesktop" --> doIgnore
   , className =? "mpv" --> doFloat
+  , className =? "Pavucontrol" --> doFloat
   ]
 
 ------------------------------------------------------------------------
