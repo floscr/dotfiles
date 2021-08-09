@@ -7,18 +7,14 @@ with lib.my;
     modules.bindings.items = (mkMerge [
       (mkIf config.modules.desktop.bspwm.enable [
         {
-          binding = "super + BackSpace";
-          command = "zzz";
-          description = "Turn off display";
+          binding = "super + Escape";
+          command = ''pkill -USR1 -x sxhkd; notify-send "Reloaded shortcuts"'';
+          description = "Reload Shortcuts";
         }
         {
-          binding = "super + shift + BackSpace";
-          command = "zzz -f";
-          description = "Sleep";
-        }
-        {
-          command = "caffeine";
-          description = "Caffeine";
+          binding = "super + t";
+          command = "toggle-polybar";
+          description = "Toggle Polybar";
         }
         {
           binding = "super + grave";
@@ -137,24 +133,43 @@ with lib.my;
         ]
       ))
       (mkIf config.services.xserver.enable [
-        ## Screenshots
+        {
+          binding = "super + BackSpace";
+          xmonadBinding = "M-<Backspace>";
+          command = "zzz";
+          description = "Turn off display";
+        }
+        {
+          binding = "super + shift + BackSpace";
+          xmonadBinding = "M-S-<Backspace>";
+          command = "zzz -f";
+          description = "Sleep";
+        }
+        {
+          command = "caffeine";
+          description = "Caffeine";
+        }
         {
           binding = "super + shift + S";
+          xmonadBinding = "M-S-s";
           command = "nimx screenCapture";
           description = "Screenshot";
         }
         {
           binding = "super + ctrl + s";
+          xmonadBinding = "M-C-s";
           command = "scrrec -s ~/Media/Screenrecording/$(date +%F-%T).mp4";
           description = "Record Screen (MP4)";
         }
         {
           binding = "super + ctrl + alt + s";
+          xmonadBinding = "M-C-M1-s";
           command = "scrrec -s -w ~/Media/Screenrecording/$(date +%F-%T).mp4";
           description = "Record Screen (MP4) + Screenkey";
         }
         {
           binding = "super + alt + s";
+          xmonadBinding = "M-M1-s";
           command = "scrrec -s ~/Media/Screenrecording/$(date +%F-%T).gif";
           description = "Record Screen (GIF)";
         }
@@ -174,64 +189,65 @@ with lib.my;
           description = "New Terminal";
         }
         {
-          binding = "super + t";
-          command = "toggle-polybar";
-          description = "Toggle Polybar";
-        }
-        {
           binding = "XF86Bluetooth";
           command = "bluetooth-toggle";
           description = "Toggle buetooth";
         }
         {
           binding = "super + shift + x";
+          xmonadBinding = "M-S-x";
           command = "org-capture-frame";
           description = "Emacs Org Capture";
         }
         {
-          binding = "super + Escape";
-          command = ''pkill -USR1 -x sxhkd; notify-send "Reloaded shortcuts"'';
-          description = "Reload Shortcuts";
-        }
-        {
           binding = "super + XF86MonBrightnessDown";
+          xmonadBinding = "M-<XF86MonBrightnessDown>";
           command = "light -S 0.01";
           description = "Screen brightness: Minimum";
         }
         {
           binding = "super + XF86MonBrightnessUp";
+          xmonadBinding = "M-<XF86MonBrightnessUp>";
           command = "light -S 100";
           description = "Screen brightness: Maximum";
         }
         {
           binding = "XF86MonBrightnessUp";
+          xmonadBinding = "<XF86MonBrightnessUp>";
           command = "light -A 5";
           description = "Screen brightness: -5%";
         }
         {
+          binding = "XF86MonBrightnessDown";
+          xmonadBinding = "<XF86MonBrightnessDown>";
+          command = "light -U 5";
+          description = "Screen brightness: Decrease 5%";
+        }
+        {
           binding = "{ XF86AudioLowerVolume, super + alt + j }";
+          xmonadBinding = "<XF86AudioLowerVolume>";
           command = "amixer -q set Master 10%- unmute";
           description = "Volume: -10%";
         }
         {
-          binding = "XF86MonBrightnessDown";
-          command = "light -U 5";
-          description = "Screen brightness: Decrease 5%";
+          xmonadBinding = "M-M1-j";
+          command = "amixer -q set Master 10%- unmute";
         }
         {
           binding = "{ XF86AudioRaiseVolume, super + alt + k }";
+          xmonadBinding = "<XF86AudioRaiseVolume>";
           command = "amixer -q set Master 10%+ unmute";
           description = "Volume: +10%";
         }
         {
-          binding = "{ XF86AudioPlay, super + alt + p }";
-          command = "playerctl play-pause";
-          description = "Toggle Play Pause";
+          xmonadBinding = "M-M1-k";
+          command = "amixer -q set Master 10%+ unmute";
         }
         {
-          binding = "XF86MonBrightnessDown";
-          command = "light -U 5";
-          description = "Screen brightness: Decrease 5%";
+          binding = "{ XF86AudioPlay, super + alt + p }";
+          xmonadBinding = "M-M1-p";
+          command = "playerctl play-pause";
+          description = "Toggle Play Pause";
         }
       ])
       [
