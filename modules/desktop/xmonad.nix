@@ -28,13 +28,15 @@ in
             dbus
           ];
           config = (builtins.readFile ./xmonad.hs) + (
-            let bindings = ""; in
-            ''
-              myKeybindings conf@(XConfig { XMonad.modMask = modMask }) =
-                M.fromList $ [
-                  ${bindings}
-                ]
-            ''
+            let bindings = (fold
+              (cur: acc: if isNull cur.xmonadBinding then acc else ''${acc} , ("${cur.xmonadBinding}", spawn "${cur.command}")'') ""
+              config.modules.bindings.items); in
+            (
+              ''
+                myNixKeys :: [(String, X ())]
+                myNixKeys = [("M-C-r", spawn "xmonad --recompile") ${bindings}]
+              ''
+            )
           );
         };
       };

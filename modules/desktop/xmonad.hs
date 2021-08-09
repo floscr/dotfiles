@@ -30,6 +30,7 @@ import           XMonad.Layout.ThreeColumns
 import           XMonad.Layout.WindowArranger
 
 import           XMonad.Util.EZConfig                (additionalKeys,
+                                                      additionalKeysP,
                                                       additionalMouseBindings)
 import           XMonad.Util.NamedScratchpad         as NS
 import           XMonad.Util.Run                     (spawnPipe)
@@ -364,7 +365,7 @@ defaults pipe =
       , focusedBorderColor = "#ffb6b0"
 
   -- keybindings
-      , keys               = myKeys <+> myKeybindings
+      , keys               = myKeys
       , mouseBindings      = myMouseBindings
 
   -- hooks
@@ -385,6 +386,7 @@ defaults pipe =
                                 , (\w -> focus w >> Flex.mouseResizeWindow w)
                                 )
                               ]
+      `additionalKeysP` myNixKeys
 
 
 main = do

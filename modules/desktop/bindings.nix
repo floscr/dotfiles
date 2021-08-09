@@ -160,6 +160,7 @@ with lib.my;
         }
         {
           binding = "super + u";
+          xmonadBinding = "M-u";
           command = "xcolor-yank";
           description = "Xcolor";
         }

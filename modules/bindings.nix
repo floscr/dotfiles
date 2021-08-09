@@ -10,6 +10,7 @@ in
     items = mkOption {
       type = with types; listOf (submodule ({ name, ... }: {
         options.binding = mkOption { type = nullOr str; default = null; };
+        options.xmonadBinding = mkOption { type = nullOr str; default = null; };
         options.command = mkOption { type = str; default = ""; };
         options.description = mkOption { type = str; default = ""; };
         options.categories = mkOption { type = str; default = ""; };
