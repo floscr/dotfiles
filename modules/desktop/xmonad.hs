@@ -330,7 +330,7 @@ xmoPP h = xmobarPP { ppOutput          = hPutStrLn h
 
 defaults pipe = def
   { terminal           = myTerminal
-  , focusFollowsMouse  = True
+  , focusFollowsMouse  = False
   , borderWidth        = 1
   , modMask            = myModMask
   , workspaces         = myWorkspaces
