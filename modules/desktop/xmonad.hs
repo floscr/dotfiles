@@ -165,6 +165,7 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
              case layout of
                 "BSP" -> sendMessage $ ExpandTowards R
                 "Flip Tall" -> sendMessage $ Shrink
+                "Flip ThreeCol" -> sendMessage $ Shrink
                 _     -> sendMessage Expand
            )
 
@@ -173,6 +174,7 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
              case layout of
                 "BSP" -> sendMessage $ ExpandTowards L
                 "Flip Tall" -> sendMessage $ Expand
+                "Flip ThreeCol" -> sendMessage $ Expand
                 _     -> sendMessage Shrink
            )
 
@@ -292,15 +294,13 @@ myTabConfig = def { activeBorderColor   = "#cd8b00"
                   }
 myLayout =
   mkToggle (single MIRROR)
-    $ mkToggle (single REFLECTX)
-    $ mkToggle (single REFLECTY)
     $ mkToggle (NOBORDERS ?? FULL ?? EOT)
     $ windowArrange
         (   tiled
         ||| Flip tiled
         ||| Flip Grid
         ||| emptyBSP
-        ||| ThreeCol 1 (1 / 3) (3 / 100)
+        ||| Flip (ThreeCol 1 (3 / 100) (1 / 2))
         ||| tabbed shrinkText myTabConfig
         ||| Full
         )
