@@ -312,13 +312,15 @@ myLogHook pipe = dynamicLogWithPP $ xmoPP pipe
 
 xmoPP :: Handle -> PP
 xmoPP h = xmobarPP { ppOutput          = hPutStrLn h
-                   , ppCurrent         = xmobarColor "#98be65" "" . wrap "[" "]"
+                   , ppCurrent         = xmobarColor "#98be65" "" . clickable
                    , ppVisible         = xmobarColor "#98be65" ""
-                   , ppHidden          = xmobarColor "#82AAFF" "" . wrap "*" ""
+                   , ppHidden          = clickable
                    , ppHiddenNoWindows = xmobarColor "#c792ea" ""
                    , ppTitle           = xmobarColor "#b3afc2" "" . shorten 60
                    , ppSep             = "<fc=#666666> <fn=1>|</fn> </fc>"
                    , ppUrgent          = xmobarColor "#C45500" "" . wrap "!" "!"
+
+                   , ppSort    = fmap (namedScratchpadFilterOutWorkspace.) (ppSort defaultPP) -- hide "NSP" from workspace list
                    , ppOrder = \(ws : l : t : ex) -> [ws, l] ++ ex ++ [t]
                    }
 
