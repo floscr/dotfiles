@@ -85,22 +85,21 @@ myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces [1 ..]
 -- Scratch Pads:
 ------------------------------------------------------------------------
 
-myScratchPads :: [NamedScratchpad]
-myScratchPads =
-  [ NS "terminal" spawnTerm     findTerm                  manageTerm
-  , NS "capture"  "org-capture" (title =? "doom-capture") orgFloat
-  ]
- where
-  spawnTerm  = myTerminal ++ " -t scratchpad"
-  findTerm   = title =? "scratchpad"
-  orgFloat   = customFloating $ W.RationalRect (1 / 2) (1 / 2) (1 / 2) (1 / 2)
-  manageTerm = customFloating $ W.RationalRect l t w h
-   where
-    h = 0.6
-    w = 0.6
-    t = 0.7 - h
-    l = 0.8 - w
+namedScratchpads' :: [NamedScratchpad]
+namedScratchpads' =
+    [ NS "terminal"   "alacritty -t scratchpad &"   (title =? "scratchpad")   floating'
+    ]
+        where floating' = customFloating $ W.RationalRect 0.2 0.2 0.6 0.6
 
+
+-- | Hook for managing scratchpads
+scratchpadHook' :: ManageHook
+scratchpadHook' = scratchpadManageHook $ W.RationalRect l t w h
+  where
+    h = 0.25 -- terminal height
+    w = 1 -- terminal width
+    t = 0
+    l = 1 - w
 ------------------------------------------------------------------------
 -- Key bindings:
 ------------------------------------------------------------------------
@@ -117,7 +116,7 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
 
         -- close focused window
        , ((modMask, xK_w), kill)
-       , ((modMask, xK_comma), namedScratchpadAction myScratchPads "terminal")
+       , ((modMask, xK_comma), namedScratchpadAction namedScratchpads' "terminal")
 
         -- rofi cmder
        , ((modMask, xK_space), spawn "nimx cmder &")
@@ -127,10 +126,10 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
        , ((modMask .|. shiftMask, xK_v), spawn "rofi-greenclip &")
 
        -- Emacs capture
-       -- , ((modMask .|. shiftMask, xK_x), spawn "org-capture-frame &")
-       , ( (modMask .|. shiftMask, xK_x)
-         , namedScratchpadAction myScratchPads "capture"
-         )
+       , ((modMask .|. shiftMask, xK_x), spawn "org-capture-frame &")
+       -- , ( (modMask .|. shiftMask, xK_x)
+       --   , namedScratchpadAction myScratchPads "capture"
+       --   )
 
        -- Rotate through the available layout algorithms
        , ((modMask .|. shiftMask, xK_m), sendMessage NextLayout)
