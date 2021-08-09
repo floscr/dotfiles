@@ -33,6 +33,7 @@ import           XMonad.Util.EZConfig                (additionalKeys, additional
 import XMonad.Util.Scratchpad
 import           XMonad.Util.NamedScratchpad         as NS
 import           XMonad.Util.Run                     (spawnPipe)
+import           XMonad.Util.SpawnOnce               (spawnOnce)
 
 import           Control.Arrow                       (second, (***))
 import qualified Data.Map                            as M

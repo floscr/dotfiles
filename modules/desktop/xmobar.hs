@@ -4,13 +4,13 @@ Config { font = "xft:Iosevka Mono-8:medium,FontAwesome: size=8"
         , bgColor = "#141517"
         , fgColor = "#c5c8c6"
         , position = TopW L 100
-        , textOffset       = 20
+        , textOffset       = 22
         , commands = [
                 Run Weather "SBPA" ["-t","<tempC>°C","-L","18","-H","25","--normal","green","--high","red","--low","lightblue"] 18000
                 , Run Cpu ["-L","3","-H","50"] 10
                 , Run Memory ["-t","<used>"] 10
                 , Run Date " %a %d.%m  %H:%M" "date" 10
-                , Run StdinReader
+                , Run UnsafeStdinReader
                 , Run Weather "ZHHH" ["-t"," <tempC>°C","-L","48","-H","16"] 36000
 
                 -- , Run Com "/home/floscr/.config/dotfiles/bin/weather vienna" [] "weather" 1000
