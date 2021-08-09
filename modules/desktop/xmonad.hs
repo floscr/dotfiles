@@ -159,8 +159,23 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
        , ((modMask .|. shiftMask, xK_k), windowSwap U False)
        , ((modMask .|. shiftMask, xK_h), windowSwap L False)
        , ((modMask .|. shiftMask, xK_l), windowSwap R False)
-       , ((modMask .|. controlMask, xK_h), sendMessage Shrink)
-       , ((modMask .|. controlMask, xK_l), sendMessage Expand)
+
+       , ((modMask .|. controlMask, xK_l), do
+             layout <- getActiveLayoutDescription
+             case layout of
+                "BSP" -> sendMessage $ ExpandTowards R
+                "Flip Tall" -> sendMessage $ Shrink
+                _     -> sendMessage Expand
+           )
+
+       , ((modMask .|. controlMask, xK_h), do
+             layout <- getActiveLayoutDescription
+             case layout of
+                "BSP" -> sendMessage $ ExpandTowards L
+                "Flip Tall" -> sendMessage $ Expand
+                _     -> sendMessage Shrink
+           )
+
 
        -- Move focus to the master window
        , ((modMask, xK_m), windows W.focusMaster)
@@ -262,6 +277,11 @@ instance LayoutClass l a => LayoutClass (Flip l) a where
       Rectangle (screenWidth - rx - (fromIntegral rw)) ry rw rh
   handleMessage (Flip l) = fmap (fmap Flip) . handleMessage l
   description (Flip l) = "Flip " ++ description l
+
+getActiveLayoutDescription :: X String
+getActiveLayoutDescription = do
+    workspaces <- gets windowset
+    return $ description . W.layout . W.workspace . W.current $ workspaces
 
 myTabConfig = def { activeBorderColor   = "#cd8b00"
                   , activeTextColor     = "#CEFFAC"
