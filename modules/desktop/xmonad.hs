@@ -43,7 +43,7 @@ import           Data.Maybe
 import qualified XMonad.StackSet                     as W
 
 ------------------------------------------------------------------------
--- Utils:
+-- Consts:
 ------------------------------------------------------------------------
 
 myTerminal = "alacritty"
@@ -104,6 +104,7 @@ scratchpadHook' = scratchpadManageHook $ W.RationalRect l t w h
   w = 1 -- terminal width
   t = 0
   l = 1 - w
+
 ------------------------------------------------------------------------
 -- Key bindings:
 ------------------------------------------------------------------------
