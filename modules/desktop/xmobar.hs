@@ -19,11 +19,9 @@ Config { font = "xft:Iosevka Mono-8:medium,FontAwesome: size=8"
                         ["-L", "20", "-H", "50", "-m", "1", "-p", "3"] 20
                 -- battery monitor
                 , Run Battery [
-                        "--template" , "<acstatus> (<timeleft>)"
+                        "--template" , "<acstatus>"
                         , "--Low"      , "25"
                         , "--High"     , "50"
-                        , "--low"      , "#cc6666"
-                        , "--high"     , "#b5bd68"
                         , "--"
                         --battery specific options
                         -- discharging
