@@ -43,5 +43,5 @@ Config { font = "xft:Iosevka Mono-8:medium,FontAwesome: size=8"
         ]
         , sepChar = "%"
         , alignSep = "}{"
-        , template = "%StdinReader% } { %cpu% | %memory% %disku% %date% %battery% %ZHHH% <action=`pavucontrol` button=1>%volume%</action>"
+        , template = "%UnsafeStdinReader% } { %cpu%     %memory%     %disku%     %date%     %battery%"
         }
