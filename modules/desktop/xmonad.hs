@@ -8,6 +8,8 @@ import           XMonad
 
 import           XMonad.Actions.CycleWS
 import           XMonad.Actions.Navigation2D
+import qualified XMonad.Actions.FlexibleResize as Flex
+
 
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.EwmhDesktops           as Ewmh
@@ -27,7 +29,8 @@ import           XMonad.Layout.Tabbed
 import           XMonad.Layout.ThreeColumns
 import           XMonad.Layout.WindowArranger
 
-import           XMonad.Util.EZConfig                (additionalKeys)
+import           XMonad.Util.EZConfig                (additionalKeys, additionalMouseBindings)
+import XMonad.Util.Scratchpad
 import           XMonad.Util.NamedScratchpad         as NS
 import           XMonad.Util.Run                     (spawnPipe)
 
@@ -349,6 +352,8 @@ defaults pipe = def
                          <+> Ewmh.fullscreenEventHook
                          <+> docksEventHook
   }
+  `additionalMouseBindings` [ ((myModMask, button3), (\w -> focus w >> Flex.mouseResizeWindow w)) ]
+
 
 main = do
   pipe <- spawnPipe "xmobar"
