@@ -7,8 +7,8 @@ import           System.IO
 import           XMonad
 
 import           XMonad.Actions.CycleWS
+import qualified XMonad.Actions.FlexibleResize       as Flex
 import           XMonad.Actions.Navigation2D
-import qualified XMonad.Actions.FlexibleResize as Flex
 
 
 import           XMonad.Hooks.DynamicLog
@@ -29,10 +29,11 @@ import           XMonad.Layout.Tabbed
 import           XMonad.Layout.ThreeColumns
 import           XMonad.Layout.WindowArranger
 
-import           XMonad.Util.EZConfig                (additionalKeys, additionalMouseBindings)
-import XMonad.Util.Scratchpad
+import           XMonad.Util.EZConfig                (additionalKeys,
+                                                      additionalMouseBindings)
 import           XMonad.Util.NamedScratchpad         as NS
 import           XMonad.Util.Run                     (spawnPipe)
+import           XMonad.Util.Scratchpad
 import           XMonad.Util.SpawnOnce               (spawnOnce)
 
 import           Control.Arrow                       (second, (***))
@@ -91,19 +92,18 @@ myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces [1 ..]
 
 namedScratchpads' :: [NamedScratchpad]
 namedScratchpads' =
-    [ NS "terminal"   "alacritty -t scratchpad &"   (title =? "scratchpad")   floating'
-    ]
-        where floating' = customFloating $ W.RationalRect 0.2 0.2 0.6 0.6
+  [NS "terminal" "alacritty -t scratchpad &" (title =? "scratchpad") floating']
+  where floating' = customFloating $ W.RationalRect 0.2 0.2 0.6 0.6
 
 
 -- | Hook for managing scratchpads
 scratchpadHook' :: ManageHook
 scratchpadHook' = scratchpadManageHook $ W.RationalRect l t w h
-  where
-    h = 0.25 -- terminal height
-    w = 1 -- terminal width
-    t = 0
-    l = 1 - w
+ where
+  h = 0.25 -- terminal height
+  w = 1 -- terminal width
+  t = 0
+  l = 1 - w
 ------------------------------------------------------------------------
 -- Key bindings:
 ------------------------------------------------------------------------
@@ -120,7 +120,9 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
 
         -- close focused window
        , ((modMask, xK_w), kill)
-       , ((modMask, xK_comma), namedScratchpadAction namedScratchpads' "terminal")
+       , ( (modMask, xK_comma)
+         , namedScratchpadAction namedScratchpads' "terminal"
+         )
 
         -- rofi cmder
        , ((modMask, xK_space), spawn "nimx cmder &")
@@ -173,7 +175,6 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
 
        -- Push window back into tiling
        , ((modMask, xK_t), withFocused $ windows . W.sink)
-
        , ((modMask .|. shiftMask, xK_s), spawn "nimx screenCapture")
 
        -- Deincrement the number of windows in the master area
@@ -314,51 +315,55 @@ clickable ws =
 myLogHook pipe = dynamicLogWithPP $ xmoPP pipe
 
 xmoPP :: Handle -> PP
-xmoPP h = xmobarPP { ppOutput          = hPutStrLn h
-                   , ppCurrent         = xmobarColor "#98be65" "" . clickable
-                   , ppVisible         = xmobarColor "#98be65" ""
-                   , ppHidden          = clickable
-                   , ppHiddenNoWindows = xmobarColor "#c792ea" ""
-                   , ppTitle           = xmobarColor "#b3afc2" "" . shorten 60
-                   , ppSep             = "<fc=#666666> <fn=1>|</fn> </fc>"
-                   , ppUrgent          = xmobarColor "#C45500" "" . wrap "!" "!"
-
-                   , ppSort    = fmap (namedScratchpadFilterOutWorkspace.) (ppSort defaultPP) -- hide "NSP" from workspace list
-                   , ppOrder = \(ws : l : t : ex) -> [ws, l] ++ ex ++ [t]
-                   }
+xmoPP h = xmobarPP
+  { ppOutput          = hPutStrLn h
+  , ppCurrent         = xmobarColor "#98be65" "" . clickable
+  , ppVisible         = xmobarColor "#98be65" ""
+  , ppHidden          = clickable
+  , ppHiddenNoWindows = xmobarColor "#c792ea" ""
+  , ppTitle           = xmobarColor "#b3afc2" "" . shorten 60
+  , ppSep             = "<fc=#666666> <fn=1>|</fn> </fc>"
+  , ppUrgent          = xmobarColor "#C45500" "" . wrap "!" "!"
+  , ppSort = fmap (namedScratchpadFilterOutWorkspace .) (ppSort defaultPP) -- hide "NSP" from workspace list
+  , ppOrder           = \(ws : l : t : ex) -> [ws, l] ++ ex ++ [t]
+  }
 
 ------------------------------------------------------------------------
 -- Main
 ------------------------------------------------------------------------
 
-defaults pipe = def
-  { terminal           = myTerminal
-  , focusFollowsMouse  = False
-  , borderWidth        = 1
-  , modMask            = myModMask
-  , workspaces         = myWorkspaces
-  , normalBorderColor  = "#7c7c7c"
-  , focusedBorderColor = "#ffb6b0"
+defaults pipe =
+  def
+      { terminal           = myTerminal
+      , focusFollowsMouse  = False
+      , borderWidth        = 1
+      , modMask            = myModMask
+      , workspaces         = myWorkspaces
+      , normalBorderColor  = "#7c7c7c"
+      , focusedBorderColor = "#ffb6b0"
 
   -- keybindings
-  , keys               = myKeys <+> myKeybindings
-  , mouseBindings      = myMouseBindings
+      , keys               = myKeys <+> myKeybindings
+      , mouseBindings      = myMouseBindings
 
   -- hooks
-  , layoutHook         = avoidStruts $ smartBorders $ myLayout
-  , manageHook         = myManageHook
-                         <+> manageDocks
-                         <+> insertPosition Below Newer
-                         <+> namedScratchpadManageHook namedScratchpads'
-                         <+> scratchpadHook'
-  , startupHook        = Ewmh.ewmhDesktopsStartup
-  , logHook            = myLogHook pipe
-  , handleEventHook    = def
-                         <+> Ewmh.ewmhDesktopsEventHook
-                         <+> Ewmh.fullscreenEventHook
-                         <+> docksEventHook
-  }
-  `additionalMouseBindings` [ ((myModMask, button3), (\w -> focus w >> Flex.mouseResizeWindow w)) ]
+      , layoutHook         = avoidStruts $ smartBorders $ myLayout
+      , manageHook         = myManageHook
+                             <+> manageDocks
+                             <+> insertPosition Below Newer
+                             <+> namedScratchpadManageHook namedScratchpads'
+                             <+> scratchpadHook'
+      , startupHook        = Ewmh.ewmhDesktopsStartup
+      , logHook            = myLogHook pipe
+      , handleEventHook    = def
+                             <+> Ewmh.ewmhDesktopsEventHook
+                             <+> Ewmh.fullscreenEventHook
+                             <+> docksEventHook
+      }
+    `additionalMouseBindings` [ ( (myModMask, button3)
+                                , (\w -> focus w >> Flex.mouseResizeWindow w)
+                                )
+                              ]
 
 
 main = do
