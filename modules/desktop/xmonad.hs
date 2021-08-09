@@ -346,7 +346,8 @@ defaults pipe = def
   , manageHook         = myManageHook
                          <+> manageDocks
                          <+> insertPosition Below Newer
-                         <+> namedScratchpadManageHook myScratchPads
+                         <+> namedScratchpadManageHook namedScratchpads'
+                         <+> scratchpadHook'
   , startupHook        = Ewmh.ewmhDesktopsStartup
   , logHook            = myLogHook pipe
   , handleEventHook    = def
