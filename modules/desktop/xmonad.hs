@@ -133,12 +133,6 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
          )
        , ((modMask .|. shiftMask, xK_v), spawn "rofi-greenclip &")
 
-       -- Emacs capture
-       , ((modMask .|. shiftMask, xK_x), spawn "org-capture-frame &")
-       -- , ( (modMask .|. shiftMask, xK_x)
-       --   , namedScratchpadAction myScratchPads "capture"
-       --   )
-
        -- Rotate through the available layout algorithms
        , ((modMask .|. shiftMask, xK_m), sendMessage NextLayout)
 
@@ -194,7 +188,6 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
 
        -- Push window back into tiling
        , ((modMask, xK_t), withFocused $ windows . W.sink)
-       , ((modMask .|. shiftMask, xK_s), spawn "nimx screenCapture")
 
        -- Deincrement the number of windows in the master area
        , ((modMask, xK_period), sendMessage (IncMasterN (-1)))
