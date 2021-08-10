@@ -119,7 +119,6 @@
       command = "switch-sound-monitor";
     }
     {
-      binding = "{ super + alt + t }";
       description = "Toggle Headphone Audio Output";
       categories = "Script, Audio";
       command = "nimx toggleHeadphoneAudioOutput";
@@ -131,17 +130,32 @@
     }
     {
       binding = "{ XF86AudioPlay, super + alt + p }";
+      xmonadBinding = "<XF86AudioPlay>";
       description = "Media: Play / Pause";
       command = "playerctl play-pause";
     }
     {
+      xmonadBinding = "M-M1-p";
+      command = "playerctl play-pause";
+    }
+    {
       binding = "{ XF86AudioNext, super + alt + l }";
+      xmonadBinding = "<XF86AudioNext>";
       description = "Media: Next";
       command = "playerctl next";
     }
     {
+      xmonadBinding = "M-M1-l";
+      command = "playerctl next";
+    }
+    {
       binding = "{ XF86AudioPrev, super + alt + h }";
+      xmonadBinding = "<XF86AudioPrev>";
       description = "Media: Previous";
+      command = "playerctl previous";
+    }
+    {
+      xmonadBinding = "M-M1-h";
       command = "playerctl previous";
     }
     {

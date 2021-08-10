@@ -243,12 +243,6 @@ with lib.my;
           xmonadBinding = "M-M1-k";
           command = "amixer -q set Master 10%+ unmute";
         }
-        {
-          binding = "{ XF86AudioPlay, super + alt + p }";
-          xmonadBinding = "M-M1-p";
-          command = "playerctl play-pause";
-          description = "Toggle Play Pause";
-        }
       ])
       [
         {
