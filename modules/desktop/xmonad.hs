@@ -167,24 +167,24 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
        , ((modMask .|. shiftMask, xK_k), windowSwap U False)
        , ((modMask .|. shiftMask, xK_h), windowSwap L False)
        , ((modMask .|. shiftMask, xK_l), windowSwap R False)
-
-       , ((modMask .|. controlMask, xK_l), do
-             layout <- getActiveLayoutDescription
-             case layout of
-                "BSP" -> sendMessage $ ExpandTowards R
-                "Flip Tall" -> sendMessage $ Shrink
-                "Flip ThreeCol" -> sendMessage $ Shrink
-                _     -> sendMessage Expand
-           )
-
-       , ((modMask .|. controlMask, xK_h), do
-             layout <- getActiveLayoutDescription
-             case layout of
-                "BSP" -> sendMessage $ ExpandTowards L
-                "Flip Tall" -> sendMessage $ Expand
-                "Flip ThreeCol" -> sendMessage $ Expand
-                _     -> sendMessage Shrink
-           )
+       , ( (modMask .|. controlMask, xK_l)
+         , do
+           layout <- getActiveLayoutDescription
+           case layout of
+             "BSP"           -> sendMessage $ ExpandTowards R
+             "Flip Tall"     -> sendMessage $ Shrink
+             "Flip ThreeCol" -> sendMessage $ Shrink
+             _               -> sendMessage Expand
+         )
+       , ( (modMask .|. controlMask, xK_h)
+         , do
+           layout <- getActiveLayoutDescription
+           case layout of
+             "BSP"           -> sendMessage $ ExpandTowards L
+             "Flip Tall"     -> sendMessage $ Expand
+             "Flip ThreeCol" -> sendMessage $ Expand
+             _               -> sendMessage Shrink
+         )
 
 
        -- Move focus to the master window
@@ -289,8 +289,8 @@ instance LayoutClass l a => LayoutClass (Flip l) a where
 
 getActiveLayoutDescription :: X String
 getActiveLayoutDescription = do
-    workspaces <- gets windowset
-    return $ description . W.layout . W.workspace . W.current $ workspaces
+  workspaces <- gets windowset
+  return $ description . W.layout . W.workspace . W.current $ workspaces
 
 myTabConfig = def { activeBorderColor   = "#cd8b00"
                   , activeTextColor     = "#CEFFAC"
@@ -300,17 +300,15 @@ myTabConfig = def { activeBorderColor   = "#cd8b00"
                   , inactiveColor       = "#000000"
                   }
 myLayout =
-  mkToggle (single MIRROR)
-    $ mkToggle (NOBORDERS ?? FULL ?? EOT)
-    $ windowArrange
-        (   tiled
-        ||| Flip tiled
-        ||| Flip Grid
-        ||| emptyBSP
-        ||| Flip (ThreeCol 1 (3 / 100) (1 / 2))
-        ||| tabbed shrinkText myTabConfig
-        ||| Full
-        )
+  mkToggle (single MIRROR) $ mkToggle (NOBORDERS ?? FULL ?? EOT) $ windowArrange
+    (   tiled
+    ||| Flip tiled
+    ||| Flip Grid
+    ||| emptyBSP
+    ||| Flip (ThreeCol 1 (3 / 100) (1 / 2))
+    ||| tabbed shrinkText myTabConfig
+    ||| Full
+    )
  where
   -- default tiling algorithm partitions the screen into two panes
   tiled   = Tall nmaster delta ratio
@@ -390,11 +388,8 @@ defaults pipe =
                              <+> docksEventHook
                              <+> floatClickFocusHandler
       }
-    `additionalMouseBindings` [ ( (myModMask, button3)
-                                , (\w -> focus w >> Flex.mouseResizeWindow w)
-                                )
-                              ]
-      `additionalKeysP` myNixKeys
+    `additionalMouseBindings` []
+    `additionalKeysP`         myNixKeys
 
 
 main = do
