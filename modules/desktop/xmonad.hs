@@ -38,8 +38,10 @@ import           XMonad.Util.Scratchpad
 import           XMonad.Util.SpawnOnce               (spawnOnce)
 
 import           Control.Arrow                       (second, (***))
+import           Control.Monad                       (when)
 import qualified Data.Map                            as M
 import           Data.Maybe
+import           Data.Monoid                         (All (..))
 
 import qualified XMonad.StackSet                     as W
 
@@ -79,6 +81,17 @@ standardSize win = do
 
 toggleFloat =
   floatOrNot (withFocused $ windows . W.sink) (withFocused centreFloat')
+
+bringFocusedToTop :: X ()
+bringFocusedToTop =
+  windows $ W.modify' $ \(W.Stack t ls rs) -> W.Stack t [] (reverse ls <> rs)
+
+floatClickFocusHandler :: Event -> X All
+floatClickFocusHandler ButtonEvent { ev_window = w } = do
+  s <- gets windowset
+  when (w `M.member` W.floating s) $ focus w >> bringFocusedToTop
+  pure mempty
+floatClickFocusHandler _ = pure mempty
 
 ------------------------------------------------------------------------
 -- Workspaces:
@@ -351,6 +364,7 @@ defaults pipe =
   def
       { terminal           = myTerminal
       , focusFollowsMouse  = False
+      , clickJustFocuses   = False
       , borderWidth        = 1
       , modMask            = myModMask
       , workspaces         = myWorkspaces
@@ -374,6 +388,7 @@ defaults pipe =
                              <+> Ewmh.ewmhDesktopsEventHook
                              <+> Ewmh.fullscreenEventHook
                              <+> docksEventHook
+                             <+> floatClickFocusHandler
       }
     `additionalMouseBindings` [ ( (myModMask, button3)
                                 , (\w -> focus w >> Flex.mouseResizeWindow w)
