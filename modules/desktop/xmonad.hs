@@ -260,14 +260,14 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
 myMouseBindings (XConfig { XMonad.modMask = modMask }) =
   M.fromList
     $
-      -- mod-button1, Set the window to floating mode and move by dragging
+      -- Set the window to floating mode and move by dragging
       [ ((modMask, button1), (\w -> focus w >> mouseMoveWindow w))
 
-      -- mod-button2, Raise the window to the top of the stack
+      -- Raise the window to the top of the stack
       , ((modMask, button2), (\w -> focus w >> windows W.swapMaster))
 
-      -- mod-button3, Set the window to floating mode and resize by dragging
-      , ((modMask, button3), (\w -> focus w >> mouseResizeWindow w))
+      -- Raise the window to the top of the stack
+      , ((myModMask, button3), (\w -> focus w >> Flex.mouseResizeWindow w))
       ]
 
 ------------------------------------------------------------------------
