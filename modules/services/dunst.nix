@@ -88,16 +88,19 @@ in
       {
         description = "Dunst: Close Last";
         binding = "ctrl + grave";
+        xmonadBinding = "C-`";
         command = "dunstctl close";
       }
       {
         description = "Dunst: Close All";
         binding = "ctrl + shift + grave";
+        xmonadBinding = "C-S-`";
         command = "dunstctl close-all";
       }
       {
         description = "Dunst: Show recent history item";
         binding = "ctrl + alt + grave";
+        xmonadBinding = "C-M1-`";
         command = "dunstctl history-pop";
       }
     ];
