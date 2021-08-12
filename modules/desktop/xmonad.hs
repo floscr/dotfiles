@@ -6,9 +6,10 @@ import           System.Exit
 import           System.IO
 import           XMonad
 
-import XMonad.Actions.GroupNavigation (historyHook, Direction (History, Backward, Forward), nextMatch)
 import           XMonad.Actions.CycleWS
 import qualified XMonad.Actions.FlexibleResize       as Flex
+import           XMonad.Actions.GroupNavigation      (Direction (Backward, Forward, History),
+                                                      historyHook, nextMatch)
 import           XMonad.Actions.Navigation2D
 
 
@@ -256,10 +257,11 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
 
 
 ezKeys :: [(String, X ())]
-ezKeys = [ ("M-S-,", nextMatch Backward (return True))
-         , ("M-S-.", nextMatch Forward (return True))
-         , ("M-`", nextMatch History (return True))
-         ]
+ezKeys =
+  [ ("M-S-,", nextMatch Backward (return True))
+  , ("M-S-.", nextMatch Forward (return True))
+  , ("M-`"  , nextMatch History (return True))
+  ]
 
 ------------------------------------------------------------------------
 -- Mouse bindings:
