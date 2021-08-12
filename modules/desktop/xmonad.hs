@@ -258,7 +258,8 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
 
 ezKeys :: [(String, X ())]
 ezKeys =
-  [ ("M-S-,", nextMatch Backward (return True))
+  [ ("M-t", sendMessage ToggleStruts)
+  , ("M-S-,", nextMatch Backward (return True))
   , ("M-S-.", nextMatch Forward (return True))
   , ("M-`"  , nextMatch History (return True))
   ]
