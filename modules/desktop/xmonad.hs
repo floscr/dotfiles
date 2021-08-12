@@ -6,6 +6,7 @@ import           System.Exit
 import           System.IO
 import           XMonad
 
+import XMonad.Actions.GroupNavigation (historyHook, Direction (History, Backward, Forward), nextMatch)
 import           XMonad.Actions.CycleWS
 import qualified XMonad.Actions.FlexibleResize       as Flex
 import           XMonad.Actions.Navigation2D
@@ -253,6 +254,13 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
        ]
 
+
+ezKeys :: [(String, X ())]
+ezKeys = [ ("M-S-,", nextMatch Backward (return True))
+         , ("M-S-.", nextMatch Forward (return True))
+         , ("M-`", nextMatch History (return True))
+         ]
+
 ------------------------------------------------------------------------
 -- Mouse bindings:
 ------------------------------------------------------------------------
@@ -381,7 +389,7 @@ defaults pipe =
                              <+> namedScratchpadManageHook namedScratchpads'
                              <+> scratchpadHook'
       , startupHook        = Ewmh.ewmhDesktopsStartup
-      , logHook            = myLogHook pipe
+      , logHook            = (myLogHook pipe) <+> historyHook
       , handleEventHook    = def
                              <+> Ewmh.ewmhDesktopsEventHook
                              <+> Ewmh.fullscreenEventHook
@@ -389,7 +397,7 @@ defaults pipe =
                              <+> floatClickFocusHandler
       }
     `additionalMouseBindings` []
-    `additionalKeysP`         myNixKeys
+    `additionalKeysP`         (myNixKeys ++ ezKeys)
 
 
 main = do
