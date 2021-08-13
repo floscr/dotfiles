@@ -88,11 +88,6 @@ in
 
   modules.bindings.items = [
     {
-      binding = "super + shift + d";
-      command = "flameshot gui";
-      description = "Flameshot";
-    }
-    {
       description = "Performance Mode On";
       categories = "Script";
       command = "sudo ${pkgs.systemd}/bin/systemctl start lenovo_fix_performance.service";

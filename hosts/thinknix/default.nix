@@ -15,7 +15,6 @@ with lib.my;
     appimage-run
     ffmpeg
     user.xcolor
-    flameshot
     gparted
     gnome3.nautilus
     s-tui
@@ -135,6 +134,7 @@ with lib.my;
       dunst.enable = true;
       greenclip.enable = true;
       hotplug.enable = true;
+      flameshot.enable = true;
     };
     work.meisterlabs.enable = true;
     theme.active = "opera";
