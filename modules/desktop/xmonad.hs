@@ -299,13 +299,18 @@ getActiveLayoutDescription = do
   workspaces <- gets windowset
   return $ description . W.layout . W.workspace . W.current $ workspaces
 
-myTabConfig = def { activeBorderColor   = "#cd8b00"
-                  , activeTextColor     = "#CEFFAC"
-                  , activeColor         = "#000000"
-                  , inactiveBorderColor = "#7C7C7C"
-                  , inactiveTextColor   = "#EEEEEE"
-                  , inactiveColor       = "#000000"
-                  }
+oxyDarkTheme :: Theme
+oxyDarkTheme = defaultTheme { inactiveBorderColor = "#777"
+                            -- , activeBorderColor = myFocusedBorderColor
+                            , activeColor = "#000"
+                            , inactiveColor = "#444"
+                            , inactiveTextColor = "aquamarine4"
+                            , activeTextColor = "aquamarine1"
+                            , fontName = "xft:Dejavu Sans Mono-8"
+                            , decoHeight = 15
+                            , urgentColor = "#000"
+                            , urgentTextColor = "#63b8ff"
+                        }
 myLayout =
   mkToggle (single MIRROR) $ mkToggle (NOBORDERS ?? FULL ?? EOT) $ windowArrange
     (   tiled
@@ -313,7 +318,7 @@ myLayout =
     ||| Flip Grid
     ||| emptyBSP
     ||| Flip (ThreeCol 1 (3 / 100) (1 / 2))
-    ||| tabbed shrinkText myTabConfig
+    ||| tabbed shrinkText oxyDarkTheme
     ||| Full
     )
  where
