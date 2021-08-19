@@ -198,7 +198,7 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
        , ((modMask .|. shiftMask, xK_k), windows W.swapUp)
 
        -- Push window back into tiling
-       , ((modMask, xK_t), withFocused $ windows . W.sink)
+       , ((modMask .|. shiftMask, xK_t), withFocused $ windows . W.sink)
 
        -- Deincrement the number of windows in the master area
        , ((modMask, xK_period), sendMessage (IncMasterN (-1)))
