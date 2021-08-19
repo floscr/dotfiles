@@ -362,7 +362,7 @@ xmoPP h = xmobarPP
   , ppTitle           = xmobarColor "#b3afc2" "" . shorten 60
   , ppSep             = "<fc=#666666> <fn=1>|</fn> </fc>"
   , ppUrgent          = xmobarColor "#C45500" "" . wrap "!" "!"
-  , ppSort = fmap (namedScratchpadFilterOutWorkspace .) (ppSort defaultPP) -- hide "NSP" from workspace list
+  , ppSort = fmap (namedScratchpadFilterOutWorkspace .) (ppSort def) -- hide "NSP" from workspace list
   , ppOrder           = \(ws : l : t : ex) -> [ws, l] ++ ex ++ [t]
   }
 
