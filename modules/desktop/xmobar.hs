@@ -12,12 +12,9 @@ Config { font = "xft:Iosevka Mono-8:medium,FontAwesome: size=8"
                 , Run Date " %a %d.%m  %H:%M" "date" 10
                 , Run UnsafeStdinReader
                 , Run Weather "ZHHH" ["-t"," <tempC>°C","-L","48","-H","16"] 36000
-
-                -- , Run Com "/home/floscr/.config/dotfiles/bin/weather vienna" [] "weather" 1000
-
                 , Run DiskU [("/", "<free>")]
                         ["-L", "20", "-H", "50", "-m", "1", "-p", "3"] 20
-                -- battery monitor
+                , Run Com "network-monitor-status" [] "networkMonitorStatus" 60
                 , Run Battery [
                         "--template" , "<acstatus>"
                         , "--Low"      , "25"
@@ -41,5 +38,5 @@ Config { font = "xft:Iosevka Mono-8:medium,FontAwesome: size=8"
         ]
         , sepChar = "%"
         , alignSep = "}{"
-        , template = "%UnsafeStdinReader% } { %cpu%     %memory%     %disku%     %date%     %battery%"
+        , template = " %UnsafeStdinReader% } { %networkMonitorStatus%     %cpu%     %memory%     %disku%     %date%     %battery% "
         }

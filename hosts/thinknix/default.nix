@@ -135,6 +135,7 @@ with lib.my;
       greenclip.enable = true;
       hotplug.enable = true;
       flameshot.enable = true;
+      network-monitoring.enable = true;
     };
     work.meisterlabs.enable = true;
     theme.active = "opera";
