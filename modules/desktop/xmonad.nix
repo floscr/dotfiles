@@ -26,6 +26,7 @@ in
           enableContribAndExtras = true;
           extraPackages = pkgs: with pkgs; [
             dbus
+            haskell-language-server
           ];
           config = (builtins.readFile ./xmonad.hs) + (
             let bindings = (fold
