@@ -1,7 +1,6 @@
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-import           Graphics.X11.ExtraTypes.XF86
 import           System.Exit
 import           System.IO
 import           XMonad
@@ -17,8 +16,6 @@ import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.EwmhDesktops           as Ewmh
 import           XMonad.Hooks.InsertPosition
 import           XMonad.Hooks.ManageDocks
-import           XMonad.Hooks.ManageHelpers
-import           XMonad.Hooks.SetWMName
 
 import           XMonad.Layout.BinarySpacePartition
 import           XMonad.Layout.Decoration
@@ -27,7 +24,7 @@ import           XMonad.Layout.MultiToggle
 import           XMonad.Layout.MultiToggle.Instances (StdTransformers (FULL, MIRROR, NOBORDERS))
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.Reflect
-import           XMonad.Layout.Tabbed
+import           XMonad.Layout.Tabbed (tabbed)
 import           XMonad.Layout.ThreeColumns
 import           XMonad.Layout.WindowArranger
 
@@ -37,7 +34,6 @@ import           XMonad.Util.EZConfig                (additionalKeys,
 import           XMonad.Util.NamedScratchpad         as NS
 import           XMonad.Util.Run                     (spawnPipe)
 import           XMonad.Util.Scratchpad
-import           XMonad.Util.SpawnOnce               (spawnOnce)
 
 import           Control.Arrow                       (second, (***))
 import           Control.Monad                       (when)
