@@ -346,8 +346,16 @@ myManageHook = composeAll
 -- Xmobar & Logging
 ------------------------------------------------------------------------
 
-clickable ws =
-  "<action=xdotool key super+" ++ show i ++ ">" ++ ws ++ "</action>"
+wrapWorkspaceAction ws =
+  "<action=`xdotool set_desktop --relative -- -1` button=4>"
+    ++ "<action=`xdotool set_desktop --relative 1` button=5>"
+    ++ "<action=xdotool key super+"
+    ++ show i
+    ++ ">"
+    ++ ws
+    ++ "</action>"
+    ++ "</action>"
+    ++ "</action>"
   where i = fromJust $ M.lookup ws myWorkspaceIndices
 
 myLogHook pipe = dynamicLogWithPP $ xmoPP pipe
@@ -355,10 +363,10 @@ myLogHook pipe = dynamicLogWithPP $ xmoPP pipe
 xmoPP :: Handle -> PP
 xmoPP h = xmobarPP
   { ppOutput          = hPutStrLn h
-  , ppCurrent         = xmobarColor "#98be65" "" . clickable
-  , ppVisible         = xmobarColor "#98be65" ""
-  , ppHidden          = clickable
-  , ppHiddenNoWindows = xmobarColor "#c792ea" ""
+  , ppCurrent         = xmobarColor "#98be65" "" . wrapWorkspaceAction
+  , ppVisible         = xmobarColor "#98be65" "" . wrapWorkspaceAction
+  , ppHidden          = wrapWorkspaceAction
+  , ppHiddenNoWindows = xmobarColor "#c792ea" "" . wrapWorkspaceAction
   , ppTitle           = xmobarColor "#b3afc2" "" . shorten 60
   , ppSep             = "<fc=#666666> <fn=1>|</fn> </fc>"
   , ppUrgent          = xmobarColor "#C45500" "" . wrap "!" "!"
