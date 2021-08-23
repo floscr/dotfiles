@@ -24,7 +24,7 @@ import           XMonad.Layout.MultiToggle
 import           XMonad.Layout.MultiToggle.Instances (StdTransformers (FULL, MIRROR, NOBORDERS))
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.Reflect
-import           XMonad.Layout.Tabbed (tabbed)
+import           XMonad.Layout.Tabbed                (tabbed)
 import           XMonad.Layout.ThreeColumns
 import           XMonad.Layout.WindowArranger
 
@@ -254,7 +254,7 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
 
 ezKeys :: [(String, X ())]
 ezKeys =
-  [ ("M-t", sendMessage ToggleStruts)
+  [ ("M-t"  , sendMessage ToggleStruts)
   , ("M-S-,", nextMatch Backward (return True))
   , ("M-S-.", nextMatch Forward (return True))
   , ("M-`"  , nextMatch History (return True))
@@ -302,15 +302,15 @@ getActiveLayoutDescription = do
 oxyDarkTheme :: Theme
 oxyDarkTheme = defaultTheme { inactiveBorderColor = "#777"
                             -- , activeBorderColor = myFocusedBorderColor
-                            , activeColor = "#000"
-                            , inactiveColor = "#444"
-                            , inactiveTextColor = "aquamarine4"
-                            , activeTextColor = "aquamarine1"
-                            , fontName = "xft:Dejavu Sans Mono-8"
-                            , decoHeight = 15
-                            , urgentColor = "#000"
-                            , urgentTextColor = "#63b8ff"
-                        }
+                            , activeColor         = "#000"
+                            , inactiveColor       = "#444"
+                            , inactiveTextColor   = "aquamarine4"
+                            , activeTextColor     = "aquamarine1"
+                            , fontName            = "xft:Dejavu Sans Mono-8"
+                            , decoHeight          = 15
+                            , urgentColor         = "#000"
+                            , urgentTextColor     = "#63b8ff"
+                            }
 myLayout =
   mkToggle (single MIRROR) $ mkToggle (NOBORDERS ?? FULL ?? EOT) $ windowArrange
     (   tiled
@@ -362,7 +362,7 @@ xmoPP h = xmobarPP
   , ppTitle           = xmobarColor "#b3afc2" "" . shorten 60
   , ppSep             = "<fc=#666666> <fn=1>|</fn> </fc>"
   , ppUrgent          = xmobarColor "#C45500" "" . wrap "!" "!"
-  , ppSort = fmap (namedScratchpadFilterOutWorkspace .) (ppSort def) -- hide "NSP" from workspace list
+  , ppSort            = fmap (namedScratchpadFilterOutWorkspace .) (ppSort def) -- hide "NSP" from workspace list
   , ppOrder           = \(ws : l : t : ex) -> [ws, l] ++ ex ++ [t]
   }
 
