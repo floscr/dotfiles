@@ -25,8 +25,8 @@ in
     ];
     systemd.services.vnstat = {
       # Dont autostart service
-      after = [ ];
-      wantedBy = [ ];
+      after = lib.mkForce [ ];
+      wantedBy = lib.mkForce [ ];
     };
     services = {
       vnstat.enable = true;
