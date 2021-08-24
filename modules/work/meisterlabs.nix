@@ -130,10 +130,10 @@ in
           rm -rf build
           nice -n10 npm run "$1"
           notify-send "Bundle \"$1\" built."
-          $MEISTERLABS_MINDMEISTER_DOCKER_DIR/mindmeister/bundle
+          $MEISTERLABS_MINDMEISTER_VAGRANT_DIR/mindmeister/bundle
           docker exec -it mm-rails /bin/bash -c "rm -rf /opt/mindmeister-web && mkdir -p /opt/mindmeister-web"
           docker cp build mm-rails:/opt/mindmeister-web
-          cd $MEISTERLABS_MINDMEISTER_DOCKER_DIR
+          cd $MEISTERLABS_MINDMEISTER_VAGRANT_DIR
           ./mindmeister/rake "client:import_bundles_testing['$2']"
         '')
       ];
