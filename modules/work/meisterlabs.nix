@@ -124,18 +124,7 @@ in
       user.packages = with pkgs; [
         ruby
         dragon-drop
-        (writeShellScriptBin "mm-build-bundle" ''
-          #!/usr/bin/env zsh
-
-          rm -rf build
-          nice -n10 npm run "$1"
-          notify-send "Bundle \"$1\" built."
-          $MEISTERLABS_MINDMEISTER_VAGRANT_DIR/mindmeister/bundle
-          docker exec -it mm-rails /bin/bash -c "rm -rf /opt/mindmeister-web && mkdir -p /opt/mindmeister-web"
-          docker cp build mm-rails:/opt/mindmeister-web
-          cd $MEISTERLABS_MINDMEISTER_VAGRANT_DIR
-          ./mindmeister/rake "client:import_bundles_testing['$2']"
-        '')
+        (writeShellScriptBin "mm-build-bundle" (builtins.readFile ./bin/mm-build-bundle))
       ];
 
       modules.shell.zsh.rcFiles = [ ./env.zsh ];

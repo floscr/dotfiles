@@ -1,0 +1,21 @@
+#!/usr/bin/env zsh
+
+set -e
+
+cd $MEISTERLABS_MINDMEISTER_FE_DIR
+rm -rf build
+nice -n10 npm run "$1"
+notify-send "Bundle \"$1\" built."
+
+(
+    VAGRANT_HOME_DIR=/home/vagrant
+    VAGRANT_FE_DIR=$VAGRANT_HOME_DIR/mindmeister-web
+    VAGRANT_BE_DIR=$VAGRANT_HOME_DIR/mindmeister
+    VAGRANT_BUILD_DIR=$VAGRANT_FE_DIR/build
+
+    cd $MEISTERLABS_MINDMEISTER_VAGRANT_DIR
+
+    vagrant exec rm -rf $VAGRANT_BUILD_DIR
+    vagrant scp $MEISTERLABS_MINDMEISTER_FE_DIR/build $VAGRANT_BUILD_DIR
+    vagrant exec "cd $VAGRANT_BE_DIR; rake client:import_bundles_testing['$2']"
+)
