@@ -24,7 +24,7 @@ in
             foreground = fg0;
           };
           cursor = {
-            text = fg0;
+            text = bg0;
             cursor = fg0;
           };
           normal = {
