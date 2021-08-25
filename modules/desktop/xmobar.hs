@@ -7,8 +7,15 @@ Config { font = "xft:Iosevka Mono-8:medium,FontAwesome: size=8"
         , textOffset       = 22
         , commands = [
                 Run Weather "SBPA" ["-t","<tempC>°C","-L","18","-H","25","--normal","green","--high","red","--low","lightblue"] 18000
-                , Run Cpu ["-L","3","-H","50"] 10
-                , Run Memory ["-t","<used>"] 10
+
+                , Run MultiCpu [
+                    "-t", "<fc=#CC6666>CPU</fc> <total>%"
+                    ] 10
+
+                , Run Memory [
+                    "-t", "mem: <usedratio>%"
+                    ] 10
+
                 , Run Date " %a %d.%m  %H:%M" "date" 10
                 , Run UnsafeStdinReader
                 , Run Weather "ZHHH" ["-t"," <tempC>°C","-L","48","-H","16"] 36000
@@ -38,5 +45,5 @@ Config { font = "xft:Iosevka Mono-8:medium,FontAwesome: size=8"
         ]
         , sepChar = "%"
         , alignSep = "}{"
-        , template = " %UnsafeStdinReader% } { %networkMonitorStatus%     %cpu%     %memory%     %disku%     %date%     %battery% "
+        , template = " %UnsafeStdinReader% } { %networkMonitorStatus%     %multicpu%     %memory%     %disku%     %date%     %battery% "
         }
