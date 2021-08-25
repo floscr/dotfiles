@@ -5,6 +5,9 @@ import           System.Exit
 import           System.IO
 import           XMonad
 
+import           XMonad.Actions.CopyWindow           (copyToAll,
+                                                      killAllOtherCopies,
+                                                      wsContainingCopies)
 import           XMonad.Actions.CycleWS
 import qualified XMonad.Actions.FlexibleResize       as Flex
 import           XMonad.Actions.GroupNavigation      (Direction (Backward, Forward, History),
@@ -79,6 +82,14 @@ standardSize win = do
 
 toggleFloat =
   floatOrNot (withFocused $ windows . W.sink) (withFocused centreFloat')
+
+toggleSticky :: X ()
+toggleSticky = wsContainingCopies >>= \ws -> case ws of
+  [] -> windows copyToAll
+  _  -> killAllOtherCopies
+
+-- toggleSticky w =
+--   windows $ \s -> if M.member w (W.floating s) then copyToAll s else s
 
 bringFocusedToTop :: X ()
 bringFocusedToTop =
@@ -197,8 +208,6 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
        -- Swap the focused window with the previous window
        , ((modMask .|. shiftMask, xK_k), windows W.swapUp)
 
-       -- Push window back into tiling
-       , ((modMask .|. shiftMask, xK_t), withFocused $ windows . W.sink)
 
        -- Deincrement the number of windows in the master area
        , ((modMask, xK_period), sendMessage (IncMasterN (-1)))
@@ -254,10 +263,17 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
 
 ezKeys :: [(String, X ())]
 ezKeys =
-  [ ("M-t"  , sendMessage ToggleStruts)
+  [
+    -- Toggle Docks
+    ("M-t"  , sendMessage ToggleStruts)
+    -- History
   , ("M-S-,", nextMatch Backward (return True))
   , ("M-S-.", nextMatch Forward (return True))
   , ("M-`"  , nextMatch History (return True))
+
+  -- Float / Sink Floating Windows
+  , ("M-S-'", toggleSticky)
+  , ("M-S-t", withFocused $ windows . W.sink)
   ]
 
 ------------------------------------------------------------------------
