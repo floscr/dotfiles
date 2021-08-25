@@ -1,5 +1,5 @@
 #!/usr/bin/env nix-shell
-#! nix-shell -i bash -p gifsicle
+#! nix-shell -i bash -p gifsicle image_optim
 
 # Optimize image files (losslessly by default)
 #
@@ -68,6 +68,9 @@ for file in $@; do
       png)
         [[ -n $lossy ]] && pngquant $file
         optipng -nc -nb -o7 $file
+        ;;
+      svg)
+        node_svgo "$file"
         ;;
       gif)
         gifsicle --batch --optimize=3 "$file"
