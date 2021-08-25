@@ -2,7 +2,8 @@
 
 set -e
 
-cd $MEISTERLABS_MINDMEISTER_FE_DIR
+SRC_DIR=$(pwd)
+
 rm -rf build
 nice -n10 npm run "$1"
 notify-send "Bundle \"$1\" built."
@@ -16,6 +17,7 @@ notify-send "Bundle \"$1\" built."
     cd $MEISTERLABS_MINDMEISTER_VAGRANT_DIR
 
     vagrant exec rm -rf $VAGRANT_BUILD_DIR
-    vagrant scp $MEISTERLABS_MINDMEISTER_FE_DIR/build $VAGRANT_BUILD_DIR
-    vagrant exec "cd $VAGRANT_BE_DIR; rake client:import_bundles_testing['$2']"
+    vagrant scp $SRC_DIR/build $VAGRANT_BUILD_DIR
+    vagrant exec "cd $VAGRANT_BE_DIR; rake client:import_bundles_testing['$2']; git add .; git commit -am 'Bundle'"
+    vagrant exec "cd $VAGRANT_BE_DIR; git add .; git commit -am 'Bundle'"
 )
