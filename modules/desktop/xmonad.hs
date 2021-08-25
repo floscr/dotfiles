@@ -266,6 +266,7 @@ ezKeys =
   [
     -- Toggle Docks
     ("M-t"  , sendMessage ToggleStruts)
+
     -- History
   , ("M-S-,", nextMatch Backward (return True))
   , ("M-S-.", nextMatch Forward (return True))
@@ -274,6 +275,9 @@ ezKeys =
   -- Float / Sink Floating Windows
   , ("M-S-'", toggleSticky)
   , ("M-S-t", withFocused $ windows . W.sink)
+
+  -- M-o leader
+  , ("M-o b", spawn "rofi_org_bookmarks")
   ]
 
 ------------------------------------------------------------------------
