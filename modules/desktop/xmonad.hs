@@ -10,6 +10,7 @@ import           XMonad.Actions.CopyWindow           (copyToAll,
                                                       wsContainingCopies)
 import           XMonad.Actions.CycleWS
 import qualified XMonad.Actions.FlexibleResize       as Flex
+import           XMonad.Actions.FloatKeys            (keysMoveWindowTo)
 import           XMonad.Actions.GroupNavigation      (Direction (Backward, Forward, History),
                                                       historyHook, nextMatch)
 import           XMonad.Actions.Navigation2D
@@ -40,6 +41,9 @@ import           XMonad.Util.Scratchpad
 
 import           Control.Arrow                       (second, (***))
 import           Control.Monad                       (when)
+import           Control.Monad.Trans                 (lift)
+import           Control.Monad.Trans.Maybe
+
 import qualified Data.Map                            as M
 import           Data.Maybe
 import           Data.Monoid                         (All (..))
@@ -74,12 +78,6 @@ centreFloat win = do
 -- Float a window in the centre
 centreFloat' w = windows $ W.float w centreRect
 
--- Make a window my 'standard size' (half of the screen) keeping the centre of the window fixed
-standardSize win = do
-  (_, W.RationalRect x y w h) <- floatLocation win
-  windows $ W.float win (W.RationalRect x y 0.5 0.5)
-  return ()
-
 toggleFloat =
   floatOrNot (withFocused $ windows . W.sink) (withFocused centreFloat')
 
@@ -88,19 +86,27 @@ toggleSticky = wsContainingCopies >>= \ws -> case ws of
   [] -> windows copyToAll
   _  -> killAllOtherCopies
 
--- toggleSticky w =
---   windows $ \s -> if M.member w (W.floating s) then copyToAll s else s
-
-bringFocusedToTop :: X ()
-bringFocusedToTop =
-  windows $ W.modify' $ \(W.Stack t ls rs) -> W.Stack t [] (reverse ls <> rs)
-
+-- Put the most recent clicked floating window on top
 floatClickFocusHandler :: Event -> X All
 floatClickFocusHandler ButtonEvent { ev_window = w } = do
   s <- gets windowset
   when (w `M.member` W.floating s) $ focus w >> bringFocusedToTop
   pure mempty
 floatClickFocusHandler _ = pure mempty
+
+bringFocusedToTop :: X ()
+bringFocusedToTop =
+  windows $ W.modify' $ \(W.Stack t ls rs) -> W.Stack t [] (reverse ls <> rs)
+
+-- Move window to screen edge
+moveWindowToRelativePosition :: Rational -> Rational -> X ()
+moveWindowToRelativePosition x y = (() <$) . runMaybeT $ do
+  scr <- lift (gets $ W.current . windowset)
+  win <- MaybeT (return . fmap W.focus . W.stack . W.workspace $ scr)
+  let Rectangle _ _ w h = screenRect . W.screenDetail $ scr
+      x0                = round (x * fromIntegral (w - 3))
+      y0                = round (y * fromIntegral (h - 27))
+  lift (keysMoveWindowTo (x0, y0) (x, y) win)
 
 ------------------------------------------------------------------------
 -- Workspaces:
@@ -265,19 +271,25 @@ ezKeys :: [(String, X ())]
 ezKeys =
   [
     -- Toggle Docks
-    ("M-t"  , sendMessage ToggleStruts)
+    ("M-t"    , sendMessage ToggleStruts)
+
+    -- Move window to corner
+  , ("M-S-w 1", moveWindowToRelativePosition 0 0)
+  , ("M-S-w 2", moveWindowToRelativePosition 1 0)
+  , ("M-S-w 3", moveWindowToRelativePosition 1 1)
+  , ("M-S-w 4", moveWindowToRelativePosition 0 1)
 
     -- History
-  , ("M-S-,", nextMatch Backward (return True))
-  , ("M-S-.", nextMatch Forward (return True))
-  , ("M-`"  , nextMatch History (return True))
+  , ("M-S-,"  , nextMatch Backward (return True))
+  , ("M-S-."  , nextMatch Forward (return True))
+  , ("M-`"    , nextMatch History (return True))
 
   -- Float / Sink Floating Windows
-  , ("M-S-'", toggleSticky)
-  , ("M-S-t", withFocused $ windows . W.sink)
+  , ("M-S-'"  , toggleSticky)
+  , ("M-S-t"  , withFocused $ windows . W.sink)
 
   -- M-o leader
-  , ("M-o b", spawn "rofi_org_bookmarks")
+  , ("M-o b"  , spawn "rofi_org_bookmarks")
   ]
 
 ------------------------------------------------------------------------
