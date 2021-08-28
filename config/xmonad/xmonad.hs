@@ -4,6 +4,7 @@
 import           System.Exit
 import           System.IO
 import           XMonad
+import           XMonad.Core                         (withWindowSet)
 
 import           XMonad.Actions.CopyWindow           (copyToAll,
                                                       killAllOtherCopies,
@@ -15,7 +16,7 @@ import           XMonad.Actions.FloatKeys            (keysMoveWindow,
 import           XMonad.Actions.GroupNavigation      (Direction (Backward, Forward, History),
                                                       historyHook, nextMatch)
 import           XMonad.Actions.Navigation2D
-
+import           XMonad.Actions.TagWindows           (addTag, delTag)
 
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.DynamicProperty        (dynamicPropertyChange)
@@ -46,6 +47,7 @@ import           Control.Monad                       (when)
 import           Control.Monad.Trans                 (lift)
 import           Control.Monad.Trans.Maybe
 
+import           Data.Bool                           (bool)
 import qualified Data.Map                            as M
 import           Data.Maybe
 import           Data.Monoid                         (All (..))
@@ -419,6 +421,11 @@ wrapWorkspaceAction ws =
 
 myLogHook pipe = dynamicLogWithPP $ xmoPP pipe
 
+tagHook = withWindowSet $ mapM_ <$> tagFloating <*> W.allWindows
+ where
+  tagFloating set win = tagIff (win `M.member` W.floating set) "floating" win
+  tagIff = bool delTag addTag
+
 xmoPP :: Handle -> PP
 xmoPP h = xmobarPP
   { ppOutput          = hPutStrLn h
@@ -460,7 +467,7 @@ defaults pipe =
                              <+> namedScratchpadManageHook namedScratchpads'
                              <+> scratchpadHook'
       , startupHook        = myStartupHook <+> Ewmh.ewmhDesktopsStartup
-      , logHook            = (myLogHook pipe) <+> historyHook
+      , logHook            = (myLogHook pipe) <+> historyHook <+> tagHook
       , handleEventHook    = def
                              <+> Ewmh.ewmhDesktopsEventHook
                              <+> Ewmh.fullscreenEventHook

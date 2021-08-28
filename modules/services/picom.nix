@@ -35,11 +35,13 @@ in
       ];
 
       shadow = true;
-      shadowOffsets = [ (-10) (-10) ];
-      shadowOpacity = 0.22;
+      shadowOffsets = [ (-8) (-8) ];
+      shadowOpacity = 0.15;
 
       settings = {
-        shadow-radius = 12;
+        shadow-radius = 20;
+        shadow-exclude = [ "!(class_g = 'xmobar' || _XMONAD_TAGS:s *= 'floating')" ];
+
         blur-background-exclude = [
           "name *= 'slop'"
           "name = 'cpt_frame_window'"
@@ -49,6 +51,7 @@ in
         ];
         blur-kern = "7x7box";
         blur-strength = 320;
+
       };
     };
   };
