@@ -14,7 +14,6 @@ in
     services.picom = {
       enable = true;
 
-
       backend = "glx";
       vSync = true;
       experimentalBackends = true;
@@ -25,11 +24,15 @@ in
         "name = 'as_toolbar'"
         "name = 'zoom_linux_float_video_window'"
         "name = 'AnnoInputLinux'"
+        "class_g = 'Dunst'"
       ];
 
-      # fade = true;
-      # fadeDelta = 1;
-      # fadeSteps = [ 1.0e-2 1.2e-2 ];
+      fade = true;
+      fadeDelta = 1;
+      fadeSteps = [ 1.0e-2 1.2e-2 ];
+      fadeExclude = [
+        "class_g != 'Dunst'"
+      ];
 
       shadow = true;
       shadowOffsets = [ (-10) (-10) ];
