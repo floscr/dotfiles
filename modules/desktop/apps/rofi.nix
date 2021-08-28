@@ -35,8 +35,14 @@ in
       }
       {
         binding = "super + shift + Tab";
+        xmonadBinding = "M-S-<Tab>";
         command = "${binDir}/rofi/app_switch";
         description = "Switch application";
+      }
+      {
+        xmonadBinding = "M1-<Tab>";
+        command = "${binDir}/rofi/app_switch t";
+        description = "Switch application (Current Desktop)";
       }
       {
         description = "drun";
