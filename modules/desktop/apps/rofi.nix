@@ -25,6 +25,7 @@ in
       '')
       rofimoji
       user.rofi-translate
+      rofi-systemd
     ];
     modules.bindings.items = [
       {
@@ -55,6 +56,10 @@ in
       {
         description = "Org Bookmarks";
         command = "rofi_org_bookmarks";
+      }
+      {
+        description = "Systemd";
+        command = "rofi-systemd";
       }
     ];
   };
