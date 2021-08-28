@@ -28,7 +28,7 @@ in
             dbus
             haskell-language-server
           ];
-          config = (builtins.readFile ./xmonad.hs) + (
+          config = (builtins.readFile "${configDir}/xmonad/xmonad.hs") + (
             let bindings = (fold
               (cur: acc: if isNull cur.xmonadBinding then acc else ''${acc} , ("${cur.xmonadBinding}", spawn "${cur.command}")'') ""
               config.modules.bindings.items); in
@@ -43,6 +43,6 @@ in
       };
     };
 
-    home.configFile."xmobar/xmobarrc".source = ./xmobar.hs;
+    home.configFile."xmobar/xmobarrc".source = "${configDir}/xmonad/xmobar.hs";
   };
 }
