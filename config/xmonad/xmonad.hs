@@ -286,6 +286,7 @@ ezKeys =
     )
   , ("M-S-w 3", moveWindowToRelativePosition 1 1)
   , ("M-S-w 4", moveWindowToRelativePosition 0 1)
+  , ("M-S-w c", moveWindowToRelativePosition 0.5 0.5)
 
     -- History
   , ("M-S-,"  , nextMatch Backward (return True))
