@@ -25,6 +25,7 @@ in
         "name = 'zoom_linux_float_video_window'"
         "name = 'AnnoInputLinux'"
         "class_g = 'Dunst'"
+        "!(_XMONAD_TAGS:s *= 'floating')"
       ];
 
       fade = true;
