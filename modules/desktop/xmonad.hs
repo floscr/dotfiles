@@ -17,6 +17,7 @@ import           XMonad.Actions.Navigation2D
 
 
 import           XMonad.Hooks.DynamicLog
+import           XMonad.Hooks.DynamicProperty        (dynamicPropertyChange)
 import           XMonad.Hooks.EwmhDesktops           as Ewmh
 import           XMonad.Hooks.InsertPosition
 import           XMonad.Hooks.ManageDocks
@@ -376,12 +377,21 @@ myLayout =
 -- Window Rules
 ------------------------------------------------------------------------
 
-myManageHook = composeAll
+manageWindowsHook = composeAll
   [ resource =? "desktop_window" --> doIgnore
   , resource =? "kdesktop" --> doIgnore
   , className =? "mpv" --> doFloat
+  -- , className =? "Emacs" --> insertPosition Master Newer
+  -- , className =? "Emacs" <&&> title =? "doom-capture" --> doFloat
   , className =? "Pavucontrol" --> doFloat
   ]
+
+myHandleEventHook :: Event -> X All
+myHandleEventHook = dynamicPropertyChange "WM_NAME"
+                                          (title =? "Spotify" --> floating)
+ where
+  floating = customFloating $ W.RationalRect (1 / 12) (1 / 12) (5 / 6) (5 / 6)
+
 
 ------------------------------------------------------------------------
 -- Xmobar & Logging
@@ -448,6 +458,7 @@ defaults pipe =
                              <+> Ewmh.fullscreenEventHook
                              <+> docksEventHook
                              <+> floatClickFocusHandler
+                             <+> myHandleEventHook
       }
     `additionalMouseBindings` []
     `additionalKeysP`         (myNixKeys ++ ezKeys)
