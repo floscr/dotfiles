@@ -293,6 +293,15 @@ ezKeys =
   ]
 
 ------------------------------------------------------------------------
+-- Startup Hook:
+------------------------------------------------------------------------
+
+myStartupHook :: X ()
+myStartupHook = do
+  spawn "systemctl --user restart setup-monitor.service"
+  spawn "systemctl --user restart setup-keyboard.service"
+
+------------------------------------------------------------------------
 -- Mouse bindings:
 ------------------------------------------------------------------------
 
@@ -427,12 +436,12 @@ defaults pipe =
 
   -- hooks
       , layoutHook         = avoidStruts $ smartBorders $ myLayout
-      , manageHook         = myManageHook
+      , manageHook         = manageWindowsHook
                              <+> manageDocks
                              <+> insertPosition Below Newer
                              <+> namedScratchpadManageHook namedScratchpads'
                              <+> scratchpadHook'
-      , startupHook        = Ewmh.ewmhDesktopsStartup
+      , startupHook        = myStartupHook <+> Ewmh.ewmhDesktopsStartup
       , logHook            = (myLogHook pipe) <+> historyHook
       , handleEventHook    = def
                              <+> Ewmh.ewmhDesktopsEventHook
