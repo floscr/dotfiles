@@ -10,7 +10,8 @@ import           XMonad.Actions.CopyWindow           (copyToAll,
                                                       wsContainingCopies)
 import           XMonad.Actions.CycleWS
 import qualified XMonad.Actions.FlexibleResize       as Flex
-import           XMonad.Actions.FloatKeys            (keysMoveWindowTo)
+import           XMonad.Actions.FloatKeys            (keysMoveWindow,
+                                                      keysMoveWindowTo)
 import           XMonad.Actions.GroupNavigation      (Direction (Backward, Forward, History),
                                                       historyHook, nextMatch)
 import           XMonad.Actions.Navigation2D
@@ -272,11 +273,17 @@ ezKeys :: [(String, X ())]
 ezKeys =
   [
     -- Toggle Docks
-    ("M-t"    , sendMessage ToggleStruts)
+    ("M-t", sendMessage ToggleStruts)
 
     -- Move window to corner
-  , ("M-S-w 1", moveWindowToRelativePosition 0 0)
-  , ("M-S-w 2", moveWindowToRelativePosition 1 0)
+  , ( "M-S-w 1"
+    , sequence_
+      [(moveWindowToRelativePosition 0 0), withFocused (keysMoveWindow (0, 32))]
+    )
+  , ( "M-S-w 2"
+    , sequence_
+      [(moveWindowToRelativePosition 1 0), withFocused (keysMoveWindow (0, 32))]
+    )
   , ("M-S-w 3", moveWindowToRelativePosition 1 1)
   , ("M-S-w 4", moveWindowToRelativePosition 0 1)
 
