@@ -165,6 +165,7 @@ with lib.my;
       hotplug.enable = true;
       flameshot.enable = true;
       network-monitoring.enable = true;
+      picom.enable = true;
     };
     work.meisterlabs.enable = true;
     theme.active = "opera";
