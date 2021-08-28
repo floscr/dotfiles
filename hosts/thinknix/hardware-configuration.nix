@@ -18,6 +18,22 @@
     "i915.enable_dc=2"
   ];
 
+  # Remove screen tearing
+  environment.etc."X11/xorg.conf.d/20-intel.conf" = {
+    text = ''
+      Section "Device"
+        Identifier "Intel Graphics"
+        Driver "intel"
+        Option "TearFree" "true"
+        Option "AccelMethod" "sna"
+        Option "SwapbuffersWait" "true"
+        Option "TripleBuffer" "true"
+        Option "VariableRefresh" "true"
+        Option "DRI" "2"
+      EndSection
+    '';
+  };
+
   environment.systemPackages = with pkgs; [
     fwupd
     undervolt
@@ -31,12 +47,29 @@
   hardware.cpu.intel.updateMicrocode = true;
 
   # Graphics
-  # services.xserver.videoDrivers = ["intel"];
+  services.xserver.videoDrivers = [ "intel" ];
+  # services.xserver.videoDrivers = [ "modesetting" ];
+  services.xserver.useGlamor = true;
+  services.xserver = {
+    deviceSection = ''
+      Option "VariableRefresh" "true"
+      Option "DRI" "3"
+      Option "TearFree" "True"
+    '';
+  };
 
-  hardware.opengl.enable = true;
-  hardware.opengl.driSupport = true;
-  hardware.opengl.driSupport32Bit = true;
-  hardware.opengl.package = pkgs.mesa_drivers;
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+    driSupport32Bit = true;
+    setLdLibraryPath = true;
+    extraPackages = with pkgs; [
+      intel-media-driver
+      vaapiIntel
+      vaapiVdpau
+      libvdpau-va-gl
+    ];
+  };
 
   # Battery
   services.upower.enable = true;
