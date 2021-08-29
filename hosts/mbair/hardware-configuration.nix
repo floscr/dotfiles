@@ -1,7 +1,6 @@
 { config, lib, inputs, pkgs, modulesPath, ... }:
 
 {
-  boot.kernelModules = [ "kvm-intel" "wl" "mba6x_bl" ];
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
