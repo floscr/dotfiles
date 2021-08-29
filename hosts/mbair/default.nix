@@ -10,6 +10,7 @@ with lib.my;
 
   user.packages = with pkgs; [
     nixpkgs-fmt
+    brightnessctl
   ];
 
   modules = {
@@ -72,6 +73,9 @@ with lib.my;
   # Source: https://github.com/willtim/nixos/blob/52e730ec0d8288a3862538205cd8ff0fa2d1c159/desktop.nix#L151
   # xiccd apparently is buggy and cpu intensive
   services.xserver.displayManager.sessionCommands = ''{pkgs.argyllcms}/bin/dispwin -I "~/.local/macbook-air-lcd.icc"'';
+
+  programs.light.enable = true;
+  user.extraGroups = [ "video" ];
 
   services.xserver.libinput.enable = true;
   services.xserver.libinput.disableWhileTyping = true;
