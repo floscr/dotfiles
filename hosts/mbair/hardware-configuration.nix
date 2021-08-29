@@ -17,7 +17,10 @@
   # boot.initrd.kernelModules = [ "fbcon" ];
   boot.kernelModules = [ "kvm-intel" "wl" "mba6x_bl" ];
   # Divides power consumption by two.
-  boot.kernelParams = [ "acpi_osi=" ];
+  # boot.kernelParams = [
+  #   "acpi_backlight=vendor"
+  #   "acpi_osi="
+  # ];
 
   services.xserver.deviceSection = lib.mkDefault ''
     Option "Backlight" "mba6x_backlight"
