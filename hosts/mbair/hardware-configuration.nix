@@ -1,26 +1,29 @@
 { config, lib, inputs, pkgs, modulesPath, ... }:
 
 {
+  boot.kernelModules = [ "kvm-intel" "wl" "mba6x_bl" ];
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
-
-
-  boot.extraModulePackages = with config.boot.kernelPackages; [ broadcom_sta mba6x_bl   ];
-  boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "usb_storage" "usbhid" "sd_mod"
-                                         "mba6x_bl"
-
-                                       ];
+  boot.extraModulePackages = with config.boot.kernelPackages; [ broadcom_sta mba6x_bl ];
+  boot.initrd.availableKernelModules = [
+    "xhci_pci"
+    "nvme"
+    "usb_storage"
+    "usbhid"
+    "sd_mod"
+    "mba6x_bl"
+  ];
   # boot.initrd.kernelModules = [ "fbcon" ];
-  boot.kernelModules = [ "kvm-intel" "wl" ];
-    # Divides power consumption by two.
-    boot.kernelParams = [ "acpi_osi=" ];
+  boot.kernelModules = [ "kvm-intel" "wl" "mba6x_bl" ];
+  # Divides power consumption by two.
+  boot.kernelParams = [ "acpi_osi=" ];
 
-  # services.xserver.deviceSection = lib.mkDefault ''
-  #   Option "Backlight" "mba6x_backlight"
-  #   Option "TearFree" "true"
-  # '';
+  services.xserver.deviceSection = lib.mkDefault ''
+    Option "Backlight" "mba6x_backlight"
+    Option "TearFree" "true"
+  '';
 
   fileSystems."/" =
     {
@@ -45,14 +48,14 @@
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
 
-  hardware.opengl = {
-    enable = true;
-    extraPackages = with pkgs; [
-      vaapiIntel
-      vaapiVdpau
-      libvdpau-va-gl
-    ];
-    driSupport32Bit = true;
-  };
+  # hardware.opengl = {
+  #   enable = true;
+  #   extraPackages = with pkgs; [
+  #     vaapiIntel
+  #     vaapiVdpau
+  #     libvdpau-va-gl
+  #   ];
+  #   driSupport32Bit = true;
+  # };
 
 }

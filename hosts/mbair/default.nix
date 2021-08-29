@@ -27,21 +27,14 @@ with lib.my;
       audio.enable = true;
       bluetooth.enable = true;
       keyboard.enable = true;
-      # fs = {
-      #   enable = true;
-      #   ssd.enable = true;
-      # };
-      sensors.enable = true;
     };
     dev = {
-      node.enable = true;
       nim.enable = true;
     };
     desktop = {
       xmonad.enable = true;
       apps = {
         rofi.enable = true;
-        transmission.enable = true;
       };
       media = {
         spotify.enable = true;
@@ -67,12 +60,16 @@ with lib.my;
     };
     theme.active = "opera";
   };
-
+  hardware = {
+    brillo.enable = true;
+    opengl.driSupport32Bit = true;
+    opengl.extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
+  };
   # Fix the horrible color profile on the display from linux
   # Export your default color profile from the mac osx partition
   # Source: https://github.com/willtim/nixos/blob/52e730ec0d8288a3862538205cd8ff0fa2d1c159/desktop.nix#L151
   # xiccd apparently is buggy and cpu intensive
-  services.xserver.displayManager.sessionCommands = ''{pkgs.argyllcms}/bin/dispwin -I "~/.local/macbook-air-lcd.icc"'';
+  # services.xserver.displayManager.sessionCommands = ''{pkgs.argyllcms}/bin/dispwin -I "~/.local/macbook-air-lcd.icc"'';
 
   programs.light.enable = true;
   user.extraGroups = [ "video" ];
