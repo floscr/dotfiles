@@ -21,4 +21,6 @@ shift $((OPTIND-1))
 
 emacsclient -a "" \
   -c -F '((name . "doom-capture") (transient . t))' \
-  -e "(+org-capture|my-open-frame)"
+  -e "(+org-capture|my-open-frame)" &
+sleep 0.2
+xmonadctl toggle-float
