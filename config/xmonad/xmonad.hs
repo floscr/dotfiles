@@ -18,6 +18,7 @@ import           XMonad.Actions.GroupNavigation      (Direction (Backward, Forwa
 import           XMonad.Actions.Navigation2D
 import           XMonad.Actions.TagWindows           (addTag, delTag)
 
+import XMonad.Hooks.ServerMode (serverModeEventHook, serverModeEventHookCmd')
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.DynamicProperty        (dynamicPropertyChange)
 import           XMonad.Hooks.EwmhDesktops           as Ewmh
@@ -47,6 +48,7 @@ import           Control.Monad                       (when)
 import           Control.Monad.Trans                 (lift)
 import           Control.Monad.Trans.Maybe
 
+import Data.List (sortOn,isPrefixOf)
 import           Data.Bool                           (bool)
 import qualified Data.Map                            as M
 import           Data.Maybe
@@ -59,7 +61,7 @@ import qualified XMonad.StackSet                     as W
 ------------------------------------------------------------------------
 
 myTerminal = "alacritty"
-
+myMaxScreenCount  = 1
 ------------------------------------------------------------------------
 -- Utils:
 ------------------------------------------------------------------------
@@ -302,6 +304,45 @@ ezKeys =
   -- M-o leader
   , ("M-o b"  , spawn "rofi_org_bookmarks")
   ]
+  
+------------------------------------------------------------------------
+-- External commands
+
+myCommands :: [(String, X ())]
+myCommands =
+        [ ("decrease-master-size"      , sendMessage Shrink                               )
+        , ("increase-master-size"      , sendMessage Expand                               )
+        , ("decrease-master-count"     , sendMessage $ IncMasterN (-1)                    )
+        , ("increase-master-count"     , sendMessage $ IncMasterN ( 1)                    )
+        , ("focus-prev"                , windows W.focusUp                                )
+        , ("focus-next"                , windows W.focusDown                              )
+        , ("toggle-float"                , toggleFloat )
+        , ("focus-master"              , windows W.focusMaster                            )
+        , ("swap-with-prev"            , windows W.swapUp                                 )
+        , ("swap-with-next"            , windows W.swapDown                               )
+        , ("swap-with-master"          , windows W.swapMaster                             )
+        , ("kill-window"               , kill                                             )
+        , ("quit"                      , io $ exitWith ExitSuccess                        )
+        , ("restart"                   , spawn "xmonad --recompile; xmonad --restart"     )
+        ]
+
+myServerModeEventHook = serverModeEventHookCmd' $ return myCommands'
+myCommands' = ("list-commands", listMyServerCmds) : myCommands ++ sortOn fst (wscs ++ sccs) -- (wscs ++ sccs ++ spcs)
+    where
+        wscs = [((m ++ s), windows $f s) | s <- myWorkspaces
+               , (f, m) <- [(W.view, "focus-workspace-"), (W.shift, "send-to-workspace-")] ]
+
+        sccs = [((m ++ show sc), screenWorkspace (fromIntegral sc) >>= flip whenJust (windows . f))
+               | sc <- [0..myMaxScreenCount], (f, m) <- [(W.view, "focus-screen-"), (W.shift, "send-to-screen-")]]
+
+        -- spcs = [("toggle-" ++ sp, namedScratchpadAction myScratchpads sp)
+        --        | sp <- (flip map) (myScratchpads) (\(NS x _ _ _) -> x) ]
+
+listMyServerCmds :: X ()
+listMyServerCmds = spawn ("echo '" ++ asmc ++ "'")
+    where asmc = unlines $ "Available commands:" : map (\(x, _)-> "    " ++ x) myCommands'
+
+
 
 ------------------------------------------------------------------------
 -- Startup Hook:
@@ -330,7 +371,7 @@ myMouseBindings (XConfig { XMonad.modMask = modMask }) =
       ]
 
 ------------------------------------------------------------------------
--- Layouts:
+-- Layouts
 ------------------------------------------------------------------------
 
 newtype Flip l a = Flip (l a) deriving (Show, Read)
@@ -392,7 +433,7 @@ manageWindowsHook = composeAll
   , resource =? "kdesktop" --> doIgnore
   , className =? "mpv" --> doFloat
   -- , className =? "Emacs" --> insertPosition Master Newer
-  -- , className =? "Emacs" <&&> title =? "doom-capture" --> doFloat
+  , className =? "Emacs" <&&> title =? "doom-capture" --> doFloat
   , className =? "Pavucontrol" --> doFloat
   ]
 
@@ -474,6 +515,7 @@ defaults pipe =
                              <+> docksEventHook
                              <+> floatClickFocusHandler
                              <+> myHandleEventHook
+                             <+> myServerModeEventHook
       }
     `additionalMouseBindings` []
     `additionalKeysP`         (myNixKeys ++ ezKeys)

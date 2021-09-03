@@ -15,6 +15,17 @@ in
       xmobar
       haskellPackages.brittany
       haskellPackages.stylish-haskell
+      (pkgs.writers.writeHaskellBin
+        "xmonadctl"
+        {
+          libraries = [
+            pkgs.haskellPackages.xmonad
+            pkgs.haskellPackages.xmonad-extras
+            pkgs.haskellPackages.xmonad-contrib
+          ];
+        }
+        ./xmonadctl.hs
+      )
     ];
 
     services = {
