@@ -28,7 +28,7 @@ Config { font = "xft:Iosevka Mono-8:medium"
                   ["-L", "20", "-H", "50", "-m", "1", "-p", "3"]
                   20
 
-                , Run Date "<fn=2></fn> %a %d.%m <fn=2></fn> %H:%M" "date" 10
+                , Run Date "<fn=2><fc=#767B81></fc> </fn> %a %d.%m <fn=1><fc=#767B81>%b</fc></fn>   <fn=2><fc=#767B81></fc></fn>  %H:%M" "date" 10
                 , Run UnsafeStdinReader
                 , Run Weather "ZHHH" ["-t"," <tempC>°C","-L","48","-H","16"] 36000
                 , Run Com "network-monitor-status" [] "networkMonitorStatus" 60
