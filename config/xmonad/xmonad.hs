@@ -67,6 +67,15 @@ myMaxScreenCount = 1
 -- Utils:
 ------------------------------------------------------------------------
 
+xKill :: Window -> X()
+xKill w = withDisplay $ \d -> do
+    wmdelt <- atom_WM_DELETE_WINDOW  ;  wmprot <- atom_WM_PROTOCOLS
+
+    protocols <- io $ getWMProtocols d w
+    io $ if wmdelt `elem` protocols
+    then killClient d w >> return ()
+        else killClient d w >> return ()
+
 centreRect = W.RationalRect 0.5 0.5 0.5 0.5
 
 -- If the window is floating then (f), if tiled then (n)
@@ -279,6 +288,9 @@ ezKeys =
   [
     -- Toggle Docks
     ("M-t", sendMessage ToggleStruts)
+
+  , ("M-S-w x"
+    , withFocused xKill)
 
     -- Move window to corner
   , ( "M-S-w 1"
