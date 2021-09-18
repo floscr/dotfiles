@@ -24,7 +24,7 @@ Config { font = "xft:Iosevka Mono-8:medium"
                     ] 10
 
                 , Run DiskU
-                  [("/", "<free>")]
+                  [("/", "<fn=1><fc=#767B81>DSK  </fc></fn><free>")]
                   ["-L", "20", "-H", "50", "-m", "1", "-p", "3"]
                   20
 
