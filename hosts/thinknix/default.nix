@@ -73,6 +73,9 @@ with lib.my;
     }
   ];
 
+  # Timer
+  services.atd.enable = true;
+
   modules = {
     bindings.enable = true;
     shell = {
