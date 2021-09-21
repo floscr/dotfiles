@@ -18,6 +18,7 @@ in
     home-manager.users.${config.user.name}.programs.alacritty = {
       enable = true;
       settings = {
+        env.TERM = "xterm-256color";
         colors = (with config.modules.theme.colors; {
           primary = {
             background = bg0;
@@ -61,7 +62,6 @@ in
           { key = "y"; mode = "Vi"; action = "ClearSelection"; }
           { key = "N"; mods = "Super"; action = ''SpawnNewInstance''; }
         ];
-        env.TERM = "xterm-256color";
         window = {
           dimensions = {
             columns = 81;
