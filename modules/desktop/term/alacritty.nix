@@ -71,6 +71,7 @@ in
             x = 12;
             y = 12;
           };
+          dynamic_title = true;
         };
         scrolling = {
           history = 10000;
