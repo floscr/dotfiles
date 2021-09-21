@@ -43,6 +43,8 @@ import           XMonad.Util.EZConfig                (additionalKeys,
 import           XMonad.Util.NamedScratchpad         as NS
 import           XMonad.Util.Run                     (spawnPipe)
 import           XMonad.Util.Scratchpad
+import XMonad.Util.Paste (sendKey)
+
 
 import           Control.Arrow                       (second, (***))
 import           Control.Monad                       (when)
@@ -66,6 +68,25 @@ myMaxScreenCount = 1
 ------------------------------------------------------------------------
 -- Utils:
 ------------------------------------------------------------------------
+
+startAtomicChrome = do
+  spawn "emacsclient -e \"(atomic-chrome-start-server)\""
+  sendKey (myAltMask .|. shiftMask) xK_comma
+
+bindAll :: [(Query Bool, X ())] -> X ()
+bindAll = mapM_ choose where
+  choose (mh,action) = withFocused $ \w -> whenX (runQuery mh w) action
+
+-- | Run the action paired with the first Query that holds true.
+bindFirst :: [(Query Bool, X ())] -> X ()
+bindFirst = withFocused . chooseOne
+
+chooseOne :: [(Query Bool, X ())] -> Window -> X ()
+chooseOne [] _ = return ()
+chooseOne ((mh,a):bs) w = do
+  c <- runQuery mh w
+  if c then a
+       else chooseOne bs w
 
 xKill :: Window -> X()
 xKill w = withDisplay $ \d -> do
@@ -156,6 +177,7 @@ scratchpadHook' = scratchpadManageHook $ W.RationalRect l t w h
 
 myModMask = mod4Mask
 myNumlockMask = mod2Mask
+myAltMask = mod1Mask
 
 myKeys conf@(XConfig { XMonad.modMask = modMask }) =
   M.fromList
@@ -288,6 +310,9 @@ ezKeys =
   [
     -- Toggle Docks
     ("M-t", sendMessage ToggleStruts)
+
+  , ("M1-S-,"
+    , bindFirst [(className =? "Brave-browser", startAtomicChrome ), (pure True, sendKey (myAltMask .|. shiftMask) xK_comma)])
 
   , ("M-S-w x"
     , withFocused xKill)
