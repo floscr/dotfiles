@@ -57,7 +57,6 @@ with lib.my;
     unrar
     unzip
     user.based-connect
-    user.scdl
     vlc
     xorg.xwininfo
     xournal
