@@ -182,11 +182,8 @@ myAltMask = mod1Mask
 myKeys conf@(XConfig { XMonad.modMask = modMask }) =
   M.fromList
     $
-
-        -- launch a terminal
        [ ((modMask, xK_Return), spawn $ XMonad.terminal conf)
 
-        -- close focused window
        , ((modMask, xK_w), kill)
        , ( (modMask, xK_comma)
          , namedScratchpadAction namedScratchpads' "terminal"
