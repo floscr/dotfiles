@@ -45,7 +45,6 @@ in
       enableGhostscriptFonts = true;
       fontconfig = {
         enable = true;
-        dpi = 180;
         defaultFonts = with config.modules.theme.fonts; {
           monospace = [ mono.family ];
           sansSerif = [ sans.family ];
