@@ -17,7 +17,7 @@ in
 
     home.configFile."xtheme/80-dpi".text = ''
       #if X_RESOLUTION > 3840
-      Xft.dpi: 144
+      Xft.dpi: 182
       #endif
       #if X_RESOLUTION <= 3840
       Xft.dpi: 120
