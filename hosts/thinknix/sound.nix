@@ -72,7 +72,7 @@
   };
 
   environment.systemPackages = with pkgs; [
-    unstable.playerctl
+    playerctl
     pavucontrol
     blueman
     (pkgs.writeScriptBin "switch-sound-monitor" ''
