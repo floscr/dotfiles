@@ -29,7 +29,6 @@ in
       xclip
       feh
       xdotool
-      sxhkd
       (pkgs.writeScriptBin "dragon_downloads" ''
         #!${stdenv.shell}
         cd ~/Downloads

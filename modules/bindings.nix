@@ -28,14 +28,14 @@ in
           then acc
           else acc + "${cur.description},,,${cur.command},,,${if ! isNull(cur.binding) then cur.binding else ""}\n") ""
         config.modules.bindings.items;
-    home.configFile."sxhkd/sxhkdrc".text =
-      fold
-        (cur: acc: if isNull cur.binding then acc else ''
-          ${acc}
-          # ${cur.description}
-          ${cur.binding}
-              ${cur.command}
-        '') ""
-        config.modules.bindings.items;
+    # home.configFile."sxhkd/sxhkdrc".text =
+    #   fold
+    #     (cur: acc: if isNull cur.binding then acc else ''
+    #       ${acc}
+    #       # ${cur.description}
+    #       ${cur.binding}
+    #           ${cur.command}
+    #     '') ""
+    #     config.modules.bindings.items;
   };
 }
