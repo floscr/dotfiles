@@ -14,7 +14,7 @@ with lib.my;
   user.packages = with pkgs; [
     appimage-run
     ffmpeg
-    user.xcolor
+    xcolor
     (writeShellScriptBin "," ''
       set -euo pipefail
       usage() {
