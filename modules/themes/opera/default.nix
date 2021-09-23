@@ -37,7 +37,7 @@ in
             };
             terminal = {
               family = "Iosevka";
-              size = 9;
+              size = 10;
               pkg = pkgs.iosevka;
             };
             ui = sans;
