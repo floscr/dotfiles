@@ -28,6 +28,7 @@ configuration {
   fg: #bbc2cf;
   fg-list: #bbc2cf;
   border: #f0c674;
+  placeholder: #545764;
 
   on: #8bd49c;
   off: #cc6666;
@@ -65,6 +66,10 @@ scrollbar {
 inputbar {
   children: [ textbox-icon, prompt, entry ];
   border: 0;
+}
+entry {
+  placeholder: "Search";
+  placeholder-color: @placeholder;
 }
 textbox-icon,
 prompt {
