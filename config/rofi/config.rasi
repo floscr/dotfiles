@@ -3,6 +3,7 @@ configuration {
   icon-theme: "Paper";
   cycle: true;
   disable-history: false;
+  hover-select: true;
   monitor: "-4";
 }
 
