@@ -1,28 +1,28 @@
 /* -*- mode: css; -*- */
 configuration {
-  icon-theme:       "Paper";
-  cycle:            true;
-  disable-history:  false;
-  monitor:          "-4";
+  icon-theme: "Paper";
+  cycle: true;
+  disable-history: false;
+  monitor: "-4";
 }
 
 * {
-  accent:   #bd93f9;
+  accent: #bd93f9;
 
-  bg:       #1E2029FA;
+  bg: #1e2029fa;
   bg-light: #1c1c1c;
   bg-focus: #282a36;
-  bg-dark:  #181a23;
-  fg:       #bbc2cf;
-  fg-list:  #bbc2cf;
-  border:   #f0c674;
+  bg-dark: #181a23;
+  fg: #bbc2cf;
+  fg-list: #bbc2cf;
+  border: #f0c674;
 
-  on:       #8BD49C;
-  off:      #cc6666;
+  on: #8bd49c;
+  off: #cc6666;
 
-  text-font:        "Iosevka 18";
-  text-mono-font:   "Iosevka 18";
-  icon-font:        "FontAwesome5FreeSolid 18";
+  text-font: "Iosevka 18";
+  text-mono-font: "Iosevka 18";
+  icon-font: "FontAwesome5FreeSolid 18";
 
   background-color: transparent;
   text-color: @fg-list;
@@ -31,7 +31,7 @@ configuration {
 }
 
 window {
-  width:    43%;
+  width: 43%;
   border: 0;
   border-color: @bg-light;
   children: [ inputbar, listview ];
@@ -53,7 +53,8 @@ inputbar {
   children: [ textbox-icon, prompt, entry ];
   border: 0;
 }
-textbox-icon, prompt {
+textbox-icon,
+prompt {
   padding: 11px;
   expand: false;
   border: 0 1px 0 0;
@@ -62,7 +63,8 @@ textbox-icon, prompt {
 textbox-icon {
   padding: 7px -6px 0;
 }
-entry, element {
+entry,
+element {
   padding: 11px 14px;
 }
 textbox {
@@ -75,16 +77,21 @@ scrollbar {
   handle-color: @accent;
   border-color: @bg-dark;
 }
-listview, inputbar {
+listview,
+inputbar {
   background-color: @bg-dark;
 }
-textbox-icon, prompt, entry {
+textbox-icon,
+prompt,
+entry {
   text-color: @accent;
 }
-prompt, entry {
+prompt,
+entry {
   background-color: @bg-focus;
 }
-textbox-icon, prompt {
+textbox-icon,
+prompt {
   background-color: #2f313d;
 }
 prompt {
@@ -98,7 +105,8 @@ entry {
   text-color: @fg;
 }
 
-element.normal.normal, element.alternate.normal {
+element.normal.normal,
+element.alternate.normal {
   background-color: @bg;
   text-color: @fg;
 }
