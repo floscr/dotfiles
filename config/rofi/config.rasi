@@ -79,7 +79,7 @@ prompt {
   margin: 0 -2px 0 0;
 }
 textbox-icon {
-  padding: 7px -6px 0;
+  padding: 11px -6px 0;
 }
 entry,
 element {
