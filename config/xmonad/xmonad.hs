@@ -41,9 +41,9 @@ import           XMonad.Util.EZConfig                (additionalKeys,
                                                       additionalKeysP,
                                                       additionalMouseBindings)
 import           XMonad.Util.NamedScratchpad         as NS
+import           XMonad.Util.Paste                   (sendKey)
 import           XMonad.Util.Run                     (spawnPipe)
 import           XMonad.Util.Scratchpad
-import XMonad.Util.Paste (sendKey)
 
 
 import           Control.Arrow                       (second, (***))
@@ -74,28 +74,28 @@ startAtomicChrome = do
   sendKey (myAltMask .|. shiftMask) xK_comma
 
 bindAll :: [(Query Bool, X ())] -> X ()
-bindAll = mapM_ choose where
-  choose (mh,action) = withFocused $ \w -> whenX (runQuery mh w) action
+bindAll = mapM_ choose
+  where choose (mh, action) = withFocused $ \w -> whenX (runQuery mh w) action
 
 -- | Run the action paired with the first Query that holds true.
 bindFirst :: [(Query Bool, X ())] -> X ()
 bindFirst = withFocused . chooseOne
 
 chooseOne :: [(Query Bool, X ())] -> Window -> X ()
-chooseOne [] _ = return ()
-chooseOne ((mh,a):bs) w = do
+chooseOne []             _ = return ()
+chooseOne ((mh, a) : bs) w = do
   c <- runQuery mh w
-  if c then a
-       else chooseOne bs w
+  if c then a else chooseOne bs w
 
-xKill :: Window -> X()
+xKill :: Window -> X ()
 xKill w = withDisplay $ \d -> do
-    wmdelt <- atom_WM_DELETE_WINDOW  ;  wmprot <- atom_WM_PROTOCOLS
+  wmdelt    <- atom_WM_DELETE_WINDOW
+  wmprot    <- atom_WM_PROTOCOLS
 
-    protocols <- io $ getWMProtocols d w
-    io $ if wmdelt `elem` protocols
+  protocols <- io $ getWMProtocols d w
+  io $ if wmdelt `elem` protocols
     then killClient d w >> return ()
-        else killClient d w >> return ()
+    else killClient d w >> return ()
 
 centreRect = W.RationalRect 0.5 0.5 0.5 0.5
 
@@ -181,10 +181,8 @@ myAltMask = mod1Mask
 
 myKeys conf@(XConfig { XMonad.modMask = modMask }) =
   M.fromList
-    $
-       [ ((modMask, xK_Return), spawn $ XMonad.terminal conf)
-
-       , ((modMask, xK_w), kill)
+    $  [ ((modMask, xK_Return), spawn $ XMonad.terminal conf)
+       , ((modMask, xK_w)     , kill)
        , ( (modMask, xK_comma)
          , namedScratchpadAction namedScratchpads' "terminal"
          )
@@ -194,10 +192,10 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
        , ( (modMask, xK_apostrophe)
          , spawn "rofi-pass -dmenu -theme theme/passmenu.rasi &"
          )
-       , ((modMask .|. shiftMask, xK_v), spawn "rofi-greenclip &")
+       , ((modMask .|. shiftMask, xK_v)    , spawn "rofi-greenclip &")
 
        -- Rotate through the available layout algorithms
-       , ((modMask .|. shiftMask, xK_m), sendMessage NextLayout)
+       , ((modMask .|. shiftMask, xK_m)    , sendMessage NextLayout)
 
        --  Reset the layouts on the current workspace to default
        , ((modMask .|. shiftMask, xK_space), setLayout $ XMonad.layoutHook conf)
@@ -206,13 +204,13 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
          )
 
        -- Move focus to the next window
-       , ((modMask, xK_Tab), toggleWS)
+       , ((modMask, xK_Tab)            , toggleWS)
 
        -- Vim window switching
-       , ((modMask, xK_h), windowGo L False)
-       , ((modMask, xK_l), windowGo R False)
-       , ((modMask, xK_j), windowGo D False)
-       , ((modMask, xK_k), windowGo U False)
+       , ((modMask, xK_h)              , windowGo L False)
+       , ((modMask, xK_l)              , windowGo R False)
+       , ((modMask, xK_j)              , windowGo D False)
+       , ((modMask, xK_k)              , windowGo U False)
        , ((modMask .|. shiftMask, xK_j), windowSwap D False)
        , ((modMask .|. shiftMask, xK_k), windowSwap U False)
        , ((modMask .|. shiftMask, xK_h), windowSwap L False)
@@ -238,26 +236,26 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
 
 
        -- Move focus to the master window
-       , ((modMask, xK_m), windows W.focusMaster)
+       , ((modMask, xK_m)                   , windows W.focusMaster)
 
        -- Swap the focused window and the master window
        , ((modMask .|. shiftMask, xK_Return), windows W.swapMaster)
 
        -- Swap the focused window with the next window
-       , ((modMask .|. shiftMask, xK_j), windows W.swapDown)
+       , ((modMask .|. shiftMask, xK_j)     , windows W.swapDown)
 
        -- Swap the focused window with the previous window
-       , ((modMask .|. shiftMask, xK_k), windows W.swapUp)
+       , ((modMask .|. shiftMask, xK_k)     , windows W.swapUp)
 
 
        -- Deincrement the number of windows in the master area
-       , ((modMask, xK_period), sendMessage (IncMasterN (-1)))
+       , ((modMask, xK_period)              , sendMessage (IncMasterN (-1)))
 
        -- Mirror, reflect around x or y axis
-       , ((modMask, xK_m), sendMessage $ Toggle MIRROR)
-       , ((modMask, xK_v), sendMessage $ Toggle REFLECTY)
-       , ((modMask, xK_f), sendMessage $ Toggle FULL)
-       , ((modMask .|. shiftMask, xK_f), toggleFloat)
+       , ((modMask, xK_m)                   , sendMessage $ Toggle MIRROR)
+       , ((modMask, xK_v)                   , sendMessage $ Toggle REFLECTY)
+       , ((modMask, xK_f)                   , sendMessage $ Toggle FULL)
+       , ((modMask .|. shiftMask, xK_f)     , toggleFloat)
 
        -- Quit xmonad
        , ( (modMask .|. shiftMask .|. controlMask, xK_q)
@@ -307,12 +305,13 @@ ezKeys =
   [
     -- Toggle Docks
     ("M-t", sendMessage ToggleStruts)
-
-  , ("M1-S-,"
-    , bindFirst [(className =? "Brave-browser", startAtomicChrome ), (pure True, sendKey (myAltMask .|. shiftMask) xK_comma)])
-
-  , ("M-S-w x"
-    , withFocused xKill)
+  , ( "M1-S-,"
+    , bindFirst
+      [ (className =? "Brave-browser", startAtomicChrome)
+      , (pure True, sendKey (myAltMask .|. shiftMask) xK_comma)
+      ]
+    )
+  , ("M-S-w x", withFocused xKill)
 
     -- Move window to corner
   , ( "M-S-w 1"
