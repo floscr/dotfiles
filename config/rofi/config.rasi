@@ -8,22 +8,21 @@ configuration {
 
 * {
   accent:   #bd93f9;
+
   bg:       #1E2029FA;
   bg-light: #1c1c1c;
   bg-focus: #282a36;
   bg-dark:  #181a23;
   fg:       #bbc2cf;
   fg-list:  #bbc2cf;
-  on:       #8BD49C;
-  off:      #cc6666;
   border:   #f0c674;
 
-  magenta: #bd93f9;
-  blue:    #61bfff;
+  on:       #8BD49C;
+  off:      #cc6666;
 
-  text-font:        "Iosevka 21";
-  text-mono-font:   "Iosevka 21";
-  icon-font:        "FontAwesome5FreeSolid 21";
+  text-font:        "Iosevka 18";
+  text-mono-font:   "Iosevka 18";
+  icon-font:        "FontAwesome5FreeSolid 18";
 
   background-color: transparent;
   text-color: @fg-list;
@@ -31,23 +30,16 @@ configuration {
   border-color: @bg-dark;
 }
 
-/**** Layout ****/
 window {
   width:    43%;
-  /* max-height: 30; */
-  /* y-offset: -25%; */
-  /* anchor:   north; */
-  /* location: center; */
-  border: 5px;
-  /* border-radius: 6px; */
+  border: 0;
   border-color: @bg-light;
   children: [ inputbar, listview ];
+  background-color: @bg;
 }
-
 
 listview {
   fixed-height: 1;
-  /* reverse: true; */
   margin: -2px 0 0;
   columns: 1;
   scrollbar: true;
@@ -59,7 +51,7 @@ scrollbar {
 }
 inputbar {
   children: [ textbox-icon, prompt, entry ];
-  border: 0 0 1px;
+  border: 0;
 }
 textbox-icon, prompt {
   padding: 11px;
@@ -78,8 +70,6 @@ textbox {
   margin: 20px;
 }
 
-
-/**** Looks ****/
 scrollbar {
   background-color: @bg-dark;
   handle-color: @accent;
@@ -108,11 +98,11 @@ entry {
   text-color: @fg;
 }
 
-element {
+element.normal.normal, element.alternate.normal {
   background-color: @bg;
   text-color: @fg;
 }
-element selected {
+element.selected.normal {
   background-color: @bg-dark;
   text-color: @accent;
 }
