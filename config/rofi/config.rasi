@@ -3,8 +3,13 @@ configuration {
   icon-theme: "Paper";
   cycle: true;
   disable-history: false;
-  hover-select: true;
+
   monitor: "-4";
+
+  /* Allow hover and mouse click */
+  hover-select: true;
+  me-accept-entry: "MousePrimary";
+  me-select-entry: "";
 }
 
 * {
