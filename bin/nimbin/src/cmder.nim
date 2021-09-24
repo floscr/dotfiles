@@ -97,7 +97,7 @@ proc main() =
   else:
     discard execProcess(&"frece init \"{freceDb}\" \"{freceTxt}\"")
 
-  let response = execProcess(&"frece print \"{freceDb}\" | rofi -i -dmenu -p \"Run\" -markup-rows").replace("\n", "")
+  let response = execProcess(&"frece print \"{freceDb}\" | rofi -i -dmenu -p \"\" -markup-rows").replace("\n", "")
   if response != "":
     let index = printedItems.find(response)
     let escaped = response.replace("\"", "\\\"")

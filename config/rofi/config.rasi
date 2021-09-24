@@ -4,6 +4,12 @@ configuration {
   cycle: true;
   disable-history: false;
 
+  display-ssh: "";
+  display-run: "";
+  display-drun: "";
+  display-window: "";
+  display-combi: "";
+
   monitor: "-4";
 
   /* Allow hover and mouse click */
