@@ -50,6 +50,7 @@ listview {
   columns: 1;
   scrollbar: true;
   spacing: 1px;
+  border: 0;
 }
 scrollbar {
   background-color: @bg;
