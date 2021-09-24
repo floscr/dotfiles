@@ -45,7 +45,7 @@ configuration {
 
 window {
   width: 43%;
-  border: 0;
+  border: 1;
   border-color: @bg-light;
   children: [ inputbar, listview ];
   background-color: @bg;
