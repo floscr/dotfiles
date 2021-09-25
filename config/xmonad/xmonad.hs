@@ -474,8 +474,11 @@ myLayout =
 -- Window Rules
 ------------------------------------------------------------------------
 
+wmWindowRole = stringProperty "WM_WINDOW_ROLE"
+
 manageWindowsHook = composeAll
   [ resource =? "desktop_window" --> doIgnore
+  , wmWindowRole =? "GtkFileChooserDialog" --> doRectFloat(W.RationalRect 0.25 0.25 0.5 0.5)
   , resource =? "kdesktop" --> doIgnore
   , className =? "mpv" --> doFloat
   -- , className =? "Emacs" --> insertPosition Master Newer
