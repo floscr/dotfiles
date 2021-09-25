@@ -13,6 +13,7 @@ in
     user.packages = with pkgs; [
       nodejs-14_x
       yarn
+      nodePackages.prettier
     ];
 
     env.ADBLOCK = "1"; # Stop node packages from showing ads in my darn CLI...
