@@ -397,7 +397,7 @@ listMyServerCmds = spawn ("echo '" ++ asmc ++ "'")
 myStartupHook :: X ()
 myStartupHook = do
   spawn "systemctl --user restart setup-monitor.service"
-  spawn "systemctl --user restart setup-keyboard.service"
+  spawn "systemctl --user start setup-keyboard.service"
 
 ------------------------------------------------------------------------
 -- Mouse bindings:
