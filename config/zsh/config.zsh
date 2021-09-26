@@ -36,6 +36,7 @@ HISTFILE="$XDG_CACHE_HOME/zhistory"
 HISTSIZE=1000                    # Max events to store in internal history.
 SAVEHIST=3000                    # Max events to store in history file.
 
+setopt HIST_IGNORE_SPACE         # Don't write history when prefixed with space
 setopt BANG_HIST                 # Don't treat '!' specially during expansion.
 setopt EXTENDED_HISTORY          # Write the history file in the ':start:elapsed;command' format.
 setopt APPEND_HISTORY            # Appends history to history file on exit
