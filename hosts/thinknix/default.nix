@@ -89,6 +89,9 @@ with lib.my;
       youtube-dl.enable = true;
       zsh.enable = true;
     };
+    scripts = {
+      screen-record.enable = true;
+    };
     shared = {
       sudoers.enable = true;
     };

@@ -156,24 +156,6 @@ with lib.my;
           description = "Screenshot";
         }
         {
-          binding = "super + ctrl + s";
-          xmonadBinding = "M-C-s";
-          command = "scrrec -s ~/Media/Screenrecording/$(date +%F-%T).mp4";
-          description = "Record Screen (MP4)";
-        }
-        {
-          binding = "super + ctrl + alt + s";
-          xmonadBinding = "M-C-M1-s";
-          command = "scrrec -s -w ~/Media/Screenrecording/$(date +%F-%T).mp4";
-          description = "Record Screen (MP4) + Screenkey";
-        }
-        {
-          binding = "super + alt + s";
-          xmonadBinding = "M-M1-s";
-          command = "scrrec -s ~/Media/Screenrecording/$(date +%F-%T).gif";
-          description = "Record Screen (GIF)";
-        }
-        {
           binding = "super + u";
           xmonadBinding = "M-u";
           command = "xcolor-yank";

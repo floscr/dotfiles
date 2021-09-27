@@ -1,6 +1,4 @@
-#!/usr/bin/env cached-nix-shell
-#! nix-shell -i bash -p ffmpeg slop screenkey
-
+#!/usr/bin/env zsh
 # Required packages for non-nix users
 # ffmpeg slop screenkey mov2gif
 
@@ -37,7 +35,7 @@ while getopts c:d:f:g:a:psw opt; do
     d) delay="$OPTARG" ;;
     f) fps=$OPTARG ;;
     g) geom="$OPTARG" ;;
-    p) compton= ;;
+    p) picom= ;;
     s) is_script=1 ;;
     a) record_audio=1 ;;
     w) with_screenkey=1 ;;
@@ -71,11 +69,6 @@ countdown() {
 }
 
 recording-start() {
-  local ffmpeg_opts="-y -f x11grab -show_region 1 -ss $delay -s ${4}x${5} -i :0.0+${2},${3} -framerate ${fps}"
-  [[ $record_audio ]] && ffmpeg_opts="-f pulse -i default -threads 4 -acodec pcm_s16le -async 1 $ffmpeg_opts"
-
-  echo $ffmpeg_opts
-
   local dest=${1:-./rec.mp4}
   local mp4dest=
 
@@ -83,7 +76,7 @@ recording-start() {
   [[ $with_screenkey ]] && screenkey --geometry $4x$screenkey_height+$2+$(( $3 + $5 - $screenkey_height )) &
 
   countdown
-  ffmpeg $ffmpeg_opts "${mp4dest:-$dest}" &
+  ffmpeg -y -f x11grab -show_region 1 -ss $delay -s ${4}x${5} -i :0.0+${2},${3} -framerate ${fps} "${mp4dest:-$dest}" &
   pid=$!
   echo $pid >$stopfile
   wait $pid
@@ -105,15 +98,15 @@ fi
 read -r W H X Y < <(select-region)
 [[ -z "$W$H$X$Y" ]] && exit 1
 
-# Compton with blur and/or transparencies cause unbearable flickering in
+# Picom with blur and/or transparencies cause unbearable flickering in
 # recordings, so temporarily disable it.
-compton=
-if systemctl is-enabled --user compton >/dev/null; then
-  systemctl --user stop compton
-  compton=1
+picom=
+if systemctl is-enabled --user picom >/dev/null; then
+  systemctl --user stop picom
+  picom=1
 fi
 cleanup() {
-  [[ $compton ]] && systemctl --user start compton;
+  [[ $picom ]] && systemctl --user start picom;
   [[ $with_screenkey ]] && pkill screenkey
 }
 trap cleanup EXIT
