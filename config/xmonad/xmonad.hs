@@ -18,12 +18,13 @@ import           XMonad.Actions.GroupNavigation      (Direction (Backward, Forwa
 import           XMonad.Actions.Navigation2D
 import           XMonad.Actions.TagWindows           (addTag, delTag)
 
-import XMonad.Hooks.ManageHelpers (doCenterFloat, doRectFloat)
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.DynamicProperty        (dynamicPropertyChange)
 import           XMonad.Hooks.EwmhDesktops           as Ewmh
 import           XMonad.Hooks.InsertPosition
 import           XMonad.Hooks.ManageDocks
+import           XMonad.Hooks.ManageHelpers          (doCenterFloat,
+                                                      doRectFloat)
 import           XMonad.Hooks.ServerMode             (serverModeEventHook,
                                                       serverModeEventHookCmd')
 
@@ -100,7 +101,7 @@ xKill w = withDisplay $ \d -> do
 
 -- Open terminal in the path that is set in the xproperty "MY_XWINDOW_PATH"
 -- otherwise use default terminal
-openTerminal :: Window -> X()
+openTerminal :: Window -> X ()
 openTerminal w = do
   path <- runQuery (stringProperty "MY_XWINDOW_PATH") w
   case path of
@@ -312,11 +313,8 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
 
 ezKeys :: [(String, X ())]
 ezKeys =
-  [
-    ("M-t", sendMessage ToggleStruts)
-
+  [ ("M-t"       , sendMessage ToggleStruts)
   , ("M-<Return>", withFocused openTerminal)
-
   , ( "M1-S-,"
     , bindFirst
       [ (className =? "Brave-browser", startAtomicChrome)
@@ -490,7 +488,8 @@ wmWindowRole = stringProperty "WM_WINDOW_ROLE"
 
 manageWindowsHook = composeAll
   [ resource =? "desktop_window" --> doIgnore
-  , wmWindowRole =? "GtkFileChooserDialog" --> doRectFloat(W.RationalRect 0.25 0.25 0.5 0.5)
+  , wmWindowRole =? "GtkFileChooserDialog" --> doRectFloat
+    (W.RationalRect 0.25 0.25 0.5 0.5)
   , resource =? "kdesktop" --> doIgnore
   , className =? "mpv" --> doFloat
   -- , className =? "Emacs" --> insertPosition Master Newer
