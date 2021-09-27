@@ -313,7 +313,6 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
 ezKeys :: [(String, X ())]
 ezKeys =
   [
-    -- Toggle Docks
     ("M-t", sendMessage ToggleStruts)
 
   , ("M-<Return>", withFocused openTerminal)
