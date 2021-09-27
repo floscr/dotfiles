@@ -18,6 +18,7 @@ import           XMonad.Actions.GroupNavigation      (Direction (Backward, Forwa
 import           XMonad.Actions.Navigation2D
 import           XMonad.Actions.TagWindows           (addTag, delTag)
 
+import XMonad.Hooks.ManageHelpers (doCenterFloat, doRectFloat)
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.DynamicProperty        (dynamicPropertyChange)
 import           XMonad.Hooks.EwmhDesktops           as Ewmh
