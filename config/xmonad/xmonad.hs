@@ -98,6 +98,15 @@ xKill w = withDisplay $ \d -> do
     then killClient d w >> return ()
     else killClient d w >> return ()
 
+-- Open terminal in the path that is set in the xproperty "MY_XWINDOW_PATH"
+-- otherwise use default terminal
+openTerminal :: Window -> X()
+openTerminal w = do
+  path <- runQuery (stringProperty "MY_XWINDOW_PATH") w
+  case path of
+    [] -> spawn myTerminal
+    xs -> spawn (myTerminal ++ " --working-directory \"" ++ show xs ++ "\"")
+
 centreRect = W.RationalRect 0.5 0.5 0.5 0.5
 
 -- If the window is floating then (f), if tiled then (n)
@@ -306,6 +315,9 @@ ezKeys =
   [
     -- Toggle Docks
     ("M-t", sendMessage ToggleStruts)
+
+  , ("M-<Return>", withFocused openTerminal)
+
   , ( "M1-S-,"
     , bindFirst
       [ (className =? "Brave-browser", startAtomicChrome)
