@@ -101,12 +101,19 @@ xKill w = withDisplay $ \d -> do
 
 -- Open terminal in the path that is set in the xproperty "MY_XWINDOW_PATH"
 -- otherwise use default terminal
-openTerminal :: Window -> X ()
-openTerminal w = do
-  path <- runQuery (stringProperty "MY_XWINDOW_PATH") w
-  case path of
-    [] -> spawn myTerminal
-    xs -> spawn (myTerminal ++ " --working-directory \"" ++ show xs ++ "\"")
+openTerminal = do
+  let
+    spawnEmptyTerminal = spawn myTerminal
+
+    trySpawnTerminalAtCwd w = do
+        cwd <- runQuery (stringProperty "MY_XWINDOW_PATH") w
+        case cwd of
+          [] -> spawnEmptyTerminal
+          xs -> spawn (myTerminal ++ " --working-directory \"" ++ show xs ++ "\"")
+
+    in withWindowSet $ \w -> case (W.peek w) of
+        Just win -> trySpawnTerminalAtCwd win
+        Nothing  -> spawnEmptyTerminal
 
 centreRect = W.RationalRect 0.5 0.5 0.5 0.5
 
@@ -314,7 +321,7 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
 ezKeys :: [(String, X ())]
 ezKeys =
   [ ("M-t"       , sendMessage ToggleStruts)
-  , ("M-<Return>", withFocused openTerminal)
+  , ("M-<Return>", openTerminal)
   , ( "M1-S-,"
     , bindFirst
       [ (className =? "Brave-browser", startAtomicChrome)
