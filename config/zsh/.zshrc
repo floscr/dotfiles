@@ -22,6 +22,7 @@ function my_set_xwindow_path_hook() {
   fi
 }
 chpwd_functions=(${chpwd_functions[@]} "my_set_xwindow_path_hook")
+precmd_functions=(${precmd_functions[@]} "my_set_xwindow_path_hook")
 
 if [[ $TERM != dumb ]]; then
   source $ZDOTDIR/keybinds.zsh
