@@ -9,6 +9,7 @@ import           XMonad.Core                         (withWindowSet)
 import           XMonad.Actions.CopyWindow           (copyToAll,
                                                       killAllOtherCopies,
                                                       wsContainingCopies)
+
 import           XMonad.Actions.CycleWS
 import qualified XMonad.Actions.FlexibleResize       as Flex
 import           XMonad.Actions.FloatKeys            (keysMoveWindow,
@@ -35,6 +36,7 @@ import           XMonad.Layout.MultiToggle
 import           XMonad.Layout.MultiToggle.Instances (StdTransformers (FULL, MIRROR, NOBORDERS))
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.Reflect
+import           XMonad.Layout.ResizableTile
 import           XMonad.Layout.Tabbed                (tabbed)
 import           XMonad.Layout.ThreeColumns
 import           XMonad.Layout.WindowArranger
@@ -233,24 +235,38 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
        , ((modMask .|. shiftMask, xK_k), windowSwap U False)
        , ((modMask .|. shiftMask, xK_h), windowSwap L False)
        , ((modMask .|. shiftMask, xK_l), windowSwap R False)
+       , ((modMask .|. controlMask, xK_j), do
+           layout <- getActiveLayoutDescription
+           case layout of
+             "BSP" -> sendMessage $ ExpandTowards D
+             _     -> sendMessage MirrorShrink
+         )
+       , ((modMask .|. controlMask, xK_k), do
+           layout <- getActiveLayoutDescription
+           case layout of
+             "BSP" -> sendMessage $ ExpandTowards U
+             _     -> sendMessage MirrorExpand
+         )
        , ( (modMask .|. controlMask, xK_l)
          , do
            layout <- getActiveLayoutDescription
            case layout of
-             "BSP"           -> sendMessage $ ExpandTowards R
-             "Flip Tall"     -> sendMessage $ Shrink
-             "Flip ThreeCol" -> sendMessage $ Shrink
-             _               -> sendMessage Expand
+             "BSP"                -> sendMessage $ ExpandTowards R
+             "Flip ResizableTall" -> sendMessage $ Shrink
+             "Flip ThreeCol"      -> sendMessage $ Shrink
+             _                    -> sendMessage Expand
          )
        , ( (modMask .|. controlMask, xK_h)
          , do
            layout <- getActiveLayoutDescription
            case layout of
-             "BSP"           -> sendMessage $ ExpandTowards L
-             "Flip Tall"     -> sendMessage $ Expand
-             "Flip ThreeCol" -> sendMessage $ Expand
-             _               -> sendMessage Shrink
+             "BSP"                -> sendMessage $ ExpandTowards L
+             "Flip ResizableTall" -> sendMessage $ Expand
+             "Flip ThreeCol"      -> sendMessage $ Expand
+             _                    -> sendMessage Shrink
          )
+
+       , ((modMask .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
 
 
        -- Move focus to the master window
@@ -468,18 +484,19 @@ oxyDarkTheme = defaultTheme { inactiveBorderColor = "#777"
                             , urgentTextColor     = "#63b8ff"
                             }
 myLayout =
-  mkToggle (single MIRROR) $ mkToggle (NOBORDERS ?? FULL ?? EOT) $ windowArrange
+  -- mkToggle (single MIRROR) $
+  mkToggle (NOBORDERS ?? FULL ?? EOT) $ windowArrange
     (   tiled
     ||| Flip tiled
-    ||| Flip Grid
+    -- ||| Flip tiled
+    -- ||| Flip Grid
     ||| emptyBSP
-    ||| Flip (ThreeCol 1 (3 / 100) (1 / 2))
-    ||| tabbed shrinkText oxyDarkTheme
+    -- ||| tabbed shrinkText oxyDarkTheme
     ||| Full
     )
  where
   -- default tiling algorithm partitions the screen into two panes
-  tiled   = Tall nmaster delta ratio
+  tiled   = ResizableTall nmaster delta ratio []
   -- The default number of windows in the master pane
   nmaster = 1
   -- Default proportion of screen occupied by master pane
