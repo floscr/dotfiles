@@ -33,7 +33,7 @@ in
 
           ## UI: Notification
           # geometry [{width}]x{height}][+/-{x}+/-{y}]
-          geometry = 365x15-21+21
+          geometry = 365x15-15+46
           alignment = left
           frame_width = 2
           frame_color = #1a1c25
