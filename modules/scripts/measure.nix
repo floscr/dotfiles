@@ -15,6 +15,7 @@ in
     user.packages = with pkgs; [
       maim
       bc
+      (pkgs.writeScriptBin script-name (builtins.readFile ./measure.sh))
     ];
 
     modules.bindings.items = [
