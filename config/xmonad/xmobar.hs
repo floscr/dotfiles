@@ -1,11 +1,11 @@
-Config { font = "xft:Iosevka Mono-8:medium"
-        , additionalFonts = [ "xft:Iosevka Mono:size=6:style=bold", "xft:FontAwesome:size=8" ]
+Config { font = "xft:Iosevka Mono-10:medium"
+        , additionalFonts = [ "xft:Iosevka Mono:size=7:style=bold", "xft:FontAwesome:size=10" ]
         , borderColor = "black"
         , border = FullB 4
         , bgColor = "#141517"
         , fgColor = "#c5c8c6"
         , position = TopW L 100
-        , textOffsets       = [ 22, 22, 22 ]
+        , textOffsets       = [ 22, 22, 24 ]
         , commands = [
                 Run Weather "SBPA" ["-t","<tempC>°C","-L","18","-H","25","--normal","green","--high","red","--low","lightblue"] 18000
 
@@ -31,7 +31,7 @@ Config { font = "xft:Iosevka Mono-8:medium"
                 , Run Date "<fn=2><fc=#767B81></fc> </fn> %a %d.%m <fn=1><fc=#767B81>%b</fc></fn>   <fn=2><fc=#767B81></fc></fn>  %H:%M" "date" 10
                 , Run UnsafeStdinReader
                 , Run Weather "ZHHH" ["-t"," <tempC>°C","-L","48","-H","16"] 36000
-                , Run Com "network-monitor-status" [] "networkMonitorStatus" 60
+                , Run ComX "echo \"\"" [] "" "caffeine" 10
                 , Run Battery [
                         "--template" , "<acstatus>"
                         , "--Low"      , "25"
@@ -55,5 +55,5 @@ Config { font = "xft:Iosevka Mono-8:medium"
         ]
         , sepChar = "%"
         , alignSep = "}{"
-        , template = " %UnsafeStdinReader% } { %networkMonitorStatus%     %multicpu%     %memory%     %disku%     %date%     %battery% "
+        , template = " %UnsafeStdinReader% } { %caffeine%     %multicpu%     %memory%     %disku%     %date%     %battery% "
         }
