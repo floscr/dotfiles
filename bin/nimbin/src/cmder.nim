@@ -1,5 +1,6 @@
 import fp/list
 import fp/option
+import fp/trym
 import lib/fpUtils
 import lib/utils
 import os
@@ -84,10 +85,29 @@ proc getDesktopApplications(): any =
     .filter(x => x.path.endsWith("desktop"))
     .map(c => joinPath(desktopApplicationsDir, c.path) |> parseDesktopFile)
 
+proc getXmonadItems(): seq[ConfigItem] =
+  fromEither(tryET do:
+    readFile "/tmp/xmonad-commands")
+  .map(x => x
+       .strip(trailing = true)
+       .splitLines()
+  )
+  .getOrElse(@[])
+  .map(command => ConfigItem(
+    description: &"XMonad: {command}",
+    command: &"xmonadctl {command}",
+    binding: none(string)
+  ))
+
 proc main() =
   let config = parseConfig()
   let desktopApplications = getDesktopApplications()
-  let items = config.concat(desktopApplications)
+  let xmonadItems = getXmonadItems()
+
+  let items = config
+    .concat(desktopApplications)
+    .concat(xmonadItems)
+
   let printedItems = items.prettyCommands()
 
   writeFile(freceTxt, printedItems.join("\n"))

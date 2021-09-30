@@ -393,6 +393,9 @@ myCommands =
   , ("restart", spawn "xmonad --recompile; xmonad --restart")
   ]
 
+commandsList :: String
+commandsList = foldl (\acc cur -> acc ++ (fst cur) ++ "\n") "" myCommands
+
 myServerModeEventHook = serverModeEventHookCmd' $ return myCommands'
 myCommands' = ("list-commands", listMyServerCmds) : myCommands ++ sortOn
   fst
@@ -606,5 +609,6 @@ defaults pipe =
 
 
 main = do
+  writeFile "/tmp/xmonad-commands" commandsList
   pipe <- spawnPipe "xmobar"
   xmonad $ docks $ ewmh $ defaults pipe
