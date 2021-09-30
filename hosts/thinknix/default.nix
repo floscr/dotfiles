@@ -91,6 +91,7 @@ with lib.my;
     };
     scripts = {
       screen-record.enable = true;
+      measure.enable = true;
     };
     shared = {
       sudoers.enable = true;
