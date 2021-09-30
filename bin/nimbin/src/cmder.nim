@@ -85,6 +85,12 @@ proc getDesktopApplications(): any =
     .filter(x => x.path.endsWith("desktop"))
     .map(c => joinPath(desktopApplicationsDir, c.path) |> parseDesktopFile)
 
+proc prettyXmonadCommand(x: string): string =
+  x
+  .split("-")
+  .map(capitalizeAscii)
+  .join(" ")
+
 proc getXmonadItems(): seq[ConfigItem] =
   fromEither(tryET do:
     readFile "/tmp/xmonad-commands")
@@ -94,7 +100,7 @@ proc getXmonadItems(): seq[ConfigItem] =
   )
   .getOrElse(@[])
   .map(command => ConfigItem(
-    description: &"XMonad: {command}",
+    description: &"XMonad: {prettyXmonadCommand(command)}",
     command: &"xmonadctl {command}",
     binding: none(string)
   ))
