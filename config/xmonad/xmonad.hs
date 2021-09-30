@@ -486,7 +486,8 @@ oxyDarkTheme = defaultTheme { inactiveBorderColor = "#777"
                             , urgentColor         = "#000"
                             , urgentTextColor     = "#63b8ff"
                             }
-myLayout =
+
+myLayoutHook =
   -- mkToggle (single MIRROR) $
   mkToggle (NOBORDERS ?? FULL ?? EOT) $ windowArrange
     (   tiled
@@ -588,7 +589,7 @@ defaults pipe =
       , mouseBindings      = myMouseBindings
 
   -- hooks
-      , layoutHook         = avoidStruts $ smartBorders $ myLayout
+      , layoutHook         = avoidStruts $ smartBorders $ myLayoutHook
       , manageHook         = manageWindowsHook
                              <+> manageDocks
                              <+> insertPosition Below Newer
