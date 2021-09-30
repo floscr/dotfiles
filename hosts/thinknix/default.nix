@@ -14,25 +14,25 @@ with lib.my;
   user.packages = with pkgs; [
     appimage-run
     ffmpeg
-    xcolor
-    gparted
     gnome3.nautilus
-    s-tui
+    gparted
     jq
+    magic-wormhole
     nethogs
     nixpkgs-fmt
+    s-tui
     screenkey
     signal-desktop
-    magic-wormhole
-    termdown
+    termdown # Countdown in the term
     unrar
     unzip
     user.based-connect
     vlc
+    xcolor
     xorg.xwininfo
-    xournal
+    xournal # Pdf editing
     xtitle
-    xvkbd
+    xvkbd # Virtual keyboard
   ] ++ flake-packages;
 
   hardware.usb.wakeupDisabled = [
