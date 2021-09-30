@@ -19,8 +19,4 @@ shift $((OPTIND-1))
 
 [ -t 0 ] && str="$*" || str=$(cat)
 
-emacsclient -a "" \
-  -c -F '((name . "doom-capture") (transient . t))' \
-  -e "(+org-capture|my-open-frame)" &
-sleep 0.2
-xmonadctl toggle-float
+emacsclient -a "" -e "(progn (+org-capture|my-open-frame))" &
