@@ -1,5 +1,4 @@
-#!/usr/bin/env cached-nix-shell
-#! nix-shell -i bash -p maim bc
+#!/usr/bin/env bash
 
 TMPFILE=$(mktemp -p /tmp --suffix ".png")
 

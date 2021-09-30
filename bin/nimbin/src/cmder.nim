@@ -1,15 +1,15 @@
+import fp/list
+import fp/option
+import lib/fpUtils
+import lib/utils
 import os
-import system
 import osproc
-import strutils
+import regex
 import sequtils
 import strformat
-import fp/option
-import fp/list
-import lib/utils
+import strutils
 import sugar
-import regex
-import lib/fpUtils
+import system
 
 {.experimental.}
 
