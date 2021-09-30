@@ -3,12 +3,16 @@
 
 import           System.Exit
 import           System.IO
-import           XMonad
+import           XMonad                              hiding ((|||))
 import           XMonad.Core                         (withWindowSet)
 
 import           XMonad.Actions.CopyWindow           (copyToAll,
                                                       killAllOtherCopies,
                                                       wsContainingCopies)
+
+import           XMonad.Layout.LayoutCombinators     (JumpToLayout (JumpToLayout),
+                                                      (|||))
+import           XMonad.Layout.Named                 (named)
 
 import           XMonad.Actions.CycleWS
 import qualified XMonad.Actions.FlexibleResize       as Flex
@@ -390,6 +394,10 @@ myCommands =
   , ("swap-with-master"     , windows W.swapMaster)
   , ("kill-window"          , kill)
   , ("quit"                 , io $ exitWith ExitSuccess)
+  , ("layout-monocle-right"           , sendMessage $ JumpToLayout "Monocle (Right)")
+  , ("layout-monocle-left"           , sendMessage $ JumpToLayout "Monocle (Right)")
+  , ("layout-monocle-bsp"           , sendMessage $ JumpToLayout "BSP")
+  , ("layout-monocle-full"           , sendMessage $ JumpToLayout "Full")
   , ("restart", spawn "xmonad --recompile; xmonad --restart")
   ]
 
@@ -490,8 +498,8 @@ oxyDarkTheme = defaultTheme { inactiveBorderColor = "#777"
 myLayoutHook =
   -- mkToggle (single MIRROR) $
   mkToggle (NOBORDERS ?? FULL ?? EOT) $ windowArrange
-    (   tiled
-    ||| Flip tiled
+    (   (named "Monocle (Right)" $ tiled)
+    ||| (named "Monocle (Left)" $ Flip tiled)
     -- ||| Flip tiled
     -- ||| Flip Grid
     ||| emptyBSP
