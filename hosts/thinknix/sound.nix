@@ -170,6 +170,7 @@
     }
     {
       binding = "{ XF86AudioMute, super + alt + m }";
+      xmonadBinding = "<XF86AudioMute>";
       description = "Sound: Mute/Unmute";
       command = "amixer -q set Master toggle";
     }
