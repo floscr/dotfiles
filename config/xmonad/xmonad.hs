@@ -13,6 +13,7 @@ import           XMonad.Actions.CopyWindow           (copyToAll,
 import           XMonad.Layout.LayoutCombinators     (JumpToLayout (JumpToLayout),
                                                       (|||))
 import           XMonad.Layout.Named                 (named)
+import           XMonad.Layout.PerWorkspace          (onWorkspace)
 
 import           XMonad.Actions.CycleWS
 import qualified XMonad.Actions.FlexibleResize       as Flex
@@ -496,25 +497,21 @@ oxyDarkTheme = defaultTheme { inactiveBorderColor = "#777"
                             }
 
 myLayoutHook =
-  -- mkToggle (single MIRROR) $
-  mkToggle (NOBORDERS ?? FULL ?? EOT) $ windowArrange
-    (   (named "Monocle (Right)" $ tiled)
-    ||| (named "Monocle (Left)" $ Flip tiled)
-    -- ||| Flip tiled
-    -- ||| Flip Grid
-    ||| emptyBSP
-    -- ||| tabbed shrinkText oxyDarkTheme
-    ||| Full
-    )
+  smartBorders
+  $ avoidStruts
+  $ windowArrange
+  $ mkToggle (NOBORDERS ?? FULL ?? EOT)
+  $ onWorkspace "2" workingLayout
+  $ onWorkspace "3" termLayout
+  defaultLayout
  where
-  -- default tiling algorithm partitions the screen into two panes
-  tiled   = ResizableTall nmaster delta ratio []
-  -- The default number of windows in the master pane
-  nmaster = 1
-  -- Default proportion of screen occupied by master pane
-  ratio   = 1 / 2
-  -- Percent of screen to increment by when resizing panes
-  delta   = 3 / 100
+   defaultLayout = monocleRight ||| monocleLeft ||| emptyBSP ||| Full
+   workingLayout = monocleLeft ||| monocleRight ||| emptyBSP ||| Full
+   termLayout = emptyBSP ||| monocleLeft ||| monocleRight ||| Full
+
+   monocleRight = named "Monocle (Right)" $ tiled
+   monocleLeft = named "Monocle (Left)" $ Flip tiled
+   tiled   = ResizableTall 1  (3 / 100) (1 / 2) []
 
 ------------------------------------------------------------------------
 -- Window Rules
@@ -597,7 +594,7 @@ defaults pipe =
       , mouseBindings      = myMouseBindings
 
   -- hooks
-      , layoutHook         = avoidStruts $ smartBorders $ myLayoutHook
+      , layoutHook         = myLayoutHook
       , manageHook         = manageWindowsHook
                              <+> manageDocks
                              <+> insertPosition Below Newer
