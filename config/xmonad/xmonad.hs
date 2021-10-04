@@ -389,6 +389,8 @@ myCommands =
   , ("swap-with-prev"       , windows W.swapUp)
   , ("swap-with-next"       , windows W.swapDown)
   , ("swap-with-master"     , windows W.swapMaster)
+
+  , ("center-float-window"          , withFocused doCenterFloatRetainSize)
   , ("kill-window"          , kill)
   , ("quit"                 , io $ exitWith ExitSuccess)
   , ("layout-monocle-right"           , sendMessage $ JumpToLayout "Monocle (Right)")
