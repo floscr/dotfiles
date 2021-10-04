@@ -129,12 +129,15 @@ floatOrNot f n = withFocused $ \windowId -> do
     then f
     else n
 
+doCenterFloatRetainSize win = do
   (_, W.RationalRect x y w h) <- floatLocation win
-  windows $ W.float win (W.RationalRect ((1 - w) / 2) ((1 - h) / 2) w h)
+  windows $ W.float win (W.RationalRect ((1 - w) / 2) ((1 - (min h 0.9)) / 2) w (min h 0.9))
   return ()
 
 toggleFloat =
-  floatOrNot (withFocused $ windows . W.sink) (withFocused centreFloat')
+  floatOrNot
+  (withFocused $ windows . W.sink)
+  (withFocused $ doCenterFloatRetainSize)
 
 toggleSticky :: X ()
 toggleSticky = wsContainingCopies >>= \ws -> case ws of
