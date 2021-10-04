@@ -527,11 +527,11 @@ manageWindowsHook = composeAll
   ]
 
 myHandleEventHook :: Event -> X All
-myHandleEventHook = dynamicPropertyChange "WM_NAME"
-                                          (title =? "Spotify" --> floating)
- where
-  floating = customFloating $ W.RationalRect (1 / 12) (1 / 12) (5 / 6) (5 / 6)
-
+myHandleEventHook = dynamicPropertyChange "WM_NAME" $ composeAll
+  [ title =? "Spotify" --> doCenterFloat
+  , title =? "doom-capture" --> floating
+  ] where
+  floating = customFloating $ W.RationalRect (1/4) (1/4) (2/4) (2/4)
 
 ------------------------------------------------------------------------
 -- Xmobar & Logging
