@@ -394,7 +394,7 @@ myCommands =
   , ("kill-window"          , kill)
   , ("quit"                 , io $ exitWith ExitSuccess)
   , ("layout-monocle-right"           , sendMessage $ JumpToLayout "Monocle (Right)")
-  , ("layout-monocle-left"           , sendMessage $ JumpToLayout "Monocle (Right)")
+  , ("layout-monocle-left"           , sendMessage $ JumpToLayout "Monocle (Left)")
   , ("layout-monocle-bsp"           , sendMessage $ JumpToLayout "BSP")
   , ("layout-monocle-full"           , sendMessage $ JumpToLayout "Full")
   , ("restart", spawn "xmonad --recompile; xmonad --restart")
