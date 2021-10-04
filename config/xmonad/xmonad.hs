@@ -122,8 +122,6 @@ openTerminal = do
         Just win -> trySpawnTerminalAtCwd win
         Nothing  -> spawnEmptyTerminal
 
-centreRect = W.RationalRect 0.5 0.5 0.5 0.5
-
 -- If the window is floating then (f), if tiled then (n)
 floatOrNot f n = withFocused $ \windowId -> do
   floats <- gets (W.floating . windowset)
@@ -131,14 +129,9 @@ floatOrNot f n = withFocused $ \windowId -> do
     then f
     else n
 
--- Centre and float a window (retain size)
-centreFloat win = do
   (_, W.RationalRect x y w h) <- floatLocation win
   windows $ W.float win (W.RationalRect ((1 - w) / 2) ((1 - h) / 2) w h)
   return ()
-
--- Float a window in the centre
-centreFloat' w = windows $ W.float w centreRect
 
 toggleFloat =
   floatOrNot (withFocused $ windows . W.sink) (withFocused centreFloat')
@@ -294,7 +287,6 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
        , ((modMask, xK_m)                   , sendMessage $ Toggle MIRROR)
        , ((modMask, xK_v)                   , sendMessage $ Toggle REFLECTY)
        , ((modMask, xK_f)                   , sendMessage $ Toggle FULL)
-       , ((modMask .|. shiftMask, xK_f)     , toggleFloat)
 
        -- Quit xmonad
        , ( (modMask .|. shiftMask .|. controlMask, xK_q)
@@ -350,6 +342,7 @@ ezKeys =
       ]
     )
   , ("M-S-w x", withFocused xKill)
+  , ("M-S-f", toggleFloat)
 
     -- Move window to corner
   , ( "M-S-w 1"
