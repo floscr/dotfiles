@@ -252,19 +252,17 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
          , do
            layout <- getActiveLayoutDescription
            case layout of
-             "BSP"                -> sendMessage $ ExpandTowards R
-             "Flip ResizableTall" -> sendMessage $ Shrink
-             "Flip ThreeCol"      -> sendMessage $ Shrink
-             _                    -> sendMessage Expand
+             "BSP"            -> sendMessage $ ExpandTowards R
+             "Monocle (Left)" -> sendMessage $ Shrink
+             _                -> sendMessage Expand
          )
        , ( (modMask .|. controlMask, xK_h)
          , do
            layout <- getActiveLayoutDescription
            case layout of
-             "BSP"                -> sendMessage $ ExpandTowards L
-             "Flip ResizableTall" -> sendMessage $ Expand
-             "Flip ThreeCol"      -> sendMessage $ Expand
-             _                    -> sendMessage Shrink
+             "BSP"            -> sendMessage $ ExpandTowards L
+             "Monocle (Left)" -> sendMessage $ Expand
+             _                -> sendMessage Shrink
          )
 
        , ((modMask .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
