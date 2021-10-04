@@ -177,15 +177,14 @@ myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces [1 ..]
 -- Scratch Pads:
 ------------------------------------------------------------------------
 
-namedScratchpads' :: [NamedScratchpad]
-namedScratchpads' =
+myScratchpads :: [NamedScratchpad]
+myScratchpads =
   [NS "terminal" "alacritty -t scratchpad &" (title =? "scratchpad") floating']
   where floating' = customFloating $ W.RationalRect 0.2 0.2 0.6 0.6
 
-
 -- | Hook for managing scratchpads
-scratchpadHook' :: ManageHook
-scratchpadHook' = scratchpadManageHook $ W.RationalRect l t w h
+myScratchpadHook :: ManageHook
+myScratchpadHook = scratchpadManageHook $ W.RationalRect l t w h
  where
   h = 0.25 -- terminal height
   w = 1 -- terminal width
@@ -205,7 +204,7 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
     $  [ ((modMask, xK_Return), spawn $ XMonad.terminal conf)
        , ((modMask, xK_w)     , kill)
        , ( (modMask, xK_comma)
-         , namedScratchpadAction namedScratchpads' "terminal"
+         , namedScratchpadAction myScratchpads "terminal"
          )
 
         -- rofi cmder
@@ -594,8 +593,8 @@ defaults pipe =
       , manageHook         = manageWindowsHook
                              <+> manageDocks
                              <+> insertPosition Below Newer
-                             <+> namedScratchpadManageHook namedScratchpads'
-                             <+> scratchpadHook'
+                             <+> namedScratchpadManageHook myScratchpads
+                             <+> myScratchpadHook
       , startupHook        = myStartupHook <+> Ewmh.ewmhDesktopsStartup
       , logHook            = (myLogHook pipe) <+> historyHook <+> tagHook
       , handleEventHook    = def
