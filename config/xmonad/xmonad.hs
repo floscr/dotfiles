@@ -516,10 +516,9 @@ myLayoutHook =
    defaultLayout = monocleRight ||| monocleLeft ||| emptyBSP ||| Full
    workingLayout = monocleLeft ||| monocleRight ||| emptyBSP ||| Full
    termLayout = emptyBSP ||| monocleLeft ||| monocleRight ||| Full
-
    monocleRight = named "Monocle (Right)" $ tiled
    monocleLeft = named "Monocle (Left)" $ Flip tiled
-   tiled   = ResizableTall 1  (3 / 100) (1 / 2) []
+   tiled = ResizableTall 1 0.03 0.8 []
 
 ------------------------------------------------------------------------
 -- Window Rules
