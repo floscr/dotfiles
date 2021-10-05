@@ -524,8 +524,6 @@ myLayoutHook =
 -- Window Rules
 ------------------------------------------------------------------------
 
-wmWindowRole = stringProperty "WM_WINDOW_ROLE"
-
 myManageHook :: ManageHook
 myManageHook = composeAll
   [ manageDocks
@@ -538,7 +536,7 @@ myManageHook = composeAll
 
 manageWindowsHook = composeAll
   [ resource =? "desktop_window" --> doIgnore
-  , wmWindowRole =? "GtkFileChooserDialog" --> doRectFloat
+  , stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog" --> doRectFloat
     (W.RationalRect 0.25 0.25 0.5 0.5)
   , resource =? "kdesktop" --> doIgnore
   , className =? "mpv" --> doFloat
