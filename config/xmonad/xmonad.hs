@@ -122,6 +122,14 @@ openTerminal = do
         Just win -> trySpawnTerminalAtCwd win
         Nothing  -> spawnEmptyTerminal
 
+
+willFloat :: Query Bool
+willFloat = ask >>= \w -> liftX $ withDisplay $ \d -> do
+  sh <- io $ getWMNormalHints d w
+  let isFixedSize = isJust (sh_min_size sh) && sh_min_size sh == sh_max_size sh
+  isTransient <- isJust <$> io (getTransientForHint d w)
+  return (isFixedSize || isTransient)
+
 -- If the window is floating then (f), if tiled then (n)
 floatOrNot f n = withFocused $ \windowId -> do
   floats <- gets (W.floating . windowset)
@@ -514,6 +522,16 @@ myLayoutHook =
 
 wmWindowRole = stringProperty "WM_WINDOW_ROLE"
 
+myManageHook :: ManageHook
+myManageHook = composeAll
+  [ manageDocks
+    -- open windows at the end if they are not floating
+  , fmap not willFloat --> insertPosition Below Newer
+  , manageDocks
+  , namedScratchpadManageHook myScratchpads
+  , myScratchpadHook
+  ]
+
 manageWindowsHook = composeAll
   [ resource =? "desktop_window" --> doIgnore
   , wmWindowRole =? "GtkFileChooserDialog" --> doRectFloat
@@ -590,11 +608,7 @@ defaults pipe =
 
   -- hooks
       , layoutHook         = myLayoutHook
-      , manageHook         = manageWindowsHook
-                             <+> manageDocks
-                             <+> insertPosition Below Newer
-                             <+> namedScratchpadManageHook myScratchpads
-                             <+> myScratchpadHook
+      , manageHook         = myManageHook
       , startupHook        = myStartupHook <+> Ewmh.ewmhDesktopsStartup
       , logHook            = (myLogHook pipe) <+> historyHook <+> tagHook
       , handleEventHook    = def
