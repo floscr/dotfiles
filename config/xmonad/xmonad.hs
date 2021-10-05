@@ -24,6 +24,8 @@ import           XMonad.Actions.GroupNavigation      (Direction (Backward, Forwa
 import           XMonad.Actions.Navigation2D
 import           XMonad.Actions.TagWindows           (addTag, delTag)
 
+
+import XMonad.Hooks.RefocusLast (refocusLastLayoutHook, refocusLastWhen, isFloat)
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.DynamicProperty        (dynamicPropertyChange)
 import           XMonad.Hooks.EwmhDesktops           as Ewmh
@@ -34,6 +36,7 @@ import           XMonad.Hooks.ManageHelpers          (doCenterFloat,
 import           XMonad.Hooks.ServerMode             (serverModeEventHook,
                                                       serverModeEventHookCmd')
 
+import XMonad.Layout.TrackFloating
 import           XMonad.Layout.BinarySpacePartition
 import           XMonad.Layout.Decoration
 import           XMonad.Layout.Grid
@@ -66,7 +69,7 @@ import qualified Data.Map                            as M
 import           Data.Maybe
 import           Data.Monoid                         (All (..))
 
-import           XMonad.Hooks.RefocusLast
+
 import qualified XMonad.StackSet                     as W
 
 ------------------------------------------------------------------------
@@ -506,6 +509,7 @@ oxyDarkTheme = defaultTheme { inactiveBorderColor = "#777"
 
 myLayoutHook =
   smartBorders
+  $ refocusLastLayoutHook . trackFloating
   $ avoidStruts
   $ windowArrange
   $ mkToggle (NOBORDERS ?? FULL ?? EOT)
@@ -615,7 +619,7 @@ defaults pipe =
       , startupHook        = myStartupHook <+> Ewmh.ewmhDesktopsStartup
       , logHook            = (myLogHook pipe) <+> historyHook <+> tagHook
       , handleEventHook    = def
-                             <+> (refocusLastWhen (refocusingIsActive <||> isFloat))
+                             <+> refocusLastWhen isFloat
                              <+> Ewmh.ewmhDesktopsEventHook
                              <+> Ewmh.fullscreenEventHook
                              <+> docksEventHook
