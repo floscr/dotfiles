@@ -187,7 +187,9 @@ myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces [1 ..]
 
 myScratchpads :: [NamedScratchpad]
 myScratchpads =
-  [NS "terminal" "alacritty -t scratchpad &" (title =? "scratchpad") floating']
+  [ NS "terminal" "alacritty -t scratchpad &" (title =? "scratchpad") floating'
+  , NS "emacs-scratch" "emacsclient -e \"(+UI|scratch)\"" (title =? "emacs-scratch") floating'
+  ]
   where floating' = customFloating $ W.RationalRect 0.2 0.2 0.6 0.6
 
 -- | Hook for managing scratchpads
@@ -351,6 +353,8 @@ ezKeys =
     )
   , ("M-S-w x", withFocused xKill)
   , ("M-S-f", toggleFloat)
+
+  , ("M-S-<Return>", namedScratchpadAction myScratchpads "emacs-scratch")
 
     -- Move window to corner
   , ( "M-S-w 1"
@@ -547,6 +551,7 @@ myHandleEventHook :: Event -> X All
 myHandleEventHook = dynamicPropertyChange "WM_NAME" $ composeAll
   [ title =? "Spotify" --> doCenterFloat
   , title =? "doom-capture" --> floating
+  , title =? "emacs-scratch" --> floating
   ] where
   floating = customFloating $ W.RationalRect (1/4) (1/4) (2/4) (2/4)
 
