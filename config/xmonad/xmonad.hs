@@ -66,6 +66,7 @@ import qualified Data.Map                            as M
 import           Data.Maybe
 import           Data.Monoid                         (All (..))
 
+import           XMonad.Hooks.RefocusLast
 import qualified XMonad.StackSet                     as W
 
 ------------------------------------------------------------------------
@@ -617,6 +618,7 @@ defaults pipe =
       , startupHook        = myStartupHook <+> Ewmh.ewmhDesktopsStartup
       , logHook            = (myLogHook pipe) <+> historyHook <+> tagHook
       , handleEventHook    = def
+                             <+> (refocusLastWhen (refocusingIsActive <||> isFloat))
                              <+> Ewmh.ewmhDesktopsEventHook
                              <+> Ewmh.fullscreenEventHook
                              <+> docksEventHook
