@@ -4,7 +4,6 @@ let
     pkgs.xmonad
     pkgs.xmonad-extras
     pkgs.xmonad-contrib
-    pkgs.taffybar
   ]);
 in
 pkgs.mkShell {
