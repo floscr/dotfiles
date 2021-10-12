@@ -68,6 +68,10 @@
       vaapiIntel
       vaapiVdpau
       libvdpau-va-gl
+
+      # Vulkan
+      amdvlk
+      vulkan-loader
     ];
   };
 
