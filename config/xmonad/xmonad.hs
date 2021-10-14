@@ -530,7 +530,7 @@ myLayoutHook =
 
 myManageHook :: ManageHook
 myManageHook = composeAll
-  [ manageDocks
+  [ manageWindowsHook
     -- open windows at the end if they are not floating
   , fmap not willFloat --> insertPosition Below Newer
   , manageDocks
