@@ -60,7 +60,7 @@ proc parseConfig(): seq[ConfigItem] =
 
 proc exec(x: string, config = parseConfig()) =
   let y = config
-    .findIt(it.description == x.split(splitChar)[1])
+    .findIt(it.description == x.split(splitChar, maxsplit = 1)[1])
   echo y.command
 
 proc parseDesktopFile(f: string): ConfigItem =
@@ -70,9 +70,9 @@ proc parseDesktopFile(f: string): ConfigItem =
 
   for line in lines(f):
     if line.startsWith("Exec") and exec.isEmptyOrWhitespace:
-      exec = line.split("=")[1]
+      exec = line.split("=", maxsplit = 1)[1]
     if line.startsWith("Name") and name.isEmptyOrWhitespace:
-      name = line.split("=")[1]
+      name = line.split("=", maxsplit = 1)[1]
 
   ConfigItem(
     description: name,
