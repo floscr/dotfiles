@@ -54,17 +54,15 @@ in
       defaultSearchProviderSearchURL = "https://duckduckgo.com/?q={searchTerms}";
       defaultSearchProviderSuggestURL = "https://ac.duckduckgo.com/ac/?q={searchTerms}&type=list";
       extensions = [
-        "icpgjfneehieebagbmdbhnlpiopdcmna" # Add URL to window title
-        "gcbommkclmclpchllfjekcdonpmejbdp" # Atomic Chrome, edit inputs in emacs
-        "cjpalhdlnbpafiamejdnhcphjbkeiagm" # Dark Reader
-        "dbepggeogbaibhgnhhndojpepiihcmeb" # Georgify - Hacker News Theme
-        "lhaoghhllmiaaagaffababmkdllgfcmc" # HTTPS Everywhere
-        "eimadpbcbfnmbkopoojfekhnkhdbieeh" # JSON Viewer
-        "kbmfpngjjgdllneeigpgjifpgocmfgmb" # New Tab URL - To fix vimium new tab disable
-        "ofjfdfaleomlfanfehgblppafkijjhmi" # Reddit Enhancment Suite
-        "gbmdgpbipfallnflgajpaliibnhdgobh" # Tab Shortcuts
-        "ndiaggkadcioihmhghipjmgfeamgjeoi" # Vimium
-        "fipfgiejfpcdacpjepkohdlnjonchnal" # uBlock Origin
+        "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
+        "dbepggeogbaibhgnhhndojpepiihcmeb" # Vimium
+        "eimadpbcbfnmbkopoojfekhnkhdbieeh" # Dark Readerr
+        "fipfgiejfpcdacpjepkohdlnjonchnal" # Keyboard shortcuts
+        "gbmdgpbipfallnflgajpaliibnhdgobh" # Json Viewer
+        "icpgjfneehieebagbmdbhnlpiopdcmna" # New Tab Redirect
+        "kbmfpngjjgdllneeigpgjifpgocmfgmb" # Reddit Enhancement Suite
+        "lhaoghhllmiaaagaffababmkdllgfcmc" # Atomic Chrome
+        "ndiaggkadcioihmhghipjmgfeamgjeoi" # Add URL To Window Title
       ];
     };
   };
