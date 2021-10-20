@@ -49,6 +49,7 @@ with lib.my;
   modules = {
     bindings.enable = true;
     shell = {
+      starship.enable = true;
       bpytop.enable = true;
       color-optimization.enable = true;
       direnv.enable = true;

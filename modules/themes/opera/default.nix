@@ -43,8 +43,6 @@ in
             ui = sans;
           };
         };
-
-        shell.zsh.rcFiles = [ ./config/zsh/prompt.zsh ];
       };
     }
 
