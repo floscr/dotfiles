@@ -49,14 +49,15 @@ with lib.my;
   modules = {
     bindings.enable = true;
     shell = {
-      pazi.enable = true;
-      starship.enable = true;
+      bat.enable = true;
       bpytop.enable = true;
       color-optimization.enable = true;
       direnv.enable = true;
       git.enable = true;
       gnupg.enable = true;
       pass.enable = true;
+      pazi.enable = true;
+      starship.enable = true;
       weechat.enable = true;
       wget.enable = true;
       youtube-dl.enable = true;

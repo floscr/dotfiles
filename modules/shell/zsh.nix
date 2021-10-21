@@ -38,7 +38,6 @@ in
 
     user.packages = with pkgs; [
       (ripgrep.override { withPCRE2 = true; })
-      bat
       bc
       exa
       pazi
