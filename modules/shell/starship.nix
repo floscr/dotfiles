@@ -29,8 +29,6 @@ in
         };
         format = "$directory$git_branch\n$character";
       };
-
-
     };
   };
 }

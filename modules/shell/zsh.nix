@@ -41,7 +41,7 @@ in
       bat
       bc
       exa
-      fasd
+      pazi
       fd
       fzf
       nix-zsh-completions

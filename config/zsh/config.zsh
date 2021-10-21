@@ -7,8 +7,6 @@ if [[ $TERM == dumb || -n $INSIDE_EMACS ]]; then
 fi
 
 ## General
-export _FASD_DATA="$XDG_CACHE_HOME/fasd"
-export _FASD_VIMINFO="$XDG_CACHE_HOME/viminfo"
 
 # Treat these characters as part of a word.
 WORDCHARS='_-*?[]~&.;!#$%^(){}<>'
