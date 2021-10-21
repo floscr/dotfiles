@@ -14,6 +14,12 @@ in
       pazi
     ];
 
-    modules.shell.zsh.rcInit = ''eval "$(pazi init zsh)"'';
+    modules.shell.zsh =
+      {
+        rcInit = ''eval "$(pazi init zsh)"'';
+        aliases = {
+          zf = "pazi_cd --pipe=${pkgs.fzf}/bin/fzf";
+        };
+      };
   };
 }
