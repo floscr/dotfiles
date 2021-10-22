@@ -16,10 +16,14 @@ in
 
     modules.shell.zsh =
       {
-        rcInit = ''eval "$(pazi init zsh)"'';
-        aliases = {
-          zf = "pazi_cd --pipe=${pkgs.fzf}/bin/fzf";
-        };
+        rcInit = ''
+          eval "$(pazi init zsh)"
+          function zf () {
+            dir="$(pazi view | cut -f 2- | fzf --tiebreak=index)"
+            [[ ! -z "$dir" ]] && cd "$dir"
+          }
+          bindkey -s "^T" 'zf^M'
+        '';
       };
   };
 }
