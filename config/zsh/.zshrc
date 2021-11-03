@@ -14,16 +14,6 @@ fi
 
 source $ZDOTDIR/config.zsh
 
-# Sets a x window property on every directory change in the shell
-# So I can stay in the same directory when opening a new terminal
-function my_set_xwindow_path_hook() {
-  if [[ $TERM == "xterm-256color" && ! -z $WINDOWID ]]; then
-    xprop -id $WINDOWID -f MY_XWINDOW_PATH 8s -set MY_XWINDOW_PATH "$(pwd)"
-  fi
-}
-chpwd_functions=(${chpwd_functions[@]} "my_set_xwindow_path_hook")
-precmd_functions=(${precmd_functions[@]} "my_set_xwindow_path_hook")
-
 if [[ $TERM != dumb ]]; then
   source $ZDOTDIR/keybinds.zsh
   source $ZDOTDIR/completion.zsh
