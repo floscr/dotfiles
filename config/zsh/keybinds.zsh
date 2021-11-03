@@ -44,6 +44,7 @@ fi
 autoload -Uz edit-command-line; zle -N edit-command-line
 bindkey '^ ' edit-command-line
 
+bindkey -s "^T" 'pazi view | cut -f 2- | fzf --tiebreak=index | xargs -r bash -c "cd $0"^M'
 bindkey -M viins '^n' history-substring-search-down
 bindkey -M viins '^p' history-substring-search-up
 bindkey -M viins '^s' history-incremental-pattern-search-backward
