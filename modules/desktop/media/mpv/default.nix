@@ -62,6 +62,7 @@ in
     home-manager.users.${config.user.name}.xdg = {
       mimeApps.defaultApplications = {
         "audio/x-mp3" = [ "mpv.desktop" ];
+        "video/quicktime" = [ "mpv.desktop" ];
       };
       configFile = {
         # bookmarks
