@@ -36,6 +36,7 @@ import           XMonad.Hooks.ManageHelpers          (doCenterFloat,
 import           XMonad.Hooks.ServerMode             (serverModeEventHook,
                                                       serverModeEventHookCmd')
 
+import XMonad.Layout.ThreeColumns
 import XMonad.Layout.TrackFloating
 import           XMonad.Layout.BinarySpacePartition
 import           XMonad.Layout.Decoration
@@ -392,6 +393,7 @@ myCommands =
   , ("layout-monocle-right"           , sendMessage $ JumpToLayout "Monocle (Right)")
   , ("layout-monocle-left"           , sendMessage $ JumpToLayout "Monocle (Left)")
   , ("layout-monocle-bsp"           , sendMessage $ JumpToLayout "BSP")
+  , ("layout-monocle-three-col"           , sendMessage $ JumpToLayout "Three Col")
   , ("layout-monocle-full"           , sendMessage $ JumpToLayout "Full")
   , ("restart", spawn "xmonad --recompile; xmonad --restart")
   ]
@@ -500,9 +502,10 @@ myLayoutHook =
   $ onWorkspace "3" termLayout
   defaultLayout
  where
-   defaultLayout = monocleRight ||| monocleLeft ||| emptyBSP ||| Full
-   workingLayout = monocleLeft ||| monocleRight ||| emptyBSP ||| Full
-   termLayout = emptyBSP ||| monocleLeft ||| monocleRight ||| Full
+   defaultLayout = monocleRight ||| monocleLeft ||| emptyBSP ||| threeColLayout ||| Full
+   workingLayout = monocleLeft ||| monocleRight ||| emptyBSP ||| threeColLayout ||| Full
+   termLayout = emptyBSP ||| threeColLayout ||| monocleLeft ||| monocleRight ||| Full
+   threeColLayout = named "Three Col" $ ThreeCol 1 (3/100) (1/2)
    monocleRight = named "Monocle (Right)" $ tiled
    monocleLeft = named "Monocle (Left)" $ Flip tiled
    tiled = ResizableTall 1 0.03 0.8 []
