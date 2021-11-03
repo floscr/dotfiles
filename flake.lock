@@ -2,17 +2,16 @@
   "nodes": {
     "emacs-overlay": {
       "locked": {
-        "lastModified": 1634095131,
-        "narHash": "sha256-zHZ4lV5gDzfXdJpHgY+43AS5SmU+LRfh2p+9Iudd5XY=",
+        "lastModified": 1634808364,
+        "narHash": "sha256-zRavMj93kD1vHfccHTyxuhg22vZTnDSarJs+iEI4fzE=",
         "owner": "nix-community",
         "repo": "emacs-overlay",
-        "rev": "5c81caffd457963acc3724cdb3dec0154ba076ee",
+        "rev": "b9f98ddb3168d4425db2112cbb9a31b626b13e27",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
         "repo": "emacs-overlay",
-        "rev": "5c81caffd457963acc3724cdb3dec0154ba076ee",
         "type": "github"
       }
     },
@@ -88,11 +87,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1634543124,
-        "narHash": "sha256-sPjP5GjZ0DgTgY8KljhGeix4L5ey7A3L1nm6lDffTh0=",
+        "lastModified": 1634743337,
+        "narHash": "sha256-CrevqYUr8MhfAken+vk4dz20z3auI/ytP7qsKITxlqw=",
         "owner": "rycee",
         "repo": "home-manager",
-        "rev": "b5d738b5a3f8c3738433e0aa6482afb4ac635380",
+        "rev": "91155a98ed126553deb8696b25556d782d2a5450",
         "type": "github"
       },
       "original": {
@@ -186,11 +185,11 @@
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1634728924,
-        "narHash": "sha256-W24N65gKP7D583bKlkH8OzXh++jjJUKMNOKPJUEHdZM=",
+        "lastModified": 1634823394,
+        "narHash": "sha256-tNknqv6mqlgRvI3knGg5b7t5I3h8WiFE0Ae+xAXuHis=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "8018eea2df53ef05fe81fb8383d1d2e8464cc062",
+        "rev": "5bd422223abfd599f37858169d008772d571d655",
         "type": "github"
       },
       "original": {
@@ -277,11 +276,11 @@
     },
     "nur": {
       "locked": {
-        "lastModified": 1634704360,
-        "narHash": "sha256-TotiUAIS1UsceSMroYrBPHtST72l/OmQ7Hv4Tb/1XmI=",
+        "lastModified": 1634806589,
+        "narHash": "sha256-1gqV6PUaeF8X7oaanW96RjLMi6J0pJPtHPOsxBCP85U=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "6ec56fd461c2c381b6c98c4b64fe327ee795bf37",
+        "rev": "48dbfcb2bdbc5b24600020e0ec57ab6e0a49404c",
         "type": "github"
       },
       "original": {
