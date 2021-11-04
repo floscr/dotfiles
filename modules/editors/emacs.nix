@@ -66,6 +66,8 @@ in
       #   perlPackages.RPCEPCService
       #   perlPackages.DBDPg
       #   perlPackages.DBDmysql)
+
+      perlPackages.FileMimeInfo # Mime type
     ];
 
     services.emacs = {

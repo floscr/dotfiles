@@ -126,7 +126,6 @@ in
         "$HOME/.config/icons"
       ];
       home.configFile = {
-        # GTK
         "gtk-3.0/settings.ini".text = ''
           [Settings]
           ${optionalString (cfg.gtk.theme != "")
@@ -137,6 +136,8 @@ in
             ''gtk-cursor-theme-name=${cfg.gtk.cursorTheme}''}
           gtk-fallback-icon-theme=gnome
           gtk-application-prefer-dark-theme=true
+
+          gtk-enable-primary-paste=false
 
           gtk-xft-hinting=1
           gtk-xft-hintstyle=hintfull

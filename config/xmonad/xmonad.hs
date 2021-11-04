@@ -25,7 +25,6 @@ import           XMonad.Actions.Navigation2D
 import           XMonad.Actions.TagWindows           (addTag, delTag)
 
 
-import XMonad.Hooks.RefocusLast (refocusLastLayoutHook, refocusLastWhen, isFloat)
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.DynamicProperty        (dynamicPropertyChange)
 import           XMonad.Hooks.EwmhDesktops           as Ewmh
@@ -33,11 +32,12 @@ import           XMonad.Hooks.InsertPosition
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers          (doCenterFloat,
                                                       doRectFloat)
+import           XMonad.Hooks.RefocusLast            (isFloat,
+                                                      refocusLastLayoutHook,
+                                                      refocusLastWhen)
 import           XMonad.Hooks.ServerMode             (serverModeEventHook,
                                                       serverModeEventHookCmd')
 
-import XMonad.Layout.ThreeColumns
-import XMonad.Layout.TrackFloating
 import           XMonad.Layout.BinarySpacePartition
 import           XMonad.Layout.Decoration
 import           XMonad.Layout.Grid
@@ -48,6 +48,7 @@ import           XMonad.Layout.Reflect
 import           XMonad.Layout.ResizableTile
 import           XMonad.Layout.Tabbed                (tabbed)
 import           XMonad.Layout.ThreeColumns
+import           XMonad.Layout.TrackFloating
 import           XMonad.Layout.WindowArranger
 
 import           XMonad.Util.EZConfig                (additionalKeys,
@@ -127,13 +128,13 @@ floatOrNot f n = withFocused $ \windowId -> do
 
 doCenterFloatRetainSize win = do
   (_, W.RationalRect x y w h) <- floatLocation win
-  windows $ W.float win (W.RationalRect ((1 - w) / 2) ((1 - (min h 0.9)) / 2) w (min h 0.9))
+  windows $ W.float
+    win
+    (W.RationalRect ((1 - w) / 2) ((1 - (min h 0.9)) / 2) w (min h 0.9))
   return ()
 
-toggleFloat =
-  floatOrNot
-  (withFocused $ windows . W.sink)
-  (withFocused $ doCenterFloatRetainSize)
+toggleFloat = floatOrNot (withFocused $ windows . W.sink)
+                         (withFocused $ doCenterFloatRetainSize)
 
 toggleSticky :: X ()
 toggleSticky = wsContainingCopies >>= \ws -> case ws of
@@ -176,7 +177,10 @@ myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces [1 ..]
 myScratchpads :: [NamedScratchpad]
 myScratchpads =
   [ NS "terminal" "alacritty -t scratchpad &" (title =? "scratchpad") floating'
-  , NS "emacs-scratch" "emacsclient -e \"(+UI|scratch)\"" (title =? "emacs-scratch") floating'
+  , NS "emacs-scratch"
+       "emacsclient -e \"(+UI|scratch)\""
+       (title =? "emacs-scratch")
+       floating'
   ]
   where floating' = customFloating $ W.RationalRect 0.2 0.2 0.6 0.6
 
@@ -199,11 +203,9 @@ myAltMask = mod1Mask
 
 myKeys conf@(XConfig { XMonad.modMask = modMask }) =
   M.fromList
-    $  [ ((modMask, xK_Return), spawn $ XMonad.terminal conf)
-       , ((modMask, xK_w)     , kill)
-       , ( (modMask, xK_comma)
-         , namedScratchpadAction myScratchpads "terminal"
-         )
+    $  [ ((modMask, xK_Return)             , spawn $ XMonad.terminal conf)
+       , ((modMask, xK_w)                  , kill)
+       , ((modMask, xK_comma), namedScratchpadAction myScratchpads "terminal")
 
 
        -- Rotate through the available layout algorithms
@@ -227,13 +229,15 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
        , ((modMask .|. shiftMask, xK_k), windowSwap U False)
        , ((modMask .|. shiftMask, xK_h), windowSwap L False)
        , ((modMask .|. shiftMask, xK_l), windowSwap R False)
-       , ((modMask .|. controlMask, xK_j), do
+       , ( (modMask .|. controlMask, xK_j)
+         , do
            layout <- getActiveLayoutDescription
            case layout of
              "BSP" -> sendMessage $ ExpandTowards D
              _     -> sendMessage MirrorShrink
          )
-       , ((modMask .|. controlMask, xK_k), do
+       , ( (modMask .|. controlMask, xK_k)
+         , do
            layout <- getActiveLayoutDescription
            case layout of
              "BSP" -> sendMessage $ ExpandTowards U
@@ -255,8 +259,7 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
              "Monocle (Left)" -> sendMessage $ Expand
              _                -> sendMessage Shrink
          )
-
-       , ((modMask .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
+       , ((modMask .|. shiftMask, xK_space), setLayout $ XMonad.layoutHook conf)
 
 
        -- Move focus to the master window
@@ -333,13 +336,11 @@ ezKeys =
       , (pure True, sendKey (myAltMask .|. shiftMask) xK_comma)
       ]
     )
-  , ("M-S-w x", withFocused xKill)
-  , ("M-S-f", toggleFloat)
-
-  , ("M-<Space>", spawn "nimx cmder")
+  , ("M-S-w x"     , withFocused xKill)
+  , ("M-S-f"       , toggleFloat)
+  , ("M-<Space>"   , spawn "nimx cmder")
   , ("M-'", spawn "rofi-pass -dmenu -theme theme/passmenu.rasi")
-  , ("M-S-v", spawn "rofi-greenclip")
-
+  , ("M-S-v"       , spawn "rofi-greenclip")
   , ("M-S-<Return>", namedScratchpadAction myScratchpads "emacs-scratch")
 
     -- Move window to corner
@@ -373,26 +374,25 @@ ezKeys =
 
 myCommands :: [(String, X ())]
 myCommands =
-  [ ("decrease-master-size" , sendMessage Shrink)
-  , ("increase-master-size" , sendMessage Expand)
-  , ("decrease-master-count", sendMessage $ IncMasterN (-1))
-  , ("increase-master-count", sendMessage $ IncMasterN (1))
-  , ("focus-prev"           , windows W.focusUp)
-  , ("focus-next"           , windows W.focusDown)
-  , ("toggle-float"         , toggleFloat)
-  , ("focus-master"         , windows W.focusMaster)
-  , ("swap-with-prev"       , windows W.swapUp)
-  , ("swap-with-next"       , windows W.swapDown)
-  , ("swap-with-master"     , windows W.swapMaster)
-
-  , ("center-float-window"          , withFocused doCenterFloatRetainSize)
-  , ("kill-window"          , kill)
-  , ("quit"                 , io $ exitWith ExitSuccess)
-  , ("layout-monocle-right"           , sendMessage $ JumpToLayout "Monocle (Right)")
-  , ("layout-monocle-left"           , sendMessage $ JumpToLayout "Monocle (Left)")
-  , ("layout-monocle-bsp"           , sendMessage $ JumpToLayout "BSP")
-  , ("layout-monocle-three-col"           , sendMessage $ JumpToLayout "Three Col")
-  , ("layout-monocle-full"           , sendMessage $ JumpToLayout "Full")
+  [ ("decrease-master-size"    , sendMessage Shrink)
+  , ("increase-master-size"    , sendMessage Expand)
+  , ("decrease-master-count"   , sendMessage $ IncMasterN (-1))
+  , ("increase-master-count"   , sendMessage $ IncMasterN (1))
+  , ("focus-prev"              , windows W.focusUp)
+  , ("focus-next"              , windows W.focusDown)
+  , ("toggle-float"            , toggleFloat)
+  , ("focus-master"            , windows W.focusMaster)
+  , ("swap-with-prev"          , windows W.swapUp)
+  , ("swap-with-next"          , windows W.swapDown)
+  , ("swap-with-master"        , windows W.swapMaster)
+  , ("center-float-window", withFocused doCenterFloatRetainSize)
+  , ("kill-window"             , kill)
+  , ("quit"                    , io $ exitWith ExitSuccess)
+  , ("layout-monocle-right", sendMessage $ JumpToLayout "Monocle (Right)")
+  , ("layout-monocle-left", sendMessage $ JumpToLayout "Monocle (Left)")
+  , ("layout-monocle-bsp"      , sendMessage $ JumpToLayout "BSP")
+  , ("layout-monocle-three-col", sendMessage $ JumpToLayout "Three Col")
+  , ("layout-monocle-full"     , sendMessage $ JumpToLayout "Full")
   , ("restart", spawn "xmonad --recompile; xmonad --restart")
   ]
 
@@ -492,21 +492,24 @@ oxyDarkTheme = defaultTheme { inactiveBorderColor = "#777"
 
 myLayoutHook =
   smartBorders
-  $ refocusLastLayoutHook . trackFloating
-  $ avoidStruts
-  $ windowArrange
-  $ mkToggle (NOBORDERS ?? FULL ?? EOT)
-  $ onWorkspace "2" workingLayout
-  $ onWorkspace "3" termLayout
-  defaultLayout
+    $ refocusLastLayoutHook
+    . trackFloating
+    $ avoidStruts
+    $ windowArrange
+    $ mkToggle (NOBORDERS ?? FULL ?? EOT)
+    $ onWorkspace "2" workingLayout
+    $ onWorkspace "3" termLayout defaultLayout
  where
-   defaultLayout = monocleRight ||| monocleLeft ||| emptyBSP ||| threeColLayout ||| Full
-   workingLayout = monocleLeft ||| monocleRight ||| emptyBSP ||| threeColLayout ||| Full
-   termLayout = emptyBSP ||| threeColLayout ||| monocleLeft ||| monocleRight ||| Full
-   threeColLayout = named "Three Col" $ ThreeCol 1 (3/100) (1/2)
-   monocleRight = named "Monocle (Right)" $ tiled
-   monocleLeft = named "Monocle (Left)" $ Flip tiled
-   tiled = ResizableTall 1 0.03 0.8 []
+  defaultLayout =
+    monocleRight ||| monocleLeft ||| emptyBSP ||| threeColLayout ||| Full
+  workingLayout =
+    monocleLeft ||| monocleRight ||| emptyBSP ||| threeColLayout ||| Full
+  termLayout =
+    emptyBSP ||| threeColLayout ||| monocleLeft ||| monocleRight ||| Full
+  threeColLayout = named "Three Col" $ ThreeCol 1 (3 / 100) (1 / 2)
+  monocleRight   = named "Monocle (Right)" $ tiled
+  monocleLeft    = named "Monocle (Left)" $ Flip tiled
+  tiled          = ResizableTall 1 0.03 0.8 []
 
 ------------------------------------------------------------------------
 -- Window Rules
@@ -539,7 +542,7 @@ myHandleEventHook = dynamicPropertyChange "WM_NAME" $ composeAll
   , title =? "doom-capture" --> floating
   , title =? "emacs-scratch" --> floating
   ] where
-  floating = customFloating $ W.RationalRect (1/4) (1/4) (2/4) (2/4)
+  floating = customFloating $ W.RationalRect (1 / 4) (1 / 4) (2 / 4) (2 / 4)
 
 ------------------------------------------------------------------------
 -- Xmobar & Logging

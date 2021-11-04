@@ -12,14 +12,17 @@ with lib.my;
   ];
 
   user.packages = with pkgs; [
+    babashka
     appimage-run
     ffmpeg
     gnome3.nautilus
+    ocamlPackages.merlin
     gparted
     jq
     magic-wormhole
     nethogs
     nixpkgs-fmt
+    zip
     s-tui
     screenkey
     signal-desktop
