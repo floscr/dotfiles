@@ -171,4 +171,11 @@ with lib.my;
   # Monitor backlight control
   programs.light.enable = true;
   user.extraGroups = [ "video" ];
+
+  home.configFile = {
+    "gtk-3.0/bookmarks".text = ''
+      file://${homeDir}/Downloads
+      file://${homeDir}/Documents
+    '';
+  };
 }
