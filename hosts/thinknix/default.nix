@@ -93,6 +93,7 @@ with lib.my;
       nim.enable = true;
       docker.enable = true;
       mysql.enable = false;
+      clojure.enable = true;
     };
     desktop = {
       # bspwm.enable = true;
