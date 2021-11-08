@@ -74,7 +74,7 @@ in
           dynamic_title = true;
         };
         scrolling = {
-          history = 10000;
+          history = 99999;
           multiplier = 3;
         };
       };
