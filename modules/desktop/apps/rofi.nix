@@ -30,7 +30,7 @@ in
     modules.bindings.items = [
       {
         binding = "super + @space";
-        command = "nimx cmder";
+        command = "rofi_cmder";
         description = "Rofi Main Menu";
       }
       {
