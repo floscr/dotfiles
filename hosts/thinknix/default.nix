@@ -8,7 +8,7 @@ with lib.my;
     ./throttled.nix
     ./hardware-configuration.nix
     ../personal.nix
-    ./etc.nix
+    ./bindings.nix
   ];
 
   user.packages = with pkgs; [
