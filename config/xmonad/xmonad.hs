@@ -536,10 +536,11 @@ manageWindowsHook = composeAll
   , className =? "mpv" --> doFloat
   -- , className =? "Emacs" --> insertPosition Master Newer
   , className =? "Emacs" <&&> title =? "doom-capture" --> doFloat
-  , className =? "Pavucontrol" --> doFloat
-  , className =? "Dragon" --> doFloatToMouse
+  , className =? "Pavucontrol" --> doFloatToMouseCenter
+  , className =? "Dragon" --> doFloatToMouse (0.05, 0.05)
   ]
-  where doFloatToMouse = placeHook (inBounds (underMouse (0, 0))) <+> doFloat
+  where doFloatToMouse = \pos -> placeHook (inBounds (underMouse pos)) <+> doFloat
+        doFloatToMouseCenter = doFloatToMouse (0.5, 0.5)
 
 myHandleEventHook :: Event -> X All
 myHandleEventHook = dynamicPropertyChange "WM_NAME" $ composeAll
