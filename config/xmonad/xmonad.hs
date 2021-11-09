@@ -340,7 +340,7 @@ ezKeys =
     )
   , ("M-S-w x"     , withFocused xKill)
   , ("M-S-f"       , toggleFloat)
-  , ("M-<Space>"   , spawn "nimx cmder")
+  , ("M-<Space>"   , spawn "rofi_cmder")
   , ("M-'", spawn "rofi-pass -dmenu -theme theme/passmenu.rasi")
   , ("M-S-v"       , spawn "rofi-greenclip")
   , ("M-S-<Return>", namedScratchpadAction myScratchpads "emacs-scratch")
