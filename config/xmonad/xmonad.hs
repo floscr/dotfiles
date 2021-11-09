@@ -32,6 +32,8 @@ import           XMonad.Hooks.InsertPosition
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers          (doCenterFloat,
                                                       doRectFloat)
+import           XMonad.Hooks.Place                  (inBounds, placeHook,
+                                                      underMouse)
 import           XMonad.Hooks.RefocusLast            (isFloat,
                                                       refocusLastLayoutHook,
                                                       refocusLastWhen)
@@ -534,7 +536,9 @@ manageWindowsHook = composeAll
   -- , className =? "Emacs" --> insertPosition Master Newer
   , className =? "Emacs" <&&> title =? "doom-capture" --> doFloat
   , className =? "Pavucontrol" --> doFloat
+  , className =? "Dragon" --> doFloatToMouse
   ]
+  where doFloatToMouse = placeHook (inBounds (underMouse (0, 0))) <+> doFloat
 
 myHandleEventHook :: Event -> X All
 myHandleEventHook = dynamicPropertyChange "WM_NAME" $ composeAll
