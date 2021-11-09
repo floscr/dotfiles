@@ -344,6 +344,7 @@ ezKeys =
   , ("M-'", spawn "rofi-pass -dmenu -theme theme/passmenu.rasi")
   , ("M-S-v"       , spawn "rofi-greenclip")
   , ("M-S-<Return>", namedScratchpadAction myScratchpads "emacs-scratch")
+  , ("M-C-'"       , spawn "rofi_org_bookmarks")
 
     -- Move window to corner
   , ( "M-S-w 1"
