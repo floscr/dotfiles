@@ -14,5 +14,9 @@ in
       enable = true;
       package = pkgs.mariadb;
     };
+
+    environment.sessionVariables = {
+      MYSQL_HISTFILE = "$XDG_CACHE_HOME/mysql_history";
+    };
   };
 }
