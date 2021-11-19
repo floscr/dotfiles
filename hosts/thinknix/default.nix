@@ -142,6 +142,7 @@ with lib.my;
       vim.enable = true;
     };
     services = {
+      espanso.enable = true;
       screendrawing.enable = true;
       syncthing.enable = true;
       polybar.enable = false;
