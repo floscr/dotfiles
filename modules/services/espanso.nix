@@ -64,7 +64,8 @@ in
       wantedBy = [ "default.target" ];
     };
 
-    home.file.".config/espanso/default.yml".source = yaml.generate "default.yml" cfg.config;
+    home.file.".config/espanso/default.yml".source =
+      yaml.generate "default.yml" cfg.config;
 
     environment.systemPackages = [ pkgs.espanso ];
   };
