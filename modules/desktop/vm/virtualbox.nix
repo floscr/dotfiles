@@ -16,15 +16,13 @@ in
 
       virtualisation.virtualbox.host = {
         enable = true;
-        package = pkgs.virtualboxPkgs.virtualbox;
-        enableExtensionPack = false;
       };
 
       user.extraGroups = [ "vboxusers" ];
     }
     (mkIf cfg.vagrant.enable {
       environment.systemPackages = with pkgs; [
-        pkgs.virtualboxPkgs.vagrant
+        pkgs.vagrant
       ];
       environment.shellAliases = {
         v = "vagrant";
