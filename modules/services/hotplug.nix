@@ -89,6 +89,8 @@ in
           /etc/profiles/per-user/$(whoami)/bin/reloadWallpaper
 
           ${pkgs.xorg.xrdb}/bin/xrdb -merge ~/.config/xtheme/80-dpi
+
+          /etc/profiles/per-user/floscr/bin/xmonadctl restart
         ''}";
         };
       };
