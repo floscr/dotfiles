@@ -22,6 +22,13 @@ in
       #if X_RESOLUTION <= 3840
       Xft.dpi: 120
       #endif
+
+      Xft.antialias: 1
+      Xft.autohint: 0
+      Xft.hinting: 1
+      Xft.hintstyle: hintslight
+      Xft.lcdfilter: lcddefault
+      Xft.rgba: rgb
     '';
   };
 }
