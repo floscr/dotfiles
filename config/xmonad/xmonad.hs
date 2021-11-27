@@ -40,16 +40,17 @@ import           XMonad.Hooks.RefocusLast            (isFloat,
 import           XMonad.Hooks.ServerMode             (serverModeEventHook,
                                                       serverModeEventHookCmd')
 
+
 import           XMonad.Layout.BinarySpacePartition
 import           XMonad.Layout.Decoration
 import           XMonad.Layout.Grid
+import           XMonad.Layout.MultiColumns          (multiCol)
 import           XMonad.Layout.MultiToggle
 import           XMonad.Layout.MultiToggle.Instances (StdTransformers (FULL, MIRROR, NOBORDERS))
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.Reflect
 import           XMonad.Layout.ResizableTile
 import           XMonad.Layout.Tabbed                (tabbed)
-import           XMonad.Layout.ThreeColumns
 import           XMonad.Layout.TrackFloating
 import           XMonad.Layout.WindowArranger
 
@@ -377,25 +378,25 @@ ezKeys =
 
 myCommands :: [(String, X ())]
 myCommands =
-  [ ("decrease-master-size"    , sendMessage Shrink)
-  , ("increase-master-size"    , sendMessage Expand)
-  , ("decrease-master-count"   , sendMessage $ IncMasterN (-1))
-  , ("increase-master-count"   , sendMessage $ IncMasterN (1))
-  , ("focus-prev"              , windows W.focusUp)
-  , ("focus-next"              , windows W.focusDown)
-  , ("toggle-float"            , toggleFloat)
-  , ("focus-master"            , windows W.focusMaster)
-  , ("swap-with-prev"          , windows W.swapUp)
-  , ("swap-with-next"          , windows W.swapDown)
-  , ("swap-with-master"        , windows W.swapMaster)
+  [ ("decrease-master-size"        , sendMessage Shrink)
+  , ("increase-master-size"        , sendMessage Expand)
+  , ("decrease-master-count"       , sendMessage $ IncMasterN (-1))
+  , ("increase-master-count"       , sendMessage $ IncMasterN (1))
+  , ("focus-prev"                  , windows W.focusUp)
+  , ("focus-next"                  , windows W.focusDown)
+  , ("toggle-float"                , toggleFloat)
+  , ("focus-master"                , windows W.focusMaster)
+  , ("swap-with-prev"              , windows W.swapUp)
+  , ("swap-with-next"              , windows W.swapDown)
+  , ("swap-with-master"            , windows W.swapMaster)
   , ("center-float-window", withFocused doCenterFloatRetainSize)
-  , ("kill-window"             , kill)
-  , ("quit"                    , io $ exitWith ExitSuccess)
+  , ("kill-window"                 , kill)
+  , ("quit"                        , io $ exitWith ExitSuccess)
   , ("layout-monocle-right", sendMessage $ JumpToLayout "Monocle (Right)")
   , ("layout-monocle-left", sendMessage $ JumpToLayout "Monocle (Left)")
-  , ("layout-monocle-bsp"      , sendMessage $ JumpToLayout "BSP")
-  , ("layout-monocle-three-col", sendMessage $ JumpToLayout "Three Col")
-  , ("layout-monocle-full"     , sendMessage $ JumpToLayout "Full")
+  , ("layout-monocle-bsp"          , sendMessage $ JumpToLayout "BSP")
+  , ("layout-monocle-three-columns", sendMessage $ JumpToLayout "Three Columns")
+  , ("layout-monocle-full"         , sendMessage $ JumpToLayout "Full")
   , ("restart", spawn "xmonad --recompile; xmonad --restart")
   ]
 
@@ -509,7 +510,7 @@ myLayoutHook =
     monocleLeft ||| monocleRight ||| emptyBSP ||| threeColLayout ||| Full
   termLayout =
     emptyBSP ||| threeColLayout ||| monocleLeft ||| monocleRight ||| Full
-  threeColLayout = named "Three Col" $ ThreeCol 1 (3 / 100) (1 / 2)
+  threeColLayout = named "Columns" $ (multiCol [1] 8 0.05 0.33)
   monocleRight   = named "Monocle (Right)" $ tiled
   monocleLeft    = named "Monocle (Left)" $ Flip tiled
   tiled          = ResizableTall 1 0.03 0.8 []
