@@ -109,6 +109,7 @@ with lib.my;
       apps = {
         rofi.enable = true;
         transmission.enable = true;
+        font-manager.enable = true;
       };
       gaming = {
         steam.enable = true;
