@@ -25,7 +25,10 @@ with lib.my;
   hardware.pulseaudio.enable = true;
 
   modules = {
-    shell = { };
+    shell = {
+      git.enable = true;
+      zsh.enable = true;
+    };
     scripts = { };
     shared = { };
     dev = { };
