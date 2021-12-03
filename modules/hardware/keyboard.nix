@@ -61,6 +61,8 @@ in
         xcape
         xorg.xkbcomp
         xorg.xmodmap
+        xorg.xset
+        xdotool
       ];
       serviceConfig = {
         Type = "oneshot";
@@ -84,6 +86,10 @@ in
           xmodmap -e "remove mod4 = $spare_modifier"
           xmodmap -e "add Control = $spare_modifier"
 
+          # Turn of caps lock
+          if [[ "$(xset -q | grep Caps | grep on)" ]]; then
+              xdotool key Caps_Lock
+          fi
 
           # Map space to an unused keycode (to keep it around for xcape to use).
           xmodmap -e "keycode any = space"
