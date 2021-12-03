@@ -5,7 +5,6 @@
     {
       nixpkgs.url = "nixpkgs/nixos-unstable";
       nixpkgs-unstable.url = "nixpkgs/master";
-      nixpkgs-virtualbox.url = "github:nixos/nixpkgs/e754546ef7c3a7d5890f17dab7e6d03db16c1e1f";
       nixos-hardware.url = "github:nixos/nixos-hardware";
 
       home-manager.url = "github:rycee/home-manager/master";
@@ -28,7 +27,6 @@
     , home-manager
     , nixpkgs
     , nixpkgs-unstable
-    , nixpkgs-virtualbox
     , nur
     , org_print_scan
     , rofi_cmder
@@ -56,7 +54,6 @@
       };
       pkgs = mkPkgs nixpkgs [ self.overlay nur.overlay ];
       uPkgs = mkPkgs nixpkgs-unstable [ ];
-      vPkgs = mkPkgs nixpkgs-virtualbox [ ];
 
       lib = nixpkgs.lib.extend
         (self: super: { my = import ./lib { inherit pkgs inputs; lib = self; }; });
@@ -67,7 +64,6 @@
       overlay =
         final: prev: {
           unstable = uPkgs;
-          virtualboxPkgs = vPkgs;
           user = self.packages."${system}";
         };
 

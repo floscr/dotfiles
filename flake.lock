@@ -231,22 +231,6 @@
         "type": "indirect"
       }
     },
-    "nixpkgs-virtualbox": {
-      "locked": {
-        "lastModified": 1618491247,
-        "narHash": "sha256-LVLXHL6KmWMV5BMRIubjNuq9HUBM0SHklDpvGwF9rK4=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "e754546ef7c3a7d5890f17dab7e6d03db16c1e1f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "e754546ef7c3a7d5890f17dab7e6d03db16c1e1f",
-        "type": "github"
-      }
-    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1619945546,
@@ -420,7 +404,6 @@
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "nixpkgs-unstable": "nixpkgs-unstable",
-        "nixpkgs-virtualbox": "nixpkgs-virtualbox",
         "nur": "nur",
         "org_print_scan": "org_print_scan",
         "rofi_cmder": "rofi_cmder",
