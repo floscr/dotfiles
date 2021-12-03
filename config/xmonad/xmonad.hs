@@ -73,6 +73,7 @@ import           Data.List                           (isPrefixOf, sortOn)
 import qualified Data.Map                            as M
 import           Data.Maybe
 import           Data.Monoid                         (All (..))
+import qualified Data.Text                           as T
 
 
 import qualified XMonad.StackSet                     as W
@@ -535,6 +536,8 @@ manageWindowsHook = composeAll
     (W.RationalRect 0.25 0.25 0.5 0.5)
   , resource =? "kdesktop" --> doIgnore
   , className =? "mpv" --> doFloat
+  , ("Gimp" `isPrefixOf`) <$> className <&&> title =? "gimp-action-search-dialog" --> floating
+  , ("Gimp" `isPrefixOf`) <$> className  --> doFloat
   -- , className =? "Emacs" --> insertPosition Master Newer
   , className =? "Emacs" <&&> title =? "doom-capture" --> doFloat
   , className =? "Pavucontrol" --> doFloatToMouseCenter
@@ -542,6 +545,7 @@ manageWindowsHook = composeAll
   ]
   where doFloatToMouse = \pos -> placeHook (inBounds (underMouse pos)) <+> doFloat
         doFloatToMouseCenter = doFloatToMouse (0.5, 0.5)
+        floating = customFloating $ W.RationalRect (1 / 4) (1 / 4) (2 / 4) (2 / 4)
 
 myHandleEventHook :: Event -> X All
 myHandleEventHook = dynamicPropertyChange "WM_NAME" $ composeAll
