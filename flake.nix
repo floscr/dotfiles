@@ -85,6 +85,6 @@
         // mapModulesRec ./modules import;
 
       nixosConfigurations =
-        mapHosts ./hosts { inherit system; };
+        mapHosts ./hosts { };
     };
 }
