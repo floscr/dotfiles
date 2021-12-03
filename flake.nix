@@ -23,17 +23,17 @@
     };
 
   outputs =
-    inputs @ { flake-utils
+    inputs @ { self
+    , flake-utils
     , home-manager
     , nixpkgs
     , nixpkgs-unstable
     , nixpkgs-virtualbox
     , nur
     , org_print_scan
-    , rofi_org_bookmarks
     , rofi_cmder
+    , rofi_org_bookmarks
     , secrets
-    , self
     , ...
     }:
     let
