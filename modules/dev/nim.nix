@@ -10,6 +10,7 @@ in
   };
 
   config = mkIf cfg.enable {
+    environment.variables.NIM_UNWRAPPED_DIR = "${pkgs.nim-unwrapped}";
     user.packages = with pkgs; [
       nim
       (pkgs.writeScriptBin "nimx" ''
