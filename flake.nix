@@ -47,7 +47,12 @@
           (_: super:
             {
               flake-packages = flake-utils.defaultPackages system
-                { inherit org_print_scan rofi_org_bookmarks rofi_cmder; };
+                {
+                  inherit
+                    # org_print_scan
+                    rofi_org_bookmarks
+                    rofi_cmder;
+                };
             }
           )
         ];
