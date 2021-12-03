@@ -63,6 +63,7 @@ in
         xorg.xmodmap
         xorg.xset
         xdotool
+        xcape
       ];
       serviceConfig = {
         Type = "oneshot";
@@ -78,7 +79,7 @@ in
           xkbcomp /etc/X11/keymap.xkb $DISPLAY
 
           # Capslock to control
-          ${pkgs.xcape}/bin/xcape -e 'Control_L=Escape'
+          xcape -e 'Control_L=Escape'
 
           # Make space Control L whenn pressed.
           spare_modifier="Hyper_L"
@@ -95,7 +96,7 @@ in
           xmodmap -e "keycode any = space"
 
           # Finally use xcape to cause the space bar to generate a space when tapped.
-          ${pkgs.xcape}/bin/xcape -e "$spare_modifier=space"
+          xcape -e "$spare_modifier=space"
 
           echo "Keyboard setup done!"
         ''}";
