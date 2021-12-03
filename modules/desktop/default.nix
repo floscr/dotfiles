@@ -32,7 +32,7 @@ in
       (pkgs.writeScriptBin "dragon_downloads" ''
         #!${stdenv.shell}
         cd ~/Downloads
-        ls -t | head -n 15 | xargs -d '\n' bash -c '${dragon-drop}/bin/dragon --and-exit "$@" _'
+        ls -t | head -n 15 | xargs -d '\n' bash -c '${dragon-drop}/bin/dragon --and-exit "$@"' _
       '')
       (pkgs.writeScriptBin "xcolor-yank" ''
         #!${stdenv.shell}
