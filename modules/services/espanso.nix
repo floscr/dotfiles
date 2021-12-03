@@ -34,20 +34,6 @@ in
               }
             ];
           }
-          {
-            # Shell commands
-            trigger = ":shell";
-            replace = "{{output}}";
-            vars = [
-              {
-                name = "output";
-                type = "shell";
-                params = {
-                  cmd = "echo Hello from your shell";
-                };
-              }
-            ];
-          }
         ];
       };
     };
