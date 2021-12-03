@@ -68,11 +68,11 @@
     },
     "flake-utils_4": {
       "locked": {
-        "lastModified": 1634851050,
-        "narHash": "sha256-N83GlSGPJJdcqhUxSCS/WwW5pksYf3VP1M13cDRTSVA=",
+        "lastModified": 1638122382,
+        "narHash": "sha256-sQzZzAbvKEqN9s0bzWuYmRaA03v40gaJ4+iL1LXjaeI=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "c91f3de5adaf1de973b797ef7485e441a65b8935",
+        "rev": "74f7e4319258e287b0f9cb95426c9853b282730b",
         "type": "github"
       },
       "original": {
@@ -219,11 +219,11 @@
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1641300916,
-        "narHash": "sha256-3IWB4qhIWEtj2bMZ4UjvXYRfIchfKhTSkcW4iDVSk/Y=",
+        "lastModified": 1641329288,
+        "narHash": "sha256-cUxtxxFjuVSEYnyIMc11oF3lAwUVfi/Ey7CH7OTWjiY=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "d4ea8d998aa1646d5805841ea46de27117065e26",
+        "rev": "cf9dbdbe037d956ecb229e58e0f2a4b5f6cadd93",
         "type": "github"
       },
       "original": {
@@ -278,11 +278,11 @@
     },
     "nixpkgs_5": {
       "locked": {
-        "lastModified": 1635934775,
-        "narHash": "sha256-DUkBfZjgeefgqyvFxnkZiOOWXgHP5Y1oKp/Zm+LT05Y=",
+        "lastModified": 1641224400,
+        "narHash": "sha256-unXptp6PtSHSFVSAz+v6ZLtFDgaZZUCSjV0ie5A0qIw=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "4789953e5c1ef6d10e3ff437e5b7ab8eed526942",
+        "rev": "adf7f03d3bfceaba64788e1e846191025283b60d",
         "type": "github"
       },
       "original": {
@@ -324,11 +324,11 @@
     },
     "nur": {
       "locked": {
-        "lastModified": 1641299021,
-        "narHash": "sha256-zt2BOC9SywGfAdNmgTgzF1KNi6go2HFaOTMNoV7gIGk=",
+        "lastModified": 1641309797,
+        "narHash": "sha256-oqJr2/Ze2i5I16p9QqL5hFEx63u8yDrCHwVZOWxAfJg=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "87ec9b91b3dc2c061b3368029e4370de660d5164",
+        "rev": "964a01ff983ea0fcaca0143244d40bff89cdecd0",
         "type": "github"
       },
       "original": {
@@ -364,11 +364,11 @@
         "nixpkgs": "nixpkgs_5"
       },
       "locked": {
-        "lastModified": 1636394849,
-        "narHash": "sha256-dItUJLxg3555+2ukScJOv3x357hueFJeVU82scT56zY=",
+        "lastModified": 1641404643,
+        "narHash": "sha256-j01tbyBAdYbtMYRZFbGCOjP0iyHn2Ysu8NhgRjy098A=",
         "owner": "floscr",
         "repo": "rofi_cmder",
-        "rev": "7ddce5176b4cbb23088eb22115826e7e61605f40",
+        "rev": "daf2040496c2293599e4b2dd04227e8f07625179",
         "type": "github"
       },
       "original": {
