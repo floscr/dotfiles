@@ -15,6 +15,7 @@ with lib.my;
     babashka
     appimage-run
     ffmpeg
+    libreoffice
     gnome3.nautilus
     ocamlPackages.merlin
     gparted
