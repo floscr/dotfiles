@@ -12,6 +12,7 @@ in
   config = mkIf cfg.enable {
     user.packages = with pkgs; [
       rustup
+      rust-analyzer
     ];
 
     env.RUSTUP_HOME = "$XDG_DATA_HOME/rustup";
