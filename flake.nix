@@ -10,8 +10,6 @@
       home-manager.url = "github:rycee/home-manager/master";
       home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-      nixpkgs-scan.url = "nixpkgs/b0249fdf998d782e1058b0cf3239091e59e393ef";
-
       secrets = { url = "/etc/dotfiles-private"; flake = false; };
 
       emacs-overlay.url = "github:nix-community/emacs-overlay/80db8e4e9f25e81662a244a96029f3427fe3d5b9";
@@ -29,7 +27,6 @@
     , home-manager
     , nixpkgs
     , nixpkgs-unstable
-    , nixpkgs-scan
     , nur
     , org_print_scan
     , rofi_cmder
@@ -62,7 +59,6 @@
       };
       pkgs = mkPkgs nixpkgs [ self.overlay nur.overlay ];
       uPkgs = mkPkgs nixpkgs-unstable [ ];
-      sPkgs = mkPkgs nixpkgs-scan [ ];
 
       lib = nixpkgs.lib.extend
         (self: super: { my = import ./lib { inherit pkgs inputs; lib = self; }; });
@@ -73,7 +69,6 @@
       overlay =
         final: prev: {
           unstable = uPkgs;
-          scan = sPkgs;
           user = self.packages."${system}";
         };
 
