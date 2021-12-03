@@ -14,4 +14,20 @@ with lib;
   };
 
   time.timeZone = mkDefault "Europe/Vienna";
+
+  users = {
+    users.media = {
+      name = "media";
+      isSystemUser = true;
+      uid = 6666;
+      description = "Media user and group";
+      home = "/var/empty";
+      group = "media";
+    };
+    groups.media = {
+      name = "media";
+      gid = 6666;
+      members = [ config.user.name "media" ];
+    };
+  };
 }
