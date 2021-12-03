@@ -538,6 +538,7 @@ manageWindowsHook = composeAll
   , className =? "mpv" --> doFloat
   , ("Gimp" `isPrefixOf`) <$> className <&&> title =? "gimp-action-search-dialog" --> floating
   , ("Gimp" `isPrefixOf`) <$> className  --> doFloat
+  , ("steam_app_" `isPrefixOf`) <$> className --> floating
   -- , className =? "Emacs" --> insertPosition Master Newer
   , className =? "Emacs" <&&> title =? "doom-capture" --> doFloat
   , className =? "Pavucontrol" --> doFloatToMouseCenter
