@@ -13,6 +13,7 @@ in
     environment.variables.NIM_UNWRAPPED_DIR = "${pkgs.nim-unwrapped}";
     user.packages = with pkgs; [
       nim
+      nimlsp
       (pkgs.writeScriptBin "nimx" ''
         bin=$1
         src="$HOME/.config/dotfiles/bin/nimbin/src/$bin.nim"
