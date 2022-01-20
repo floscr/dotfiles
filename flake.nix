@@ -29,6 +29,7 @@
     , nixpkgs-unstable
     , nur
     , org_print_scan
+    , emacs-overlay
     , rofi_cmder
     , rofi_org_bookmarks
     , secrets
@@ -44,6 +45,8 @@
         inherit system;
         config.allowUnfree = true;
         overlays = extraOverlays ++ (attrValues self.overlays) ++ [
+          emacs-overlay.overlay
+        ] ++ [
           (_: super:
             {
               flake-packages = flake-utils.defaultPackages system

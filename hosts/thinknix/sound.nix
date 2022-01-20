@@ -88,7 +88,7 @@
       pacmd set-card-profile 0 output:analog-stereo+input:analog-stereo
 
       # Unmute the microphone
-      amixer set Capture cap
+      pactl set-source-mute 21 1
     '')
   ];
 
@@ -172,7 +172,7 @@
       binding = "{ XF86AudioMute, super + alt + m }";
       xmonadBinding = "<XF86AudioMute>";
       description = "Sound: Mute/Unmute";
-      command = "amixer -q set Master toggle";
+      command = "pactl set-sink-mute @DEFAULT_SINK@ toggle";
     }
   ];
 }

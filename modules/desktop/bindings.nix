@@ -208,22 +208,22 @@ with lib.my;
         {
           binding = "{ XF86AudioLowerVolume, super + alt + j }";
           xmonadBinding = "<XF86AudioLowerVolume>";
-          command = "amixer -q set Master 10%- unmute";
+          command = "pactl set-sink-volume @DEFAULT_SINK@ -10%";
           description = "Volume: -10%";
         }
         {
           xmonadBinding = "M-M1-j";
-          command = "amixer -q set Master 10%- unmute";
+          command = "pactl set-sink-volume @DEFAULT_SINK@ -10%";
         }
         {
           binding = "{ XF86AudioRaiseVolume, super + alt + k }";
           xmonadBinding = "<XF86AudioRaiseVolume>";
-          command = "amixer -q set Master 10%+ unmute";
+          command = "pactl set-sink-volume @DEFAULT_SINK@ +10%";
           description = "Volume: +10%";
         }
         {
           xmonadBinding = "M-M1-k";
-          command = "amixer -q set Master 10%+ unmute";
+          command = "pactl set-sink-volume @DEFAULT_SINK@ +10%";
         }
       ])
       [

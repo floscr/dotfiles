@@ -95,7 +95,7 @@ with lib.my;
       nim.enable = true;
       docker.enable = true;
       mysql.enable = false;
-      clojure.enable = true;
+      clojure.enable = false;
     };
     desktop = {
       # bspwm.enable = true;
@@ -157,7 +157,7 @@ with lib.my;
       flameshot.enable = true;
       network-monitoring.enable = true;
       picom.enable = true;
-      opensnitch.enable = true;
+      opensnitch.enable = false;
     };
     work.meisterlabs.enable = true;
     theme.active = "opera";
