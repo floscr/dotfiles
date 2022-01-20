@@ -157,6 +157,7 @@ with lib.my;
       flameshot.enable = true;
       network-monitoring.enable = true;
       picom.enable = true;
+      opensnitch.enable = true;
     };
     work.meisterlabs.enable = true;
     theme.active = "opera";
