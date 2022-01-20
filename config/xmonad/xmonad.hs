@@ -31,6 +31,7 @@ import           XMonad.Hooks.EwmhDesktops           as Ewmh
 import           XMonad.Hooks.InsertPosition
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers          (doCenterFloat,
+                                                      isInProperty,
                                                       doRectFloat)
 import           XMonad.Hooks.Place                  (inBounds, placeHook,
                                                       underMouse)
@@ -64,7 +65,7 @@ import           XMonad.Util.Scratchpad
 
 
 import           Control.Arrow                       (second, (***))
-import           Control.Monad                       (when)
+import           Control.Monad                       (when, filterM)
 import           Control.Monad.Trans                 (lift)
 import           Control.Monad.Trans.Maybe
 
@@ -530,6 +531,26 @@ myManageHook = composeAll
   , myScratchpadHook
   ]
 
+isOverlayWindow :: Query Bool
+isOverlayWindow = do
+    isNotification      <- isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_NOTIFICATION"
+    floatingVideoWindow <- className =? "zoom" <&&> title =? "zoom_linux_float_video_window"
+    sharingToolbar      <- className =? "zoom" <&&> title =? "as_toolbar"
+    sharingWindowFrame  <- title =? "cpt_frame_window"
+    return $ isNotification || floatingVideoWindow || sharingToolbar || sharingWindowFrame
+
+allWindowsByType :: Query Bool -> X [Window]
+allWindowsByType query = withDisplay $ \display -> do
+    (_, _, windows) <- asks theRoot >>= io . queryTree display
+    filterM (runQuery query) windows
+
+raiseWindow' :: Window -> X ()
+raiseWindow' window = withDisplay $ \display ->
+    io $ raiseWindow display window
+
+raiseOverlays :: X ()
+raiseOverlays = allWindowsByType isOverlayWindow >>= mapM_ raiseWindow'
+
 manageWindowsHook = composeAll
   [ resource =? "desktop_window" --> doIgnore
   , stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog" --> doRectFloat
@@ -616,7 +637,7 @@ defaults pipe =
       , layoutHook         = myLayoutHook
       , manageHook         = myManageHook
       , startupHook        = myStartupHook <+> Ewmh.ewmhDesktopsStartup
-      , logHook            = (myLogHook pipe) <+> historyHook <+> tagHook
+      , logHook            = (myLogHook pipe) <+> historyHook <+> tagHook <+> raiseOverlays
       , handleEventHook    = def
                              <+> refocusLastWhen isFloat
                              <+> Ewmh.ewmhDesktopsEventHook
