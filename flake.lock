@@ -415,13 +415,14 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-/rT5c4N8bNEvQb2ReKy1v8/ELTtTdRRQnqaXgd7Lc0A=",
-        "path": "/etc/dotfiles-private",
-        "type": "path"
+        "lastModified": 1622018972,
+        "narHash": "sha256-EAUQzlFZZqBEihb58CI7BzOjNrT+yxNGyjW2h9v/fqU=",
+        "type": "git",
+        "url": "file:///etc/dotfiles-private"
       },
       "original": {
-        "path": "/etc/dotfiles-private",
-        "type": "path"
+        "type": "git",
+        "url": "file:///etc/dotfiles-private"
       }
     }
   },
