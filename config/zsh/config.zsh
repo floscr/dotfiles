@@ -31,8 +31,8 @@ unsetopt CHECK_JOBS       # Don't report on jobs when shell exit.
 
 ## History
 HISTFILE="$XDG_CACHE_HOME/zhistory"
-HISTSIZE=1000                    # Max events to store in internal history.
-SAVEHIST=7000                    # Max events to store in history file.
+HISTSIZE=10000000                # Max events to store in internal history.
+SAVEHIST=10000000                # Max events to store in history file.
 
 setopt HIST_IGNORE_SPACE         # Don't write history when prefixed with space
 setopt BANG_HIST                 # Don't treat '!' specially during expansion.
