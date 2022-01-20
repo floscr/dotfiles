@@ -335,6 +335,12 @@ ezKeys :: [(String, X ())]
 ezKeys =
   [ ("M-t"       , sendMessage ToggleStruts)
   , ("M-<Return>", spawn (myTerminal ++ " --working-directory \"`xcwd`\""))
+  , ( "M-S-c"
+    , bindFirst
+      [ (className =? "Brave-browser", sendKey (controlMask .|. shiftMask) xK_l)
+      , (pure True, spawn "org-capture-frame")
+      ]
+    )
   , ( "M1-S-,"
     , bindFirst
       [ (className =? "Brave-browser", startAtomicChrome)

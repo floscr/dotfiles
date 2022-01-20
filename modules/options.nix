@@ -27,6 +27,7 @@ with lib.my;
       configFile = mkOpt' attrs { } "Files to place in $XDG_CONFIG_HOME";
       dataFile = mkOpt' attrs { } "Files to place in $XDG_DATA_HOME";
       defaultApplications = mkOpt' attrs { } "XDG/MIME default applications";
+      desktopEntries = mkOpt' attrs { } "XDG/MIME desktop entries";
     };
 
     env = mkOption {
@@ -78,6 +79,9 @@ with lib.my;
         xdg = {
           configFile = mkAliasDefinitions options.home.configFile;
           dataFile = mkAliasDefinitions options.home.dataFile;
+
+          desktopEntries = mkAliasDefinitions options.home.desktopEntries;
+
           mime.enable = true;
           mimeApps = {
             enable = true;

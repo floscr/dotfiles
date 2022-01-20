@@ -36,6 +36,7 @@ in
         "kbmfpngjjgdllneeigpgjifpgocmfgmb" # Reddit Enhancement Suite
         "lhaoghhllmiaaagaffababmkdllgfcmc" # Atomic Chrome
         "ndiaggkadcioihmhghipjmgfeamgjeoi" # Add URL To Window Title
+        "kkkjlfejijcjgjllecmnejhogpbcigdc" # Org Protocol Capture
       ];
     };
   };

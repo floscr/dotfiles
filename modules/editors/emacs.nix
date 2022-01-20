@@ -81,6 +81,18 @@ in
 
     fonts.fonts = [ pkgs.emacs-all-the-icons-fonts ];
 
+    home = {
+      defaultApplications = {
+        "x-scheme-handler/org-protocol" = "org-protocol.desktop";
+      };
+      desktopEntries."org-protocol" = {
+        name = "Org-Protocol";
+        exec = "emacsclient %u";
+        icon = "emacs-icon";
+        type = "Application";
+        mimeType = [ "x-scheme-handler/org-protocol" ];
+      };
+    };
     # home.mimeApps = {
     #   enable = true;
     #   defaultApplications = {
