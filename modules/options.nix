@@ -10,6 +10,18 @@ with lib.my;
     email = mkStrOpt "hello@florianschroedl.com";
     workEmail = mkStrOpt "";
 
+    dotfiles = {
+      dir = mkOpt path
+        (findFirst pathExists (toString ../.) [
+          "${config.user.home}/.config/dotfiles"
+          "/etc/dotfiles"
+        ]);
+      binDir = mkOpt path "${config.dotfiles.dir}/bin";
+      configDir = mkOpt path "${config.dotfiles.dir}/config";
+      modulesDir = mkOpt path "${config.dotfiles.dir}/modules";
+      themesDir = mkOpt path "${config.dotfiles.modulesDir}/themes";
+    };
+
     home = {
       file = mkOpt' attrs { } "Files to place directly in $HOME";
       configFile = mkOpt' attrs { } "Files to place in $XDG_CONFIG_HOME";
@@ -29,19 +41,20 @@ with lib.my;
   };
 
   config = {
-    user = {
-      description = "The primary user account";
-      extraGroups = [
-        "wheel"
-        "video"
-        "networkmanager"
-      ];
-      isNormalUser = true;
-      name = let name = builtins.getEnv "USER"; in
-        if elem name [ "" "root" ]
-        then "floscr" else name;
-      uid = 1000;
-    };
+    user =
+      let
+        user = builtins.getEnv "USER";
+        name = if elem user [ "" "root" ] then "floscr" else user;
+      in
+      {
+        inherit name;
+        description = "The primary user account";
+        extraGroups = [ "wheel" ];
+        isNormalUser = true;
+        home = "/home/${name}";
+        group = "users";
+        uid = 1000;
+      };
 
     home-manager = {
       useUserPackages = true;
