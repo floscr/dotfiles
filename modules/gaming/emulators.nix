@@ -6,22 +6,19 @@ let cfg = config.modules.desktop.gaming.emulators;
 in
 {
   options.modules.desktop.gaming.emulators = {
-    psx.enable = mkBoolOpt false; # Playstation
-    ds.enable = mkBoolOpt false; # Nintendo DS
-    gb.enable = mkBoolOpt false; # GameBoy + GameBoy Color
-    gba.enable = mkBoolOpt false; # GameBoy Advance
-    snes.enable = mkBoolOpt false; # Super Nintendo
+    n64.enable = mkBoolOpt false;
   };
 
-  config = {
-    user.packages = with pkgs; [
-      (mkIf cfg.psx.enable epsxe)
-      (mkIf cfg.ds.enable desmume)
-      (mkIf
-        (cfg.gba.enable ||
-          cfg.gb.enable ||
-          cfg.snes.enable)
-        higan)
-    ];
-  };
+  config = mkMerge [
+    (mkIf cfg.n64.enable {
+      user.packages = with pkgs; [
+        mupen64plus
+      ];
+
+      # Switch controller support
+      boot.extraModulePackages = with config.boot.kernelPackages; [
+        hid-nintendo
+      ];
+    })
+  ];
 }
