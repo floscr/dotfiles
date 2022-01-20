@@ -13,7 +13,7 @@ in
     user.packages = with pkgs; [
       font-manager
     ];
-    home-manager.users.${config.user.name}.xdg.mimeApps.defaultApplications = {
+    home.defaultApplications = {
       "font/sfnt" = [ "font-manager.desktop" ];
     };
   };
