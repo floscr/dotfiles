@@ -60,6 +60,7 @@ with lib.my;
       gnupg.enable = true;
       pass.enable = true;
       pazi.enable = true;
+      say.enable = true;
       starship.enable = true;
       weechat.enable = true;
       wget.enable = true;
