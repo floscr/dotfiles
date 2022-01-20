@@ -13,6 +13,7 @@ in
     user.packages = with pkgs; [
       babashka
       clojure
+      clj-kondo
       unstable.clojure-lsp
       joker
       leiningen
