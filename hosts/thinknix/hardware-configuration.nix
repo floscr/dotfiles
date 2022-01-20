@@ -43,7 +43,7 @@
   services.fwupd.enable = true; # Bios updates
 
   # CPU
-  nix.maxJobs = lib.mkDefault 4;
+  nix.settings.max-jobs = lib.mkDefault 4;
   powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
   hardware.cpu.intel.updateMicrocode = true;
 

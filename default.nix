@@ -28,20 +28,22 @@ with inputs;
         "nixpkgs-overlays=${config.dotfiles.dir}/overlays"
         "dotfiles=${config.dotfiles.dir}"
       ];
-      binaryCaches = [
-        "https://cachix.org/api/v1/cache/emacs"
-        "https://cache.nixos.org"
-        "https://nix-community.cachix.org"
-        "https://nixpkgs.cachix.org"
-      ];
-      binaryCachePublicKeys = [
-        "emacs.cachix.org-1:b1SMJNLY/mZF6GxQE+eDBeps7WnkT0Po55TAyzwOxTY="
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "nixpkgs.cachix.org-1:q91R6hxbwFvDqTSDKwDAV4T5PxqXGxswD8vhONFMeOE="
-      ];
+      settings = {
+        substituters = [
+          "https://cachix.org/api/v1/cache/emacs"
+          "https://cache.nixos.org"
+          "https://nix-community.cachix.org"
+          "https://nixpkgs.cachix.org"
+        ];
+        trusted-public-keys = [
+          "emacs.cachix.org-1:b1SMJNLY/mZF6GxQE+eDBeps7WnkT0Po55TAyzwOxTY="
+          "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+          "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+          "nixpkgs.cachix.org-1:q91R6hxbwFvDqTSDKwDAV4T5PxqXGxswD8vhONFMeOE="
+        ];
+        auto-optimise-store = true;
+      };
       registry = registryInputs // { dotfiles.flake = inputs.self; };
-      autoOptimiseStore = true;
     };
   system.configurationRevision = with inputs; mkIf (self ? rev) self.rev;
   system.stateVersion = "21.05";
