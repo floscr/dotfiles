@@ -15,6 +15,7 @@ in
       type = yaml.type;
       description = "Espanso configuration";
       default = {
+        show_notifications = false;
         matches = [
           {
             trigger = ":repro";
