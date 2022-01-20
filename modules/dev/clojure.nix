@@ -17,5 +17,11 @@ in
       joker
       leiningen
     ];
+    home.configFile."clojure/deps.edn".text = ''
+      {
+        ;; Fix doom clojure buffer eval
+        :deps {cider/cider-nrepl {:mvn/version "0.26.0"}}
+      }
+    '';
   };
 }
