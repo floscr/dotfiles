@@ -364,11 +364,11 @@
         "nixpkgs": "nixpkgs_5"
       },
       "locked": {
-        "lastModified": 1641404643,
-        "narHash": "sha256-j01tbyBAdYbtMYRZFbGCOjP0iyHn2Ysu8NhgRjy098A=",
+        "lastModified": 1642618258,
+        "narHash": "sha256-3AmoXYNBzsAP3JFdzwQMVVW9EnX94SMgI9uGovn4vxM=",
         "owner": "floscr",
         "repo": "rofi_cmder",
-        "rev": "daf2040496c2293599e4b2dd04227e8f07625179",
+        "rev": "d1eff7949e937214260cc897b174d0f7a53ab511",
         "type": "github"
       },
       "original": {
