@@ -10,8 +10,12 @@ in
   };
 
   config = mkIf cfg.enable {
-    user.packages = [ pkgs.youtube-dl ];
+    user.packages = [
+      # Fork of youtube-dl that deals with throttling of downloads
+      pkgs.yt-dlp
+    ];
     environment.shellAliases = {
+      youtube-dl = "yt-dlp";
       youtube-dl-audio = "youtube-dl -x --audio-format vorbis --prefer-ffmpeg";
     };
   };
