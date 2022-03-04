@@ -46,6 +46,23 @@
     };
   };
 
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+    driSupport32Bit = true;
+    setLdLibraryPath = true;
+    extraPackages = with pkgs; [
+      intel-media-driver
+      vaapiIntel
+      vaapiVdpau
+      libvdpau-va-gl
+
+      # Vulkan
+      amdvlk
+      vulkan-loader
+    ];
+  };
+
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/55904fe9-fcc7-49e8-8839-8505347d9084";
     fsType = "ext4";
