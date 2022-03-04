@@ -40,7 +40,7 @@ in
           systemd
           xorg.xrandr
           xorg.xsetroot
-          emacsPgtkGcc
+          # emacsPgtkGcc
         ];
         serviceConfig = {
           Type = "oneshot";
@@ -83,7 +83,7 @@ in
 
           xsetroot -cursor_name left_ptr
 
-          emacsclient -e "(my::ui|adjust-ui-to-display)"
+          # emacsclient -e "(my::ui|adjust-ui-to-display)"
 
           # Hacky way to call the script, but it works
           /etc/profiles/per-user/$(whoami)/bin/reloadWallpaper
