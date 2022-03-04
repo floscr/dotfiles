@@ -50,7 +50,7 @@ with lib.my;
       bluetooth.enable = true;
       keyboard.enable = true;
       external-display.enable = true;
-      # scanner.enable = true;
+      scanner.enable = true;
       fs = {
         enable = true;
         ssd.enable = true;
@@ -59,11 +59,11 @@ with lib.my;
       sensors.enable = true;
     };
     dev = {
-      # node.enable = true;
-      # nim.enable = true;
-      # docker.enable = true;
+      node.enable = true;
+      nim.enable = true;
+      docker.enable = true;
       # mysql.enable = false;
-      # clojure.enable = true;
+      clojure.enable = true;
     };
     desktop = {
       # bspwm.enable = true;
@@ -83,8 +83,8 @@ with lib.my;
         font-manager.enable = true;
       };
       gaming = {
-        # steam.enable = true;
-        # emulators.n64.enable = true;
+        steam.enable = true;
+        emulators.n64.enable = true;
       };
       graphics = {
         gimp.enable = true;
