@@ -110,7 +110,7 @@ with lib.my;
       default = "nvim";
       emacs = {
         enable = true;
-        enableMail = true;
+        enableMail = false;
       };
       vim.enable = true;
     };
