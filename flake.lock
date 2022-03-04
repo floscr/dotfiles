@@ -412,17 +412,7 @@
         "secrets": "secrets"
       }
     },
-    "secrets": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1622018972,
-        "narHash": "sha256-EAUQzlFZZqBEihb58CI7BzOjNrT+yxNGyjW2h9v/fqU=",
-        "type": "git",
-        "url": "file:///etc/dotfiles-private"
-      },
-      "original": {
-        "type": "git",
-        "url": "file:///etc/dotfiles-private"
+        "rofi_org_bookmarks": "rofi_org_bookmarks"
       }
     }
   },

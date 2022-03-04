@@ -8,7 +8,6 @@ with inputs;
     [
       home-manager.nixosModules.home-manager
     ]
-    ++ (if (pathExists inputs.secrets) then [ "${inputs.secrets}/private.nix" ] else [ ])
     ++ (mapModulesRec' (toString ./modules) import);
 
   # Common config for all nixos machines; and to ensure the flake operates soundly
