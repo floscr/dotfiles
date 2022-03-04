@@ -76,7 +76,7 @@ function main {
     echo "Updating NixOS flake"
     if [[ "$@" ]]; then
       for flake in $@; do
-        _do nix flake update --update-input "$flake" "$DOTFILES"
+        _do nix flake lock --update-input "$flake" "$DOTFILES"
       done
     else
       _do nix flake update --recreate-lock-file "$DOTFILES"
