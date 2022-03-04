@@ -11,7 +11,10 @@ with lib.my;
     # ./bindings.nix
   ];
 
+
   user.packages = with pkgs; [
+    unzip
+    s-tui
   ] ++ flake-packages;
 
   hardware.usb.wakeupDisabled = [
@@ -34,6 +37,7 @@ with lib.my;
       pass.enable = true;
       pazi.enable = true;
       starship.enable = true;
+      youtube-dl.enable = true;
       zsh.enable = true;
     };
     scripts = {
