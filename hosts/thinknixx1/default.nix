@@ -15,6 +15,7 @@ with lib.my;
   user.packages = with pkgs; [
     unzip
     s-tui
+    nim-utils.get_url_title
   ] ++ flake-packages;
 
   hardware.usb.wakeupDisabled = [

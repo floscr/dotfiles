@@ -32,6 +32,7 @@
     , emacs-overlay
     , rofi_cmder
     , rofi_org_bookmarks
+    , nim-utils
     , ...
     }:
     let
@@ -48,6 +49,9 @@
         ] ++ [
           (_: super:
             {
+              nim-utils = {
+                get_url_title = nim-utils.packages.${system}.get_url_title;
+              };
               flake-packages = flake-utils.defaultPackages system
                 {
                   inherit
