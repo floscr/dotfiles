@@ -593,7 +593,7 @@ raiseOverlays = allWindowsByType isOverlayWindow >>= mapM_ raiseWindow'
 fullFloatFocused =
   withFocused $ \f -> windows =<< appEndo `fmap` runQuery doFullFloat f
 
-toggleFullFloat w = do
+togglFullFloat w = do
   hasFloatTag <- hasTag "fullFloat" w
   if hasFloatTag
     then do
@@ -604,13 +604,12 @@ toggleFullFloat w = do
       fullFloatFocused
       withFocused $ addTag "fullFloat"
 
-
 toggleFull = withFocused
   (\w -> do
     floats <- gets (W.floating . windowset)
     if w `M.member` floats
       then do
-        toggleFullFloat w
+        togglFullFloat w
       else do
         sendMessage $ Toggle FULL
   )
