@@ -7,7 +7,7 @@ with lib.my;
     user = mkOpt attrs { };
 
     username = mkStrOpt "floscr";
-    email = mkStrOpt "hello@florianschroedl.com";
+    email = mkStrOpt "";
     workEmail = mkStrOpt "";
 
     dotfiles = {
