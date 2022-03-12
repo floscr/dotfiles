@@ -235,6 +235,10 @@ with lib.my;
           command = "sudo ${pkgs.linuxPackages.cpupower}/bin/cpupower frequency-set -g powersave";
           description = "CPUPower: Powersave";
         }
+        {
+          command = "${pkgs.systemd}/bin/systemctl reboot";
+          description = "Reboot";
+        }
       ]
     ]);
   };

@@ -22,12 +22,14 @@ import           XMonad.Actions.FloatKeys            (keysMoveWindow,
 import           XMonad.Actions.GroupNavigation      (Direction (Backward, Forward, History),
                                                       historyHook, nextMatch)
 import           XMonad.Actions.Navigation2D
-import           XMonad.Actions.TagWindows           (addTag, delTag)
+import           XMonad.Actions.TagWindows           (addTag, delTag, hasTag)
 
 
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.DynamicProperty        (dynamicPropertyChange)
 import           XMonad.Hooks.EwmhDesktops           as Ewmh
+import XMonad.Hooks.PositionStoreHooks
+
 import           XMonad.Hooks.InsertPosition
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers          (doCenterFloat,
@@ -64,7 +66,7 @@ import           XMonad.Util.NamedScratchpad         as NS
 import           XMonad.Util.Paste                   (sendKey)
 import           XMonad.Util.Run                     (spawnPipe)
 import           XMonad.Util.Scratchpad
-
+import           XMonad.Util.PositionStore
 
 import           Control.Arrow                       (second, (***))
 import           Control.Monad                       (when, filterM)
@@ -170,6 +172,28 @@ moveWindowToRelativePosition x y = (() <$) . runMaybeT $ do
       x0                = round (x * fromIntegral (w - 3))
       y0                = round (y * fromIntegral (h - 27))
   lift (keysMoveWindowTo (x0, y0) (x, y) win)
+
+
+-- https://github.com/SimSaladin/configs/blob/646a363ed2f47db190e41a4ed58808687f92e0dd/.xmonad/xmonad.hs
+-- | Float current according to saved position
+myFloatCurrent :: X ()
+myFloatCurrent = withFocused $ \window -> withWindowSet $ \ws -> do
+    ps <- getPosStore
+    let sr@(Rectangle _srX _srY srW srH) = screenRect . W.screenDetail $ W.current ws
+    case posStoreQuery ps window sr of
+        Just (Rectangle x y w h) -> do
+            let r' = W.RationalRect (fromIntegral x / fromIntegral srW)
+                                    (fromIntegral y / fromIntegral srH)
+                                    (fromIntegral w / fromIntegral srW)
+                                    (fromIntegral h / fromIntegral srH)
+            windows $ W.float window r'
+        Nothing  -> return ()
+-- | Save float position of the window
+saveFloatPosition :: Window -> X ()
+saveFloatPosition window = do
+    sr <- withWindowSet $ return . screenRect . W.screenDetail . W.current
+    (_, rect) <- floatLocation window
+    modifyPosStore $ \ps -> posStoreInsert ps window (scaleRationalRect sr rect) sr
 
 ------------------------------------------------------------------------
 -- Workspaces:
@@ -568,7 +592,14 @@ toggleFull = withFocused (\windowId -> do {
    floats <- gets (W.floating . windowset);
    if windowId `M.member` floats
    then do
-     fullFloatFocused
+     hasFloatTag <- hasTag "fullFloat" windowId
+     if hasFloatTag then do
+       myFloatCurrent
+       withFocused $ delTag "fullFloat"
+     else do
+       withFocused $ saveFloatPosition
+       fullFloatFocused
+       withFocused $ addTag "fullFloat"
    else do
      sendMessage $ Toggle FULL
 })
@@ -669,6 +700,7 @@ defaults pipe =
                              <+> floatClickFocusHandler
                              <+> myHandleEventHook
                              <+> myServerModeEventHook
+                             <+> positionStoreEventHook
       }
     `additionalMouseBindings` []
     `additionalKeysP`         (myNixKeys ++ ezKeys)
