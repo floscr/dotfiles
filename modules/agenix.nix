@@ -19,9 +19,8 @@ in {
       }) (import secretsFile)
       else {};
     identityPaths =
-      options.age.identityPaths.default ++ (filter pathExists [
-        "${config.user.home}/.ssh/id_ed25519"
-        "${config.user.home}/.ssh/id_rsa"
-      ]);
+      options.age.identityPaths.default ++ [
+        "${config.user.home}/.ssh/dotfiles"
+      ];
   };
 }
