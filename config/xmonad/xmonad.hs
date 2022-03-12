@@ -31,6 +31,8 @@ import           XMonad.Hooks.EwmhDesktops           as Ewmh
 import           XMonad.Hooks.InsertPosition
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers          (doCenterFloat,
+                                                      doFullFloat,
+                                                      isFullscreen,
                                                       isInProperty,
                                                       doRectFloat)
 import           XMonad.Hooks.Place                  (inBounds, placeHook,
@@ -73,7 +75,8 @@ import           Data.Bool                           (bool)
 import           Data.List                           (isPrefixOf, sortOn)
 import qualified Data.Map                            as M
 import           Data.Maybe
-import           Data.Monoid                         (All (..))
+import           Data.Monoid                         (appEndo,
+                                                      All (..))
 import qualified Data.Text                           as T
 
 
@@ -349,6 +352,7 @@ ezKeys =
     )
   , ("M-S-w x"     , withFocused xKill)
   , ("M-S-f"       , toggleFloat)
+  , ("M-f"         , toggleFull)
   , ("M-<Space>"   , spawn "rofi_cmder")
   , ("M-'", spawn "rofi-pass -dmenu -theme theme/passmenu.rasi")
   , ("M-S-v"       , spawn "rofi-greenclip")
@@ -557,8 +561,21 @@ raiseWindow' window = withDisplay $ \display ->
 raiseOverlays :: X ()
 raiseOverlays = allWindowsByType isOverlayWindow >>= mapM_ raiseWindow'
 
+fullFloatFocused =
+  withFocused $ \f -> windows =<< appEndo `fmap` runQuery doFullFloat f
+
+toggleFull = withFocused (\windowId -> do {
+   floats <- gets (W.floating . windowset);
+   if windowId `M.member` floats
+   then do
+     fullFloatFocused
+   else do
+     sendMessage $ Toggle FULL
+})
+
 manageWindowsHook = composeAll
-  [ resource =? "desktop_window" --> doIgnore
+  [ isFullscreen --> doFullFloat
+  , resource =? "desktop_window" --> doIgnore
   , stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog" --> doRectFloat
     (W.RationalRect 0.25 0.25 0.5 0.5)
   , resource =? "kdesktop" --> doIgnore
