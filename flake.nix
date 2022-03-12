@@ -9,6 +9,8 @@
 
       home-manager.url = "github:rycee/home-manager/master";
       home-manager.inputs.nixpkgs.follows = "nixpkgs";
+      agenix.url = "github:ryantm/agenix";
+      agenix.inputs.nixpkgs.follows = "nixpkgs";
 
       # secrets = { url = "/etc/dotfiles-private"; flake = false; };
 
