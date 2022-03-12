@@ -704,10 +704,10 @@ defaults pipe =
       , mouseBindings      = myMouseBindings
 
   -- hooks
+      , logHook = (myLogHook pipe) <+> historyHook <+> tagHook <+> raiseOverlays
       , layoutHook         = myLayoutHook
       , manageHook         = myManageHook
       , startupHook        = myStartupHook <+> Ewmh.ewmhDesktopsStartup
-      , logHook            = (myLogHook pipe) <+> historyHook <+> tagHook <+> raiseOverlays
       , handleEventHook    = def
                              <+> refocusLastWhen isFloat
                              <+> Ewmh.ewmhDesktopsEventHook
