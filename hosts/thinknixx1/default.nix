@@ -43,6 +43,7 @@ with lib.my;
       starship.enable = true;
       youtube-dl.enable = true;
       zsh.enable = true;
+      wget.enable = true;
     };
     scripts = {
       screen-record.enable = true;
