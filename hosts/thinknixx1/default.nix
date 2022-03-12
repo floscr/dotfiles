@@ -11,6 +11,9 @@ with lib.my;
     # ./bindings.nix
   ];
 
+  home.file = {
+    ".config/espanso/user/email.yml".source = config.age.secrets.espanso-private-emails.path;
+  };
 
   user.packages = with pkgs; [
     unzip
