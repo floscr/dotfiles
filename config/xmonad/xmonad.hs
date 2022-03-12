@@ -28,15 +28,14 @@ import           XMonad.Actions.TagWindows           (addTag, delTag, hasTag)
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.DynamicProperty        (dynamicPropertyChange)
 import           XMonad.Hooks.EwmhDesktops           as Ewmh
-import XMonad.Hooks.PositionStoreHooks
+import           XMonad.Hooks.PositionStoreHooks
 
 import           XMonad.Hooks.InsertPosition
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers          (doCenterFloat,
-                                                      doFullFloat,
+                                                      doFullFloat, doRectFloat,
                                                       isFullscreen,
-                                                      isInProperty,
-                                                      doRectFloat)
+                                                      isInProperty)
 import           XMonad.Hooks.Place                  (inBounds, placeHook,
                                                       underMouse)
 import           XMonad.Hooks.RefocusLast            (isFloat,
@@ -64,12 +63,12 @@ import           XMonad.Util.EZConfig                (additionalKeys,
                                                       additionalMouseBindings)
 import           XMonad.Util.NamedScratchpad         as NS
 import           XMonad.Util.Paste                   (sendKey)
+import           XMonad.Util.PositionStore
 import           XMonad.Util.Run                     (spawnPipe)
 import           XMonad.Util.Scratchpad
-import           XMonad.Util.PositionStore
 
 import           Control.Arrow                       (second, (***))
-import           Control.Monad                       (when, filterM)
+import           Control.Monad                       (filterM, when)
 import           Control.Monad.Trans                 (lift)
 import           Control.Monad.Trans.Maybe
 
@@ -77,8 +76,7 @@ import           Data.Bool                           (bool)
 import           Data.List                           (isPrefixOf, sortOn)
 import qualified Data.Map                            as M
 import           Data.Maybe
-import           Data.Monoid                         (appEndo,
-                                                      All (..))
+import           Data.Monoid                         (All (..), appEndo)
 import qualified Data.Text                           as T
 
 
@@ -178,22 +176,24 @@ moveWindowToRelativePosition x y = (() <$) . runMaybeT $ do
 -- | Float current according to saved position
 myFloatCurrent :: X ()
 myFloatCurrent = withFocused $ \window -> withWindowSet $ \ws -> do
-    ps <- getPosStore
-    let sr@(Rectangle _srX _srY srW srH) = screenRect . W.screenDetail $ W.current ws
-    case posStoreQuery ps window sr of
-        Just (Rectangle x y w h) -> do
-            let r' = W.RationalRect (fromIntegral x / fromIntegral srW)
-                                    (fromIntegral y / fromIntegral srH)
-                                    (fromIntegral w / fromIntegral srW)
-                                    (fromIntegral h / fromIntegral srH)
-            windows $ W.float window r'
-        Nothing  -> return ()
+  ps <- getPosStore
+  let sr@(Rectangle _srX _srY srW srH) =
+        screenRect . W.screenDetail $ W.current ws
+  case posStoreQuery ps window sr of
+    Just (Rectangle x y w h) -> do
+      let r' = W.RationalRect (fromIntegral x / fromIntegral srW)
+                              (fromIntegral y / fromIntegral srH)
+                              (fromIntegral w / fromIntegral srW)
+                              (fromIntegral h / fromIntegral srH)
+      windows $ W.float window r'
+    Nothing -> return ()
 -- | Save float position of the window
 saveFloatPosition :: Window -> X ()
 saveFloatPosition window = do
-    sr <- withWindowSet $ return . screenRect . W.screenDetail . W.current
-    (_, rect) <- floatLocation window
-    modifyPosStore $ \ps -> posStoreInsert ps window (scaleRationalRect sr rect) sr
+  sr        <- withWindowSet $ return . screenRect . W.screenDetail . W.current
+  (_, rect) <- floatLocation window
+  modifyPosStore
+    $ \ps -> posStoreInsert ps window (scaleRationalRect sr rect) sr
 
 ------------------------------------------------------------------------
 -- Workspaces:
@@ -365,7 +365,7 @@ ezKeys =
   , ( "M-S-c"
     , bindFirst
       [ (className =? "Brave-browser", sendKey (controlMask .|. shiftMask) xK_l)
-      , (pure True, spawn "org-capture-frame")
+      , (pure True                   , spawn "org-capture-frame")
       ]
     )
   , ( "M1-S-,"
@@ -567,20 +567,25 @@ myManageHook = composeAll
 
 isOverlayWindow :: Query Bool
 isOverlayWindow = do
-    isNotification      <- isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_NOTIFICATION"
-    floatingVideoWindow <- className =? "zoom" <&&> title =? "zoom_linux_float_video_window"
-    sharingToolbar      <- className =? "zoom" <&&> title =? "as_toolbar"
-    sharingWindowFrame  <- title =? "cpt_frame_window"
-    return $ isNotification || floatingVideoWindow || sharingToolbar || sharingWindowFrame
+  isNotification <- isInProperty "_NET_WM_WINDOW_TYPE"
+                                 "_NET_WM_WINDOW_TYPE_NOTIFICATION"
+  floatingVideoWindow <-
+    className =? "zoom" <&&> title =? "zoom_linux_float_video_window"
+  sharingToolbar     <- className =? "zoom" <&&> title =? "as_toolbar"
+  sharingWindowFrame <- title =? "cpt_frame_window"
+  return
+    $  isNotification
+    || floatingVideoWindow
+    || sharingToolbar
+    || sharingWindowFrame
 
 allWindowsByType :: Query Bool -> X [Window]
 allWindowsByType query = withDisplay $ \display -> do
-    (_, _, windows) <- asks theRoot >>= io . queryTree display
-    filterM (runQuery query) windows
+  (_, _, windows) <- asks theRoot >>= io . queryTree display
+  filterM (runQuery query) windows
 
 raiseWindow' :: Window -> X ()
-raiseWindow' window = withDisplay $ \display ->
-    io $ raiseWindow display window
+raiseWindow' window = withDisplay $ \display -> io $ raiseWindow display window
 
 raiseOverlays :: X ()
 raiseOverlays = allWindowsByType isOverlayWindow >>= mapM_ raiseWindow'
@@ -588,21 +593,23 @@ raiseOverlays = allWindowsByType isOverlayWindow >>= mapM_ raiseWindow'
 fullFloatFocused =
   withFocused $ \f -> windows =<< appEndo `fmap` runQuery doFullFloat f
 
-toggleFull = withFocused (\windowId -> do {
-   floats <- gets (W.floating . windowset);
-   if windowId `M.member` floats
-   then do
-     hasFloatTag <- hasTag "fullFloat" windowId
-     if hasFloatTag then do
-       myFloatCurrent
-       withFocused $ delTag "fullFloat"
-     else do
-       withFocused $ saveFloatPosition
-       fullFloatFocused
-       withFocused $ addTag "fullFloat"
-   else do
-     sendMessage $ Toggle FULL
-})
+toggleFull = withFocused
+  (\windowId -> do
+    floats <- gets (W.floating . windowset)
+    if windowId `M.member` floats
+      then do
+        hasFloatTag <- hasTag "fullFloat" windowId
+        if hasFloatTag
+          then do
+            myFloatCurrent
+            withFocused $ delTag "fullFloat"
+          else do
+            withFocused $ saveFloatPosition
+            fullFloatFocused
+            withFocused $ addTag "fullFloat"
+      else do
+        sendMessage $ Toggle FULL
+  )
 
 manageWindowsHook = composeAll
   [ isFullscreen --> doFullFloat
@@ -611,17 +618,22 @@ manageWindowsHook = composeAll
     (W.RationalRect 0.25 0.25 0.5 0.5)
   , resource =? "kdesktop" --> doIgnore
   , className =? "mpv" --> doFloat
-  , ("Gimp" `isPrefixOf`) <$> className <&&> title =? "gimp-action-search-dialog" --> floating
-  , ("Gimp" `isPrefixOf`) <$> className  --> doFloat
+  , ("Gimp" `isPrefixOf`)
+  <$>  className
+  <&&> title
+  =?   "gimp-action-search-dialog"
+  -->  floating
+  , ("Gimp" `isPrefixOf`) <$> className --> doFloat
   , ("steam_app_" `isPrefixOf`) <$> className --> floating
   -- , className =? "Emacs" --> insertPosition Master Newer
   , className =? "Emacs" <&&> title =? "doom-capture" --> doFloat
   , className =? "Pavucontrol" --> doFloatToMouseCenter
   , className =? "Dragon" --> doFloatToMouse (0.05, 0.05)
   ]
-  where doFloatToMouse = \pos -> placeHook (inBounds (underMouse pos)) <+> doFloat
-        doFloatToMouseCenter = doFloatToMouse (0.5, 0.5)
-        floating = customFloating $ W.RationalRect (1 / 4) (1 / 4) (2 / 4) (2 / 4)
+ where
+  doFloatToMouse = \pos -> placeHook (inBounds (underMouse pos)) <+> doFloat
+  doFloatToMouseCenter = doFloatToMouse (0.5, 0.5)
+  floating = customFloating $ W.RationalRect (1 / 4) (1 / 4) (2 / 4) (2 / 4)
 
 myHandleEventHook :: Event -> X All
 myHandleEventHook = dynamicPropertyChange "WM_NAME" $ composeAll
