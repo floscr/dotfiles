@@ -14,8 +14,6 @@ in
     user.packages = with pkgs; [
       xcwd
       xmobar
-      haskellPackages.brittany
-      haskellPackages.stylish-haskell
       (pkgs.writers.writeHaskellBin
         "xmonadctl"
         {

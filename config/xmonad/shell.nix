@@ -5,10 +5,13 @@ let
     pkgs.haskell-language-server
     pkgs.xmonad-extras
     pkgs.xmonad-contrib
+
   ]);
 in
 pkgs.mkShell {
-  buildInputs = [
+  buildInputs = with pkgs; [
     ghc
+    haskellPackages.brittany
+    haskellPackages.stylish-haskell
   ];
 }
