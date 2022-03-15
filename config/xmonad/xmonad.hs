@@ -553,6 +553,7 @@ manageWindowsHook = composeAll
   , stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog" --> doRectFloat (W.RationalRect 0.25 0.25 0.5 0.5)
   , resource =? "kdesktop" --> doIgnore
   , className =? "mpv" --> doFloat
+  , className =? "zoom" --> doFloat
   , ("Gimp" `isPrefixOf`) <$> className <&&> title =? "gimp-action-search-dialog" --> floating
   , ("Gimp" `isPrefixOf`) <$> className --> doFloat
   , ("steam_app_" `isPrefixOf`) <$> className --> floating
