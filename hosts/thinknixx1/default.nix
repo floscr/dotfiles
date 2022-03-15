@@ -60,6 +60,7 @@ with lib.my;
       keyboard.enable = true;
       external-display.enable = true;
       scanner.enable = true;
+      battery.enable = true;
       fs = {
         enable = true;
         ssd.enable = true;
