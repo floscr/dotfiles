@@ -19,6 +19,7 @@ with lib.my;
     unzip
     s-tui
     nim-utils.get_url_title
+    signal-desktop
   ] ++ flake-packages;
 
   hardware.usb.wakeupDisabled = [
