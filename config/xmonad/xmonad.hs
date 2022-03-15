@@ -97,8 +97,7 @@ startAtomicChrome = do
   sendKey (myAltMask .|. shiftMask) xK_comma
 
 bindAll :: [(Query Bool, X ())] -> X ()
-bindAll = mapM_ choose
-  where choose (mh, action) = withFocused $ \w -> whenX (runQuery mh w) action
+bindAll = mapM_ choose where choose (mh, action) = withFocused $ \w -> whenX (runQuery mh w) action
 
 -- | Run the action paired with the first Query that holds true.
 bindFirst :: [(Query Bool, X ())] -> X ()
@@ -116,9 +115,7 @@ xKill w = withDisplay $ \d -> do
   wmprot    <- atom_WM_PROTOCOLS
 
   protocols <- io $ getWMProtocols d w
-  io $ if wmdelt `elem` protocols
-    then killClient d w >> return ()
-    else killClient d w >> return ()
+  io $ if wmdelt `elem` protocols then killClient d w >> return () else killClient d w >> return ()
 
 willFloat :: Query Bool
 willFloat = ask >>= \w -> liftX $ withDisplay $ \d -> do
@@ -136,13 +133,10 @@ floatOrNot f n = withFocused $ \windowId -> do
 
 doCenterFloatRetainSize win = do
   (_, W.RationalRect x y w h) <- floatLocation win
-  windows $ W.float
-    win
-    (W.RationalRect ((1 - w) / 2) ((1 - (min h 0.9)) / 2) w (min h 0.9))
+  windows $ W.float win (W.RationalRect ((1 - w) / 2) ((1 - (min h 0.9)) / 2) w (min h 0.9))
   return ()
 
-toggleFloat = floatOrNot (withFocused $ windows . W.sink)
-                         (withFocused $ doCenterFloatRetainSize)
+toggleFloat = floatOrNot (withFocused $ windows . W.sink) (withFocused $ doCenterFloatRetainSize)
 
 toggleSticky :: X ()
 toggleSticky = wsContainingCopies >>= \ws -> case ws of
@@ -158,8 +152,7 @@ floatClickFocusHandler ButtonEvent { ev_window = w } = do
 floatClickFocusHandler _ = pure mempty
 
 bringFocusedToTop :: X ()
-bringFocusedToTop =
-  windows $ W.modify' $ \(W.Stack t ls rs) -> W.Stack t [] (reverse ls <> rs)
+bringFocusedToTop = windows $ W.modify' $ \(W.Stack t ls rs) -> W.Stack t [] (reverse ls <> rs)
 
 -- Move window to screen edge
 moveWindowToRelativePosition :: Rational -> Rational -> X ()
@@ -177,8 +170,7 @@ moveWindowToRelativePosition x y = (() <$) . runMaybeT $ do
 myFloatCurrent :: X ()
 myFloatCurrent = withFocused $ \window -> withWindowSet $ \ws -> do
   ps <- getPosStore
-  let sr@(Rectangle _srX _srY srW srH) =
-        screenRect . W.screenDetail $ W.current ws
+  let sr@(Rectangle _srX _srY srW srH) = screenRect . W.screenDetail $ W.current ws
   case posStoreQuery ps window sr of
     Just (Rectangle x y w h) -> do
       let r' = W.RationalRect (fromIntegral x / fromIntegral srW)
@@ -192,8 +184,7 @@ saveFloatPosition :: Window -> X ()
 saveFloatPosition window = do
   sr        <- withWindowSet $ return . screenRect . W.screenDetail . W.current
   (_, rect) <- floatLocation window
-  modifyPosStore
-    $ \ps -> posStoreInsert ps window (scaleRationalRect sr rect) sr
+  modifyPosStore $ \ps -> posStoreInsert ps window (scaleRationalRect sr rect) sr
 
 ------------------------------------------------------------------------
 -- Workspaces:
@@ -208,11 +199,8 @@ myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces [1 ..]
 
 myScratchpads :: [NamedScratchpad]
 myScratchpads =
-  [ NS "terminal" "alacritty -t scratchpad &" (title =? "scratchpad") floating'
-  , NS "emacs-scratch"
-       "emacsclient -e \"(+UI|scratch)\""
-       (title =? "emacs-scratch")
-       floating'
+  [ NS "terminal"      "alacritty -t scratchpad &"        (title =? "scratchpad")    floating'
+  , NS "emacs-scratch" "emacsclient -e \"(+UI|scratch)\"" (title =? "emacs-scratch") floating'
   ]
   where floating' = customFloating $ W.RationalRect 0.2 0.2 0.6 0.6
 
@@ -235,32 +223,30 @@ myAltMask = mod1Mask
 
 myKeys conf@(XConfig { XMonad.modMask = modMask }) =
   M.fromList
-    $  [ ((modMask, xK_Return)             , spawn $ XMonad.terminal conf)
-       , ((modMask, xK_w)                  , kill)
+    $  [ ((modMask, xK_Return)               , spawn $ XMonad.terminal conf)
+       , ((modMask, xK_w)                    , kill)
        , ((modMask, xK_comma), namedScratchpadAction myScratchpads "terminal")
 
 
        -- Rotate through the available layout algorithms
-       , ((modMask .|. shiftMask, xK_m)    , sendMessage NextLayout)
+       , ((modMask .|. shiftMask, xK_m)      , sendMessage NextLayout)
 
        --  Reset the layouts on the current workspace to default
-       , ((modMask .|. shiftMask, xK_space), setLayout $ XMonad.layoutHook conf)
-       , ( (modMask .|. controlMask, xK_space)
-         , setLayout $ XMonad.layoutHook conf
-         )
+       , ((modMask .|. shiftMask, xK_space)  , setLayout $ XMonad.layoutHook conf)
+       , ((modMask .|. controlMask, xK_space), setLayout $ XMonad.layoutHook conf)
 
        -- Move focus to the next window
-       , ((modMask, xK_Tab)            , toggleWS)
+       , ((modMask, xK_Tab)                  , toggleWS)
 
        -- Vim window switching
-       , ((modMask, xK_h)              , windowGo L False)
-       , ((modMask, xK_l)              , windowGo R False)
-       , ((modMask, xK_j)              , windowGo D False)
-       , ((modMask, xK_k)              , windowGo U False)
-       , ((modMask .|. shiftMask, xK_j), windowSwap D False)
-       , ((modMask .|. shiftMask, xK_k), windowSwap U False)
-       , ((modMask .|. shiftMask, xK_h), windowSwap L False)
-       , ((modMask .|. shiftMask, xK_l), windowSwap R False)
+       , ((modMask, xK_h)                    , windowGo L False)
+       , ((modMask, xK_l)                    , windowGo R False)
+       , ((modMask, xK_j)                    , windowGo D False)
+       , ((modMask, xK_k)                    , windowGo U False)
+       , ((modMask .|. shiftMask, xK_j)      , windowSwap D False)
+       , ((modMask .|. shiftMask, xK_k)      , windowSwap U False)
+       , ((modMask .|. shiftMask, xK_h)      , windowSwap L False)
+       , ((modMask .|. shiftMask, xK_l)      , windowSwap R False)
        , ( (modMask .|. controlMask, xK_j)
          , do
            layout <- getActiveLayoutDescription
@@ -291,89 +277,66 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
              "Monocle (Left)" -> sendMessage $ Expand
              _                -> sendMessage Shrink
          )
-       , ((modMask .|. shiftMask, xK_space), setLayout $ XMonad.layoutHook conf)
+       , ((modMask .|. shiftMask, xK_space)            , setLayout $ XMonad.layoutHook conf)
 
 
        -- Move focus to the master window
-       , ((modMask, xK_m)                   , windows W.focusMaster)
+       , ((modMask, xK_m)                              , windows W.focusMaster)
 
        -- Swap the focused window and the master window
-       , ((modMask .|. shiftMask, xK_Return), windows W.swapMaster)
+       , ((modMask .|. shiftMask, xK_Return)           , windows W.swapMaster)
 
        -- Swap the focused window with the next window
-       , ((modMask .|. shiftMask, xK_j)     , windows W.swapDown)
+       , ((modMask .|. shiftMask, xK_j)                , windows W.swapDown)
 
        -- Swap the focused window with the previous window
-       , ((modMask .|. shiftMask, xK_k)     , windows W.swapUp)
+       , ((modMask .|. shiftMask, xK_k)                , windows W.swapUp)
 
 
        -- Deincrement the number of windows in the master area
-       , ((modMask, xK_period)              , sendMessage (IncMasterN (-1)))
+       , ((modMask, xK_period)                         , sendMessage (IncMasterN (-1)))
 
        -- Mirror, reflect around x or y axis
-       , ((modMask, xK_m)                   , sendMessage $ Toggle MIRROR)
-       , ((modMask, xK_v)                   , sendMessage $ Toggle REFLECTY)
-       , ((modMask, xK_f)                   , sendMessage $ Toggle FULL)
+       , ((modMask, xK_m)                              , sendMessage $ Toggle MIRROR)
+       , ((modMask, xK_v)                              , sendMessage $ Toggle REFLECTY)
+       , ((modMask, xK_f)                              , sendMessage $ Toggle FULL)
 
        -- Quit xmonad
-       , ( (modMask .|. shiftMask .|. controlMask, xK_q)
-         , io (exitWith ExitSuccess)
-         )
+       , ((modMask .|. shiftMask .|. controlMask, xK_q), io (exitWith ExitSuccess))
 
        -- Reload xmonad
-       , ((modMask .|. shiftMask, xK_r), restart "xmonad" True)
+       , ((modMask .|. shiftMask, xK_r)                , restart "xmonad" True)
 
        -- windowArranger keybindings
-       , ((modMask .|. controlMask, xK_s), sendMessage Arrange)
+       , ((modMask .|. controlMask, xK_s)              , sendMessage Arrange)
        , ((modMask .|. controlMask .|. shiftMask, xK_s), sendMessage DeArrange)
-       , ((modMask .|. controlMask, xK_Left), sendMessage (MoveLeft 10))
-       , ((modMask .|. controlMask, xK_Right), sendMessage (MoveRight 10))
-       , ((modMask .|. controlMask, xK_Down), sendMessage (MoveDown 10))
-       , ((modMask .|. controlMask, xK_Up), sendMessage (MoveUp 10))
-       , ((modMask .|. shiftMask, xK_Left), sendMessage (IncreaseLeft 10))
-       , ((modMask .|. shiftMask, xK_Right), sendMessage (IncreaseRight 10))
-       , ((modMask .|. shiftMask, xK_Down), sendMessage (IncreaseDown 10))
-       , ((modMask .|. shiftMask, xK_Up), sendMessage (IncreaseUp 10))
-       , ( (modMask .|. controlMask .|. shiftMask, xK_Left)
-         , sendMessage (DecreaseLeft 10)
-         )
-       , ( (modMask .|. controlMask .|. shiftMask, xK_Right)
-         , sendMessage (DecreaseRight 10)
-         )
-       , ( (modMask .|. controlMask .|. shiftMask, xK_Down)
-         , sendMessage (DecreaseDown 10)
-         )
-       , ( (modMask .|. controlMask .|. shiftMask, xK_Up)
-         , sendMessage (DecreaseUp 10)
-         )
+       , ((modMask .|. controlMask, xK_Left)           , sendMessage (MoveLeft 10))
+       , ((modMask .|. controlMask, xK_Right)          , sendMessage (MoveRight 10))
+       , ((modMask .|. controlMask, xK_Down)           , sendMessage (MoveDown 10))
+       , ((modMask .|. controlMask, xK_Up)             , sendMessage (MoveUp 10))
+       , ((modMask .|. shiftMask, xK_Left)             , sendMessage (IncreaseLeft 10))
+       , ((modMask .|. shiftMask, xK_Right)            , sendMessage (IncreaseRight 10))
+       , ((modMask .|. shiftMask, xK_Down)             , sendMessage (IncreaseDown 10))
+       , ((modMask .|. shiftMask, xK_Up)               , sendMessage (IncreaseUp 10))
+       , ((modMask .|. controlMask .|. shiftMask, xK_Left), sendMessage (DecreaseLeft 10))
+       , ((modMask .|. controlMask .|. shiftMask, xK_Right), sendMessage (DecreaseRight 10))
+       , ((modMask .|. controlMask .|. shiftMask, xK_Down), sendMessage (DecreaseDown 10))
+       , ((modMask .|. controlMask .|. shiftMask, xK_Up), sendMessage (DecreaseUp 10))
        ]
     ++
        --
        -- mod-[1..9], Switch to workspace N
        -- mod-shift-[1..9], Move client to workspace N
        --
-       [ ((m .|. modMask, k), windows $ f i)
-       | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
-       , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
-       ]
+       [ ((m .|. modMask, k), windows $ f i) | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9], (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)] ]
 
 
 ezKeys :: [(String, X ())]
 ezKeys =
-  [ ("M-t"       , sendMessage ToggleStruts)
+  [ ("M-t"         , sendMessage ToggleStruts)
   , ("M-<Return>", spawn (myTerminal ++ " --working-directory \"`xcwd`\""))
-  , ( "M-S-c"
-    , bindFirst
-      [ (className =? "Brave-browser", sendKey (controlMask .|. shiftMask) xK_l)
-      , (pure True                   , spawn "org-capture-frame")
-      ]
-    )
-  , ( "M1-S-,"
-    , bindFirst
-      [ (className =? "Brave-browser", startAtomicChrome)
-      , (pure True, sendKey (myAltMask .|. shiftMask) xK_comma)
-      ]
-    )
+  , ("M-S-c", bindFirst [(className =? "Brave-browser", sendKey (controlMask .|. shiftMask) xK_l), (pure True, spawn "org-capture-frame")])
+  , ("M1-S-,", bindFirst [(className =? "Brave-browser", startAtomicChrome), (pure True, sendKey (myAltMask .|. shiftMask) xK_comma)])
   , ("M-S-w x"     , withFocused xKill)
   , ("M-S-f"       , toggleFloat)
   , ("M-f"         , toggleFull)
@@ -384,29 +347,23 @@ ezKeys =
   , ("M-C-'"       , spawn "rofi_org_bookmarks")
 
     -- Move window to corner
-  , ( "M-S-w 1"
-    , sequence_
-      [(moveWindowToRelativePosition 0 0), withFocused (keysMoveWindow (0, 32))]
-    )
-  , ( "M-S-w 2"
-    , sequence_
-      [(moveWindowToRelativePosition 1 0), withFocused (keysMoveWindow (0, 32))]
-    )
-  , ("M-S-w 3", moveWindowToRelativePosition 1 1)
-  , ("M-S-w 4", moveWindowToRelativePosition 0 1)
-  , ("M-S-w c", moveWindowToRelativePosition 0.5 0.5)
+  , ("M-S-w 1", sequence_ [(moveWindowToRelativePosition 0 0), withFocused (keysMoveWindow (0, 32))])
+  , ("M-S-w 2", sequence_ [(moveWindowToRelativePosition 1 0), withFocused (keysMoveWindow (0, 32))])
+  , ("M-S-w 3"     , moveWindowToRelativePosition 1 1)
+  , ("M-S-w 4"     , moveWindowToRelativePosition 0 1)
+  , ("M-S-w c"     , moveWindowToRelativePosition 0.5 0.5)
 
     -- History
-  , ("M-S-,"  , nextMatch Backward (return True))
-  , ("M-S-."  , nextMatch Forward (return True))
-  , ("M-`"    , nextMatch History (return True))
+  , ("M-S-,"       , nextMatch Backward (return True))
+  , ("M-S-."       , nextMatch Forward (return True))
+  , ("M-`"         , nextMatch History (return True))
 
   -- Float / Sink Floating Windows
-  , ("M-S-'"  , toggleSticky)
-  , ("M-S-t"  , withFocused $ windows . W.sink)
+  , ("M-S-'"       , toggleSticky)
+  , ("M-S-t"       , withFocused $ windows . W.sink)
 
   -- M-o leader
-  , ("M-o b"  , spawn "rofi_org_bookmarks")
+  , ("M-o b"       , spawn "rofi_org_bookmarks")
   ]
 
 ------------------------------------------------------------------------
@@ -440,20 +397,12 @@ commandsList :: String
 commandsList = foldl (\acc cur -> acc ++ (fst cur) ++ "\n") "" myCommands
 
 myServerModeEventHook = serverModeEventHookCmd' $ return myCommands'
-myCommands' = ("list-commands", listMyServerCmds) : myCommands ++ sortOn
-  fst
-  (wscs ++ sccs) -- (wscs ++ sccs ++ spcs)
+myCommands' = ("list-commands", listMyServerCmds) : myCommands ++ sortOn fst (wscs ++ sccs) -- (wscs ++ sccs ++ spcs)
  where
-  wscs =
-    [ ((m ++ s), windows $ f s)
-    | s      <- myWorkspaces
-    , (f, m) <- [(W.view, "focus-workspace-"), (W.shift, "send-to-workspace-")]
-    ]
+  wscs = [ ((m ++ s), windows $ f s) | s <- myWorkspaces, (f, m) <- [(W.view, "focus-workspace-"), (W.shift, "send-to-workspace-")] ]
 
   sccs =
-    [ ( (m ++ show sc)
-      , screenWorkspace (fromIntegral sc) >>= flip whenJust (windows . f)
-      )
+    [ ((m ++ show sc), screenWorkspace (fromIntegral sc) >>= flip whenJust (windows . f))
     | sc     <- [0 .. myMaxScreenCount]
     , (f, m) <- [(W.view, "focus-screen-"), (W.shift, "send-to-screen-")]
     ]
@@ -462,10 +411,7 @@ myCommands' = ("list-commands", listMyServerCmds) : myCommands ++ sortOn
         --        | sp <- (flip map) (myScratchpads) (\(NS x _ _ _) -> x) ]
 
 listMyServerCmds :: X ()
-listMyServerCmds = spawn ("echo '" ++ asmc ++ "'")
- where
-  asmc =
-    unlines $ "Available commands:" : map (\(x, _) -> "    " ++ x) myCommands'
+listMyServerCmds = spawn ("echo '" ++ asmc ++ "'") where asmc = unlines $ "Available commands:" : map (\(x, _) -> "    " ++ x) myCommands'
 
 
 
@@ -486,10 +432,10 @@ myMouseBindings (XConfig { XMonad.modMask = modMask }) =
   M.fromList
     $
       -- Set the window to floating mode and move by dragging
-      [ ((modMask, button1), (\w -> focus w >> mouseMoveWindow w))
+      [ ((modMask, button1)  , (\w -> focus w >> mouseMoveWindow w))
 
       -- Raise the window to the top of the stack
-      , ((modMask, button2), (\w -> focus w >> windows W.swapMaster))
+      , ((modMask, button2)  , (\w -> focus w >> windows W.swapMaster))
 
       -- Raise the window to the top of the stack
       , ((myModMask, button3), (\w -> focus w >> Flex.mouseResizeWindow w))
@@ -502,13 +448,10 @@ myMouseBindings (XConfig { XMonad.modMask = modMask }) =
 newtype Flip l a = Flip (l a) deriving (Show, Read)
 
 instance LayoutClass l a => LayoutClass (Flip l) a where
-  runLayout (W.Workspace i (Flip l) ms) r =
-    (map (second flipRect) *** fmap Flip)
-      `fmap` runLayout (W.Workspace i l ms) (flipRect r)
+  runLayout (W.Workspace i (Flip l) ms) r = (map (second flipRect) *** fmap Flip) `fmap` runLayout (W.Workspace i l ms) (flipRect r)
    where
     screenWidth = fromIntegral $ rect_width r
-    flipRect (Rectangle rx ry rw rh) =
-      Rectangle (screenWidth - rx - (fromIntegral rw)) ry rw rh
+    flipRect (Rectangle rx ry rw rh) = Rectangle (screenWidth - rx - (fromIntegral rw)) ry rw rh
   handleMessage (Flip l) = fmap (fmap Flip) . handleMessage l
   description (Flip l) = "Flip " ++ description l
 
@@ -540,12 +483,9 @@ myLayoutHook =
     $ onWorkspace "2" workingLayout
     $ onWorkspace "3" termLayout defaultLayout
  where
-  defaultLayout =
-    monocleRight ||| monocleLeft ||| emptyBSP ||| threeColLayout ||| Full
-  workingLayout =
-    monocleLeft ||| monocleRight ||| emptyBSP ||| threeColLayout ||| Full
-  termLayout =
-    emptyBSP ||| threeColLayout ||| monocleLeft ||| monocleRight ||| Full
+  defaultLayout  = monocleRight ||| monocleLeft ||| emptyBSP ||| threeColLayout ||| Full
+  workingLayout  = monocleLeft ||| monocleRight ||| emptyBSP ||| threeColLayout ||| Full
+  termLayout     = emptyBSP ||| threeColLayout ||| monocleLeft ||| monocleRight ||| Full
   threeColLayout = named "Columns" $ (multiCol [1] 8 0.05 0.33)
   monocleRight   = named "Monocle (Right)" $ tiled
   monocleLeft    = named "Monocle (Left)" $ Flip tiled
@@ -567,17 +507,11 @@ myManageHook = composeAll
 
 isOverlayWindow :: Query Bool
 isOverlayWindow = do
-  isNotification <- isInProperty "_NET_WM_WINDOW_TYPE"
-                                 "_NET_WM_WINDOW_TYPE_NOTIFICATION"
-  floatingVideoWindow <-
-    className =? "zoom" <&&> title =? "zoom_linux_float_video_window"
-  sharingToolbar     <- className =? "zoom" <&&> title =? "as_toolbar"
-  sharingWindowFrame <- title =? "cpt_frame_window"
-  return
-    $  isNotification
-    || floatingVideoWindow
-    || sharingToolbar
-    || sharingWindowFrame
+  isNotification      <- isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_NOTIFICATION"
+  floatingVideoWindow <- className =? "zoom" <&&> title =? "zoom_linux_float_video_window"
+  sharingToolbar      <- className =? "zoom" <&&> title =? "as_toolbar"
+  sharingWindowFrame  <- title =? "cpt_frame_window"
+  return $ isNotification || floatingVideoWindow || sharingToolbar || sharingWindowFrame
 
 allWindowsByType :: Query Bool -> X [Window]
 allWindowsByType query = withDisplay $ \display -> do
@@ -590,8 +524,7 @@ raiseWindow' window = withDisplay $ \display -> io $ raiseWindow display window
 raiseOverlays :: X ()
 raiseOverlays = allWindowsByType isOverlayWindow >>= mapM_ raiseWindow'
 
-fullFloatFocused =
-  withFocused $ \f -> windows =<< appEndo `fmap` runQuery doFullFloat f
+fullFloatFocused = withFocused $ \f -> windows =<< appEndo `fmap` runQuery doFullFloat f
 
 togglFullFloat w = do
   hasFloatTag <- hasTag "fullFloat" w
@@ -617,15 +550,10 @@ toggleFull = withFocused
 manageWindowsHook = composeAll
   [ isFullscreen --> doFullFloat
   , resource =? "desktop_window" --> doIgnore
-  , stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog" --> doRectFloat
-    (W.RationalRect 0.25 0.25 0.5 0.5)
+  , stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog" --> doRectFloat (W.RationalRect 0.25 0.25 0.5 0.5)
   , resource =? "kdesktop" --> doIgnore
   , className =? "mpv" --> doFloat
-  , ("Gimp" `isPrefixOf`)
-  <$>  className
-  <&&> title
-  =?   "gimp-action-search-dialog"
-  -->  floating
+  , ("Gimp" `isPrefixOf`) <$> className <&&> title =? "gimp-action-search-dialog" --> floating
   , ("Gimp" `isPrefixOf`) <$> className --> doFloat
   , ("steam_app_" `isPrefixOf`) <$> className --> floating
   -- , className =? "Emacs" --> insertPosition Master Newer
@@ -634,17 +562,14 @@ manageWindowsHook = composeAll
   , className =? "Dragon" --> doFloatToMouse (0.05, 0.05)
   ]
  where
-  doFloatToMouse = \pos -> placeHook (inBounds (underMouse pos)) <+> doFloat
+  doFloatToMouse       = \pos -> placeHook (inBounds (underMouse pos)) <+> doFloat
   doFloatToMouseCenter = doFloatToMouse (0.5, 0.5)
-  floating = customFloating $ W.RationalRect (1 / 4) (1 / 4) (2 / 4) (2 / 4)
+  floating             = customFloating $ W.RationalRect (1 / 4) (1 / 4) (2 / 4) (2 / 4)
 
 myHandleEventHook :: Event -> X All
-myHandleEventHook = dynamicPropertyChange "WM_NAME" $ composeAll
-  [ title =? "Spotify" --> doCenterFloat
-  , title =? "doom-capture" --> floating
-  , title =? "emacs-scratch" --> floating
-  ] where
-  floating = customFloating $ W.RationalRect (1 / 4) (1 / 4) (2 / 4) (2 / 4)
+myHandleEventHook = dynamicPropertyChange "WM_NAME"
+  $ composeAll [title =? "Spotify" --> doCenterFloat, title =? "doom-capture" --> floating, title =? "emacs-scratch" --> floating]
+  where floating = customFloating $ W.RationalRect (1 / 4) (1 / 4) (2 / 4) (2 / 4)
 
 ------------------------------------------------------------------------
 -- Xmobar & Logging
@@ -670,18 +595,17 @@ tagHook = withWindowSet $ mapM_ <$> tagFloating <*> W.allWindows
   tagIff = bool delTag addTag
 
 xmoPP :: Handle -> PP
-xmoPP h = xmobarPP
-  { ppOutput          = hPutStrLn h
-  , ppCurrent         = xmobarColor "#98be65" "" . wrapWorkspaceAction
-  , ppVisible         = xmobarColor "#98be65" "" . wrapWorkspaceAction
-  , ppHidden          = wrapWorkspaceAction
-  , ppHiddenNoWindows = xmobarColor "#c792ea" "" . wrapWorkspaceAction
-  , ppTitle           = xmobarColor "#b3afc2" "" . shorten 60
-  , ppSep             = "<fc=#666666> <fn=1>|</fn> </fc>"
-  , ppUrgent          = xmobarColor "#C45500" "" . wrap "!" "!"
-  , ppSort            = fmap (namedScratchpadFilterOutWorkspace .) (ppSort def) -- hide "NSP" from workspace list
-  , ppOrder           = \(ws : l : t : ex) -> [ws, l] ++ ex ++ [t]
-  }
+xmoPP h = xmobarPP { ppOutput          = hPutStrLn h
+                   , ppCurrent         = xmobarColor "#98be65" "" . wrapWorkspaceAction
+                   , ppVisible         = xmobarColor "#98be65" "" . wrapWorkspaceAction
+                   , ppHidden          = wrapWorkspaceAction
+                   , ppHiddenNoWindows = xmobarColor "#c792ea" "" . wrapWorkspaceAction
+                   , ppTitle           = xmobarColor "#b3afc2" "" . shorten 60
+                   , ppSep             = "<fc=#666666> <fn=1>|</fn> </fc>"
+                   , ppUrgent          = xmobarColor "#C45500" "" . wrap "!" "!"
+                   , ppSort            = fmap (namedScratchpadFilterOutWorkspace .) (ppSort def) -- hide "NSP" from workspace list
+                   , ppOrder           = \(ws : l : t : ex) -> [ws, l] ++ ex ++ [t]
+                   }
 
 ------------------------------------------------------------------------
 -- Main
@@ -703,7 +627,7 @@ defaults pipe =
       , mouseBindings      = myMouseBindings
 
   -- hooks
-      , logHook = (myLogHook pipe) <+> historyHook <+> tagHook <+> raiseOverlays
+      , logHook            = (myLogHook pipe) <+> historyHook <+> tagHook <+> raiseOverlays
       , layoutHook         = myLayoutHook
       , manageHook         = myManageHook
       , startupHook        = myStartupHook <+> Ewmh.ewmhDesktopsStartup
