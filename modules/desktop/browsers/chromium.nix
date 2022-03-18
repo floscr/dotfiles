@@ -47,23 +47,5 @@ in
         command = "launch-chrome --incognito";
       }
     ];
-
-    # Extensions
-    programs.chromium = {
-      enable = true;
-      defaultSearchProviderSearchURL = "https://duckduckgo.com/?q={searchTerms}";
-      defaultSearchProviderSuggestURL = "https://ac.duckduckgo.com/ac/?q={searchTerms}&type=list";
-      extensions = [
-        "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
-        "dbepggeogbaibhgnhhndojpepiihcmeb" # Vimium
-        "eimadpbcbfnmbkopoojfekhnkhdbieeh" # Dark Readerr
-        "fipfgiejfpcdacpjepkohdlnjonchnal" # Keyboard shortcuts
-        "gbmdgpbipfallnflgajpaliibnhdgobh" # Json Viewer
-        "icpgjfneehieebagbmdbhnlpiopdcmna" # New Tab Redirect
-        "kbmfpngjjgdllneeigpgjifpgocmfgmb" # Reddit Enhancement Suite
-        "lhaoghhllmiaaagaffababmkdllgfcmc" # Atomic Chrome
-        "ndiaggkadcioihmhghipjmgfeamgjeoi" # Add URL To Window Title
-      ];
-    };
   };
 }
