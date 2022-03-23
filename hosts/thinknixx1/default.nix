@@ -20,6 +20,7 @@ with lib.my;
     s-tui
     nim-utils.get_url_title
     signal-desktop
+    jellyfin-media-player
   ] ++ flake-packages;
 
   hardware.usb.wakeupDisabled = [
