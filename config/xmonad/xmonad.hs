@@ -331,8 +331,8 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
        [ ((m .|. modMask, k), windows $ f i) | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9], (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)] ]
 
 
-ezKeys :: [(String, X ())]
-ezKeys =
+myKeyboardBindings :: [(String, X ())]
+myKeyboardBindings =
   [ ("M-t"         , sendMessage ToggleStruts)
   , ("M-<Return>", spawn (myTerminal ++ " --working-directory \"`xcwd`\""))
   , ("M-S-c", bindFirst [(className =? "Brave-browser", sendKey (controlMask .|. shiftMask) xK_l), (pure True, spawn "org-capture-frame")])
@@ -643,7 +643,7 @@ defaults pipe =
                              <+> positionStoreEventHook
       }
     `additionalMouseBindings` []
-    `additionalKeysP`         (myNixKeys ++ ezKeys)
+    `additionalKeysP`         (myNixKeys ++ myKeyboardBindings)
 
 
 main = do
