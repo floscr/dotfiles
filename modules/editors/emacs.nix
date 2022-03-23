@@ -87,7 +87,7 @@ in
       };
       desktopEntries."org-protocol" = {
         name = "Org-Protocol";
-        exec = "emacsclient %u";
+        exec = "emacsclient -- %u";
         icon = "emacs-icon";
         type = "Application";
         mimeType = [ "x-scheme-handler/org-protocol" ];
