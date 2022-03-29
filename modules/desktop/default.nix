@@ -34,9 +34,11 @@ in
         cd ~/Downloads
         ls -t | head -n 15 | xargs -d '\n' bash -c '${dragon-drop}/bin/dragon --and-exit "$@"' _
       '')
-      (pkgs.writeScriptBin "xcolor-yank" ''
+      (let xcolor = "${pkgs.xcolor}/bin/xcolor";
+           xclip = "${pkgs.xclip}/bin/xclip";
+       in pkgs.writeScriptBin "xcolor-yank" ''
         #!${stdenv.shell}
-        xcolor | tr -d '\n' | xclip -selection clipboard -in
+        ${xcolor} | tr -d '\n' | ${xclip} -selection clipboard -in
       '')
     ];
 
