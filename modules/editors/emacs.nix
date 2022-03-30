@@ -75,7 +75,12 @@ in
       package = pkgs.emacsPgtkGcc;
     };
 
-    env.PATH = [ "$HOME/.emacs.d/bin" ];
+    env = {
+      PATH = [ "$HOME/.emacs.d/bin" ];
+      # lsp: use plists instead of hashtables for performance improvement
+      # https://emacs-lsp.github.io/lsp-mode/page/performance/#use-plists-for-deserialization
+      LSP_USE_PLISTS = "true";
+    };
 
     modules.shell.zsh.rcFiles = [ "${configDir}/emacs/aliases.zsh" ];
 
