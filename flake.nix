@@ -1,5 +1,5 @@
 {
-  description = "A grossly incandescent nixos config.";
+  description = "My dotfiles";
 
   inputs =
     {
