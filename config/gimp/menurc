@@ -807,7 +807,7 @@
 ; (gtk_accel_path "<Actions>/vectors/vectors-popup" "")
 ; (gtk_accel_path "<Actions>/image/image-convert-half" "")
 ; (gtk_accel_path "<Actions>/view/view-flip-vertically" "")
-; (gtk_accel_path "<Actions>/file/file-overwrite" "")
+(gtk_accel_path "<Actions>/file/file-overwrite" "<Primary><Shift>s")
 ; (gtk_accel_path "<Actions>/context/context-background-red-increase-skip" "")
 ; (gtk_accel_path "<Actions>/tools/tools-size-increase-skip" "<Shift>bracketright")
 ; (gtk_accel_path "<Actions>/image/image-rotate-90" "")
