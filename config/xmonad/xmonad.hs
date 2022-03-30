@@ -554,8 +554,12 @@ manageWindowsHook = composeAll
   , resource =? "kdesktop" --> doIgnore
   , className =? "mpv" --> doFloat
   , className =? "zoom" --> doFloat
+
+  -- Gimp
   , ("Gimp" `isPrefixOf`) <$> className <&&> title =? "gimp-action-search-dialog" --> floating
-  , ("Gimp" `isPrefixOf`) <$> className --> doFloat
+  , ("Gimp" `isPrefixOf`) <$> className --> doFloatToMouseCenter
+  , role =? "gimp-image-window" --> doShift "5"
+
   , ("steam_app_" `isPrefixOf`) <$> className --> floating
   -- , className =? "Emacs" --> insertPosition Master Newer
   , className =? "Emacs" <&&> title =? "doom-capture" --> doFloat
@@ -563,6 +567,7 @@ manageWindowsHook = composeAll
   , className =? "Dragon" --> doFloatToMouse (0.05, 0.05)
   ]
  where
+  role = stringProperty "WM_WINDOW_ROLE"
   doFloatToMouse       = \pos -> placeHook (inBounds (underMouse pos)) <+> doFloat
   doFloatToMouseCenter = doFloatToMouse (0.5, 0.5)
   floating             = customFloating $ W.RationalRect (1 / 4) (1 / 4) (2 / 4) (2 / 4)
