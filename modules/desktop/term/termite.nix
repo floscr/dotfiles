@@ -17,14 +17,14 @@ in
 
     user.packages = with pkgs; [
       termite
-      (makeDesktopItem {
-        name = "termite";
-        desktopName = "Termite";
-        genericName = "Default terminal";
-        icon = "utilities-terminal";
-        exec = "${termite}/bin/termite";
-        categories = "Development;System;Utility";
-      })
+      # (makeDesktopItem {
+      #   name = "termite";
+      #   desktopName = "Termite";
+      #   genericName = "Default terminal";
+      #   icon = "utilities-terminal";
+      #   exec = "${termite}/bin/termite";
+      #   categories =[ "Development;System;Utility"];
+      # })
     ];
 
     home-manager.users.${config.user.name}.programs.termite = mkMerge [

@@ -16,7 +16,7 @@ in
         exts.pass-genphrase
         exts.pass-tomb
       ]))
-      pkgs.libqrencode # Generate QR code from pass
+      pkgs.qrencode # Generate QR code from pass
       (lib.mkIf (config.services.xserver.enable) rofi-pass)
 
     ];

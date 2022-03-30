@@ -68,7 +68,7 @@ in
           ibm-plex
 
           # Unicode and Symbols
-          font-awesome-ttf
+          font-awesome
           noto-fonts
           noto-fonts-cjk
           symbola
