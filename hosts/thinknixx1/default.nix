@@ -17,6 +17,7 @@ with lib.my;
 
   user.packages = with pkgs; [
     unzip
+    unstable.difftastic
     s-tui
     nim-utils.get_url_title
     signal-desktop
