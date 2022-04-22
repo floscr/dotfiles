@@ -298,7 +298,6 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
 
        -- Mirror, reflect around x or y axis
        , ((modMask, xK_m)                              , sendMessage $ Toggle MIRROR)
-       , ((modMask, xK_v)                              , sendMessage $ Toggle REFLECTY)
        , ((modMask, xK_f)                              , sendMessage $ Toggle FULL)
 
        -- Quit xmonad
