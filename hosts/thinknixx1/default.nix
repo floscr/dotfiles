@@ -113,6 +113,10 @@ with lib.my;
         chromium.enable = true;
         firefox.enable = true;
         brave.enable = true;
+        brave.profiles = [
+          { dir = "Profile 1"; alias = "Pitch"; }
+          { dir = "Profile 2"; alias = "Personal"; }
+        ];
       };
       term = {
         default = "alacritty";
