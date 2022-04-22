@@ -57,6 +57,7 @@ with lib.my;
       sudoers.enable = true;
     };
     hardware = {
+      webcam.logitech-c920.enable = true;
       trackpad.enable = true;
       audio.enable = true;
       bluetooth.enable = true;
