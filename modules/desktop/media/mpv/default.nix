@@ -291,5 +291,12 @@ in
 
       };
     };
+
+    modules.shell.zsh =
+      {
+        aliases = {
+          mpv-gui = "mpv --player-operation-mode=pseudo-gui";
+        };
+      };
   };
 }
