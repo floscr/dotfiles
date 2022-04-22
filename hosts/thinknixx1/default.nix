@@ -133,6 +133,7 @@ with lib.my;
       vim.enable = true;
     };
     services = {
+      android.enable = true;
       espanso.enable = true;
       screendrawing.enable = true;
       syncthing.enable = true;
