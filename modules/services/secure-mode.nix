@@ -7,6 +7,7 @@ in
 {
   options.modules.services.secure-mode-scripts = with types; {
     enable = mkBoolOpt false;
+    tmpFile = mkStrOpt "/tmp/secure-mode-enabled";
     items = mkOption {
       type = listOf (submodule ({ name, ... }: {
         options.onEnable = mkOption { type = str; };
@@ -22,13 +23,16 @@ in
       enableScripts = lib.concatMapStrings (x: x.onEnable + "\n") xs;
       enableBin = (pkgs.writeScriptBin "secure-mode-enable" ''
         #!${pkgs.stdenv.shell}
+        touch ${cfg.tmpFile}
         ${enableScripts}
       '');
       disableScripts = lib.concatMapStrings (x: x.onDisable + "\n") xs;
       disableBin = (pkgs.writeScriptBin "secure-mode-disable" ''
         #!${pkgs.stdenv.shell}
+        rm -rf ${cfg.tmpFile}
         ${disableScripts}
       '');
+
     in
     {
       user.packages = with pkgs; [
