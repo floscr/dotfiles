@@ -18,7 +18,6 @@ in
       binutils # native-comp needs 'as', provided by this
       emacsPgtkGcc # 28 + pgtk + native-comp
 
-      nixpkgs-fmt
 
       ## Doom dependencies
       git

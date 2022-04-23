@@ -76,6 +76,7 @@ with lib.my;
       node.enable = true;
       nim.enable = true;
       docker.enable = true;
+      nix.enable = true;
       # mysql.enable = false;
       clojure.enable = true;
     };
