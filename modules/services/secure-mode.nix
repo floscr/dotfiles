@@ -16,22 +16,35 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
-    user.packages =
-      let
-        xs = config.modules.services.secure-mode-scripts.items;
-        enableScripts = lib.concatMapStrings (x: x.onEnable + "\n") xs;
-        disableScripts = lib.concatMapStrings (x: x.onDisable + "\n") xs;
-      in
-      with pkgs; [
-        (writeScriptBin "secure-mode-enable" ''
-          #!${stdenv.shell}
-          ${enableScripts}
-        '')
-        (writeScriptBin "secure-mode-disable" ''
-          #!${stdenv.shell}
-          ${disableScripts}
-        '')
+  config = mkIf cfg.enable (
+    let
+      xs = config.modules.services.secure-mode-scripts.items;
+      enableScripts = lib.concatMapStrings (x: x.onEnable + "\n") xs;
+      enableBin = (pkgs.writeScriptBin "secure-mode-enable" ''
+        #!${pkgs.stdenv.shell}
+        ${enableScripts}
+      '');
+      disableScripts = lib.concatMapStrings (x: x.onDisable + "\n") xs;
+      disableBin = (pkgs.writeScriptBin "secure-mode-disable" ''
+        #!${pkgs.stdenv.shell}
+        ${disableScripts}
+      '');
+    in
+    {
+      user.packages = with pkgs; [
+        enableBin
+        disableBin
       ];
-  };
+      modules.bindings.items = [
+        {
+          command = "${enableBin}/bin/secure-mode-enable";
+          description = "Secure Mode: Enable";
+        }
+        {
+          command = "${disableBin}/bin/secure-mode-disable";
+          description = "Secure Mode: Disable";
+        }
+      ];
+    }
+  );
 }
