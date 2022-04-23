@@ -55,6 +55,10 @@ in
           ExecStart = "${greenclip}/bin/greenclip daemon";
         };
       };
+      modules.services.secure-mode-scripts.items = [{
+        onDisable = "${pkgs.systemd}/bin/systemctl --user start greenclip.service";
+        onEnable = "${pkgs.systemd}/bin/systemctl --user stop greenclip.service";
+      }];
     }
   );
 }

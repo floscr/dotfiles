@@ -134,6 +134,7 @@ with lib.my;
       vim.enable = true;
     };
     services = {
+      secure-mode-scripts.enable = true;
       android.enable = true;
       espanso.enable = true;
       screendrawing.enable = true;
