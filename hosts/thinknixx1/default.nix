@@ -73,6 +73,7 @@ with lib.my;
       sensors.enable = true;
     };
     dev = {
+      tools.enable = true;
       node.enable = true;
       nim.enable = true;
       docker.enable = true;
