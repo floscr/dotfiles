@@ -24,9 +24,6 @@
     enable = true;
     support32Bit = true;
     package = pkgs.pulseaudioFull;
-    extraModules = [
-      pkgs.pulseaudio-modules-bt
-    ];
     extraConfig = ''
       load-module module-udev-detect tsched=0
       load-module module-bluetooth-policy

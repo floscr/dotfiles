@@ -27,9 +27,6 @@ in
         # support, so it must be selected here.
         package = pkgs.pulseaudioFull;
         # Enable additional codecs
-        extraModules = with pkgs; [
-          pulseaudio-modules-bt
-        ];
       };
 
       hardware.bluetooth.extraConfig = ''

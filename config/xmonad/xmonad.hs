@@ -460,7 +460,7 @@ getActiveLayoutDescription = do
   return $ description . W.layout . W.workspace . W.current $ workspaces
 
 oxyDarkTheme :: Theme
-oxyDarkTheme = defaultTheme { inactiveBorderColor = "#777"
+oxyDarkTheme = def { inactiveBorderColor = "#777"
                             -- , activeBorderColor = myFocusedBorderColor
                             , activeColor         = "#000"
                             , inactiveColor       = "#444"
