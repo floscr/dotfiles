@@ -61,7 +61,7 @@ function main {
   }
 
   function _diff() {
-    ls /nix/var/nix/profiles | tail -n 2 | awk '{print "/nix/var/nix/profiles/" $0}' - | xargs nvd diff
+    ls -v /nix/var/nix/profiles | tail -n 2 | awk '{print "/nix/var/nix/profiles/" $0}' - | xargs nvd diff
   }
 
   function _rebuild {
