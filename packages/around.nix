@@ -35,11 +35,11 @@ appimageTools.wrapType2 {
       gdk-pixbuf
       glib
       libdrm
-      libxkbcommon
       mesa
       nspr
       nss
       pango
+      libpulseaudio
     ]) ++ (with pkgs.xorg;
     [
       libX11
@@ -48,8 +48,11 @@ appimageTools.wrapType2 {
       libXext
       libXfixes
       libXrandr
+      libXtst
       libxcb
       libxshmfence
+      xcbutilimage
+      xcbutilkeysyms
     ]);
 
   meta = with stdenv.lib; {
