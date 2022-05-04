@@ -33,7 +33,6 @@ in
         # wantedBy = [ "graphical-session-pre.target" ];
         # partOf = [ "graphical-session-pre.target" ];
         path = with pkgs; [
-          bspwm
           coreutils
           gnugrep
           systemd
