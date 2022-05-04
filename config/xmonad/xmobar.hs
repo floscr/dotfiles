@@ -2,9 +2,10 @@ Config { font = "xft:Iosevka Mono-10:medium"
         , additionalFonts = [ "xft:Iosevka Mono:size=7:style=bold", "xft:FontAwesome:size=10" ]
         , borderColor = "black"
         , border = FullB 4
-        , bgColor = "#141517"
+        , bgColor = "#04010a"
         , fgColor = "#c5c8c6"
         , position = TopW L 100
+        , alpha = 80
         , textOffsets       = [ 22, 22, 24 ]
         , commands = [
                 Run Weather "SBPA" ["-t","<tempC>°C","-L","18","-H","25","--normal","green","--high","red","--low","lightblue"] 18000
