@@ -17,6 +17,7 @@ in
       unstable.clojure-lsp
       joker
       leiningen
+      unstable.difftastic
     ];
     home.configFile."clojure/deps.edn".text = ''
       {
