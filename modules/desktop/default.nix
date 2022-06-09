@@ -62,7 +62,7 @@ in
         with pkgs; [
           fira-code
           fira-code-symbols
-          iosevka
+          unstable.iosevka
           roboto
           roboto-mono
           source-code-pro
