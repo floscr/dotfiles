@@ -153,6 +153,7 @@ with lib.my;
       network-monitoring.enable = true;
       picom.enable = true;
       opensnitch.enable = false;
+      kdeconnect.enable = true;
     };
     work.pitch.enable = true;
     theme.active = "opera";
