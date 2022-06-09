@@ -14,6 +14,7 @@ in
       user.packages = with pkgs; [
         zoom-us
         nodePackages.mermaid-cli # Mermaid Diagrams CLI, mmdc
+        epiphany
       ];
     }
   ]);
