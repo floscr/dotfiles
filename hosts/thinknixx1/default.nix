@@ -22,7 +22,6 @@ with lib.my;
 
   user.packages = with pkgs; [
     unzip
-    unstable.difftastic
     s-tui
     nim-utils.get_url_title
     signal-desktop
@@ -45,6 +44,7 @@ with lib.my;
       bat.enable = true;
       direnv.enable = true;
       git.enable = true;
+      git.difftastic.enable = true;
       gnupg.enable = true;
       pass.enable = true;
       pazi.enable = true;
