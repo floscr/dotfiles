@@ -15,11 +15,6 @@ with lib.my;
     ".config/espanso/user/email.yml".source = config.age.secrets.espanso-private-emails.path;
   };
 
-  programs.noisetorch = {
-    enable = true;
-    package = with pkgs.unstable; noisetorch;
-  };
-
   user.packages = with pkgs; [
     unzip
     s-tui
