@@ -47,6 +47,7 @@ with lib.my;
       youtube-dl.enable = true;
       zsh.enable = true;
       wget.enable = true;
+      beancount.enable = true;
     };
     scripts = {
       screen-record.enable = true;
