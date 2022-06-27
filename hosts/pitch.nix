@@ -8,4 +8,10 @@ with lib.my;
     nodePackages.mermaid-cli # Mermaid Diagrams CLI, mmdc
     epiphany
   ];
+
+  modules = {
+    dev = {
+      clojure.enable = true;
+    };
+  };
 }

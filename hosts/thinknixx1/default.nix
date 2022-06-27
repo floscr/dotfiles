@@ -80,11 +80,8 @@ with lib.my;
       nim.enable = true;
       docker.enable = true;
       nix.enable = true;
-      # mysql.enable = false;
-      clojure.enable = true;
     };
     desktop = {
-      # bspwm.enable = true;
       xmonad.enable = true;
       mime.enable = true;
       gtk-emacs-bindings.enable = true;
