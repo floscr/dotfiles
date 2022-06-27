@@ -6,15 +6,21 @@ with lib.my;
   user.packages = with pkgs; [
     zoom-us
     nodePackages.mermaid-cli # Mermaid Diagrams CLI, mmdc
-    epiphany
   ];
 
   modules = {
     dev = {
       clojure.enable = true;
     };
-    apps = {
+    desktop.apps = {
       zoom.enable = true;
     };
   };
+
+  modules.bindings.items = [
+    {
+      description = "Epiphany (Webkit)";
+      command = "${pkgs.epiphany}/bin/epiphany";
+    }
+  ];
 }
