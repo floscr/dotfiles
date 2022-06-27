@@ -8,6 +8,7 @@ with lib.my;
     ./sound.nix
     # ./throttled.nix
     ../personal.nix
+    ../pitch.nix
     # ./bindings.nix
   ];
 
@@ -151,7 +152,6 @@ with lib.my;
       opensnitch.enable = false;
       kdeconnect.enable = true;
     };
-    work.pitch.enable = true;
     theme.active = "opera";
   };
 
