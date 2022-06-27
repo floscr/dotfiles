@@ -13,5 +13,8 @@ with lib.my;
     dev = {
       clojure.enable = true;
     };
+    apps = {
+      zoom.enable = true;
+    };
   };
 }
