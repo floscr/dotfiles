@@ -61,8 +61,17 @@ in
 
     home = {
       defaultApplications = {
+        "application/octet-stream" = [ "mpv.desktop" ];
+        "audio/flac" = [ "mpv.desktop" ];
+        "audio/mp4" = [ "mpv.desktop" ];
+        "audio/mpeg" = [ "mpv.desktop" ];
         "audio/x-mp3" = [ "mpv.desktop" ];
+        "audio/x-opus+ogg" = [ "mpv.desktop" ];
+        "audio/x-wav" = [ "mpv.desktop" ];
+        "video/mkv" = [ "mpv.desktop" ];
+        "video/mp4" = [ "mpv.desktop" ];
         "video/quicktime" = [ "mpv.desktop" ];
+        "video/webm" = [ "mpv.desktop" ];
       };
       configFile = {
         # bookmarks
