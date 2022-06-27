@@ -54,6 +54,9 @@ with lib.my;
     # keybindings = with builtins; fromJSON (readFile ./keybindings.json);
   };
 
+  environment.shellAliases = {
+    specify = "npx @specifyapp/cli";
+  };
 
   modules.bindings.items = [
     {
