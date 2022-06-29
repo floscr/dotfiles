@@ -19,7 +19,8 @@ with lib.my;
   user.packages = with pkgs; [
     unzip
     s-tui
-    nim-utils.get_url_title
+    custom.nim-utils.get_url_title
+    custom.nim-utils.bose_battery_level
     signal-desktop
     jellyfin-media-player
   ] ++ flake-packages;

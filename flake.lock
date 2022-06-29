@@ -176,11 +176,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1656517307,
-        "narHash": "sha256-yvKoFxXlWyFfLRpWVXUE1jo0CxvyY07TOaKXW4kPxok=",
+        "lastModified": 1656533273,
+        "narHash": "sha256-gFkRfLdmvxvlVEKunGnJnGn7heCiUfjwn/PUqSEUOp0=",
         "owner": "floscr",
         "repo": "nim-utils",
-        "rev": "04764aaf8dc434f4cd665ef852361eb1bc33be78",
+        "rev": "38482611f5791fd0c5acc3fc350f10b7a7e05981",
         "type": "github"
       },
       "original": {

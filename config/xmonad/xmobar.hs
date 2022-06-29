@@ -32,7 +32,9 @@ Config { font = "xft:Iosevka Mono-10:medium"
                 , Run Date "<fn=2><fc=#767B81></fc> </fn> %a %d.%m <fn=1><fc=#767B81>%b</fc></fn>   <fn=2><fc=#767B81></fc></fn>  %H:%M" "date" 10
                 , Run UnsafeStdinReader
                 , Run Weather "ZHHH" ["-t"," <tempC>°C","-L","48","-H","16"] 36000
-                , Run ComX "echo \"\"" [] "" "caffeine" 10
+
+                , Run Com "bose_battery_level" ["04:52:C7:C6:1B:68"] "bose_battery_level" 50
+
                 , Run Battery [
                         "--template" , "<acstatus>"
                         , "--Low"      , "25"
@@ -56,5 +58,5 @@ Config { font = "xft:Iosevka Mono-10:medium"
         ]
         , sepChar = "%"
         , alignSep = "}{"
-        , template = " %UnsafeStdinReader% } { %caffeine%     %multicpu%     %memory%     %disku%     %date%     %battery% "
+        , template = " %UnsafeStdinReader% } { %bose_battery_level%     %multicpu%     %memory%     %disku%     %date%     %battery% "
         }
