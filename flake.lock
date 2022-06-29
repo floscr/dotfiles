@@ -176,14 +176,17 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 0,
-        "narHash": "sha256-xKdYndraA76BWWRSqGDSVc7n0hZQruYkdfVhLR+5Wd4=",
-        "path": "/nix/store/h8aafp7scxfzkvbwjh47m192r9kbj105-source",
-        "type": "path"
+        "lastModified": 1656517307,
+        "narHash": "sha256-yvKoFxXlWyFfLRpWVXUE1jo0CxvyY07TOaKXW4kPxok=",
+        "owner": "floscr",
+        "repo": "nim-utils",
+        "rev": "04764aaf8dc434f4cd665ef852361eb1bc33be78",
+        "type": "github"
       },
       "original": {
-        "id": "nim-utils",
-        "type": "indirect"
+        "owner": "floscr",
+        "repo": "nim-utils",
+        "type": "github"
       }
     },
     "nimble": {

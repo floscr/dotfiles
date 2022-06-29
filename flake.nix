@@ -19,6 +19,7 @@
 
       flake-utils.url = "github:ursi/flake-utils/d939d2e5d73cd3468a05661e4471838b64547e6b";
       org_print_scan.url = "github:floscr/org_print_scan";
+      nim-utils.url = "github:floscr/nim-utils";
       rofi_org_bookmarks.url = "github:floscr/rofi_org_bookmarks";
       rofi_cmder.url = "github:floscr/rofi_cmder";
     };
@@ -57,9 +58,9 @@
               flake-packages = flake-utils.defaultPackages system
                 {
                   inherit
-                  # org_print_scan
-                  rofi_org_bookmarks
-                  rofi_cmder;
+                    # org_print_scan
+                    rofi_org_bookmarks
+                    rofi_cmder;
                 };
             }
           )
