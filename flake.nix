@@ -44,6 +44,21 @@
 
       system = "x86_64-linux";
 
+      mkExtraPkgs = pkgs: import pkgs {
+        inherit system;
+        config.allowUnfree = true;
+        overlays = [
+          (_: super:
+            {
+              nim-utils = {
+                get_url_title = nim-utils.packages.${system}.get_url_title;
+                bose_battery_level = nim-utils.packages.${system}.bose_battery_level;
+              };
+            }
+          )
+        ];
+      };
+
       mkPkgs = pkgs: extraOverlays: import pkgs {
         inherit system;
         config.allowUnfree = true;
@@ -52,9 +67,6 @@
         ] ++ [
           (_: super:
             {
-              nim-utils = {
-                get_url_title = nim-utils.packages.${system}.get_url_title;
-              };
               flake-packages = flake-utils.defaultPackages system
                 {
                   inherit
@@ -69,6 +81,8 @@
       pkgs = mkPkgs nixpkgs [ self.overlay nur.overlay ];
       uPkgs = mkPkgs nixpkgs-unstable [ ];
 
+      myCustomPkgs = mkExtraPkgs nixpkgs;
+
       lib = nixpkgs.lib.extend
         (self: super: { my = import ./lib { inherit pkgs inputs; lib = self; }; });
     in
@@ -77,6 +91,7 @@
 
       overlay =
         final: prev: {
+          custom = myCustomPkgs;
           unstable = uPkgs;
           user = self.packages."${system}";
         };
