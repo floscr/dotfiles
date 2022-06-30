@@ -26,14 +26,14 @@ in
 
       # NoTube
       notube
-      # (makeDesktopItem {
-      #   terminal = false;
-      #   name = "notube";
-      #   desktopName = "notube";
-      #   mimeTypes = ["x-scheme-handler/notube"];
-      #   exec = "${notube}/bin/notube %u";
-      #   type = "Application";
-      # })
+      (makeDesktopItem {
+        terminal = false;
+        name = "notube";
+        desktopName = "notube";
+        mimeTypes = [ "x-scheme-handler/notube" ];
+        exec = "${notube}/bin/notube %u";
+        type = "Application";
+      })
 
       (mpv-with-scripts.override {
         scripts = [

@@ -42,14 +42,14 @@ in
     {
       user.packages = with pkgs; [
         firefoxWrapped
-        # (makeDesktopItem {
-        #   name = "firefox-private";
-        #   desktopName = "Firefox (Private)";
-        #   genericName = "Open a private Firefox window";
-        #   icon = "firefox";
-        #   exec = "${firefoxWrapped}/bin/firefox --private-window";
-        #   categories = ["Network"];
-        # })
+        (makeDesktopItem {
+          name = "firefox-private";
+          desktopName = "Firefox (Private)";
+          genericName = "Open a private Firefox window";
+          icon = "firefox";
+          exec = "${firefoxWrapped}/bin/firefox --private-window";
+          categories = [ "Network" ];
+        })
       ];
 
       home-manager.users.${config.user.name}.programs.firefox = {

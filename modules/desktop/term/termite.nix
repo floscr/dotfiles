@@ -2,7 +2,8 @@
 
 with lib;
 with lib.my;
-let cfg = config.modules.desktop.term.termite;
+let
+  cfg = config.modules.desktop.term.termite;
   inherit (config.modules.theme) fonts;
 in
 {
@@ -17,14 +18,6 @@ in
 
     user.packages = with pkgs; [
       termite
-      # (makeDesktopItem {
-      #   name = "termite";
-      #   desktopName = "Termite";
-      #   genericName = "Default terminal";
-      #   icon = "utilities-terminal";
-      #   exec = "${termite}/bin/termite";
-      #   categories =[ "Development;System;Utility"];
-      # })
     ];
 
     home-manager.users.${config.user.name}.programs.termite = mkMerge [

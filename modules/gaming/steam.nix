@@ -35,15 +35,15 @@ in
 
           HOME="${cfg.libDir}" exec ${unstable.steam-run-native}/bin/steam-run "$@"
         '')
-        # (makeDesktopItem {
-        #   name = "steam";
-        #   desktopName = "Steam";
-        #   icon = "steam";
-        #   exec = "steam";
-        #   terminal = "false";
-        #   mimeTypes = ["x-scheme-handler/steam"];
-        #   categories = ["Network" "FileTransfer" "Game"];
-        # })
+        (pkgs.makeDesktopItem {
+          name = "steam";
+          desktopName = "Steam";
+          icon = "steam";
+          exec = "steam";
+          terminal = false;
+          mimeTypes = [ "x-scheme-handler/steam" ];
+          categories = [ "Network" "FileTransfer" "Game" ];
+        })
       ];
       system.userActivationScripts.setupSteamDir = ''mkdir -p "${cfg.libDir}"'';
 
