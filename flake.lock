@@ -20,6 +20,22 @@
         "type": "github"
       }
     },
+    "emacs-nixpkgs": {
+      "locked": {
+        "lastModified": 1653881112,
+        "narHash": "sha256-Ap9SefEcrOtkiy6+z6N248gqErsPFi+rdxZFRqhS+9s=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "a3e6348d2c68103b0c96e35b3d94c4ea0e6f9e50",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "a3e6348d2c68103b0c96e35b3d94c4ea0e6f9e50",
+        "type": "github"
+      }
+    },
     "emacs-overlay": {
       "locked": {
         "lastModified": 1636622352,

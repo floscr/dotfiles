@@ -16,8 +16,7 @@ in
     user.packages = with pkgs; [
       ## Emacs itself
       binutils # native-comp needs 'as', provided by this
-      emacsPgtkGcc # 28 + pgtk + native-comp
-
+      emacsPkgs.emacsPgtkGcc # 28 + pgtk + native-comp
 
       ## Doom dependencies
       git
@@ -73,7 +72,7 @@ in
 
     services.emacs = {
       enable = true;
-      package = pkgs.emacsPgtkGcc;
+      package = pkgs.emacsPkgs.emacsPgtkGcc;
     };
 
     env = {

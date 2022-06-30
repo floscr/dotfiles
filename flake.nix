@@ -14,6 +14,7 @@
 
       # secrets = { url = "/etc/dotfiles-private"; flake = false; };
 
+      emacs-nixpkgs.url = "github:nixos/nixpkgs/a3e6348d2c68103b0c96e35b3d94c4ea0e6f9e50";
       emacs-overlay.url = "github:nix-community/emacs-overlay/80db8e4e9f25e81662a244a96029f3427fe3d5b9";
       nur.url = "github:nix-community/NUR";
 
@@ -32,6 +33,7 @@
     , nixpkgs-unstable
     , nur
     , org_print_scan
+    , emacs-nixpkgs
     , emacs-overlay
     , rofi_cmder
     , rofi_org_bookmarks
@@ -59,6 +61,14 @@
         ];
       };
 
+      mkEmacsPkgs = pkgs: import pkgs {
+        inherit system;
+        config.allowUnfree = true;
+        overlays = [
+          emacs-overlay.overlay
+        ];
+      };
+
       mkPkgs = pkgs: extraOverlays: import pkgs {
         inherit system;
         config.allowUnfree = true;
@@ -80,7 +90,7 @@
       };
       pkgs = mkPkgs nixpkgs [ self.overlay nur.overlay ];
       uPkgs = mkPkgs nixpkgs-unstable [ ];
-
+      emacsPkgs = mkEmacsPkgs emacs-nixpkgs;
       myCustomPkgs = mkExtraPkgs nixpkgs;
 
       lib = nixpkgs.lib.extend
@@ -91,6 +101,7 @@
 
       overlay =
         final: prev: {
+          emacsPkgs = emacsPkgs;
           custom = myCustomPkgs;
           unstable = uPkgs;
           user = self.packages."${system}";
