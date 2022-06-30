@@ -47,21 +47,6 @@ in
       ];
       system.userActivationScripts.setupSteamDir = ''mkdir -p "${cfg.libDir}"'';
 
-      modules.bindings.items = [
-        {
-          description = "Binding of Isaac";
-          command = "steam steam://rungameid/250900";
-        }
-        {
-          description = "FTL: Faster Than Light";
-          command = "steam steam://rungameid/212680";
-        }
-        {
-          description = "Into The Breach";
-          command = "steam steam://rungameid/590380";
-        }
-      ];
-
       # better for steam proton games
       systemd.extraConfig = "DefaultLimitNOFILE=1048576";
     }
