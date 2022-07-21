@@ -17,6 +17,7 @@ with lib.my;
   };
 
   user.packages = with pkgs; [
+    calibre
     unzip
     s-tui
     custom.nim-utils.get_url_title
