@@ -396,10 +396,9 @@ commandsList :: String
 commandsList = foldl (\acc cur -> acc ++ (fst cur) ++ "\n") "" myCommands
 
 myServerModeEventHook = serverModeEventHookCmd' $ return myCommands'
-myCommands' = ("list-commands", listMyServerCmds) : myCommands ++ sortOn fst (wscs ++ sccs) -- (wscs ++ sccs ++ spcs)
+myCommands' = ("list-commands", listMyServerCmds) : myCommands ++ sortOn fst (wscs ++ sccs)
  where
   wscs = [ ((m ++ s), windows $ f s) | s <- myWorkspaces, (f, m) <- [(W.view, "focus-workspace-"), (W.shift, "send-to-workspace-")] ]
-
   sccs =
     [ ((m ++ show sc), screenWorkspace (fromIntegral sc) >>= flip whenJust (windows . f))
     | sc     <- [0 .. myMaxScreenCount]
