@@ -259,6 +259,7 @@ in
 
           ytdl=yes
           ytdl-format=bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best
+          ytdl-raw-options=yes-playlist=
 
           # protocol config
           [protocol.http]
