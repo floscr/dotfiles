@@ -34,24 +34,24 @@ in
     };
     services.xserver.inputClassSections = [
       ''
-          Identifier "Apple Magic Trackpad"
-          Driver "synaptics"
-          # Match only the Apple Magic Trackpad
-          MatchUSBID "05ac:030e"
-          MatchIsTouchpad "on"
-          # Set resolution tweaks for better response
-          Option "VertResolution" "75"
-          Option "HorizResolution" "75"
-          # Set a timeout for multi finger click so accidental double-clicks don't
-          # happen when right clicking and other gestures
-          Option "EmulateMidButtonTime" "100"
-          # Increase sensitivity
-          Option "MinSpeed" "3.00"
-          Option "MaxSpeed" "10.00"
-          Option "AccelFactor" "0.2"
-          # Scrolling
-          Option "VertScrollDelta" "-100"
-          Option "HorizScrollDelta" "-100"
+        Identifier "Apple Magic Trackpad"
+        Driver "synaptics"
+        # Match only the Apple Magic Trackpad
+        MatchUSBID "05ac:030e"
+        MatchIsTouchpad "on"
+        # Set resolution tweaks for better response
+        Option "VertResolution" "75"
+        Option "HorizResolution" "75"
+        # Set a timeout for multi finger click so accidental double-clicks don't
+        # happen when right clicking and other gestures
+        Option "EmulateMidButtonTime" "100"
+        # Increase sensitivity
+        Option "MinSpeed" "3.00"
+        Option "MaxSpeed" "10.00"
+        Option "AccelFactor" "0.2"
+        # Scrolling
+        Option "VertScrollDelta" "-100"
+        Option "HorizScrollDelta" "-100"
         Option          "Pressure Calibration Offset" "30"
         Option          "MaxTapTime" "300"
         Option          "Palm Pressure" "250.0"
