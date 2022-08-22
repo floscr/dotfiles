@@ -24,6 +24,7 @@ with lib.my;
     custom.nim-utils.bose_battery_level
     signal-desktop
     jellyfin-media-player
+    lsof
   ] ++ flake-packages;
 
   hardware.usb.wakeupDisabled = [
