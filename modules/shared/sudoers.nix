@@ -15,6 +15,7 @@ in
       commands = [
         { options = [ "NOPASSWD" ]; command = "${pkgs.linuxPackages.cpupower}/bin/cpupower frequency-set -g performance"; }
         { options = [ "NOPASSWD" ]; command = "${pkgs.linuxPackages.cpupower}/bin/cpupower frequency-set -g powersave"; }
+        { options = [ "NOPASSWD" ]; command = "/run/current-system/sw/bin/reboot now"; }
       ];
     }];
   };
