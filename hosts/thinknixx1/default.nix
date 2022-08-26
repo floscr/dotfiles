@@ -41,6 +41,7 @@ with lib.my;
     bindings.enable = true;
     shell = {
       bat.enable = true;
+      sysz.enable = true;
       direnv.enable = true;
       git.enable = true;
       git.difftastic.enable = true;
