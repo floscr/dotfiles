@@ -461,15 +461,15 @@ getActiveLayoutDescription = do
 oxyDarkTheme :: Theme
 oxyDarkTheme = def { inactiveBorderColor = "#777"
                             -- , activeBorderColor = myFocusedBorderColor
-                            , activeColor         = "#000"
-                            , inactiveColor       = "#444"
-                            , inactiveTextColor   = "aquamarine4"
-                            , activeTextColor     = "aquamarine1"
-                            , fontName            = "xft:Dejavu Sans Mono-8"
-                            , decoHeight          = 15
-                            , urgentColor         = "#000"
-                            , urgentTextColor     = "#63b8ff"
-                            }
+                   , activeColor         = "#000"
+                   , inactiveColor       = "#444"
+                   , inactiveTextColor   = "aquamarine4"
+                   , activeTextColor     = "aquamarine1"
+                   , fontName            = "xft:Dejavu Sans Mono-8"
+                   , decoHeight          = 15
+                   , urgentColor         = "#000"
+                   , urgentTextColor     = "#63b8ff"
+                   }
 
 myLayoutHook =
   smartBorders
