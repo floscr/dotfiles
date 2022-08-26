@@ -508,8 +508,10 @@ isOverlayWindow = do
   isNotification      <- isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_NOTIFICATION"
   floatingVideoWindow <- className =? "zoom" <&&> title =? "zoom_linux_float_video_window"
   sharingToolbar      <- className =? "zoom" <&&> title =? "as_toolbar"
+  zoomPopup           <- className =? "zoom" <&&> isInProperty "_NET_WM_WINDOW_OPACITY(CARDINAL)" "1073741824"
+  zoomPopup2          <- className =? "zoom" <&&> isInProperty "_NET_WM_STATE(ATOM)" "_NET_WM_STATE_STAYS_ON_TOP"
   sharingWindowFrame  <- title =? "cpt_frame_window"
-  return $ isNotification || floatingVideoWindow || sharingToolbar || sharingWindowFrame
+  return $ isNotification || floatingVideoWindow || sharingToolbar || sharingWindowFrame || zoomPopup || zoomPopup2
 
 allWindowsByType :: Query Bool -> X [Window]
 allWindowsByType query = withDisplay $ \display -> do
@@ -557,7 +559,6 @@ manageWindowsHook = composeAll
   , ("Gimp" `isPrefixOf`) <$> className <&&> title =? "gimp-action-search-dialog" --> floating
   , ("Gimp" `isPrefixOf`) <$> className --> doFloatToMouseCenter
   , role =? "gimp-image-window" --> doShift "5"
-
   , ("steam_app_" `isPrefixOf`) <$> className --> floating
   -- , className =? "Emacs" --> insertPosition Master Newer
   , className =? "Emacs" <&&> title =? "doom-capture" --> doFloat
@@ -565,7 +566,7 @@ manageWindowsHook = composeAll
   , className =? "Dragon" --> doFloatToMouse (0.05, 0.05)
   ]
  where
-  role = stringProperty "WM_WINDOW_ROLE"
+  role                 = stringProperty "WM_WINDOW_ROLE"
   doFloatToMouse       = \pos -> placeHook (inBounds (underMouse pos)) <+> doFloat
   doFloatToMouseCenter = doFloatToMouse (0.5, 0.5)
   floating             = customFloating $ W.RationalRect (1 / 4) (1 / 4) (2 / 4) (2 / 4)
