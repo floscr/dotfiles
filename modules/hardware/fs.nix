@@ -27,15 +27,13 @@ in
     }
 
     (mkIf (cfg.autoMount.enable) {
-      user.packages = [ pkgs.udiskie ];
-      services.xserver.displayManager.sessionCommands =
-        let
-          udiskie = "${pkgs.udiskie}/bin/udiskie";
-        in
-        ''
-          echo "Starting udiskie..."
-          ${udiskie} --tray &
-        '';
+      user.packages = [ pkgs.unstable.udiskie ];
+      services.udisks2.enable = true;
+
+      home-manager.users.${config.user.name}.services.udiskie = {
+        enable = true;
+        automount = true;
+      };
     })
 
     (mkIf (!cfg.zfs.enable && cfg.ssd.enable) {
