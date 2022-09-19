@@ -25,6 +25,7 @@ with lib.my;
     signal-desktop
     jellyfin-media-player
     lsof
+    gparted
   ] ++ flake-packages;
 
   hardware.usb.wakeupDisabled = [
