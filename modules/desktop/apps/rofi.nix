@@ -71,5 +71,18 @@ in
           }
         ];
       }
+      (mkIf (config.modules.shell.pass.enable == true) {
+        user.packages = with pkgs; [
+          rofi-pass
+        ];
+
+        modules.bindings.items = [
+          {
+            binding = "super + apostrophe";
+            command = "rofi-pass -dmenu -theme theme/passmenu.rasi";
+            description = "Password Manager";
+          }
+        ];
+      })
     ]);
 }
