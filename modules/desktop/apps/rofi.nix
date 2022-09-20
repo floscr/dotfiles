@@ -76,6 +76,14 @@ in
           rofi-pass
         ];
 
+        home.configFile =
+          {
+            "rofi-pass/config".text = ''
+              # Fix rofi error https://github.com/carnager/rofi-pass/issues/226
+              help_color="#4872FF"
+            '';
+          };
+
         modules.bindings.items = [
           {
             binding = "super + apostrophe";
