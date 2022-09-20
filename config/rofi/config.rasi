@@ -126,7 +126,6 @@ textbox-icon {
   font: @icon-font;
 }
 entry {
-  font: @text-font-mono;
   text-color: @fg;
 }
 
