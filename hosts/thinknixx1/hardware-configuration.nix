@@ -7,6 +7,9 @@
     # inputs.nixos-hardware.nixosModules.common-pc-laptop-acpi_call
   ];
 
+  # This solves lagging noticeable on high-resolution screens.
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
   boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ "dm-snapshot" ];
   boot.kernelModules = [ "kvm-intel" ];
