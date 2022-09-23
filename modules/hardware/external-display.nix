@@ -19,6 +19,18 @@ in
       '';
     };
 
+    security.sudo.extraRules = [
+      {
+        users = [ config.user.name ];
+        commands = [
+          {
+            command = "${pkgs.ddcutil}/bin/ddcutil";
+            options = [ "NOPASSWD" ];
+          }
+        ];
+      }
+    ];
+
     modules.bindings.items = [
       {
         description = "Toggle Monitor Brightness";
