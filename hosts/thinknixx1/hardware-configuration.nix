@@ -3,7 +3,7 @@
 {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
-    # inputs.nixos-hardware.nixosModules.common-cpu-intel
+    # inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-9th-gen
     # inputs.nixos-hardware.nixosModules.common-pc-laptop-acpi_call
   ];
 
@@ -39,7 +39,7 @@
   # CPU
   nix.settings.max-jobs = lib.mkDefault 4;
   powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.cpu.intel.updateMicrocode = config.hardware.enableRedistributableFirmware;
 
   # Harddrives
   boot.initrd.luks.devices = {
