@@ -152,6 +152,18 @@ with lib.my;
       picom.enable = true;
       opensnitch.enable = false;
       kdeconnect.enable = true;
+      photoprism = {
+        enable = false;
+        instances = {
+          persons = {
+            port = 2343;
+            vhost = "photos.phire.org";
+            storageDir = "/var/lib/photoprism-personal";
+            originalsDir = "/mnt/storage/personal/originals";
+            importDir = "/mnt/storage/personal/import";
+          };
+        };
+      };
     };
     theme.active = "opera";
   };
