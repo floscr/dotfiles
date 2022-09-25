@@ -41,14 +41,7 @@
   powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
   hardware.cpu.intel.updateMicrocode = config.hardware.enableRedistributableFirmware;
 
-  # Harddrives
-  boot.initrd.luks.devices = {
-    root = {
-      device = "/dev/nvme0n1p2";
-      preLVM = true;
-    };
-  };
-
+  # Graphics
   hardware.opengl = {
     enable = true;
     driSupport = true;
@@ -64,6 +57,14 @@
       amdvlk
       vulkan-loader
     ];
+  };
+
+  # Harddrives
+  boot.initrd.luks.devices = {
+    root = {
+      device = "/dev/nvme0n1p2";
+      preLVM = true;
+    };
   };
 
   fileSystems."/" = {
