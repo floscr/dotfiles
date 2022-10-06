@@ -85,6 +85,7 @@ with lib.my;
       nim.enable = true;
       docker.enable = true;
       nix.enable = true;
+      clojure.enable = true;
     };
     desktop = {
       xmonad.enable = true;
