@@ -9,8 +9,12 @@
 
   # This solves lagging noticeable on high-resolution screens.
   boot.kernelPackages = pkgs.linuxPackages_latest;
+  environment.variables = {
+    VDPAU_DRIVER = lib.mkIf config.hardware.opengl.enable (lib.mkDefault "va_gl");
+  };
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
+
+  boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" "i915" ];
   boot.initrd.kernelModules = [ "dm-snapshot" ];
   boot.kernelModules = [ "kvm-intel" ];
 
@@ -48,14 +52,17 @@
     driSupport32Bit = true;
     setLdLibraryPath = true;
     extraPackages = with pkgs; [
-      intel-media-driver
       vaapiIntel
-      vaapiVdpau
       libvdpau-va-gl
+      intel-media-driver
+      # intel-media-driver
+      # vaapiIntel
+      # vaapiVdpau
+      # libvdpau-va-gl
 
-      # Vulkan
-      amdvlk
-      vulkan-loader
+      # # Vulkan
+      # amdvlk
+      # vulkan-loader
     ];
   };
 
