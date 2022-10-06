@@ -13,6 +13,8 @@
     VDPAU_DRIVER = lib.mkIf config.hardware.opengl.enable (lib.mkDefault "va_gl");
   };
 
+  # Allow usb controllers via HDMI
+  services.udev.extraRules = ''KERNEL=="hidraw*", ATTRS{idVendor}=="20d6", ATTRS{idProduct}=="a711", MODE="0660", TAG+="uaccess"'';
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" "i915" ];
   boot.initrd.kernelModules = [ "dm-snapshot" ];
