@@ -26,6 +26,7 @@ with lib.my;
     jellyfin-media-player
     lsof
     gparted
+    xournal
   ] ++ flake-packages;
 
   hardware.usb.wakeupDisabled = [
