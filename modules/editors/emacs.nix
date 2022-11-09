@@ -7,6 +7,7 @@ in
 {
   options.modules.editors.emacs = {
     enable = mkBoolOpt false;
+    enableServer = mkBoolOpt false;
     enableMail = mkBoolOpt false;
   };
 
@@ -16,7 +17,8 @@ in
     user.packages = with pkgs; [
       ## Emacs itself
       binutils # native-comp needs 'as', provided by this
-      emacsPkgs.emacsPgtkGcc # 28 + pgtk + native-comp
+      ((emacsPackagesFor emacsNativeComp).emacsWithPackages
+        (epkgs: [ epkgs.vterm ]))
 
       ## Doom dependencies
       git
@@ -71,8 +73,8 @@ in
     ];
 
     services.emacs = {
-      enable = true;
-      package = pkgs.emacsPkgs.emacsPgtkGcc;
+      enable = cfg.enableServer;
+      package = pkgs.emacsPkgs.emacsNativeComp;
     };
 
     env = {
