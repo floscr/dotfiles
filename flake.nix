@@ -15,7 +15,7 @@
       # secrets = { url = "/etc/dotfiles-private"; flake = false; };
 
       emacs-nixpkgs.url = "github:nixos/nixpkgs/a3e6348d2c68103b0c96e35b3d94c4ea0e6f9e50";
-      emacs-overlay.url = "github:nix-community/emacs-overlay/80db8e4e9f25e81662a244a96029f3427fe3d5b9";
+      emacs-overlay.url = "github:nix-community/emacs-overlay/b50178f76a7868d0aca28278451141269df137fe";
       nur.url = "github:nix-community/NUR";
 
       flake-utils.url = "github:ursi/flake-utils/d939d2e5d73cd3468a05661e4471838b64547e6b";
