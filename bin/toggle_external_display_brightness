@@ -7,8 +7,8 @@ echo "Current Brightness $MONITOR_BRIGHTNESS"
 
 if [[ $MONITOR_BRIGHTNESS -lt 80 ]]; then
     echo "Setting to Full Brightness"
-    sudo ddcutil setvcp 10 85
+    sudo ddcutil setvcp 10 55
 else
     echo "Setting to Low Brightness"
-    sudo ddcutil setvcp 10 30
+    sudo ddcutil setvcp 10 25
 fi
