@@ -23,7 +23,7 @@ import           XMonad.Actions.GroupNavigation      (Direction (Backward, Forwa
                                                       historyHook, nextMatch)
 import           XMonad.Actions.Navigation2D
 import           XMonad.Actions.TagWindows           (addTag, delTag, hasTag)
-
+import           XMonad.Actions.WithAll              (killAll, sinkAll)
 
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.DynamicProperty        (dynamicPropertyChange)
@@ -336,6 +336,8 @@ myKeyboardBindings =
   , ("M-<Return>", spawn (myTerminal ++ " --working-directory \"`xcwd`\""))
   , ("M-S-c", bindFirst [(className =? "Brave-browser", sendKey (controlMask .|. shiftMask) xK_l), (pure True, spawn "org-capture-frame")])
   , ("M1-S-,", bindFirst [(className =? "Brave-browser", startAtomicChrome), (pure True, sendKey (myAltMask .|. shiftMask) xK_comma)])
+  , ("M-w"         , kill)
+  , ("M-S-w"       , killAll)
   , ("M-S-w x"     , withFocused xKill)
   , ("M-S-f"       , toggleFloat)
   , ("M-f"         , toggleFull)
