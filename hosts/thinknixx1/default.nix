@@ -13,7 +13,7 @@ with lib.my;
   ];
 
   home.file = {
-    ".config/espanso/user/email.yml".source = config.age.secrets.espanso-private-emails.path;
+    # ".config/espanso/user/email.yml".source = config.age.secrets.espanso-private-emails.path;
   };
 
   user.packages = with pkgs; [
@@ -27,6 +27,7 @@ with lib.my;
     lsof
     gparted
     xournal
+    zip
   ] ++ flake-packages;
 
   hardware.usb.wakeupDisabled = [
@@ -140,6 +141,7 @@ with lib.my;
       vim.enable = true;
     };
     services = {
+      wireguard.enable = true;
       secure-mode-scripts.enable = true;
       android.enable = true;
       espanso.enable = true;
