@@ -72,7 +72,7 @@ with lib.my;
       bluetooth.enable = true;
       keyboard.enable = true;
       external-display.enable = true;
-      scanner.enable = true;
+      scanner.enable = false;
       battery.enable = true;
       fs = {
         enable = true;
