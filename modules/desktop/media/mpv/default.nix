@@ -8,7 +8,7 @@ let
   mpv-gallery-thumb-dir = "/tmp/mpv_gallery_cache";
   notube = pkgs.writeScriptBin "notube" ''
     #!${pkgs.stdenv.shell}
-    ${pkgs.mpv-with-scripts}/bin/mpv "$(echo "$@" | sed "s/notube://")"
+    ${pkgs.mpv}/bin/mpv "$(echo "$@" | sed "s/notube://")"
   '';
 in
 {
@@ -35,7 +35,7 @@ in
         type = "Application";
       })
 
-      (mpv-with-scripts.override {
+      (mpv.override {
         scripts = [
           pkgs.mpvScripts.mpris # playerctl support
           (fetchurl {

@@ -22,7 +22,7 @@ with lib.my;
     s-tui
     custom.nim-utils.get_url_title
     custom.nim-utils.bose_battery_level
-    signal-desktop
+    unstable.signal-desktop
     jellyfin-media-player
     lsof
     gparted

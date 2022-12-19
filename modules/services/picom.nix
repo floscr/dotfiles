@@ -16,7 +16,6 @@ in
 
       backend = "glx";
       vSync = true;
-      experimentalBackends = true;
 
       shadowExclude = [
         "name = 'bounding_shaped'"
