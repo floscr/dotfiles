@@ -33,6 +33,7 @@ in
     environment.systemPackages = with pkgs; [
       xorg.xkbcomp
       xorg.xmodmap
+      xcape
     ];
 
     services.xserver = {
@@ -59,11 +60,10 @@ in
       path = with pkgs; [
         killall
         xcape
+        xdotool
         xorg.xkbcomp
         xorg.xmodmap
         xorg.xset
-        xdotool
-        xcape
       ];
       serviceConfig = {
         Type = "oneshot";
