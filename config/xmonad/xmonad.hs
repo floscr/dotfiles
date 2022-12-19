@@ -117,8 +117,8 @@ xKill w = withDisplay $ \d -> do
   protocols <- io $ getWMProtocols d w
   io $ if wmdelt `elem` protocols then killClient d w >> return () else killClient d w >> return ()
 
-willFloat :: Query Bool
-willFloat = ask >>= \w -> liftX $ withDisplay $ \d -> do
+myWillFloat :: Query Bool
+myWillFloat = ask >>= \w -> liftX $ withDisplay $ \d -> do
   sh <- io $ getWMNormalHints d w
   let isFixedSize = isJust (sh_min_size sh) && sh_min_size sh == sh_max_size sh
   isTransient <- isJust <$> io (getTransientForHint d w)
@@ -499,7 +499,7 @@ myManageHook :: ManageHook
 myManageHook = composeAll
   [ manageWindowsHook
     -- open windows at the end if they are not floating
-  , fmap not willFloat --> insertPosition Below Newer
+  , fmap not myWillFloat --> insertPosition Below Newer
   , manageDocks
   , namedScratchpadManageHook myScratchpads
   , myScratchpadHook
