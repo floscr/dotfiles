@@ -81,6 +81,10 @@ in
           # Capslock to control
           xcape -e 'Control_L=Escape'
 
+          # Single press super key to Super+p (rofi_cmder)
+          # Not using space for this one as it inserts a single space for some reason
+          xcape -e 'Super_L=Super_L|p'
+
           # Make space Control L whenn pressed.
           spare_modifier="Hyper_L"
           xmodmap -e "keycode 65 = $spare_modifier"

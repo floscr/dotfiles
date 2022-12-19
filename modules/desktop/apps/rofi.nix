@@ -36,6 +36,12 @@ in
             description = "Rofi Main Menu";
           }
           {
+            binding = "super + p";
+            xmonadBinding = "M-p";
+            command = "rofi_cmder";
+            description = "Rofi Main Menu";
+          }
+          {
             binding = "super + shift + Tab";
             xmonadBinding = "M-S-<Tab>";
             command = "${binDir}/rofi/app_switch";
