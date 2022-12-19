@@ -17,6 +17,7 @@ in
       unstable.clojure-lsp
       joker
       leiningen
+      zprint
     ];
     home.configFile."clojure/deps.edn".text = ''
       {
