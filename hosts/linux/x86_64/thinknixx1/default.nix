@@ -11,22 +11,12 @@
 
   boot = {
     loader = {
-      # Allow the NixOS installation to modify EFI boot variables.
       efi.canTouchEfiVariables = true;
-
-      # Choose the default generation faster.
       timeout = 1;
-
-      # Simplistic EFI boot loader.
-      # Or, how I learned to give up and accept systemd.
       systemd-boot = {
-        enable = true;
-
-        # Only show the last 10 generations that haven't been GCd.
         configurationLimit = 10;
-
-        # Fix a security hole in place for the sake of backwards compatibility.
-        editor = false;
+        enable = true;
+        editor = false; # Fix a security hole in place for the sake of backwards compatibility.
       };
     };
 
