@@ -27,6 +27,10 @@
           { dir = "Profile 2"; alias = "Personal"; }
         ];
       };
+      graphics = {
+        gimp.enable = true;
+        # inkscape.enable = true;
+      };
     };
   };
 
