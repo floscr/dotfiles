@@ -23,6 +23,7 @@ with lib; {
       configFile = mkOpt' attrs { } "Files to place in $XDG_CONFIG_HOME";
       dataFile = mkOpt' attrs { } "Files to place in $XDG_DATA_HOME";
       defaultApplications = mkOpt' attrs { } "XDG/MIME default applications";
+      desktopEntries = mkOpt' attrs { } "XDG/MIME desktop entries";
       services = mkOpt' attrs { } "Home-manager provided user services";
       programs = mkOpt' attrs { } "Home-manager provided programs";
       activation = mkOpt' attrs { } "Home-manager provided activation";
@@ -32,12 +33,11 @@ with lib; {
 
     env = mkOption {
       type = attrsOf (oneOf [ str path (listOf (either str path)) ]);
-      apply = mapAttrs (n: v:
-        # Handle an array of items separated by `:` e.g. PATH.
-        if isList v then
-          concatMapStringsSep ":" (x: toString x) v
-        else
-          (toString v));
+      apply = mapAttrs
+        (n: v:
+          if isList v
+          then concatMapStringsSep ":" (x: toString x) v
+          else (toString v));
       default = { };
       description = "Global environment variables";
     };
