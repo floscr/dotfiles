@@ -9,6 +9,7 @@
       enable = true;
       wm = "xmonad";
       dpi = 119;
+      xmonad.enable = true;
     };
   };
 
