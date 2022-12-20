@@ -60,21 +60,6 @@ with lib;
       # TODO unstable.nix-output-monitor
     ];
     variables = {
-      # Force XDG defaults as soon as possible.
-      XDG_CONFIG_HOME = "$HOME/.config";
-      XDG_CACHE_HOME = "$HOME/.cache";
-      XDG_DATA_HOME = "$HOME/.local/share";
-      XDG_BIN_HOME = "$HOME/.local/bin";
-      XDG_DESKTOP_DIR = "$HOME"; # prevent creation of ~/Desktop
-      XDG_RUNTIME_DIR =
-        if config.targetSystem.isLinux then
-          "/run/user/$UID"
-        else
-          "$XDG_DATA_HOME";
-
-      # Set up Cachix for personal binary caching.
-      CACHIX_AUTH_TOKEN = config.secrets.cachix_auth_token;
-
       # Location, timezone and internationalisation.
       TZ = "Europe/Vienna";
       LC_ALL = "en_US.UTF-8";

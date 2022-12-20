@@ -48,9 +48,6 @@ in
 
             # Try very hard to have things favour XDG convention.
             PATH = [ "$XDG_BIN_HOME" ];
-            HISTFILE = "$XDG_DATA_HOME/zsh/history";
-            INPUTRC = "$XDG_CONFIG_HOME/readline/inputrc";
-            LESSHISTFILE = "$XDG_CACHE_HOME/lesshst";
             WGETRC = "$XDG_CONFIG_HOME/wgetrc";
           };
 
