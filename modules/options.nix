@@ -33,11 +33,12 @@ with lib; {
 
     env = mkOption {
       type = attrsOf (oneOf [ str path (listOf (either str path)) ]);
-      apply = mapAttrs
-        (n: v:
-          if isList v
-          then concatMapStringsSep ":" (x: toString x) v
-          else (toString v));
+      apply = mapAttrs (n: v:
+        # Handle an array of items separated by `:` e.g. PATH.
+        if isList v then
+          concatMapStringsSep ":" (x: toString x) v
+        else
+          (toString v));
       default = { };
       description = "Global environment variables";
     };
@@ -81,7 +82,7 @@ with lib; {
     user =
       let
         user = builtins.getEnv "USER";
-        name = if elem user [ "" "root" ] then "mbaillie" else user;
+        name = if elem user [ "" "root" ] then "floscr" else user;
       in
       {
         inherit name;
