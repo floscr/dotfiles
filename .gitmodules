@@ -1,0 +1,4 @@
+[submodule ".private"]
+	path = .private
+	url = git@github.com:martinbaillie/dotfiles-private.git
+	branch = master

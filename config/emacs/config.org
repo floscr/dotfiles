@@ -1,0 +1,2088 @@
+#+title: Literate Emacs Configuration
+#+author: Martin Baillie
+#+email: martin@baillie.id
+#+language: en
+#+property: header-args :tangle yes :cache yes :results silent :padline no
+
+[[file:unicorn.jpg]]
+
+* Table of Contents :TOC_2_gh:
+- [[#personal][Personal]]
+- [[#private][Private]]
+- [[#packages][Packages]]
+  - [[#upstream][Upstream]]
+  - [[#mine][Mine]]
+- [[#uigeneral][UI/General]]
+- [[#uimacos][UI/macOS]]
+- [[#uilinux][UI/Linux]]
+- [[#keysgeneral][Keys/General]]
+- [[#keyslinux][Keys/Linux]]
+- [[#keysmacos][Keys/macOS]]
+- [[#package-customisation][Package Customisation]]
+  - [[#org][org]]
+  - [[#org-roam][org-roam]]
+  - [[#org-gcal][org-gcal]]
+  - [[#ediff][ediff]]
+  - [[#pomm][pomm]]
+  - [[#evil][evil]]
+  - [[#flyspell][flyspell]]
+  - [[#projectile][projectile]]
+  - [[#direnv][direnv]]
+  - [[#hl-todo][hl-todo]]
+  - [[#format-all][format-all]]
+  - [[#company][company]]
+  - [[#go][go]]
+  - [[#python][python]]
+  - [[#flycheck][flycheck]]
+  - [[#nyanmode][nyanmode]]
+  - [[#dired][dired]]
+  - [[#avy][avy]]
+  - [[#magit][magit]]
+  - [[#yaml][yaml]]
+  - [[#bazel][bazel]]
+  - [[#terraform][terraform]]
+  - [[#ox-clip][ox-clip]]
+  - [[#pinentry][pinentry]]
+  - [[#treemacs][treemacs]]
+  - [[#easy-motion][easy-motion]]
+  - [[#snippets][snippets]]
+  - [[#move-text][move-text]]
+  - [[#buffer-move][buffer-move]]
+  - [[#buffer-expose][buffer-expose]]
+  - [[#golden-ratio][golden-ratio]]
+  - [[#rainbow-mode][rainbow-mode]]
+  - [[#web-mode][web-mode]]
+  - [[#keycast-mode][keycast-mode]]
+  - [[#undo-tree][undo-tree]]
+  - [[#proced][proced]]
+  - [[#nix][nix]]
+  - [[#vterm][vterm]]
+  - [[#exwm][EXWM]]
+  - [[#temp-wips][TEMP WIPs]]
+
+* Personal
+#+begin_src elisp
+(setq user-full-name "Martin Baillie"
+      user-mail-address "martin@baillie.id"
+      auth-sources '((:source "/etc/dotfiles/.private/authinfo.gpg")))
+#+end_src
+* Private
+Private settings for current system.
+#+begin_src elisp
+(let ((+private (concat "/etc/dotfiles/.private/+" (system-name) ".el")))
+      (when (file-exists-p +private)
+        (load! +private)))
+#+end_src
+* Packages
+** Upstream
+#+begin_src elisp :tangle packages.el
+;; (package! dap-mode)
+(package! nyan-mode)
+(package! org-fancy-priorities)
+(package! magit-org-todos)
+(package! edit-indirect)
+(package! vimrc-mode)
+(package! pinentry)
+(package! move-text)
+(package! buffer-move)
+(package! buffer-expose)
+(package! nixpkgs-fmt)
+(package! exec-path-from-shell)
+(package! keycast)
+(package! rego-mode)
+(package! protobuf-mode)
+(package! graphql-mode)
+(package! git-link)
+(package! proced-narrow)
+(package! transpose-frame)
+(package! golden-ratio)
+(package! pomm)
+(package! emacs-everywhere)
+(package! magit-lfs)
+(package! bazel-mode
+  :recipe (:type git :host github :repo "bazelbuild/emacs-bazel-mode"))
+
+;; Let roam-ui manage org-roam
+(unpin! org-roam)
+(package! org-roam-ui)
+
+;; Trialing the Modus themes in stock Emacs
+(package! modus-themes)
+
+;; EXWM related.
+;; (package! exwm-firefox-evil)
+;; (package! exwm-firefox-core)
+(when IS-LINUX
+  (package! exwm-edit)
+  (package! desktop-environment)
+  (package! app-launcher
+    :recipe (:type git :host github :repo "SebastienWae/app-launcher")))
+#+end_src
+
+** Mine
+Various forks and packages of my own.
+#+begin_src elisp :tangle packages.el
+(package! evil-motion-trainer :recipe
+  (:host github :repo "martinbaillie/evil-motion-trainer"))
+(package! evil-easymotion :pin "e6051245c06354ccd4a57e054cdff80a34f18376" :recipe
+  (:host github :repo "martinbaillie/evil-easymotion"))
+#+end_src
+
+* UI/General
+*** Frame titles and toolbar
+#+begin_src elisp
+;; Set a standard title.
+(setq frame-title-format '("%b — Emacs")
+      doom-fallback-buffer-name "*new buffer*"
+      +doom-dashboard-name "Emacs")
+
+;; Hide the toolbar.
+(tool-bar-mode 0)
+#+end_src
+
+*** Welcome screen
+#+begin_src elisp
+(setq +doom-dashboard-banner-file
+      (expand-file-name "logo.png" doom-private-dir))
+(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
+#+end_src
+
+*** Font
+#+begin_src elisp
+(when IS-MAC
+  (setq
+   ;; TODO: Export
+   doom-font                     (font-spec :family "Iosevka" :size 14.5 :weight 'medium)
+   doom-big-font                 (font-spec :family "Iosevka Term" :size 20)
+   doom-variable-pitch-font      (font-spec :family "Iosevka Aile" :size 15)
+   doom-serif-font               (font-spec :family "Iosevka Etoile" :size 15)))
+(setq +zen-text-scale 0.8)
+(setq doom-font-increment 0.8)
+#+end_src
+
+*** Display line numbers relative to cursor
+This is useful for command combinations e.g. 10j
+#+begin_src elisp
+(setq display-line-numbers-type 'visual)
+#+end_src
+
+*** Don't truncate lines
+#+begin_src elisp
+(set-default 'truncate-lines nil)
+#+end_src
+
+*** Increase time taken to pop which-key
+The default is too fast and distracting.
+#+begin_src elisp
+(setq-default which-key-idle-delay   1.0)
+#+end_src
+
+*** Scrolloff
+Start scrolling X lines before the end of a screen.
+#+begin_src elisp
+(setq
+ scroll-conservatively 10
+ scroll-margin 10)
+#+end_src
+
+Disable for terminal buffers since there can be issues completion/interactive shell scripts.
+#+begin_src elisp
+(add-hook 'term-mode-hook (λ! (setq-local scroll-margin 0)))
+(add-hook 'vterm-mode-hook (λ! (setq-local scroll-margin 0)))
+(add-hook 'ivy-mode-hook (λ! (setq-local scroll-margin 0)))
+#+end_src
+
+*** Remove scrollbars
+#+begin_src elisp
+(scroll-bar-mode -1)
+#+end_src
+
+*** Remove whitespace at end of lines on save
+#+begin_src elisp
+(defun mb/delete-trailing-whitespace ()
+  "Deletes trailing whitespace in writable buffers"
+  (interactive)
+  (if (not buffer-read-only) (delete-trailing-whitespace)))
+(add-hook 'before-save-hook 'mb/delete-trailing-whitespace)
+#+end_src
+
+*** Themes
+Load current theme.
+#+begin_src elisp
+(load! "+theme")
+#+end_src
+
+Configure Emacs Modus themes if using.
+#+begin_src elisp
+(use-package! modus-themes
+  :init
+  (setq modus-themes-completions
+      '((selection . (intense))
+        (matches . (background intense)))
+        modus-themes-variable-pitch-headings t
+        modus-themes-scale-headings t
+        modus-themes-bold-constructs t
+        modus-themes-italic-constructs t
+        modus-themes-org-blocks 'gray-background
+        modus-themes-region '(accented bg-only no-extend))
+
+  ;; I like the main modus-operandi colours in my git gutters.
+  (custom-theme-set-faces! 'modus-operandi
+    '(git-gutter-fr:deleted :background nil :foreground "#a60000" )
+    '(git-gutter-fr:modified :background nil :foreground "#0031a9" )
+    '(git-gutter-fr:added :background nil :foreground "#005e00"))
+
+  (modus-themes-load-themes))
+#+end_src
+
+*** Formatting
+#+begin_src elisp
+(setq
+ +format-on-save-enabled-modes '(not elisp-mode sql-mode tex-mode markdown-mode gfm-mode html-mode mhtml-mode))
+#+end_src
+
+*** Brighter region highlights for my dark themes
+#+begin_src elisp
+;; (if (eq doom-theme 'doom-dracula)
+;;     (custom-set-faces
+;;      '(region ((t (:background "#bd93f9" :foreground "black"))))
+;;      )
+;;   )
+(if (eq doom-theme 'doom-one)
+    (custom-set-faces
+     '(region ((t (:background "#51afef" :foreground "black"))))))
+
+
+#+end_src
+
+*** Move to splits after creating
+#+begin_src elisp
+(setq evil-split-window-below t
+      evil-vsplit-window-right t)
+#+end_src
+
+*** Simpler modeline
+#+begin_src elisp
+(after! doom-modeline
+  ;; Don't care about encoding.
+  (setq doom-modeline-buffer-encoding nil)
+  ;; Or state.
+  (setq doom-modeline-buffer-state-icon nil)
+  ;; Or buffer size.
+  (remove-hook 'doom-modeline-mode-hook #'size-indication-mode)
+  ;; Or the default icon when there's no checker
+  (defun mb/remove-no-checker-icon (args)
+    (unless (equal args '(no-checker)) args))
+  (advice-add #'doom-modeline-update-flycheck-icon
+              :filter-args #'mb/remove-no-checker-icon)
+  ;; Or for the excessive height
+  ;; FIXME This has no effect on its own?
+  (setq doom-modeline-height 22)
+  (advice-add #'doom-modeline--font-height
+              :override #'(lambda () (progn 22)))
+  ;; But I do like file type icons.
+  (setq doom-modeline-major-mode-icon t)
+  ;; And word counts in Markdown, Org etc.
+  ;; SEE: doom-modeline-continuous-word-count-modes
+  (setq doom-modeline-enable-word-count t)
+  ;; Try to fix icons falling off the RHS edge.
+  (setq all-the-icons-scale-factor 0.9)
+  ;; Re-organise and simplify when in EXWM.
+  (when IS-LINUX
+    (doom-modeline-def-modeline 'main
+      '(bar workspace-name window-number buffer-info word-count
+            remote-host parrot modals buffer-position selection-info)
+      '(objed-state persp-name grip irc mu4e gnus debug repl lsp minor-modes
+                    input-method indent-info buffer-encoding major-mode
+                    process vcs checker matches))))
+#+end_src
+
+*** Default modes
+#+begin_src elisp
+(add-to-list 'auto-mode-alist '(".*\\.txt" . indented-text-mode))
+(add-to-list 'auto-mode-alist '("github\\.com_.*\\.txt" . gfm-mode))
+(add-to-list 'auto-mode-alist '("tridactyl\\(rc\\)?\\'" . vimrc-mode))
+#+end_src
+
+*** Always fullscreen
+#+begin_src elisp
+(set-frame-parameter (selected-frame) 'fullscreen 'maximized)
+;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+#+end_src
+
+*** Favour customised versions of files
+#+begin_src elisp
+(setq load-prefer-newer t)
+#+end_src
+*** Pixel scroll precision
+Aww yeah. Scroll up or down at pixel resolution.
+#+begin_src elisp
+(when (fboundp 'pixel-scroll-precision-mode) (pixel-scroll-precision-mode 1))
+#+end_src
+*** Fuzzier completion
+Use orderless and fallback on flex.
+#+begin_src elisp
+(after! orderless
+  (add-to-list 'completion-styles 'flex t))
+#+end_src
+*** Lookup online
+I really just use the one search engine from Emacs.
+#+begin_src elisp
+(setq +lookup-provider-url-alist
+      '(("Kagi" "https://kagi.com/search?q=%s")))
+#+end_src
+* UI/macOS
+*** Source a clean shell environment
+#+begin_src elisp
+(when IS-MAC
+  (setq exec-path-from-shell-check-startup-files nil)
+  (exec-path-from-shell-initialize)
+  (exec-path-from-shell-copy-env "GOPATH")
+  (exec-path-from-shell-copy-env "SSH_AUTH_SOCK"))
+#+end_src
+
+*** Use font smoothing
+#+begin_src elisp
+(when IS-MAC (setq ns-use-thin-smoothing t))
+#+end_src
+
+*** Hide icons in titles
+#+begin_src elisp
+(when IS-MAC (setq ns-use-proxy-icon nil))
+#+end_src
+
+*** Give me my em—dash back
+#+begin_src elisp
+(defun mb/emdash () (interactive) (insert-char (char-from-name "EM DASH")))
+(map! :i "M-_" #'mb/emdash)
+#+end_src
+
+*** Native macOS titles
+#+begin_src elisp
+;; (when IS-MAC
+;;   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)))
+#+end_src
+
+*** Native macOS fullscreen
+#+begin_src elisp
+;; (when IS-MAC
+;; Native macOS fullscreen.
+;; (add-to-list 'default-frame-alist '(fullscreen . fullboth))
+;; )
+#+end_src
+
+*** Transparency
+#+begin_src elisp
+(when IS-MAC
+  (set-frame-parameter (selected-frame) 'alpha '(97 . 97))
+  (add-to-list 'default-frame-alist '(alpha . (97 . 97)))
+  (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)))
+#+end_src
+
+* UI/Linux
+*** Transparency
+Set frame transparency and maximize windows by default.
+#+begin_src elisp
+(when IS-LINUX
+  (set-frame-parameter (selected-frame) 'alpha '(95 . 95))
+  (add-to-list 'default-frame-alist '(alpha . (95 . 95)))
+  (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)))
+#+end_src
+
+* Keys/General
+Miscellaneous.
+#+begin_src elisp
+(map!
+ :n "C-s" #'save-buffer
+ :n "C-/" #'evil-avy-goto-char-timer
+ :n "q" #'kill-current-buffer
+ :v "v" #'er/expand-region
+ :v "V" #'er/contract-region
+
+ :vgni "s-x" #'execute-extended-command
+ :vgni "s-," #'+vertico/switch-workspace-buffer
+ :vgni "s-/" #'consult-buffer
+ :vgni "s-f" #'consult-line
+ :vgni "s-." #'+workspace/switch-to
+ :vgni "C-<tab>" #'mode-line-other-buffer
+ :vgni "H-s-x" #'execute-extended-command
+ :vgni "H-s-," #'+vertico/switch-workspace-buffer
+ :vgni "H-s-/" #'consult-buffer
+ :vgni "H-s-." #'+workspace/switch-to
+ :vgni "s-1"   #'+workspace/switch-to-0
+ :vgni "s-2"   #'+workspace/switch-to-1
+ :vgni "s-3"   #'+workspace/switch-to-2
+ :vgni "s-4"   #'+workspace/switch-to-3
+ :vgni "s-5"   #'+workspace/switch-to-4
+ :vgni "s-6"   #'+workspace/switch-to-5
+ :vgni "s-7"   #'+workspace/switch-to-6
+ :vgni "s-8"   #'+workspace/switch-to-7
+ :vgni "s-9"   #'+workspace/switch-to-8
+ :vgni "s-0"   #'+workspace/switch-to-final)
+#+end_src
+
+TODO: Fix up usage of https://github.com/redguardtoo/evil-nerd-commenter again
+
+Merge comment (dwim and line).
+#+begin_src elisp
+(defun xah-comment-dwim ()
+  "Like `comment-dwim', but toggle comment if cursor is not at end of line.
+
+URL `http://ergoemacs.org/emacs/emacs_toggle_comment_by_line.html'
+Version 2016-10-25"
+  (interactive)
+  (if (region-active-p)
+      (comment-dwim nil)
+    (let (($lbp (line-beginning-position))
+          ($lep (line-end-position)))
+      (if (eq $lbp $lep)
+          (progn
+            (comment-dwim nil))
+        (if (eq (point) $lep)
+            (progn
+              (comment-dwim nil))
+          (progn
+            (comment-or-uncomment-region $lbp $lep)
+            (forward-line )))))))
+
+(map! :n "C-?" #'xah-comment-dwim)
+#+end_src
+
+Evil frame movements.
+#+begin_src elisp
+(map!
+ :n "C-h" #'evil-window-left
+ :n "C-j" #'evil-window-down
+ :n "C-k" #'evil-window-up
+ :n "C-l" #'evil-window-right
+
+ (:map evil-window-map
+  "-" (lambda () (interactive) (evil-window-decrease-height 7))
+  "+" (lambda () (interactive) (evil-window-increase-height 7))
+  "<" (lambda () (interactive) (evil-window-decrease-width 7))
+  ">" (lambda () (interactive) (evil-window-increase-width 7))))
+#+end_src
+
+Evil subword movements.
+#+begin_src elisp
+(global-subword-mode 1)
+#+end_src
+
+Motion training.
+#+begin_src elisp
+(use-package! evil-motion-trainer
+  :init
+  (global-evil-motion-trainer-mode 1))
+
+(map!
+ :leader
+ (:prefix-map ("T" . "toggle")
+  :desc "Evil motion trainer (global)" "T" #'global-evil-motion-trainer-mode)
+ (:prefix-map ("t" . "toggle")
+  :desc "Evil motion trainer" "t" #'evil-motion-trainer-mode))
+#+end_src
+
+Find in dotfiles.
+#+begin_src elisp
+(defun mb/find-in-dotfiles ()
+  "Fuzzy find in dotfiles."
+  (interactive)
+  (doom-project-find-file (expand-file-name "/etc/dotfiles")))
+(map! :leader "f ." #'mb/find-in-dotfiles)
+#+end_src
+
+* Keys/Linux
+#+begin_src elisp
+(when IS-LINUX
+  (map!
+   "s-c" (if (featurep 'evil) #'evil-yank #'copy-region-as-kill)
+   "s-v" #'yank
+   "H-s-c" (if (featurep 'evil) #'evil-yank #'copy-region-as-kill)
+   "H-s-v" #'yank
+   "H-s-f" #'consult-line))
+#+end_src
+
+* Keys/macOS
+#+begin_src elisp
+(when IS-MAC
+  (map!
+   :gni [s-return] #'toggle-frame-fullscreen
+   )
+  )
+#+end_src
+
+* Package Customisation
+#+begin_src elisp
+(defun mkdir-if-missing (path)
+  (if (not (file-exists-p (expand-file-name path)))
+    (make-directory (expand-file-name path t))))
+#+end_src
+
+** org
+*** Hide emphasis markers
+#+begin_src elisp
+(setq org-hide-emphasis-markers t)
+#+end_src
+*** Centered buffers
+#+begin_src elisp
+(defun mb/org-mode-visual-fill ()
+  (setq visual-fill-column-width 100
+        visual-fill-column-center-text t
+        display-fill-column-indicator nil)
+  (visual-fill-column-mode 1))
+
+(use-package! visual-fill-column
+  :hook (org-mode . mb/org-mode-visual-fill))
+#+end_src
+
+*** Tree slide
+#+begin_src elisp
+(org-tree-slide-presentation-profile)
+
+(setq +org-present-text-scale 1
+      org-tree-slide-modeline-display nil
+      org-tree-slide-slide-in-effect t
+      org-tree-slide-cursor-init nil
+      org-tree-slide-heading-emphasis t
+      org-tree-slide-content-margin-top 1
+      org-tree-slide-indicator
+      '(:next nil
+        :previous nil
+        :content nil))
+
+(defun mb/org-tree-slide-mode-hook ()
+  (setq-local evil-motion-trainer-mode nil)
+  (spell-fu-mode-disable)
+  (org-display-inline-images)
+  (doom-disable-line-numbers-h))
+
+(add-hook! 'org-tree-slide-play-hook 'mb/org-tree-slide-mode-hook)
+
+(advice-remove 'org-tree-slide--display-tree-with-narrow
+               #'+org-present--narrow-to-subtree-a)
+
+(map! :map org-tree-slide-mode-map
+      :n "q" (lambda () (interactive) (org-tree-slide-mode 0))
+      :ni "C-l" #'org-tree-slide-move-next-tree
+      :ni "C-h" #'org-tree-slide-move-previous-tree
+      :ni "s-<right>" #'org-tree-slide-move-next-tree
+      :ni "s-<left>" #'org-tree-slide-move-previous-tree)
+
+
+(defvar mb/hide-org-meta-line-p nil)
+
+(defun mb/hide-org-meta-line ()
+  (interactive)
+  (setq mb/hide-org-meta-line-p t)
+  (set-face-attribute 'org-meta-line nil
+                      :foreground (face-attribute 'default :background)))
+(defun mb/show-org-meta-line ()
+  (interactive)
+  (setq mb/hide-org-meta-line-p nil)
+  (set-face-attribute 'org-meta-line nil :foreground nil))
+
+(defun my/toggle-org-meta-line ()
+  (interactive)
+  (if mb/hide-org-meta-line-p
+      (mb/show-org-meta-line) (mb/hide-org-meta-line)))
+
+(add-hook 'org-tree-slide-play-hook #'mb/hide-org-meta-line)
+(add-hook 'org-tree-slide-stop-hook #'mb/show-org-meta-line)
+#+end_src
+
+*** Scratch and default buffers
+Org the world.
+#+begin_src elisp
+(setq doom-scratch-buffer-major-mode 'org-mode)
+(setq doom-scratch-initial-major-mode 'org-mode)
+;; this is a bit too far.
+;; (setq-default major-mode 'org-mode)
+#+end_src
+
+*** Dropbox-based cache folder
+#+begin_src elisp
+(after! org
+  (setq org-directory (expand-file-name "~/Dropbox/org")
+        org-archive-location (concat org-directory "/" "archive" "/" "%s_archive::")
+        org-id-locations-file (concat org-directory "/" ".org-id-locations"))
+  (file-name-directory (directory-file-name org-archive-location)))
+#+end_src
+
+*** Fold all on startup
+#+begin_src elisp
+(setq org-startup-folded 'content)
+#+end_src
+
+*** Capture templates
+#+begin_src elisp
+(after! org
+  (setq org-capture-templates
+        '(("t" "Personal todo" entry
+           (file+headline +org-capture-todo-file "Inbox")
+           "* [ ] %?\n%i\n%a" :prepend t)
+          ("n" "Personal notes" entry
+           (file+headline +org-capture-notes-file "Inbox")
+           "* %u %?\n%i\n%a" :prepend t)
+          ("j" "Journal" entry
+           (file+olp+datetree +org-capture-journal-file)
+           "* %U %?\n%i\n%a" :prepend t)
+
+          ;; Will use {project-root}/{todo,notes,changelog}.org, unless a
+          ;; {todo,notes,changelog}.org file is found in a parent directory.
+          ;; Uses the basename from `+org-capture-todo-file',
+          ;; `+org-capture-changelog-file' and `+org-capture-notes-file'.
+          ("p" "Templates for projects")
+          ("pt" "Project-local todo" entry  ; {project-root}/todo.org
+           (file+headline +org-capture-project-todo-file "Inbox")
+           "* [ ] TODO %?\n%i\n%a" :prepend t)
+          ("pn" "Project-local notes" entry  ; {project-root}/notes.org
+           (file+headline +org-capture-project-notes-file "Inbox")
+           "* %U %?\n%i\n%a" :prepend t)
+          ("pc" "Project-local changelog" entry  ; {project-root}/changelog.org
+           (file+headline +org-capture-project-changelog-file "Unreleased")
+           "* %U %?\n%i\n%a" :prepend t)
+
+          ;; Will use {org-directory}/{+org-capture-projects-file} and store
+          ;; these under {ProjectName}/{Tasks,Notes,Changelog} headings. They
+          ;; support `:parents' to specify what headings to put them under, e.g.
+          ;; :parents ("Projects")
+          ("o" "Centralized templates for projects")
+          ("ot" "Project todo" entry
+           (function +org-capture-central-project-todo-file)
+           "* [ ] TODO %?\n %i\n %a"
+           :heading "Tasks"
+           :prepend nil)
+          ("on" "Project notes" entry
+           (function +org-capture-central-project-notes-file)
+           "* %U %?\n %i\n %a"
+           :heading "Notes"
+           :prepend t)
+          ("oc" "Project changelog" entry
+           (function +org-capture-central-project-changelog-file)
+           "* %U %?\n %i\n %a"
+           :heading "Changelog"
+           :prepend t))))
+#+end_src
+
+*** Hugo
+#+begin_src elisp
+(setq org-hugo-export-with-toc t)
+#+end_src
+
+*** Agenda files
+#+begin_src elisp
+(setq org-agenda-files (list ;;org-directory
+                             (concat org-directory "/" "cal")
+                             (concat org-directory "/" "roam/daily")))
+(setq org-log-done 'time)
+#+end_src
+
+*** Keywords
+#+begin_src elisp
+(setq
+ org-todo-keywords
+ '((sequence "TODO(t)" "PROG(p)" "|" "DONE(d)" "ABRT(c)")
+   (sequence "[ ](T)" "[-](P)" "[?](M)" "|" "[X](D)")
+   (sequence "MEETING(m)" "CANCELLED(z)"))
+ org-todo-keyword-faces
+ '(("[-]" :inherit (font-lock-constant-face bold))
+   ("[?]" :inherit (warning bold))
+   ("TODO" :inherit (success bold))
+   ("PROG" :inherit (bold default))
+   ("DONE" :inherit (warning bold))
+   ("ABRT" :inherit (error bold))
+   ("MEETING" . +org-todo-project)
+   ("CANCELLED" . +org-todo-cancel)))
+#+end_src
+
+*** Priorities
+#+begin_src elisp
+(after! org
+  (setq org-priority-faces '((?A . (:foreground "red" :weight 'bold))
+                             (?B . (:foreground "orange"))
+                             (?C . (:foreground "teal"))))
+  (use-package! org-fancy-priorities
+    :hook (org-mode . org-fancy-priorities-mode)
+    :config (setq org-fancy-priorities-list '("⬆" "⬇" "☕"))
+    )
+  )
+#+end_src
+
+*** Keys
+#+begin_src elisp
+(map!
+ (:map org-mode-map
+  :ni "<s-backspace>" #'org-babel-remove-result
+  :ni [M-return] #'org-meta-return
+  :ni [S-M-return] #'org-insert-todo-heading
+  :i "<S-tab>" #'+org/dedent))
+#+end_src
+
+** org-roam
+The king of plain-text personal knowledge management. A Zettelkasten system in Emacs.
+#+begin_src elisp
+(after! org-roam
+  (setq org-roam-completion-everywhere t
+        org-roam-mode-section-functions
+        (list #'org-roam-backlinks-section
+              #'org-roam-reflinks-section
+              #'org-roam-unlinked-references-section)
+        org-roam-directory (file-truename (concat org-directory "/" "roam"))
+
+        org-roam-capture-templates
+        '(("d" "default" plain
+           "%?"
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                              "#+title: ${title}\n")
+           :unnarrowed t)
+          ("n" "note" plain
+           "%?"
+           :if-new (file+head "${slug}.org"
+                              "#+title: ${title}\n")
+           :unnarrowed t))
+
+        org-roam-capture-ref-templates
+        '(("r" "ref" plain
+           "%?"
+           :if-new (file+head "${slug}.org"
+                              "#+title: ${title}\n")
+           :unnarrowed t)
+          ("w" "web" plain
+           "%?"
+           :if-new (file+head "web/${slug}.org"
+                              "#+title: ${title}\n")
+           :unnarrowed t)))
+
+  (setq org-roam-dailies-capture-templates
+        '(("d" "default" entry
+           "* %?"
+           :if-new (file+head "%<%Y-%m-%d>.org"
+                              "#+title: %<%Y-%m-%d %a>\n\n[[roam:%<%Y-%B>]]\n\n"))
+          ("t" "task" entry
+           "* TODO %?\n%U\n%a\n%i"
+           :if-new (file+head+olp "%<%Y-%m-%d>.org"
+                                  "#+title: %<%Y-%m-%d %a>\n\n[[roam:%<%Y-%B>]]\n\n"
+                                  ("Tasks")))
+          ("n" "note" entry
+           "* NOTE %U\n\n%?\n\n"
+           :if-new (file+head+olp "%<%Y-%m-%d>.org"
+                                  "#+title: %<%Y-%m-%d %a>\n\n[[roam:%<%Y-%B>]]\n\n"
+                                  ("Notes")))
+          ("m" "meeting" entry
+           "* MEETING %U - %^{Title} :meetings:\n\n%?\n\n"
+           :if-new (file+head+olp "%<%Y-%m-%d>.org"
+                                  "#+title: %<%Y-%m-%d %a>\n\n[[roam:%<%Y-%B>]]\n\n"
+                                  ("Meetings")))))
+
+  (when IS-MAC (setq org-roam-graph-viewer "/usr/bin/open"))
+
+  ;; Ensure the roam directories exist.
+  (mkdir-if-missing org-roam-directory)
+  (mkdir-if-missing (file-truename (concat org-roam-directory "/" "web")))
+  (mkdir-if-missing (file-truename (concat org-roam-directory "/" "daily")))
+
+  ;; Make the default roam buffer a little smaller.
+  (set-popup-rules!
+    `((,(regexp-quote org-roam-buffer) ; persistent org-roam buffer
+       :side right :width .25 :height .5 :ttl nil :modeline nil :quit nil :slot 1)
+      ("^\\*org-roam: " ; node dedicated org-roam buffer
+       :side right :width .25 :height .5 :ttl nil :modeline nil :quit nil :slot 2))))
+
+;; Other roam bindings
+(map!
+ :leader
+ (:prefix-map ("n" . "notes")
+  :desc "Find directory" "-" (lambda () (interactive) (find-file org-directory))
+  (:prefix ("r" . "roam")
+   :desc "Find directory" "-" (lambda () (interactive) (find-file org-roam-directory))
+   :desc "Capture meeting today" "m" (lambda () (interactive) (org-roam-dailies-capture-today nil "m")))))
+
+;; Allow mouse clicks in the roam buffer.
+(define-key org-roam-mode-map [mouse-1] #'org-roam-visit-thing)
+
+;; Show node hierarchy in Marginalia.
+(cl-defmethod org-roam-node-hierarchy ((node org-roam-node))
+  (let ((level (org-roam-node-level node)))
+    (concat
+     (when (> level 0) (concat (org-roam-node-file-title node) " > "))
+     (when (> level 1) (concat (string-join (org-roam-node-olp node) " > ") " > "))
+     (org-roam-node-title node))))
+
+(setq org-roam-node-display-template "${hierarchy:*} ${tags:20}")
+#+end_src
+
+I use org-roam UI to quickly visualise my Zettelkasten.
+#+begin_src elisp
+(use-package! websocket
+    :after org-roam)
+
+(use-package! org-roam-ui
+    :after org-roam ;; or :after org
+;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+;;         a hookable mode anymore, you're advised to pick something yourself
+;;         if you don't care about startup time, use
+;;  :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
+#+end_src
+
+** org-gcal
+NOTE: Occasionally need to run =org-gcal-sync-tokens-clear=
+#+begin_src elisp
+(after! org-gcal
+  (setq mb/calendar-dir (file-truename (concat org-directory "/" "cal"))
+        mb/calendar-professional "martin@baillie.id"
+        mb/calendar-personal  "martin.t.baillie@gmail.com"
+        mb/calendar-aus-holidays "en.australian%23holiday%40group.v.calendar.google.com"
+
+        ;; Set `org-gcal-auto-archive' to `nil' for workaround to:
+        ;; https://github.com/kidd/org-gcal.el/issues/172
+        org-gcal-auto-archive nil
+        org-gcal-remove-api-cancelled-events t
+        org-gcal-client-id (auth-source-pick-first-password
+                            :host "calendar.google.com"
+                            :user "mbaillie^client")
+        org-gcal-client-secret (auth-source-pick-first-password
+                                :host "calendar.google.com"
+                                :user "mbaillie^secret")
+        org-gcal-token-file "/etc/dotfiles/.private/org-gcal.gpg"
+        org-gcal-fetch-file-alist `((,mb/calendar-professional
+                                     . ,(concat
+                                         mb/calendar-dir
+                                         "/"
+                                         (url-unhex-string mb/calendar-professional)
+                                         ".org"))
+                                    (,mb/calendar-personal
+                                     . ,(concat
+                                         mb/calendar-dir
+                                         "/"
+                                         (url-unhex-string mb/calendar-personal)
+                                         ".org"))
+                                    (,mb/calendar-aus-holidays
+                                     . ,(concat
+                                         mb/calendar-dir
+                                         "/"
+                                         (url-unhex-string mb/calendar-aus-holidays)
+                                         ".org"))
+                                    (,mb/calendar-work
+                                     . ,(concat
+                                         mb/calendar-dir
+                                         "/"
+                                         (url-unhex-string mb/calendar-work)
+                                         ".org"))
+                                    ))
+  (mkdir-if-missing mb/calendar-dir))
+
+;; Update my calendars upon Org agenda view entry.
+(add-hook! 'org-agenda-mode-hook :append 'org-gcal-fetch)
+
+;; org-gcal opens all agenda files to search for events (by design)
+;; SEE: https://github.com/kidd/org-gcal.el/issues/168
+;; close all these buffers again from agenda with =org-agenda-exit=
+(map! :map org-mode-map
+      :map evil-org-agenda-mode-map :m "q" #'org-agenda-exit)
+#+end_src
+
+** ediff
+#+begin_src elisp
+(defun ediff-copy-both-to-C ()
+  (interactive)
+  (ediff-copy-diff ediff-current-difference nil 'C nil
+                   (concat
+                    (ediff-get-region-contents ediff-current-difference 'A ediff-control-buffer)
+                    (ediff-get-region-contents ediff-current-difference 'B ediff-control-buffer))))
+(defun add-c-to-ediff-mode-map () (define-key ediff-mode-map (kbd "c") 'ediff-copy-both-to-C))
+(add-hook 'ediff-keymap-setup-hook 'add-c-to-ediff-mode-map)
+#+end_src
+
+** pomm
+Transient Pomodoro implementation with Slack status updates and terrible sounds.
+#+begin_src elisp
+(defconst slack-dnd-end-dnd-url "https://slack.com/api/dnd.endDnd")
+(defconst slack-dnd-set-snooze-url "https://slack.com/api/dnd.setSnooze")
+(defconst slack-set-presence-url "https://slack.com/api/users.setPresence")
+(defconst slack-users-profile-url "https://slack.com/api/users.profile.set")
+
+;; NOTE: Get this in a browser by going to `my.slack.com/customize` and running
+;; window.prompt("Slack token: ", TS.boot_data.api_token)
+(defun mb/slack-token ()
+  "Return the Slack token from auth source."
+  (auth-source-pick-first-password :host "api.slack.com" :user "token"))
+
+;; NOTE: Get this from the `d` cookie at `my.slack.com/customize` and URL encode it.
+(defun mb/slack-cookie ()
+  "Return the Slack cookie from auth source."
+  (auth-source-pick-first-password :host "api.slack.com" :user "cookie"))
+
+(defun mb/slack-response-callback (status start-time)
+  (message "The request is completed in %f seconds"
+           (float-time (time-subtract nil start-time)))
+  (display-buffer (current-buffer)))
+
+(defun mb/slack-set-presence (presence)
+  "Set the presence to PRESENCE on Slack."
+  (let ((token (mb/slack-token))
+        (url-request-extra-headers
+         `(("cookie" . ,(format "d=%s; " (mb/slack-cookie))))))
+    (progn
+      (url-retrieve
+       (format "%s?token=%s&presence=%s" slack-set-presence-url token presence)
+       'mb/slack-response-callback
+       `(,(current-time))
+       'silent
+       'inhibit-cookies) nil)))
+
+(defun mb/slack-set-dnd (&optional dur)
+  "Set the Slack do-not-disturb to DUR minutes.
+Removes the do-not-disturb status if DUR is not provided."
+  (let ((token (mb/slack-token))
+        (url-request-extra-headers
+         `(("cookie" . ,(format "d=%s; " (mb/slack-cookie))))))
+    (progn
+      (if (equal dur nil)
+          (url-retrieve
+           (format "%s?token=%s" slack-dnd-end-dnd-url token)
+           (lambda (&rest _))
+           `(,(current-time))
+           'silent
+           'inhibit-cookies)
+        (url-retrieve
+         (format "%s?token=%s&num_minutes=%s" slack-dnd-set-snooze-url token dur)
+         (lambda (&rest _))
+         `(,(current-time))
+         'silent
+         'inhibit-cookies)) nil)))
+
+(defun mb/slack-set-status (text emoji dur)
+  "Set the Slack status to EMOJI: TEXT for DUR minutes from now.
+Removes the status if EMOJI and TEXT are nil."
+  (let* ((expir (truncate (+ (time-to-seconds) (* 60 dur))))
+         (url-request-method "POST")
+         (url-request-data
+          (json-encode `(("profile" .
+                          (("status_text" . ,text)
+                           ("status_emoji" . ,emoji)
+                           ("status_expiration" . ,expir))))))
+         (url-request-extra-headers
+          `(("Content-Type" . "application/json;charset=utf-8")
+            ("Authorization" . ,(format "Bearer %s" (mb/slack-token)))
+            ("Cookie" . ,(format "d=%s; " (mb/slack-cookie))))))
+    (progn
+      (url-retrieve slack-users-profile-url
+                    (lambda (&rest _))
+                    nil
+                    'silent
+                    'inhibit-cookies) nil)))
+
+(defun mb/slack-clear-status ()
+  "Set the Slack to empty."
+  (interactive)
+  (mb/slack-set-status "" "" 0))
+
+(defun mb/slack-dnd-snooze (dur)
+  "Set the Slack do-not-disturb to snooze for DUR minutes."
+  (interactive)
+  (mb/slack-set-dnd dur))
+
+(defun mb/slack-dnd-end ()
+  "Set the Slack do-not-disturb to ended."
+  (interactive)
+  (mb/slack-set-dnd))
+
+(defun mb/slack-set-away ()
+  "Set the Slack presence to away."
+  (interactive)
+  (mb/slack-set-presence "away"))
+
+(defun mb/slack-set-auto ()
+  "Set the slack presence to auto."
+  (interactive)
+  (mb/slack-set-presence "auto"))
+(defalias 'mb/slack-set-back 'mb/slack-set-auto)
+
+(defun mb/pomm-slack-dispatch ()
+  "Dispatch an appropriate Pomodoro status to Slack."
+  (cond
+   ((eq (alist-get 'status pomm--state) 'stopped)
+    (mb/slack-dnd-end)
+    (mb/slack-clear-status))
+   ((eq (alist-get 'status pomm--state) 'running)
+    (let ((mins (/ (pomm--get-time-remaning) 60)))
+      (progn (mb/slack-set-dnd mins)
+             (mb/slack-set-status
+              (format "Will check Slack around %s"
+                      (format-time-string "%H:%M%p" (+ (time-to-seconds) (* mins 60))))
+              ":tomato:" mins))))))
+
+(use-package! pomm
+  :config
+  (pomm-mode-line-mode t)
+  (when IS-MAC
+    (setq pomm-audio-player-executable "/usr/bin/afplay"))
+  (setq
+   pomm-audio-enabled t
+   pomm-audio-files (mapcar
+                     (lambda (x)
+                       (if (eq (nth 0 x) 'tick)
+                           '(tick . nil)
+                         x))
+                     pomm-audio-files))
+  (add-hook! 'pomm-on-status-changed-hook 'mb/pomm-slack-dispatch)
+  (map! :leader :desc "Pomodoro" "P" #'pomm))
+#+end_src
+
+** evil
+Evil is a little too like Vim. Make it better.
+#+begin_src elisp
+(setq
+ ;; Do not move the cursor back one after insert mode.
+ ;; evil-move-cursor-back nil
+ ;; Finer undo according to Emacs heuristics
+ evil-want-fine-undo t
+ ;; Keep yank (kill) content after pasting.
+ evil-kill-on-visual-paste nil
+ ;; I usually know what state i'm in. Remove state from the echo area.
+ evil-echo-state nil
+ ;; Synchronise Evil Visual selections with Emacs' concept of Regions.
+ evil-visual-region-expanded t)
+
+;; Move forward Evil symbols instead of Evil words.
+;; (defalias #'forward-evil-word #'forward-evil-symbol)
+
+;; Put highlighted text as a higher priority than search highlights.
+(defadvice! my-evil-visual-highlight-a (&rest _)
+  "Make the visual overlay have higher priority than the search highlight."
+  :after '(evil-visual-highlight evil-visual-highlight-block)
+  (when evil-visual-overlay
+    (overlay-put evil-visual-overlay 'priority 1010))
+  (when evil-visual-block-overlays
+    (dolist (overlay evil-visual-block-overlays)
+      (overlay-put overlay 'priority 1010))))
+#+end_src
+** flyspell
+#+begin_src elisp
+;; TODO
+#+end_src
+
+** projectile
+*** Known directories and search path
+#+begin_src elisp
+(defun mb/directory-directories (directory &optional regexp)
+  "List just the directories of DIRECTORY"
+  (let* ((dir       (expand-file-name directory))
+         (dir-files (directory-files dir t regexp)))
+    ;; Filter out non-dirs.
+    (dolist (file dir-files)
+      (if (not (file-directory-p file))
+          (setq dir-files (delq file dir-files))))
+    dir-files))
+
+(projectile-add-known-project (expand-file-name "~/Dropbox/org"))
+(projectile-add-known-project "/etc/dotfiles")
+
+(setq projectile-project-search-path (append projectile-project-search-path
+                                      '("~/personal" "~/upstream")))
+(mapc 'mkdir-if-missing projectile-project-search-path)
+#+end_src
+
+*** Ignore certain source code directories
+#+begin_src elisp
+(setq projectile-ignored-projects (append projectile-ignored-projects
+                                          '("/tmp"
+                                    "~/.emacs.d/.local/straight/repos"
+                                    "~/Code/go"
+                                    "/nix/store")))
+(defun projectile-ignored-project-function (filepath)
+  "Return t if FILEPATH is within any of `projectile-ignored-projects'"
+  (or (mapcar (lambda (p) (s-starts-with-p p filepath)) projectile-ignored-projects)))
+#+end_src
+*** Alternate switch project actions
+#+begin_src elisp
+;; Dired
+;; (setq +workspaces-switch-project-function (lambda (dir) (dired dir)))
+;; Magit
+;; (setq +workspaces-switch-project-function #'projectile-vc)
+#+end_src
+
+** direnv
+Silence annoying popup
+#+begin_src elisp
+(setq direnv-always-show-summary nil)
+#+end_src
+
+** hl-todo
+*** Enable everywhere
+#+begin_src emacs-lisp
+(add-hook 'text-mode-hook #'hl-todo-mode)
+#+end_src
+
+** format-all
+*** Disabled modes
+#+begin_src elisp
+;; (setq +format-on-save-enabled-modes
+;;       '(not elisp-mode
+;;             sql-mode
+;;             yaml-mode
+;;             sgml-xml-mode)
+;;       )
+
+;; (defun mb/format-on-save-disable ()
+;;   "Disable formatting on save."
+;;   (interactive)
+;;   (remove-hook 'before-save-hook #'+format-buffer-h))
+#+end_src
+
+** company
+*** Keys
+#+begin_src elisp
+(use-package! company-tng
+  :config
+  (define-key! company-active-map
+    "RET" 'company-complete-selection
+    [return] 'company-complete-selection
+    )
+  )
+#+end_src
+
+** go
+*** LSP (lsp-mode)
+#+begin_src elisp
+;; (after! go-mode
+;;   (defun lsp-go-install-save-hooks ()
+;;     (add-hook 'before-save-hook #'lsp-organize-imports t t))
+;;   (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+;;   (setq gofmt-command "gofumpt"
+;;         lsp-go-link-target "pkg.go.dev"
+;;         lsp-go-codelenses '((generate . t)
+;;                             (gc_details . t)
+;;                             (regenerate_cgo . t)
+;;                             (tidy . t)
+;;                             (vendor . t)
+;;                             (upgrade_dependency . t))))
+
+(if (not (boundp 'mb/device-local-gopackage))
+    (setq mb/device-local-gopackage "github.com/martinbaillie"))
+(after! lsp-mode
+  (setq
+   ;; lsp-go-env (make-hash-table)
+   lsp-file-watch-threshold 4000
+   lsp-enable-file-watchers nil
+   lsp-go-use-gofumpt t
+   lsp-go-goimports-local mb/device-local-gopackage
+   lsp-gopls-hover-kind "FullDocumentation"
+   lsp-go-build-flags ["-tags=integration e2e smoke"]
+   lsp-go-directory-filters ["-_bazel_out"
+                             "-_bazel_bin"
+                             "-_bazel_testlogs"
+                             "-_bazel_infrastructure"
+                             "-bazel-out"
+                             "-bazel-bin"
+                             "-bazel-testlogs"
+                             "-bazel-infrastructure"
+                             "-tools"]
+   lsp-go-symbol-matcher "FastFuzzy"
+   lsp-go-analyses '((nilness . t)
+                     (fieldalignment . t)
+                     (shadow . t)
+                     (unusedparams . t)
+                     (unusedwrite . t)
+                     (useany . t)))
+  (lsp-register-custom-settings
+   '(("gopls.completeUnimported" t t)
+     ("gopls.staticcheck" t t)
+     ("gopls.completionDocumentation" t t)
+     ;; ("gopls.experimentalWorkspaceModule" t t)
+     ("gopls.hoverKind" lsp-go-hover-kind)
+     ("gopls.codelenses" lsp-go-codelenses)))
+
+  ;; Not sure why =sh-mode= isn't picked up.
+  (lsp-register-client
+   (make-lsp-client :new-connection
+                    (lsp-stdio-connection '("bash-language-server" "start"))
+                    :major-modes '(sh-mode)
+                    :priority -1
+                    :server-id 'bash-ls)))
+
+;; (defun lsp-mode-go-packages-driver
+;;       (puthash "GOPACKAGESDRIVER" (concat (projectile-project-root) "/gopackagesdriver.sh") lsp-go-env)
+;;   (my-lsp-workspace-restart))
+;;     )
+
+(defun lsp-mode-go-save-hook ()
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+(add-hook 'go-mode-hook #'lsp-mode-go-save-hook)
+#+end_src
+
+*** LSP (Eglot)
+# I'm trialling Eglot after a lot of annoyances over time with lsp-mode.
+
+# Fix backslashes in Eglot documentation.
+# SEE: https://github.com/joaotavora/eglot/issues/333
+# #+begin_src elisp
+# (defun mb/gfm-unescape-string (string)
+#   "Remove backslash-escape of punctuation characters in STRING."
+#   ;; https://github.github.com/gfm/#backslash-escapes
+#   (replace-regexp-in-string "[\\\\]\\([][!\"#$%&'()*+,./:;<=>?@\\^_`{|}~-]\\)" "\\1" string))
+
+# (advice-add 'eglot--format-markup :filter-return 'mb/gfm-unescape-string)
+# #+end_src
+
+# Run the organise imports LSP action upon save.
+# #+begin_src elisp
+# (defun mb/eglot-interactively-organize-imports ()
+#   (ignore-errors (eglot-code-action-organize-imports (point-min))))
+
+# ;; The depth of -10 places this before eglot's willSave notification,
+# ;; so that notification reports the actual contents that will be saved.
+# (defun eglot-go-save-hook ()
+#   (add-hook 'before-save-hook #'mb/eglot-interactively-organize-imports -10 t))
+
+# (after! go-mode
+#   (add-hook! 'go-mode-hook #'eglot-go-save-hook))
+
+# (if (not (boundp 'mb/device-local-gopackage))
+#          (setq mb/device-local-gopackage "github.com/martinbaillie"))
+
+# ;; Don't ask for confirmation before allowing server edits.
+# (setq eglot-confirm-server-initiated-edits nil
+#       eglot-send-changes-idle-time 2
+#       ;; grow forever
+#       eglot-events-buffer-size nil)
+#       ;; eglot-ignored-server-capabilites (quote ("workspace/didChangeWatchedFiles"))
+
+
+# (setq-default eglot-workspace-configuration
+#               ;; Turn on a bunch of stuff despite patchy Eglot support.
+#               `((:gopls . ((usePlaceholders . t)
+#                            (hoverKind ."FullDocumentation")
+#                            (linksInHover . t)
+#                            ;; TODO move hacks to monorepo .dir-locals
+#                            ;; (deepCompletion . :json-false);; does this do anything?
+#                            (buildFlags . ,["-tags=integration e2e smoke"])
+#                            (directoryFilters . ,["-_bazel_out"
+#                                                 "-_bazel_bin"
+#                                                 "-_bazel_testlogs"
+#                                                 "-_bazel_infrastructure"
+#                                                 "-bazel-out"
+#                                                 "-bazel-bin"
+#                                                 "-bazel-testlogs"
+#                                                 "-bazel-infrastructure"
+#                                                 "-tools"])
+#                            ;; (allExperiments . t)
+#                            (experimentalWorkspaceModule . t)
+#                            ;; (allowModfileModifications . t)
+#                            (staticcheck . t)
+#                            (local . ,mb/device-local-gopackage)
+#                            (gofumpt . t)
+#                            (analyses . ((nilness . t)
+#                                         (fieldalignment . t)
+#                                         (shadow . t)
+#                                         (unusedparams . t)
+#                                         (unusedwrite . t)))
+#                            (matcher . "Fuzzy")))))
+
+# ;; (setq-default eglot-workspace-configuration
+# ;;               '((:gopls . ((gofumpt . t)))))
+
+# ;; (setq-default eglot-workspace-configuration
+# ;;               '((:gopls .
+# ;;                  ((staticcheck . t)
+# ;;                   (gofumpt . t)))))
+
+# ;; (hoverKind ."FullDocumentation")
+# ;; (usePlaceholders . t)
+
+#+begin_src elisp
+;; (defun project- find-go-module (dir)
+;;   (when-let ((root (locate-dominating-file dir "go.mod")))
+;;     (cons 'go-module root)))
+
+;; (cl-defmethod project-root ((project (head go-module)))
+;;   (cdr project))
+
+;; (add-hook 'project-find-functions #'project-find-go-module)
+#+end_src
+*** DAP
+#+begin_src elisp
+;; (setq godoc-at-point-function 'godoc-gogetdoc)
+;; debugger configuration
+;; (require 'dap-go)
+;; (dap-go-setup)
+;; (dap-mode 1)
+;; (dap-ui-mode 1)
+;; (dap-tooltip-mode 1)
+(tooltip-mode 1)
+#+end_src
+
+*** Keys
+#+begin_src elisp
+(map! :map go-mode-map
+      :nv "K"  #'eldoc-doc-buffer)
+      ;; :nv "K"  #'lsp-describe-thing-at-point)
+#+end_src
+
+** python
+Locate the preferred language server.
+#+begin_src elisp
+(after! lsp-python-ms
+  (setq lsp-python-ms-executable (executable-find "python-language-server"))
+  (set-lsp-priority! 'mspyls 1))
+#+end_src
+** flycheck
+#+begin_src elisp
+;; ]e [e next and previous error respectively.
+(map! (:after flycheck
+       :m "]e" 'flycheck-next-error
+       :m "[e" 'flycheck-previous-error))
+
+;; TEMP Hack
+;; (setq flycheck-golangci-lint-executable "/Users/mbaillie/.local/share/go/bin/golangci-lint")
+(setq flycheck-disabled-checkers '(go-gofmt
+                                   golangci-lint ;; temp
+                                   go-golint
+                                   go-vet
+                                   go-build
+                                   go-test
+                                   go-staticcheck
+                                   go-errcheck))
+#+end_src
+
+#+begin_src elisp
+(flycheck-define-checker vale
+  "A checker for prose"
+  :command ("vale" "--output" "line"
+            source)
+  :standard-input nil
+  :error-patterns
+  ((error line-start (file-name) ":" line ":" column ":" (id (one-or-more (not (any ":")))) ":" (message) line-end))
+  :modes (markdown-mode gfm-mode org-mode text-mode))
+;; (add-to-list 'flycheck-checkers 'vale 'append)
+#+end_src
+
+** nyanmode
+Oh gees.
+#+begin_src elisp
+(use-package! nyan-mode
+  :after doom-modeline
+  :init
+  (setq nyan-bar-length 20)
+   (nyan-mode))
+#+end_src
+
+** dired
+Dired coloured icons.
+#+begin_src elisp
+(setq all-the-icons-dired-monochrome nil)
+#+end_src
+
+** avy
+
+*** Search across all windows
+#+begin_src elisp
+(setq avy-all-windows t)
+#+end_src
+
+*** Select the single candidate
+#+begin_src elisp
+(setq avy-single-candidate-jump t)
+#+end_src
+
+*** Faster timers
+#+begin_src elisp
+(setq avy-timeout-seconds 0.35)
+#+end_src
+** magit
+*** Avatars
+#+begin_src elisp
+(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+#+end_src
+
+*** Git sign-off line
+Automatically add a git signoff line based on discovered environmental identity.
+#+begin_src elisp
+(defun mb/auto-git-commit-signoff ()
+  "Automatically add a git signoff line based on environmental identity"
+  (beginning-of-buffer)
+  (unless
+      (or ;; Unless we're in a work repo or there's already a signoff line.
+       (string-match-p (regexp-quote "/work/") default-directory)
+       (word-search-forward "Signed-off-by" nil t))
+    (apply #'git-commit-signoff (git-commit-self-ident))))
+(add-hook! 'git-commit-mode-hook #'mb/auto-git-commit-signoff)
+#+end_src
+
+*** WIP Commits
+#+begin_src elisp
+;; TODO: Unfinished. A literal WIP. Need to workaround the race that occurs due
+;; to Magit git calls being async.
+(defun mb/magit-wip-commit-push (msg)
+  "Commit current unstaged changes and push to its upstream."
+  (interactive "sCommit Message: ")
+  (when (= 0 (length msg))
+    (setq msg (format-time-string "WIP (Magit@%Y-%m-%d %H:%M:%S)" (current-time))))
+  (when (and buffer-file-name (buffer-modified-p))
+    (save-buffer))
+  (magit-stage-modified)
+  (magit-commit-create (list "-m" msg))
+  (magit-push-current-to-pushremote nil))
+#+end_src
+*** TODOs
+#+begin_src elisp
+(use-package magit-org-todos :config (magit-org-todos-autoinsert))
+#+end_src
+
+*** Status buffer
+#+begin_src elisp
+;; Unfold some more displays by default.
+(prependq! magit-section-initial-visibility-alist '((issues . show)
+                                                    (pullreqs . show)
+                                                    (unpushed . show)))
+;; No motion training on status buffers.
+(add-hook 'magit-status-mode-hook (lambda () (evil-motion-trainer-mode -1)))
+(add-hook 'forge-topic-mode-hook (lambda () (evil-motion-trainer-mode -1)))
+#+end_src
+*** Remove confirmation of a few things
+#+begin_src elisp
+(after! magit
+  (add-to-list 'magit-no-confirm 'stage-all-changes)
+  (add-to-list 'magit-no-confirm 'unstage-all-changes))
+#+end_src
+*** Forge
+#+begin_src elisp
+;; Workaround for massive monrepos with huge GH issues
+;; https://github.com/magit/ghub/issues/81
+(setq ghub-use-workaround-for-emacs-bug 'force)
+#+end_src
+** yaml
+Get the YAML language server to validate Kubernetes resources.
+#+begin_src elisp
+(setq lsp-yaml-schemas (make-hash-table))
+(puthash "kubernetes" ["kube.yaml"
+                       "resources.yaml"
+                       "resources/*"
+                       "pod.yaml"
+                       "deployment.yaml"
+                       "serviceaccount.yaml"
+                       "clusterrole.yaml"
+                       "role.yaml"
+                       "clusterrolebinding.yaml"
+                       "rolebinding.yaml"
+                       "configmap.yaml"
+                       "service.yaml"]
+         lsp-yaml-schemas)
+(puthash "http://json.schemastore.org/kustomization" ["kustomization.yaml"] lsp-yaml-schemas)
+#+end_src
+** bazel
+#+begin_src elisp
+(add-to-list 'projectile-globally-ignored-directories "bazel-*")
+(use-package! bazel
+  :config
+  (setq bazel-buildifier-before-save t))
+#+end_src
+
+** terraform
+Enable LSP for Terraform.
+#+begin_src elisp
+;; (use-package! terraform-mode
+;;   :hook
+;;   (terraform-mode . (lambda ()
+;;                       (add-to-list
+;;                        'eglot-server-programs '(terraform-mode "terraform-lsp")
+;;                        (eglot-ensure)))))
+(setq lsp-disabled-clients '(tfls)
+      lsp-terraform-ls-enable-show-reference t
+      lsp-semantic-tokens-enable t
+      lsp-semantic-tokens-honor-refresh-requests t)
+;; (after! lsp-mode
+;;   (lsp-register-client
+;;    (make-lsp-client :new-connection (lsp-stdio-connection '("terraform-lsp" "serve"))
+;;                     :major-modes '(terraform-mode)
+;;                     :server-id 'terraform-lsp))
+;;   )
+;; (add-hook 'terraform-mode-hook #'lsp-deferred)
+#+end_src
+** ox-clip
+Use =M-x ox-clip-formatted-copy=
+#+BEGIN_SRC emacs-lisp
+(setq ox-clip-osx-cmd "hexdump -ve '1/1 \"%.2x\"' | xargs printf \"set the clipboard to {text:\\\" \\\", «class HTML»:«data HTML%s»}\" | osascript -")
+#+END_SRC
+
+** pinentry
+*** Use Emacs pinentry on Linux
+#+begin_src elisp
+(use-package pinentry
+  :demand t
+  :after epg
+
+  :config
+  ;; Allow gpg-connect-agent in ssh-agent mode to forward pinentry to Emacs
+  ;; since the ssh-agent protocol has no way to pass the TTY to gpg-agent.
+  ;;
+  ;; Also this hook has a nice effect of auto-starting gpg-agent when
+  ;; needed by ssh.
+  (setenv "INSIDE_EMACS" emacs-version)
+
+  (shell-command
+   "gpg-connect-agent updatestartuptty /bye"
+   " *gpg-update-tty*")
+
+  (pinentry-start)
+  )
+#+end_src
+
+** treemacs
+*** Keys
+Toggling.
+#+begin_src elisp
+(map!
+ :n "C-S-e" #'+treemacs/toggle
+ (:map evil-treemacs-state-map "C-S-e" #'+treemacs/toggle))
+#+end_src
+
+Evil frame movements.
+#+begin_src elisp
+(map!
+ (:map evil-treemacs-state-map
+  "C-h" #'evil-window-left
+  "C-l" #'evil-window-right))
+#+end_src
+
+** easy-motion
+*** Better scoped easy-motions
+#+begin_src elisp
+(define-key! 'global
+    [remap evilem-motion-forward-word-end] #'evilem-motion-forward-WORD-end
+    [remap evilem-motion-forward-word-begin] #'evilem-motion-forward-WORD-begin
+    [remap evilem-motion-backward-word-end] #'evilem-motion-backward-WORD-end
+    [remap evilem-motion-backward-word-begin] #'evilem-motion-backward-WORD-begin
+    )
+#+end_src
+
+*** Keys
+#+begin_src elisp
+(map! (:after evil-easymotion :m "C-f" evilem-map))
+#+end_src
+
+** snippets
+#+begin_src elisp
+(setq yas-snippet-dirs
+     (append yas-snippet-dirs `(,(concat (getenv "XDG_CONFIG_HOME") "/doom/snippets"))))
+#+end_src
+
+** move-text
+
+*** Keys
+Add additional evil movements for text moves.
+#+begin_src elisp
+(map! :m "M-j" #'move-text-down
+      :m "M-k" #'move-text-up)
+(when IS-MAC
+  (map! :m "s-j" #'move-text-down
+        :m "s-k" #'move-text-up))
+#+end_src
+
+** buffer-move
+
+*** Keys
+Add evil movements to buffer moves.
+#+begin_src elisp
+(map! :vgni "M-J" #'buf-move-down
+      :vgni "M-K" #'buf-move-up
+      :vgni "M-H" #'buf-move-left
+      :vgni "M-L" #'buf-move-right)
+(when IS-MAC
+    (map! :vgni "s-J" #'buf-move-down
+          :vgni "s-K" #'buf-move-up
+          :vgni "s-H" #'buf-move-left
+          :vgni "s-L" #'buf-move-right))
+#+end_src
+
+** buffer-expose
+*** Disable scaling
+#+begin_src elisp
+(use-package! buffer-expose
+  :config
+  (setq-default buffer-expose-rescale-factor 1.0))
+#+end_src
+
+*** Workspace expose functions
+#+begin_src elisp
+(defun buffer-workspace-expose (&optional max)
+  "Expose workspace buffers.
+If MAX is given it determines the maximum number of windows to
+show per page, which defaults to `buffer-expose-max-num-windows'."
+  (interactive "P")
+  (buffer-expose-show-buffers (projectile-project-buffers) max nil))
+
+(defun buffer-workspace-vterm-expose (&optional max)
+  "Expose vterm workspace buffers.
+If MAX is given it determines the maximum number of windows to
+show per page, which defaults to
+`buffer-expose-max-num-windows'."
+  (interactive "P")
+  (buffer-expose-show-buffers
+   (projectile-project-buffers) max nil
+   (lambda (buf)
+     (eq (buffer-local-value 'major-mode buf)
+         'vterm-mode))))
+     ;; (string-prefix-p "vterm: " (buffer-name buffer)))))
+#+end_src
+
+*** Keys
+Add evil movements to expose view.
+#+begin_src elisp
+;; TODO: Fix.
+;; (map!
+;;  (:map buffer-expose-grid-map
+;;   :vgni "h" 'buffer-expose-left-window
+;;   :vgni "k" 'buffer-expose-up-window
+;;   :vgni "j" 'buffer-expose-down-window
+;;   :vgni "l" 'buffer-expose-right-window))
+  (general-define-key
+   :keymaps '(buffer-expose-grid-map)
+   "h" 'buffer-expose-left-window
+   "l" 'buffer-expose-right-window
+   "k" 'buffer-expose-up-window
+   "j" 'buffer-expose-down-window
+   "C-h" 'buffer-expose-left-window
+   "C-l" 'buffer-expose-right-window
+   "C-k" 'buffer-expose-up-window
+   "C-j" 'buffer-expose-down-window
+   "^" 'buffer-expose-first-window-in-row
+   "$" 'buffer-expose-last-window-in-row
+   "G" 'buffer-expose-last-window
+   "<escape>" 'buffer-expose-reset
+   "SPC" 'buffer-expose-ace-window
+   "]" 'buffer-expose-next-page
+   "[" 'buffer-expose-prev-page
+   "d" 'buffer-expose-kill-buffer)
+#+end_src
+
+Add expose functions to buffer commands.
+#+begin_src elisp
+(map! :leader
+      :desc "Expose buffers" "be" #'buffer-expose
+      :desc "Expose workspace buffers" "bw" #'buffer-workspace-expose
+      :desc "Expose workspace vterm buffers" "bv" #'buffer-workspace-vterm-expose)
+#+end_src
+
+** golden-ratio
+Automatically resize the viewable windows according to the golden ratio.
+#+begin_src elisp
+(use-package! golden-ratio
+  :config
+  (setq golden-ratio-extra-commands
+        (append golden-ratio-extra-commands
+                '(evil-window-left
+                  evil-window-right
+                  evil-window-up
+                  evil-window-down
+                  ace-window
+                  select-window-1
+                  select-window-2
+                  select-window-3
+                  select-window-4
+                  select-window-5)))
+  (map! (:map evil-window-map
+         "g" #'golden-ratio
+         "G" #'golden-ratio-mode
+         ))
+  )
+#+end_src
+
+** rainbow-mode
+Rainbow mode is a helpful feature that will show the hex value colour. I want
+this enabled in most text mode.
+
+#+begin_src elisp
+(add-hook! '(text-mode-hook prog-mode-hook conf-mode-hook) #'rainbow-mode)
+#+end_src
+
+** web-mode
+#+begin_src elisp
+(add-to-list 'auto-mode-alist '("\\.vtl" . web-mode))
+#+end_src
+
+** keycast-mode
+#+begin_src elisp
+(defun mb/toggle-keycast-modeline ()
+  "Toggle the keycast modeline"
+  (interactive)
+  (if keycast-mode
+      (add-to-list 'global-mode-string '("" mode-line-keycast))
+    (setq global-mode-string (remove '("" mode-line-keycast) global-mode-string))))
+
+(after! keycast
+  (define-minor-mode keycast-mode
+    "Show current command and its key binding in the mode line."
+    :global t
+    (if keycast-mode
+        (add-hook 'pre-command-hook 'keycast--update t)
+      (remove-hook 'pre-command-hook 'keycast--update)))
+
+  ;; `emacs-doom-themes' doesn't yet support `keycast' faces.
+  (custom-set-faces!
+    '(keycast-command :inherit mode-line-emphasis)
+    '(keycast-key :inherit mode-line-highlight
+                  :weight bold))
+
+  ;; Prettier insert events.
+  (dolist (input '(self-insert-command
+                   org-self-insert-command))
+    (add-to-list 'keycast-substitute-alist `(,input "." "Martin is typing...")))
+
+  ;; Remove mouse scroll events.
+  (dolist (event '(mwheel-scroll
+                   mouse-event-p
+                   mouse-movement-p))
+    (add-to-list 'keycast-substitute-alist `(,event nil)))
+
+  (add-hook! 'keycast-mode-hook #'mb/toggle-keycast-modeline))
+
+(map!
+ :leader
+ (:prefix-map ("T" . "toggle")
+  :desc "Keycast mode" "k" #'keycast-mode))
+#+end_src
+
+** undo-tree
+#+begin_src elisp
+(setq undo-tree-enable-undo-in-region t)
+(after! undo-tree (add-hook! 'evil-local-mode-hook 'turn-on-undo-tree-mode))
+#+end_src
+
+** proced
+#+begin_src emacs-lisp
+(use-package! proced
+  :config
+  (setq-default proced-tree-flag t
+                proced-filter 'user))
+
+(map! :leader
+      (:prefix-map ("o" . "open")
+       :desc "Proced" "=" #'proced))
+#+end_src
+
+*** Narrowing processes
+#+begin_src elisp
+(use-package! proced-narrow
+  :after proced
+  :config
+  (map!
+   :map proced-mode-map
+   :n "/" #'proced-narrow))
+#+end_src
+
+*** Readable Nix paths
+#+begin_src elisp
+;; WIP Shorten long paths.
+;; (defun +mb/proced-remove-nix-path (oldformat &rest xs)
+;;   (let ((xs (--map (->> it
+;;                      (s-replace-regexp "/nix/store/[^/]+" "{nix}")
+;;                      (s-replace-regexp (template "^/home/<<(user-login-name)>>") "~")
+;;                      )
+;;                    xs)))
+;;     (progn (message xs)
+;;            (apply oldformat xs))))
+;; (defun +mb/proced-remove-nix-path (fn &rest args)
+;;   "Run FN with ARGS then return only the process without the path."
+;;   (let ((parts (split-string (apply fn args) " ")))
+;;     (message (apply fn args))
+;;     ;; (file-name-nondirectory (car parts))
+;;     ;; (s-replace-regexp "/nix/store/[^/]+" "{nix}" parts)
+;;     ))
+
+;; (advice-add #'proced-format-args :around #'+mb/proced-remove-nix-path)
+#+end_src
+
+** nix
+#+begin_src elisp
+;; TODO is there a more standard way to trigger LSP?
+(add-hook! 'nix-mode-hook #'lsp!)
+(add-hook! 'nix-mode-hook 'nixpkgs-fmt-on-save-mode)
+#+end_src
+
+** vterm
+Use system-wide vterm lib when compiling.
+#+begin_src elisp
+(setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=yes")
+#+end_src
+
+*** Mode handling
+Handle escape between Emacs and vterm.
+#+begin_src elisp
+(defun evil-collection-vterm-toggle-send-escape-ins ()
+  "Toggle where ESC is sent between `vterm' and `emacs'.
+This is needed for programs that use ESC, e.g. vim or an ssh'd emacs that
+also uses `evil-mode'. This version sends a `vterm' INS when in `emacs'."
+  (interactive)
+  (if evil-collection-vterm-send-escape-to-vterm-p
+      (evil-collection-define-key 'insert 'vterm-mode-map (kbd "<escape>")
+        (lookup-key evil-insert-state-map (kbd "<escape>"))
+        (evil-escape))
+    (evil-collection-define-key 'insert 'vterm-mode-map
+      (kbd "<escape>") 'vterm--self-insert)
+    (evil-insert-state))
+  (setq evil-collection-vterm-send-escape-to-vterm-p
+        (not evil-collection-vterm-send-escape-to-vterm-p))
+  (message (format "Sending ESC to %s."
+                   (if evil-collection-vterm-send-escape-to-vterm-p
+                       "vterm"
+                     "emacs"))))
+
+(defun evil-collection-vterm-send-escape-emacs ()
+  "Send ESC to `emacs' when in `vterm'."
+  (interactive)
+  (when (and
+         (eq major-mode 'vterm-mode)
+         evil-collection-vterm-send-escape-to-vterm-p
+         )
+    (evil-collection-define-key 'insert 'vterm-mode-map (kbd "<escape>")
+      (lookup-key evil-insert-state-map (kbd "<escape>"))
+      (evil-escape)
+      (setq evil-collection-vterm-send-escape-to-vterm-p nil)
+      (message "Sending ESC to emacs.")))
+  )
+
+(defun evil-collection-vterm-send-escape-vterm ()
+  "Send ESC to `vterm' when in `emacs'."
+  (interactive)
+  (when (and
+         (eq major-mode 'vterm-mode)
+         (not evil-collection-vterm-send-escape-to-vterm-p)
+         )
+    (evil-collection-define-key 'insert 'vterm-mode-map
+      (kbd "<escape>") 'vterm--self-insert)
+    (setq evil-collection-vterm-send-escape-to-vterm-p t)
+    (message "Sending ESC to vterm.")
+    )
+  )
+
+(defun vterm-exit-visual-insert ()
+  "Send evil-insert after exiting visual state."
+  (interactive)
+  (when (or
+         (evil-visual-state-p)
+         (evil-normal-state-p))
+    (evil-exit-visual-state)
+    (evil-insert-state 1)
+    )
+  )
+
+(add-hook 'evil-insert-state-entry-hook #'evil-collection-vterm-send-escape-vterm)
+#+end_src
+
+*** Scroll
+Scrollback limit.
+#+begin_src elisp
+(setq-default vterm-max-scrollback 9999)
+#+end_src
+
+Allow stop scroll term sequence.
+#+begin_src elisp
+(defun vterm-disable-output ()
+  (interactive)
+  (unless (evil-normal-state-p)
+    (evil-normal-state))
+  (vterm-send-key "s" nil nil t))
+#+end_src
+
+*** Titles
+#+begin_src elisp
+(setq vterm-buffer-name "vterm"
+      vterm-buffer-name-string "vterm: %s")
+#+end_src
+
+*** Prompt Outlines
+#+begin_src elisp
+;; Old dir + Lambda based prompt:
+;; (setq-hook! 'vterm-mode-hook outline-regexp "^[a-zA-Z.\/~❮]*[ ]*λ.*")
+;; New uber minimal prompt:
+(setq-hook! 'vterm-mode-hook outline-regexp "^; .*")
+#+end_src
+
+*** Copy mode
+Exclude prompts when exiting copy mode.
+#+begin_src elisp
+(setq vterm-copy-exclude-prompt t)
+#+end_src
+
+Detect prompts using the vterm prompt tracking technique when exiting copy mode.
+#+begin_src elisp
+(setq vterm-use-vterm-prompt-detection-method t)
+#+end_src
+
+Jump back into insert mode when exiting copy mode.
+#+begin_src elisp
+(advice-add 'vterm-copy-mode-done :after
+            (lambda (&rest _) (funcall #'vterm-exit-visual-insert)))
+#+end_src
+
+Make evil-yank work by bypassing vterm-copy-mode-done kill ring logic.
+#+begin_src elisp
+(advice-add 'evil-yank :after
+            (lambda (&rest _)
+              (when (bound-and-true-p vterm-copy-mode)
+                (vterm-copy-mode -1)
+                (vterm-exit-visual-insert))))
+#+end_src
+
+Display line numbers in copy mode.
+#+begin_src elisp
+(add-hook 'vterm-copy-mode-hook
+          (lambda ()
+            (if vterm-copy-mode
+                (progn (evil-escape) (setq display-line-numbers 'relative))
+              (setq display-line-numbers nil))))
+#+end_src
+
+*** Keys
+Miscellaneous vterm bindings.
+#+begin_src elisp
+(defun mb/vterm-right-here ()
+    (interactive)
+  (let ((current-prefix-arg '-))
+    (call-interactively '+vterm/here)))
+
+(map!
+ ;; Pop and find vterms.
+ :vgni "s-;" #'mb/vterm-right-here
+ :vgni "H-s-;" #'mb/vterm-right-here
+ :vgni "s-'" #'buffer-workspace-vterm-expose
+
+ (:map vterm-mode-map
+
+  ;; Enter copy mode.
+  :vni "C-SPC" #'vterm-copy-mode
+
+  ;; Stop scrolling.
+  :vni "C-s" #'vterm-disable-output
+
+  ;; Fix shift-space vterm ';2u' artefact.
+  :i "S-SPC" "SPC"
+  :i "H-S-SPC" "SPC"
+
+  ;; Term sequences.
+  :i "C-c" #'vterm-send-C-c
+  :i "C-z" #'vterm-send-C-z
+
+  ;; Claim TAB from Emacs.
+  :i [tab] #'vterm-send-tab
+  :i "TAB" #'vterm-send-tab
+
+  ;; Fix C-backspace.
+  :i "<C-backspace>" (lambda () (interactive) (vterm-send-key (kbd "C-w")))
+  :i "<s-backspace>" (lambda () (interactive) (vterm-send-key (kbd "C-w")))
+  )
+
+ (:map vterm-copy-mode-map
+  ;; Allow yank motions to exit directly
+  :mnv "y" #'evil-yank
+  ;; Prompt hopping and folding.
+  :mnv "[[" #'vterm-previous-prompt
+  :mnv "]]" #'vterm-next-prompt
+  :mnv "<tab>" #'outline-toggle-children
+  )
+ )
+#+end_src
+
+Fix escape for vterm.
+#+begin_src elisp
+(setq evil-collection-key-blacklist
+      (list "C-w" "C-j" "C-k" "gd" "gf" "K" "[" "]" "gz"
+            doom-leader-key doom-localleader-key
+            doom-leader-alt-key doom-localleader-alt-key))
+#+end_src
+
+Evil frame movements.
+#+begin_src elisp
+(map!
+ (:map vterm-copy-mode-map
+   :i "C-h" #'evil-window-left
+   :i "C-j" #'evil-window-down
+   :i "C-k" #'evil-window-up
+   :i "C-l" #'evil-window-right)
+
+ (:map vterm-mode-map
+   :nvi "C-w" evil-window-map
+   :i "C-h" #'evil-window-left
+   :i "C-j" #'vterm--self-insert
+   :i "C-k" #'vterm--self-insert
+   :i "C-l" #'evil-window-right)
+ )
+#+end_src
+
+Pass frame movements through to Emacs.
+#+begin_src elisp
+(use-package! vterm
+  :defer t
+  :init
+  (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=yes")
+  :config
+  (add-to-list 'vterm-keymap-exceptions "C-w"))
+#+end_src
+
+** EXWM
+Load my flavour of EXWM when in Linux.
+#+begin_src elisp
+(when IS-LINUX
+  (load! "+exwm"))
+#+end_src
+
+** TEMP WIPs
+Work around https://github.com/hlissner/doom-emacs/issues/5529
+#+begin_src elisp
+(add-hook! vterm-mode (persp-add-buffer (current-buffer)))
+#+end_src
+
+#+begin_src elisp
+;; Register with yas
+(set-yas-minor-mode! 'emacs-everywhere-mode)
+
+(use-package! emacs-everywhere
+  :config
+  (require 'spell-fu)
+  (setq emacs-everywhere-major-mode-function #'org-mode
+        emacs-everywhere-frame-name-format "%s — Emacs"
+        emacs-everywhere-frame-parameters
+        `((name . "emacs-everywhere")
+          (width . 120)
+          (height . 20))))
+
+;; No need for a modeline in an Emacs Everywhere frame.
+(add-hook! 'emacs-everywhere-init-hooks #'hide-mode-line-mode)
+
+;; Make new frames work consistently when persp-mode is enabled.
+(add-hook! 'emacs-everywhere-init-hooks
+  (defun +everywhere-clear-persp-info-h ()
+    (when (bound-and-true-p persp-mode)
+      (setq persp-emacsclient-init-frame-behaviour-override nil))))
+
+;; Not sure why I need this but I get prompts without it.
+(add-hook! 'emacs-everywhere-final-hooks :depth 10
+  (defun +everywhere-save-buffer ()
+    (let ((inhibit-message t)
+          (require-final-newline nil)
+          write-file-functions)
+      (write-file buffer-file-name))))
+#+end_src
+
+Format org buffers. Helpful for keeping consistency. Found this on the Org
+mailing list.
+#+begin_src elisp
+(defun mb/org-reformat-buffer ()
+  (interactive)
+  (when (y-or-n-p "Really format current buffer? ")
+    (let ((document (org-element-interpret-data (org-element-parse-buffer))))
+      (erase-buffer)
+      (insert document)
+      (goto-char (point-min)))))
+#+end_src
+
+| Hi there          | Mate |
+|-------------------+------|
+| Not working is it | No   |

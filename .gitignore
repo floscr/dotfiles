@@ -1,3 +1,26 @@
-/bin/nimbin/dst/
-/bin/nimbin/src/boseQC35BatteryLevel
-/bin/nimbin/src/wifi
+# Machine-local secrets.
+.secrets
+
+# Machine-local OS theme.
+theme.nix
+
+# Machine-local Emacs theme.
+config/emacs/+theme.el
+
+# Machine-local Emacs config tangled from `config.org`.
+config/emacs/config.el
+config/emacs/packages.el
+
+# NixOS build results.
+**/result
+
+# QEMU VMs.
+**/*.qcow*
+
+# Vagrant boxes.
+**/*.box
+**/.vagrant
+
+# Tracking improvements.
+TODO.org
+/.direnv

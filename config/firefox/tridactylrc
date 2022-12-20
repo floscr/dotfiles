@@ -1,0 +1,167 @@
+" Vim-like behaviour. Removing a line from here makes the setting disappear.
+sanitise tridactyllocal tridactylsync
+
+" Plain old, new tabs.
+set newtab about:blank
+
+" Slack shortcuts.
+" Jump to unread.
+bind gsu composite js document.getElementsByClassName("p-channel_sidebar__link--page_punreads")[0].click()
+" Mark all unreads as read.
+bind gsr composite js document.getElementsByClassName("p-unreads_view__footer")[0].firstChild.click()
+" Jump to threads.
+bind gst composite js document.getElementsByClassName("p-channel_sidebar__link--all-threads")[0].click()
+" Jump to DMs
+bind gsd composite js document.getElementsByClassName("p-channel_sidebar__link--page_pdms")[0].click()
+
+" Make Tridactyl work on more sites at the expense of some security.
+jsb browser.webRequest.onHeadersReceived.addListener(tri.request.clobberCSP,{urls:["<all_urls>"],types:["main_frame"]},["blocking","responseHeaders"])
+command fixamo_quiet jsb tri.excmds.setpref("privacy.resistFingerprinting.block_mozAddonManager", "true").then(tri.excmds.setpref("extensions.webextensions.restrictedDomains", '""'))
+command fixamo js tri.excmds.setpref("privacy.resistFingerprinting.block_mozAddonManager", "true").then(tri.excmds.setpref("extensions.webextensions.restrictedDomains", '""').then(tri.excmds.fillcmdline_tmp(3000, "Permissions added to user.js. Please restart Firefox to make them take affect.")))
+fixamo_quiet
+
+" Defaults to 300ms.
+set hintdelay 100
+
+" Hide modeindicator.
+set modeindicator false
+
+" Allow for hint refinement.
+set hintfiltermode vimperator-reflow
+
+" Vim-styled page search
+unbind <C-f>
+bind / fillcmdline find
+bind ? fillcmdline find -?
+bind n findnext 1
+bind N findnext -1
+bind <Escape> composite mode normal ; hidecmdline ; nohlsearch
+set incsearch true
+
+" Lowercase makes more sense to me.
+set hintuppercase false
+
+" Allow Ctrl-a to select all in the commandline.
+unbind --mode=ex <C-a>
+
+" Allow Ctrl-c to copy in the commandline.
+unbind --mode=ex <C-c>
+
+" Move up and down using C-j/k in the commandline.
+bind --mode=ex <C-k> ex.prev_completion
+bind --mode=ex <C-j> ex.next_completion
+
+" Easier full-ignore mode for macOS.
+bind <C-]> mode ignore
+bind --mode=ignore <Escape> mode normal
+
+" Disable all default searchurls.
+setnull searchurls.amazon
+setnull searchurls.amazonuk
+setnull searchurls.bing
+setnull searchurls.cnrtl
+setnull searchurls.duckduckgo
+setnull searchurls.gentoo_wiki
+setnull searchurls.github
+setnull searchurls.google
+setnull searchurls.googlelucky
+setnull searchurls.googleuk
+setnull searchurls.mdn
+setnull searchurls.osm
+setnull searchurls.qwant
+setnull searchurls.scholar
+setnull searchurls.searx
+setnull searchurls.startpage
+setnull searchurls.twitter
+setnull searchurls.wikipedia
+setnull searchurls.yahoo
+
+" Org-roam capture
+command org_roam js javascript:location.href='org-protocol://roam-ref?template=w&ref='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title)+'&body='+encodeURIComponent(window.getSelection())
+bind X org_roam
+
+" Pop to other persistent tabs
+unbind S
+bind S buffer soundcloud.com
+bind M buffer mail.google.com
+bind C buffer calendar.google.com
+
+" New reddit design is just fucking _terrible_. Use the old one.
+autocmd DocStart ^http(s?)://www.reddit.com js tri.excmds.urlmodify("-t", "www", "old")
+
+" Make gu take you back to subreddit from comments
+bindurl reddit.com gu urlparent 3
+
+" Toggle comments on Reddit/HN.
+bind ;c hint -c [class*="expand"],[class="togg"]
+
+" Tab ordering in fuzzy finders
+set tabsort mru
+
+" Search engine and shortcuts.
+set searchengine k
+" General.
+set searchurls.g https://www.google.com.au/search?q=%s
+set searchurls.k https://kagi.com/search?q=%s
+set searchurls.ddg https://duckduckgo.com/?q=%s
+set searchurls.sp https://startpage.com/do/search?language=english&cat=web&query=%s
+set searchurls.yt https://youtube.com/results?search_query=%s
+set searchurls.sg https://sourcegraph.com/search?q=%s
+set searchurls.gh https://cs.github.com/?scopeName=All+repos&scope=&q=%s
+set searchurls.gho https://github.com/search?q=%s
+set searchurls.so https://stackoverflow.com/search?q=%s
+set searchurls.reddit https://old.reddit.com/r/%s
+" Nix.
+set searchurls.nixopt https://search.nixos.org/options?from=0&size=15&sort=relevance&channel=unstable&query=%s
+set searchurls.nixopts https://search.nixos.org/options?from=0&size=15&sort=relevance&channel=unstable&query=%s
+set searchurls.nixpkg https://search.nixos.org/packages?from=0&size=15&sort=relevance&channel=unstable&query=%s
+set searchurls.nixpkgs https://search.nixos.org/packages?from=0&size=15&sort=relevance&channel=unstable&query=%s
+" Emacs.
+set searchurls.doom https://github.com/hlissner/doom-emacs/search?q=%s
+" Rust.
+set searchurls.crate https://crates.io/search?q=%s
+set searchurls.crates https://crates.io/search?q=%s
+set searchurls.cargo https://crates.io/search?q=%s
+set searchurls.librs https://lib.rs/search?q=%s
+set searchurls.docsrs https://docs.rs/releases/search?query=%s
+" Go.
+set searchurls.godev https://pkg.go.dev/search?q=%s
+set searchurls.godoc https://godoc.org/?q=%s
+set searchurls.gopkg https://golang.org/pkg/%s
+
+" Disable.
+blacklistadd mail.google.com
+" blacklistadd docs.google.com
+blacklistadd protonmail.com
+blacklistadd office.com
+blacklistadd excalidraw.com
+blacklistadd asciiflow.com
+blacklistadd draw.io
+blacklistadd app.diagrams.net
+blacklistadd canva.com
+blacklistadd atlassian.net
+
+" Really disable
+autocmd DocStart canva.com mode ignore
+autocmd TabEnter canva.com mode ignore
+" autocmd DocStart docs.google.com mode ignore
+" autocmd TabEnter docs.google.com mode ignore
+autocmd DocStart mail.google.com/mail/u/ mode ignore
+autocmd TabEnter mail.google.com/mail/u/ mode ignore
+autocmd DocStart protonmail.com mode ignore
+autocmd TabEnter protonmail.com mode ignore
+autocmd DocStart atlassian.net mode ignore
+autocmd TabEnter atlassian.net mode ignore
+
+" Scroll smoothly and slowly.
+set smoothscroll true
+bind j scrollline 3
+bind k scrollline -3
+
+" Use scroll keys similar to Vimium.
+bind d scrollline 10
+bind u scrollline -10
+
+" Detach tabs into new windows.
+bind gd tabdetach
+bind gD composite tabduplicate | tabdetach
