@@ -7,12 +7,14 @@ with lib; {
       let t = either str path;
       in
       {
-        # Allow for dotfile location flexibility, defaulting to parent dir.
-        dir = mkOpt t (findFirst pathExists (toString ../.)
-          [ "${config.user.home}/.config/dotfiles" ]);
+        dir = mkOpt t
+          (findFirst pathExists (toString ../.) [
+            "${config.user.home}/.config/dotfiles"
+            "/etc/dotfiles"
+          ]);
+        binDir = mkOpt t "${config.dotfiles.dir}/bin";
         configDir = mkOpt t "${config.dotfiles.dir}/config";
         modulesDir = mkOpt t "${config.dotfiles.dir}/modules";
-        privateDir = mkOpt t "${config.dotfiles.dir}/.private";
         themesDir = mkOpt t "${config.dotfiles.modulesDir}/themes";
       };
 
