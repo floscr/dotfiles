@@ -1,0 +1,140 @@
+/* -*- mode: css; -*- */
+configuration {
+  icon-theme: "Paper";
+  cycle: true;
+  disable-history: false;
+
+  display-ssh: "";
+  display-run: "";
+  display-drun: "";
+  display-window: "";
+  display-combi: "";
+
+  monitor: "-4";
+
+  /* Allow hover and mouse click */
+  hover-select: true;
+  me-accept-entry: "MousePrimary";
+  me-select-entry: "";
+}
+
+* {
+  accent: #bd93f9;
+
+  bg: #1e2029fa;
+  bg-light: #1c1c1c;
+  bg-focus: #282a36;
+  bg-dark: #181a23;
+  fg: #bbc2cf;
+  fg-list: #bbc2cf;
+  border: #f0c674;
+  placeholder: #545764;
+
+  on: #8bd49c;
+  off: #cc6666;
+
+  text-font: "Iosevka 18";
+  text-font-2x: "Iosevka 20";
+  text-mono-font: "Iosevka 18";
+  icon-font: "FontAwesome5FreeSolid 18";
+
+  background-color: transparent;
+  text-color: @fg-list;
+  border-color: @bg-dark;
+}
+
+@media (min-width: 2600) {
+  window {
+    font: @text-font-2x;
+  }
+}
+
+window {
+  width: 43%;
+  border: 1;
+  border-color: @bg-light;
+  children: [ inputbar, listview ];
+  background-color: @bg;
+  font: @text-font;
+}
+
+listview {
+  fixed-height: 1;
+  margin: -2px 0 0;
+  columns: 1;
+  scrollbar: true;
+  spacing: 1px;
+  border: 0;
+}
+scrollbar {
+  background-color: @bg;
+  handle-width: 3px;
+}
+inputbar {
+  children: [ textbox-icon, prompt, entry ];
+  border: 0;
+}
+entry {
+  placeholder: "Search";
+  placeholder-color: @placeholder;
+}
+textbox-icon,
+prompt {
+  padding: 11px;
+  expand: false;
+  border: 0 1px 0 0;
+  margin: 0 -2px 0 0;
+}
+textbox-icon {
+  padding: 11px -6px 0;
+}
+entry,
+element {
+  padding: 11px 14px;
+}
+textbox {
+  padding: 24px;
+  margin: 20px;
+}
+
+scrollbar {
+  background-color: @bg-dark;
+  handle-color: @accent;
+  border-color: @bg-dark;
+}
+listview,
+inputbar {
+  background-color: @bg-dark;
+}
+textbox-icon,
+prompt,
+entry {
+  text-color: @accent;
+}
+prompt,
+entry {
+  background-color: @bg-focus;
+}
+textbox-icon,
+prompt {
+  background-color: #2f313d;
+}
+prompt {
+  background-color: @bg-focus;
+}
+textbox-icon {
+  font: @icon-font;
+}
+entry {
+  text-color: @fg;
+}
+
+element.normal.normal,
+element.alternate.normal {
+  background-color: @bg;
+  text-color: @fg;
+}
+element.selected.normal {
+  background-color: @bg-dark;
+  text-color: @accent;
+}
