@@ -2,7 +2,28 @@
 with builtins;
 with lib;
 with lib.my;
-let cfg = config.modules.theme;
+let
+  cfg = config.modules.theme;
+  mkFontOption = description:
+    mkOption {
+      inherit description;
+      type = types.submodule {
+        options = {
+          family = mkOption {
+            description = "Font family";
+            type = types.str;
+          };
+          size = mkOption {
+            description = "Font size";
+            type = types.ints.positive;
+          };
+          pkg = mkOption {
+            description = "Package containing font family";
+            type = types.package;
+          };
+        };
+      };
+    };
 in
 {
   options.modules.theme = with types; {
@@ -14,6 +35,20 @@ in
         let theme = getEnv "THEME_MODE";
         in if theme != "" then theme else v;
     };
+
+    fonts = mkOption {
+      description = "Fonts to use throughout various apps.";
+      type = types.submodule {
+        options = {
+          sans = mkFontOption "Sans serif font";
+          serif = mkFontOption "Serif font";
+          mono = mkFontOption "Monospace font";
+          terminal = mkFontOption "Terminal font";
+          ui = mkFontOption "Font to use for UI elements";
+        };
+      };
+    };
+
     wallpaper = mkOption { type = nullOr (either str path); };
     icons = mkOption { type = nullOr (either str path); };
     tridactyl = mkStrOpt { };

@@ -3,7 +3,14 @@
   # REVIEW: Check https://github.com/NixOS/nixos-hardware for updates.
   imports = [ inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t490 ];
 
-  modules = { };
+  modules = {
+    theme.mode = "dark";
+    desktop = {
+      enable = true;
+      wm = "xmonad";
+      dpi = 119;
+    };
+  };
 
   environment.systemPackages = with pkgs; [
     cached-nix-shell
