@@ -1,7 +1,8 @@
 # Defaults across all my hosts and platforms (both NixOS and Darwin).
 { inputs, config, lib, pkgs, ... }:
 
-with lib; {
+with lib;
+{
   nix =
     let
       mkCache = url: key: { inherit url key; };
@@ -75,15 +76,23 @@ with lib; {
       CACHIX_AUTH_TOKEN = config.secrets.cachix_auth_token;
 
       # Location, timezone and internationalisation.
-      TZ = "Australia/Sydney";
-      LC_ALL = "en_AU.UTF-8";
-      LANG = "en_AU.UTF-8";
-      LANGUAGE = "en_AU.UTF-8";
+      TZ = "Europe/Vienna";
+      LC_ALL = "en_US.UTF-8";
+      LANG = "en_US.UTF-8";
+      LANGUAGE = "en_US.UTF-8";
 
-      DOTFILES = config.dotfiles.dir;
+      DOTFILES = lib.dotFilesDir;
       NIXPKGS_ALLOW_UNFREE = "1";
     };
   };
+
+  # Location, timezone and internationalisation.
+  location = {
+    latitude = 12.5;
+    longitude = 55.88;
+  };
+  time.timeZone = mkDefault "Europe/Vienna";
+  i18n.defaultLocale = "en_US.UTF-8";
 
   modules.shell.zsh.aliases = {
     nix-test = "make -C /etc/dotfiles test";

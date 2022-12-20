@@ -72,14 +72,6 @@ with lib.my; {
     ];
   };
 
-  # Location, timezone and internationalisation.
-  location = {
-    latitude = 12.5;
-    longitude = 55.88;
-  };
-  time.timeZone = mkDefault "Europe/Vienna";
-  i18n.defaultLocale = "en_US.UTF-8";
-
   # Security.
   security = {
     sudo = {
