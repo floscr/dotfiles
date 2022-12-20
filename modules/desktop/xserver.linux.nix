@@ -30,5 +30,13 @@ with lib.my;
       Xft.lcdfilter: lcddefault
       Xft.rgba: rgb
     '';
+
+    # Clean up leftovers, as much as we can
+    system.userActivationScripts.cleanupHome = ''
+      pushd $HOME
+      rm -rf .compose-cache .nv .pki .dbus .fehbg
+      [ -s .xsession-errors ] || rm -f .xsession-errors*
+      popd
+    '';
   };
 }
