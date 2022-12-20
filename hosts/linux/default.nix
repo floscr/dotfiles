@@ -36,7 +36,6 @@ with lib.my; {
     # Use the latest Linux kernel.
     kernelPackages = mkDefault pkgs.linuxPackages_5_10;
 
-    # Cattle not pets.
     tmpOnTmpfs = true;
 
     # Kernel.
@@ -57,7 +56,6 @@ with lib.my; {
   # Fix early console display.
   hardware.video.hidpi.enable = config.modules.desktop.hidpi;
 
-  # Default low-level Linux system packages.
   environment = {
     systemPackages = with pkgs; [
       exfat
@@ -72,28 +70,21 @@ with lib.my; {
     ];
   };
 
-  # Security.
   security = {
     sudo = {
       enable = true;
       wheelNeedsPassword = false;
     };
-
-    # Prevent replacing the running kernel without reboot.
     protectKernelImage = true;
   };
 
-  # Linux user and homedir settings.
   user = {
+    initialPassword = "nix";
     extraGroups = [ "input" "disk" "audio" "video" "systemd-journal" ];
-    initialHashedPassword = config.secrets.password;
   };
 
   users = {
-    # Empty root password to begin with.
-    extraUsers.root.initialHashedPassword = config.secrets.password;
-
-    # Ensure only way to change users/groups is through this file.
+    users.root.initialPassword = "nix";
     mutableUsers = false;
   };
 }
