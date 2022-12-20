@@ -5,9 +5,10 @@ with lib.my;
 {
   config = mkIf config.services.xserver.enable {
     environment.systemPackages = with pkgs; [
-      xclip
-      xdotool
       feh
+      xclip
+      xcwd
+      xdotool
     ];
 
     services.xserver.displayManager.sessionCommands = ''
