@@ -43,35 +43,6 @@ with lib; {
       description = "Global environment variables";
     };
 
-    secrets = {
-      id_rsa = mkSecret "SSH RSA key" "";
-      id_ed25519 = mkSecret "SSH ED25519 key" "";
-      ssh_keygrips = mkSecret "SSH->GPG keygrips" [ ];
-      gpg = mkSecret "GPG key" "";
-      password = mkSecret "Local user password" "";
-      cachix_signing_key = mkSecret "Cachix signing key" "";
-      cachix_auth_token = mkSecret "Cachix auth token" "";
-      work_overlay_url = mkSecret "$WORK Nix packages overlay URL" "";
-      work_username = mkSecret "$WORK username" "";
-      work_vcs_host = mkSecret "$WORK VCS host" "";
-      work_vcs_path = mkSecret "$WORK VCS path" "";
-      work_email = mkSecret "$WORK email" "";
-      work_jira = mkSecret "$WORK JIRA instance" "";
-      work_sourcegraph = mkSecret "$WORK Sourcegraph instance" "";
-      exetel_username = mkSecret "Exetel username" "";
-      exetel_password = mkSecret "Exetel password" "";
-      protonvpn_username = mkSecret "ProtonVPN OpenVPN username" "";
-      protonvpn_password = mkSecret "ProtonVPN OpenVPN password" "";
-      openweathermap_api_key = mkSecret "OpenWeatherMap key" "";
-      zuul_server_host = mkSecret "Zuul server host" "";
-      zuul_server_port = mkSecret "Zuul server port" "";
-      zuul_server_private_key = mkSecret "Zuul server private key" "";
-      zuul_server_public_key = mkSecret "Zuul server public key" "";
-      zuul_client_private_key = mkSecret "Zuul client private key" "";
-      zuul_client_public_key = mkSecret "Zuul client public key" "";
-      showrss_url = mkSecret "Show RSS URL" "";
-    };
-
     # Elaborate the current system for convenience elsewhere.
     targetSystem =
       mkOpt' attrs (systems.elaborate { system = pkgs.stdenv.targetPlatform.system; })
@@ -86,7 +57,7 @@ with lib; {
       in
       {
         inherit name;
-        description = "Martin Baillie";
+        description = "The primary user account";
       } // optionalAttrs config.targetSystem.isLinux {
         uid = 1000;
         extraGroups = [ "wheel" ];
@@ -121,7 +92,10 @@ with lib; {
           enable = true;
           configFile = mkAliasDefinitions options.home.configFile;
           dataFile = mkAliasDefinitions options.home.dataFile;
+
         } // optionalAttrs config.targetSystem.isLinux {
+          desktopEntries = mkAliasDefinitions options.home.desktopEntries;
+
           mime.enable = true;
           mimeApps = {
             enable = true;
@@ -135,16 +109,10 @@ with lib; {
     };
 
     # Ensure any existing PATH managed outside of Nix gets respected.
-    env.PATH = [ "$PATH" ];
+    env.PATH = [ "$XDG_CONFIG_HOME/dotfiles/bin" "$PATH" ];
 
     # Merge Nix environment variables declared by modules.
     environment.extraInit = concatStringsSep "\n"
       (mapAttrsToList (n: v: ''export ${n}="${v}"'') config.env);
-
-    # Secrets.
-    # TODO: Evaluate `agenix` and other Nix store encryption options.
-    secrets =
-      let path = "${(builtins.getEnv "XDG_DATA_HOME")}/secrets.nix";
-      in if pathExists path then import path else { };
   };
 }
