@@ -1,8 +1,0 @@
-#+TITLE: Readme
-
-* Caveats
-
-** Nimfp
-
-Don't use ~.find~ for ~nimfp~ lists, it gets shadowed by ~sequtils~
-Use ~lib/findX~
