@@ -17,10 +17,10 @@ with lib.my;
 
     home.configFile."xtheme/80-dpi".text = ''
       #if X_RESOLUTION > 3840
-      Xft.dpi: 144
+        Xft.dpi: 144
       #endif
       #if X_RESOLUTION <= 3840
-      Xft.dpi: 120
+        Xft.dpi: 120
       #endif
 
       Xft.antialias: 1
