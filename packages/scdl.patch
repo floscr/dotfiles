@@ -1,0 +1,23 @@
+diff --git a/scdl/__init__.py b/scdl/__init__.py
+index 6fb3be7..4b9dff4 100644
+--- a/scdl/__init__.py
++++ b/scdl/__init__.py
+@@ -21,9 +21,12 @@ else:
+
+ config_file = os.path.join(config_dir, 'scdl.cfg')
+
+-if not os.path.exists(config_file):
+-    if not os.path.exists(config_dir):
+-        os.makedirs(config_dir)
+-
+-    with open(config_file, 'w') as f:
+-        f.write(default_config)
++try:
++    if not os.path.exists(config_file):
++        if not os.path.exists(config_dir):
++            os.makedirs(config_dir)
++
++        with open(config_file, 'w') as f:
++            f.write(default_config)
++except IOError:
++    pass
