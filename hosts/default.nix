@@ -81,7 +81,7 @@ with lib;
       LANG = "en_US.UTF-8";
       LANGUAGE = "en_US.UTF-8";
 
-      DOTFILES = lib.dotFilesDir;
+      DOTFILES = config.dotfiles.dir;
       NIXPKGS_ALLOW_UNFREE = "1";
     };
   };
