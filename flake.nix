@@ -26,6 +26,8 @@
     # Emacs overlay.
     emacs-overlay.url = github:nix-community/emacs-overlay;
 
+    nur.url = "github:nix-community/NUR";
+
     # Remote deploys.
     deploy-rs.url = "github:serokell/deploy-rs";
 
@@ -51,12 +53,13 @@
   # https://github.com/NixOS/nix/blob/master/src/nix/flake.cc
   outputs =
     inputs@{ self
+    , bad-hosts
+    , darwin
+    , deploy-rs
+    , emacs-overlay
     , nixpkgs
     , nixpkgs-unstable
-    , darwin
-    , bad-hosts
-    , emacs-overlay
-    , deploy-rs
+    , nur
     , ...
     }:
     let
@@ -88,7 +91,12 @@
         });
 
       pkgs = genAttrs supportedSystems.all
-        (mkPkgs nixpkgs [ emacs-overlay.overlay self.overlay rosettaOverlay ]);
+        (mkPkgs nixpkgs [
+          emacs-overlay.overlay
+          self.overlay
+          rosettaOverlay
+          nur.overlay
+        ]);
       pkgsUnstable =
         genAttrs supportedSystems.all (mkPkgs nixpkgs-unstable [ ]);
 

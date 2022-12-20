@@ -16,6 +16,17 @@
         transmission.enable = true;
         # font-manager.enable = true;
       };
+      browsers = {
+        default = "brave";
+        psd = true;
+        chromium.enable = true;
+        firefox.enable = true;
+        brave.enable = true;
+        brave.profiles = [
+          { dir = "Profile 1"; alias = "Pitch"; }
+          { dir = "Profile 2"; alias = "Personal"; }
+        ];
+      };
     };
   };
 
