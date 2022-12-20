@@ -15,6 +15,10 @@
     home-manager.url = github:rycee/home-manager/master;
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    # Agenix
+    agenix.url = "github:ryantm/agenix";
+    agenix.inputs.nixpkgs.follows = "nixpkgs";
+
     # Block adservers, fake news etc.
     bad-hosts.url = github:StevenBlack/hosts;
     bad-hosts.inputs.nixpkgs.follows = "nixpkgs";
