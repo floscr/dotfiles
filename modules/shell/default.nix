@@ -9,65 +9,34 @@ in
     # Miscellaneous userspace utilities I always want available on any platform.
     user.packages = with pkgs;
       [
-        age
-        bat
         bc
-        bfs
         binutils
         coreutils
         curl
-        diffutils
         dnsutils
-        entr
         exa
         fd
-        file
-        findutils
         fzf
-        fzy
         gawk
-        gettext
         gnugrep
         gnumake
-        gnuplot
-        gnused
-        graphviz
-        gron
         htop
-        ijq
-        inetutils
         jq
         killall
         lsof
-        ncdu
-        nmap
-        perl
+        nvd # Nix version diff tool
         ripgrep
-        screen
-        sqlite
-        stunnel
-        tcpdump
-        tmux
         tree
         unzip
         wget
-        xar
-        yq-go
+        vim
         zip
-
-        # unstable.wireshark
-
-        (aspellWithDicts (d: with d; [ en en-computers en-science ]))
       ] ++ (if config.targetSystem.isLinux then
       # Exclusive to Linux.
         [
-          psmisc
-          kitty
         ] else
       # Exclusive to Darwin.
         [
-          pstree
-          unixtools.watch
         ]);
 
     # Miscellaneous aliases.
