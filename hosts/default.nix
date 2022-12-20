@@ -80,7 +80,7 @@ with lib; {
       LANG = "en_AU.UTF-8";
       LANGUAGE = "en_AU.UTF-8";
 
-      DOTFILES = dotFilesDir;
+      DOTFILES = config.dotfiles.dir;
       NIXPKGS_ALLOW_UNFREE = "1";
     };
   };
