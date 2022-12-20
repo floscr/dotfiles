@@ -1,0 +1,115 @@
+#!/usr/bin/env zsh
+# Required packages for non-nix users
+# ffmpeg slop screenkey mov2gif
+
+# Select a region and record it.
+#
+# If given a gif, it will record an mp4 and convert it afterwards using the
+# mov2gif script included in this repo (which is powered by gifsicle and
+# ffmpeg).
+#
+# Usage: scrrec somefile.mp4
+#        scrrec another.gif
+#
+#        Add -s to define a recording area interactively
+#        scrreec -s somefile.mp4
+#
+#        Add -w flag to display screenkey in the selection
+#        scrrec -w somefile.mp4
+#
+#        Add -a flag to record audio output
+#        scrrec -a somefile.mp4
+
+is_script=
+geom=
+delay=1
+fps=30
+count=1
+stopfile=/tmp/_stop
+record_audio=
+with_screenkey=
+screenkey_height=400
+while getopts c:d:f:g:a:psw opt; do
+  case $opt in
+    c) count=$OPTARG ;;
+    d) delay="$OPTARG" ;;
+    f) fps=$OPTARG ;;
+    g) geom="$OPTARG" ;;
+    p) picom= ;;
+    s) is_script=1 ;;
+    a) record_audio=1 ;;
+    w) with_screenkey=1 ;;
+  esac
+done
+shift $((OPTIND-1))
+
+select-region() {
+  if [[ $geom ]]; then
+    echo "${geom//[x+]/ }"
+  else
+    slop -nof "%w %h %x %y"
+  fi
+}
+
+countdown() {
+  if (( count > 0 )); then
+    for ((i=count;i>0;i--)); do
+      if [[ $is_script ]]; then
+        notify-send -u critical -t 1000 "Recording in $i"
+      else
+        echo "Recording in $i"
+      fi
+      sleep 1
+    done
+  elif [[ $is_script ]]; then
+    notify-send -u critical "Starting recording..."
+  else
+    echo "Started recording..."
+  fi
+}
+
+recording-start() {
+  local dest=${1:-./rec.mp4}
+  local mp4dest=
+
+  [[ $dest == *.gif ]] && mp4dest="${dest%.*}.mp4"
+  [[ $with_screenkey ]] && screenkey --geometry $4x$screenkey_height+$2+$(( $3 + $5 - $screenkey_height )) &
+
+  countdown
+  ffmpeg -y -f x11grab -show_region 1 -ss $delay -s ${4}x${5} -i :0.0+${2},${3} -framerate ${fps} "${mp4dest:-$dest}" &
+  pid=$!
+  echo $pid >$stopfile
+  wait $pid
+  rm -f $stopfile
+  if [[ -f "$mp4dest" ]]; then
+    mov2gif "$mp4dest" "$dest" && rm -fv "$mp4dest"
+  fi
+  echo -n "$dest" | xclip -selection clipboard -in
+  notify-send "Screencast successful" "Saved to $dest\nAnd copied to your clipboard!"
+}
+
+# If a recording session is already active, stop that one.
+if [[ -n "$is_script" && -f "$stopfile" ]]; then
+  kill $(cat $stopfile)
+  echo "Stopped previous recording"
+  exit 0
+fi
+
+read -r W H X Y < <(select-region)
+[[ -z "$W$H$X$Y" ]] && exit 1
+
+# Picom with blur and/or transparencies cause unbearable flickering in
+# recordings, so temporarily disable it.
+picom=
+if systemctl is-enabled --user picom >/dev/null; then
+  systemctl --user stop picom
+  picom=1
+fi
+cleanup() {
+  [[ $picom ]] && systemctl --user start picom;
+  [[ $with_screenkey ]] && pkill screenkey
+}
+trap cleanup EXIT
+
+# Let 'er rip
+recording-start "$1" "$X" "$Y" "$W" "$H"
