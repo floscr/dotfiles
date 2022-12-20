@@ -5,6 +5,10 @@
 
   modules = { };
 
+  environment.systemPackages = with pkgs; [
+    cached-nix-shell
+  ];
+
   boot = {
     loader = {
       # Allow the NixOS installation to modify EFI boot variables.
