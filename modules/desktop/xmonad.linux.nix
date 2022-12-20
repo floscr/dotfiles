@@ -9,6 +9,8 @@ in
   };
 
   config = mkIf cfg.enable {
+    modules.desktop.gtk.enable = true;
+
     user.packages = with pkgs; [
       xmobar
       # TODO: Fix xmonadctl it doesn't work correctly right now because config dir is not here
