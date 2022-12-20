@@ -4,17 +4,18 @@
 with lib; {
   nix =
     let
-      # Caching.
       mkCache = url: key: { inherit url key; };
-      martinbaillie = mkCache "https://martinbaillie.cachix.org"
-        "martinbaillie.cachix.org-1:clUspg2ke4PWimP2gYEtm1/lvbcDDEc8yFP6lgOiqlQ=";
       cache = mkCache "https://cache.nixos.org"
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=";
       cachix = mkCache "https://cachix.cachix.org"
         "cachix.cachix.org-1:eWNHQldwUO7G2VkjpnjDbWwy4KQ/HNxht7H4SSoMckM=";
+      emacs = mkCache "https://cachix.org/api/v1/cache/emacs"
+        "emacs.cachix.org-1:b1SMJNLY/mZF6GxQE+eDBeps7WnkT0Po55TAyzwOxTY=";
+      nixpkgs = mkCache "https://nixpkgs.cachix.org"
+        "nixpkgs.cachix.org-1:q91R6hxbwFvDqTSDKwDAV4T5PxqXGxswD8vhONFMeOE=";
       nix-community = mkCache "https://nix-community.cachix.org"
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=";
-      all = [ martinbaillie cache cachix nix-community ];
+      all = [ cache cachix emacs nixpkgs nix-community ];
 
       # Flake inputs sans `self` for system registry and Nix path uses.
       filteredInputs = filterAttrs (n: _: n != "self") inputs;
@@ -79,7 +80,6 @@ with lib; {
       LANG = "en_AU.UTF-8";
       LANGUAGE = "en_AU.UTF-8";
 
-      # Needs must.
       NIXPKGS_ALLOW_UNFREE = "1";
     };
   };
