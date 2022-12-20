@@ -4,14 +4,17 @@
 with lib;
 with lib.my; {
   system = {
-    # NixOS release to track state compatibility against.
-    # Pair this with home-manager.
-    stateVersion =
-      config.home-manager.users.${config.user.name}.home.stateVersion;
-
+    stateVersion = config.home-manager.users.${config.user.name}.home.stateVersion;
     # Let `nixos-version --json` know about the Git revision of this flake.
     configurationRevision = with inputs; mkIf (self ? rev) self.rev;
   };
+
+  # -- Networking
+  networking.networkmanager.enable = true;
+  # The global useDHCP flag is deprecated, therefore explicitly set to false
+  # here. Per-interface useDHCP will be mandatory in the future, so this
+  # generated config replicates the default behaviour.
+  networking.useDHCP = false;
 
   nix = {
     # Automatically detects files in the store that have identical contents.
@@ -70,8 +73,12 @@ with lib.my; {
   };
 
   # Location, timezone and internationalisation.
-  time.timeZone = "Australia/Sydney";
-  i18n.defaultLocale = "en_AU.UTF-8";
+  location = {
+    latitude = 12.5;
+    longitude = 55.88;
+  };
+  time.timeZone = mkDefault "Europe/Vienna";
+  i18n.defaultLocale = "en_US.UTF-8";
 
   # Security.
   security = {
