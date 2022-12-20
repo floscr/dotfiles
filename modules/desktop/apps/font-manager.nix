@@ -1,12 +1,11 @@
-{ options, config, lib, pkgs, ... }:
-
+{ options, config, pkgs, lib, ... }:
 with lib;
-with lib.my;
-let cfg = config.modules.apps.font-manager;
+let
+  cfg = config.modulesl.desktop.apps.font-manager;
 in
 {
-  options.modules.apps.font-manager = {
-    enable = mkBoolOpt false;
+  options.modules.desktop.apps.font-manager = {
+    enable = my.mkBoolOpt false;
   };
 
   config = mkIf cfg.enable {
