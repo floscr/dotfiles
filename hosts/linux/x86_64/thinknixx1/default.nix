@@ -11,6 +11,11 @@
       dpi = 119;
       xmonad.enable = true;
       mime.enable = true;
+      apps = {
+        rofi.enable = true;
+        transmission.enable = true;
+        # font-manager.enable = true;
+      };
     };
   };
 
