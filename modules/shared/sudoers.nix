@@ -1,15 +1,14 @@
-{ options, config, lib, pkgs, ... }:
-
+{ options, config, pkgs, lib, ... }:
 with lib;
-with lib.my;
-let cfg = config.modules.shared.sudoers;
+let
+  cfg = config.modules.shared.sudoers;
 in
 {
   options.modules.shared.sudoers = {
-    enable = mkBoolOpt false;
+    enable = my.mkBoolOpt false;
   };
-  config = mkIf cfg.enable {
 
+  config = mkIf cfg.enable {
     security.sudo.extraRules = [{
       groups = [ "wheel" ];
       commands = [

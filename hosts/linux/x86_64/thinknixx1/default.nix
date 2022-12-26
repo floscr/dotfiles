@@ -5,11 +5,6 @@
 
   modules = {
     theme.mode = "dark";
-    scripts = {
-      screen_record.enable = true;
-      measure.enable = true;
-    };
-
     desktop = {
       enable = true;
       wm = "xmonad";
@@ -48,6 +43,13 @@
         default = "alacritty";
         alacritty.enable = true;
       };
+    };
+    scripts = {
+      screen_record.enable = true;
+      measure.enable = true;
+    };
+    shared = {
+      sudoers.enable = true;
     };
   };
 
