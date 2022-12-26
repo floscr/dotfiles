@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+# If -f, then put computer to sleep.
+# Otherwise, lock screen and turn off monitor.
+
+
+restore() {
+  echo "Restore"
+}
+
+
+sleep_prepare () {
+  playerctl pause&
+
+  # i3lock can't grab the cursor if another application is handling it
+  systemctl --user stop hhpc
+
+  lockscreen &
+  sleep 1
+}
+
+if [[ $1 == -h ]]; then
+  bin=${0##*/}
+  echo "Usage: $bin [-f]"
+  echo
+  echo "  $bin       # put display to sleep"
+  echo "  $bin -f    # put computer to sleep"
+elif [[ $1 == -f ]]; then
+  echo "Going to sleep..."
+  notify-send " Going to sleep..."
+  sleep_prepare
+  systemctl suspend
+else
+  echo "Shutting my eyes..."
+  notify-send " Turning off display..."
+  sleep_prepare
+  xset dpms force off
+fi

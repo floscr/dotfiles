@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+printf "%s" "Waiting for server $@..."
+while ! timeout 1.2 ping -c 1 -n $@ &> /dev/null; do
+done
+notify-send "Network is back up"
