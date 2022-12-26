@@ -7,7 +7,7 @@ in
   config = mkIf (cfg.mode == "dark") {
     modules.theme = {
       wallpaper = ./dj_nobu_dark.jpg;
-      colours = import ./_dracula.nix;
+      colours = import ./_nord.nix;
       tridactyl = "base16-dracula";
       fonts = rec {
         sans = {

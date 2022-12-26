@@ -49,6 +49,8 @@ in
       };
     };
 
+    onReload = mkOpt (attrsOf lines) { };
+
     wallpaper = mkOption { type = nullOr (either str path); };
     icons = mkOption { type = nullOr (either str path); };
     tridactyl = mkStrOpt { };

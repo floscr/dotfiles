@@ -31,6 +31,14 @@
         gimp.enable = true;
         # inkscape.enable = true;
       };
+      media = {
+        spotify.enable = true;
+        mpv.enable = true;
+      };
+      term = {
+        default = "alacritty";
+        alacritty.enable = true;
+      };
     };
   };
 
