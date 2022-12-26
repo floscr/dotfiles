@@ -1,17 +1,15 @@
-{ options, config, lib, pkgs, ... }:
-
+{ options, config, pkgs, lib, ... }:
 with lib;
-with lib.my;
 let
   cfg = config.modules.scripts.measure;
   script-name = "measure";
 in
 {
   options.modules.scripts.measure = {
-    enable = mkBoolOpt false;
+    enable = my.mkBoolOpt false;
   };
 
-  config = {
+  config = mkIf cfg.enable {
     user.packages = with pkgs; [
       maim
       bc

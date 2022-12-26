@@ -5,6 +5,11 @@
 
   modules = {
     theme.mode = "dark";
+    scripts = {
+      screen_record.enable = true;
+      measure.enable = true;
+    };
+
     desktop = {
       enable = true;
       wm = "xmonad";
