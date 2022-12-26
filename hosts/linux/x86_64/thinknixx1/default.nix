@@ -16,6 +16,10 @@
         transmission.enable = true;
         # font-manager.enable = true;
       };
+      gaming = {
+        steam.enable = true;
+        emulators.n64.enable = true;
+      };
       browsers = {
         default = "brave";
         psd = true;
