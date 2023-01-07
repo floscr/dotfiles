@@ -1,38 +1,41 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bb
+(ns zzz.core
+  (:require [babashka.cli :as cli]
+            [babashka.process :as bp]))
 
-# If -f, then put computer to sleep.
-# Otherwise, lock screen and turn off monitor.
+(def cli-opts
+  {:dry-run {:alias :d
+             :desc "Don't execute sleep."}})
 
+(defn notify [msg]
+  (print "Going to sleep...")
+  (bp/shell (str "notify-send '" msg "'")))
 
-restore() {
-  echo "Restore"
-}
+(defn prepare []
+  (bp/shell {:continue true} "playerctl pause &")
+  (bp/shell {:continue true} "emacsclient -e \"(org-clock-out)\""))
 
+(defn sleep [{:keys [opts] :as args}]
+  (let [{:keys [dry-run]} opts]
+    (notify " Going to sleep...")
+    (prepare)
+    (when-not dry-run
+      (bp/shell "systemctl suspend"))))
 
-sleep_prepare () {
-  playerctl pause&
+(defn turn-off-display [{:keys [opts] :as args}]
+  (let [{:keys [dry-run]} opts]
+    (notify " Turning off display...")
+    (prepare)
+    (when-not dry-run
+      (bp/shell "xset dpms force off"))))
 
-  # i3lock can't grab the cursor if another application is handling it
-  systemctl --user stop hhpc
+(defn help
+  [_]
+  (println
+   (str "sleep\n" (cli/format-opts {:spec cli-opts}))))
 
-  lockscreen &
-  sleep 1
-}
+(def main
+  [{:cmds ["sleep"] :fn sleep :spec cli-opts}
+   {:cmds [] :fn turn-off-display}])
 
-if [[ $1 == -h ]]; then
-  bin=${0##*/}
-  echo "Usage: $bin [-f]"
-  echo
-  echo "  $bin       # put display to sleep"
-  echo "  $bin -f    # put computer to sleep"
-elif [[ $1 == -f ]]; then
-  echo "Going to sleep..."
-  notify-send " Going to sleep..."
-  sleep_prepare
-  systemctl suspend
-else
-  echo "Shutting my eyes..."
-  notify-send " Turning off display..."
-  sleep_prepare
-  xset dpms force off
-fi
+(cli/dispatch main *command-line-args*)
