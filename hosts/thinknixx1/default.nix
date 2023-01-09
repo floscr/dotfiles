@@ -41,6 +41,9 @@ with lib.my;
   services.atd.enable = true;
 
   modules-new = {
+    scripts = {
+      screen-capture.enable = true;
+    };
   };
 
   modules = {
@@ -61,7 +64,6 @@ with lib.my;
       beancount.enable = true;
     };
     scripts = {
-      screen-record.enable = true;
       measure.enable = true;
       comma.enable = true;
     };

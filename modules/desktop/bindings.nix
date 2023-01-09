@@ -150,12 +150,6 @@ with lib.my;
           description = "Caffeine";
         }
         {
-          binding = "super + shift + S";
-          xmonadBinding = "M-S-s";
-          command = "nimx screenCapture";
-          description = "Screenshot";
-        }
-        {
           binding = "super + u";
           xmonadBinding = "M-u";
           command = "xcolor-yank";
