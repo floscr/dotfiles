@@ -1,19 +1,26 @@
 #!/usr/bin/env bb
 (ns zzz.core
-  (:require [babashka.cli :as cli]
-            [babashka.process :as bp]))
+ (:require [babashka.cli :as cli]
+           [babashka.fs :as fs]
+           [babashka.process :as bp]))
 
 (def cli-opts
   {:dry-run {:alias :d
              :desc "Don't execute sleep."}})
 
+(def restore-file "/tmp/my-zzz-restore-after-sleep")
+
 (defn notify [msg]
   (print "Going to sleep...")
   (bp/shell (str "notify-send '" msg "'")))
 
-(defn prepare []
-  (bp/shell {:continue true} "playerctl pause &")
-  (bp/shell {:continue true} "emacsclient -e \"(org-clock-out)\""))
+(defn prepare
+  ([] (prepare false))
+  ([with-restore?]
+   (when with-restore?
+     (spit restore-file ""))
+   (bp/shell {:continue true} "playerctl pause &")
+   (bp/shell {:continue true} "emacsclient -e \"(org-clock-out)\"")))
 
 (defn sleep [{:keys [opts] :as args}]
   (let [{:keys [dry-run]} opts]
@@ -25,7 +32,7 @@
 (defn turn-off-display [{:keys [opts] :as args}]
   (let [{:keys [dry-run]} opts]
     (notify " Turning off display...")
-    (prepare)
+    (prepare true)
     (when-not dry-run
       (bp/shell "xset dpms force off"))))
 
