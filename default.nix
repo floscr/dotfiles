@@ -8,7 +8,8 @@ with inputs;
     [
       home-manager.nixosModules.home-manager
     ]
-    ++ (mapModulesRec' (toString ./modules) import);
+    ++ (mapModulesRec' (toString ./modules) import)
+    ++ (mapModulesRec' (toString ./modules-new) import);
 
   # Common config for all nixos machines; and to ensure the flake operates soundly
   environment.variables.DOTFILES = dotFilesDir;

@@ -118,7 +118,8 @@
         {
           dotfiles = import ./.;
         }
-        // mapModulesRec ./modules import;
+        // mapModulesRec ./modules import
+        // mapModulesRec ./modules-new import;
 
       nixosConfigurations =
         mapHosts ./hosts { };

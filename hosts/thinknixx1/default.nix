@@ -40,6 +40,9 @@ with lib.my;
 
   services.atd.enable = true;
 
+  modules-new = {
+  };
+
   modules = {
     bindings.enable = true;
     shell = {
