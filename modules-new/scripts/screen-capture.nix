@@ -1,5 +1,6 @@
 { options, config, pkgs, lib, ... }:
 with lib;
+with lib.my;
 let
   cfg = config.modules-new.scripts.screen-capture;
 in
@@ -23,7 +24,7 @@ in
       (
         let
           script-name = "screen-capture";
-          package = (pkgs.writeScriptBin script-name (builtins.readFile ./screen-capture));
+          package = (writeBabashkaScriptBin script-name ./screen-capture.clj);
           bin = "${package}/bin/${script-name}";
           dir = cfg.plugins.record.dir;
         in
