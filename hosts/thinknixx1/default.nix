@@ -28,6 +28,7 @@ with lib.my;
     gparted
     xournal
     zip
+    scdl
   ] ++ flake-packages;
 
   hardware.usb.wakeupDisabled = [
