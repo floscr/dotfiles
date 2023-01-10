@@ -134,18 +134,6 @@ with lib.my;
       ))
       (mkIf config.services.xserver.enable [
         {
-          binding = "super + BackSpace";
-          xmonadBinding = "M-<Backspace>";
-          command = "zzz";
-          description = "Turn off display";
-        }
-        {
-          binding = "super + shift + BackSpace";
-          xmonadBinding = "M-S-<Backspace>";
-          command = "zzz -f";
-          description = "Sleep";
-        }
-        {
           command = "caffeine";
           description = "Caffeine";
         }

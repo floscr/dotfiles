@@ -44,6 +44,7 @@ with lib.my;
   modules-new = {
     scripts = {
       screen-capture.enable = true;
+      zzz.enable = true;
     };
   };
 
