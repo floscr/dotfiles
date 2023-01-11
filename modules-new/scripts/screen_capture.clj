@@ -1,5 +1,5 @@
 #!/usr/bin/env bb
-(ns screen-capture.core
+(ns screen-capture
  (:require [babashka.cli :as cli]
            [babashka.fs :as fs]
            [babashka.process :as bp]))
