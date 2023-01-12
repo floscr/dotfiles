@@ -1,8 +1,8 @@
 #!/usr/bin/env bb
 (ns screen-capture
- (:require [babashka.cli :as cli]
-           [babashka.fs :as fs]
-           [babashka.process :as bp]))
+  (:require [babashka.cli :as cli]
+            [babashka.fs :as fs]
+            [babashka.process :as bp]))
 
 (def default-dirs {:single "~/Media/Screencapture"})
 
@@ -19,7 +19,7 @@
     (str path)))
 
 (defn capture-single! [{:keys [opts]}]
-  (let [ext  "png"
+  (let [ext "png"
         path (or
               (:file opts)
               (filename (:single default-dirs) ext))]
