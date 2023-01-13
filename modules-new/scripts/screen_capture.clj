@@ -114,7 +114,13 @@
     (if (fs/exists? file)
       (let [[pid] (fs/read-all-lines file)]
         (fs/delete file)
-        (bp/shell {:continue true} "kill" pid))
+        ;; Try to kill the process with pid from stop-file
+        (let [{:keys [exit]} (bp/shell {:continue true} "kill" pid)
+              could-not-find-pid? (= exit 1)]
+          (if could-not-find-pid?
+            (do (println "Stop file found but process not running. Retrying to record.")
+                (toggle-capture-animated! args))
+            (println "Stopped running screen recording."))))
       (let [proc (capture-animated! args)
             pid (-> (:proc proc)
                     (.pid)
