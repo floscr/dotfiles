@@ -122,11 +122,12 @@
                 (toggle-capture-animated! args))
             (println "Stopped running screen recording."))))
       (let [proc (capture-animated! args)
-            pid (-> (:proc proc)
-                    (.pid)
-                    (str))]
-        (fs/write-lines file [pid])
-        @proc))))
+            pid (some-> (:proc proc)
+                        (.pid)
+                        (str))]
+        (when proc
+          (fs/write-lines file [pid])
+          @proc)))))
 
 (defn help
   [_]
