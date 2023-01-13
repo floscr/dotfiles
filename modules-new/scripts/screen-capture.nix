@@ -24,7 +24,7 @@ in
       (
         let
           script-name = "screen-capture";
-          package = (writeBabashkaScriptBin script-name ./screen-capture.clj);
+          package = (writeBabashkaScriptBin script-name ./screen_capture.clj);
           bin = "${package}/bin/${script-name}";
           dir = cfg.plugins.record.dir;
         in
@@ -34,6 +34,9 @@ in
             xclip
             dunst
             maim
+            ffmpeg
+            slop
+            screenkey
           ];
           modules.bindings.items = [
             {
@@ -41,43 +44,19 @@ in
               command = "${bin} single";
               description = "Screenshot";
             }
-          ];
-        }
-      )
-    )
-    (mkIf cfg.plugins.record.enable
-      (
-        let
-          script-name = "screen-capture-record";
-          package = (pkgs.writeScriptBin script-name (builtins.readFile ./screen-capture-record.zsh));
-          bin = "${package}/bin/${script-name}";
-          dir = cfg.plugins.record.dir;
-        in
-        {
-          user.packages = with pkgs; [
-            package
-            ffmpeg
-            slop
-            screenkey
-          ];
-          modules.bindings.items = [
             {
               description = "Screen Capture: Record MP4";
               xmonadBinding = "M-C-s";
-              command = "${bin} -s ${dir}/$(date +%F-%T).mp4";
+              command = "${bin} mp4";
             }
             {
               description = "Screen Capture: Record MP4 + Screenkey";
               xmonadBinding = "M-C-M1-s";
-              command = "${bin} -s -w ${dir}/$(date +%F-%T).mp4";
-            }
-            {
-              description = "Screen Capture: Record GIF";
-              xmonadBinding = "M-M1-s";
-              command = "${bin} -s ${dir}/$(date +%F-%T).gif";
+              command = "${bin} mp4 --screenkey";
             }
           ];
         }
-      ))
+      )
+    )
   ]);
 }
