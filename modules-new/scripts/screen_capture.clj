@@ -18,6 +18,8 @@
 (def cli-opts {:dir {:alias :d
                      :require true}})
 
+(def screenkey-opts {:height 400})
+
 ;; Helpers ---------------------------------------------------------------------
 
 (defn filename-date []
@@ -91,7 +93,7 @@
     path))
 
 (defn capture-animated! [{:keys [opts]}]
-  (let [{:keys [countdown]
+  (let [{:keys [countdown screenkey]
          :or {countdown 3}} opts
         ext "mp4"
         path (or (:file opts)
@@ -100,6 +102,12 @@
     (when width
       (when (pos? countdown)
         (notification-countdown! countdown))
+      (when screenkey
+        (bp/process "screenkey" "--geometry" (format "%dx%d+%d+%d"
+                                                     width
+                                                     (:height screenkey-opts)
+                                                     x
+                                                     (+ y (- height (:height screenkey-opts))))))
       (bp/process "ffmpeg"
                   "-y" ; Ignore globals
                   "-f" "x11grab"
