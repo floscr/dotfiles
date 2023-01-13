@@ -119,7 +119,8 @@
             pid (-> (:proc proc)
                     (.pid)
                     (str))]
-        (fs/write-lines file [pid])))))
+        (fs/write-lines file [pid])
+        @proc))))
 
 (defn help
   [_]
