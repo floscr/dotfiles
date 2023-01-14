@@ -9,7 +9,8 @@
 
 ;; Variables -------------------------------------------------------------------
 
-(def opts {:dir (-> (fs/expand-home "~/.config/dotfiles") (str))})
+(def opts
+  {:dir (-> (fs/expand-home "~/.config/dotfiles") (str))})
 
 ;; Helpers ---------------------------------------------------------------------
 
@@ -41,6 +42,10 @@
                                    (str description "\n"))))
     pkgs))
 
+(defn garbage-collect! [{:keys []}]
+  (println "Cleaning up your user profile...")
+  (bp/shell opts "sudo nix-collect-garbage" "-d"))
+
 (defn help [{:keys []}]
   (println "Help"))
 
@@ -49,6 +54,7 @@
 (def table-templates
   {:rebuild {:fn rebuild!}
    :search {:args->opts [:query] :fn search!}
+   :garbage-collect {:fn garbage-collect!}
    :help {:cmds [] :fn help}})
 
 (def table
@@ -56,6 +62,8 @@
         {:cmds ["rebuild"] :template :rebuild}
         {:cmds ["s"] :template :search}
         {:cmds ["search"] :template :search}
+        {:cmds ["gc"] :template :garbage-collect}
+        {:cmds ["garbage-collect"] :template :garbage-collect}
         {:cmds [] :template :help}]
       (map (fn [x] (merge x (get table-templates (:template x)))))))
 
