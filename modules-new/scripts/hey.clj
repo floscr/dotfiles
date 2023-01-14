@@ -19,9 +19,18 @@
 
 ;; Commands --------------------------------------------------------------------
 
+(defn diff! []
+  (when-let [[a b] (->> (bp/shell {:out :string} "ls -v /nix/var/nix/profiles")
+                        :out
+                        (#(str/split % #"\n"))
+                        (take-last 2)
+                        (map #(str "/nix/var/nix/profiles/" %)))]
+    (bp/shell {:continue true} "nvd diff" a b)))
+
 (defn rebuild! [{:keys [opts]}]
-  (let [{:keys [command]
-         :or [command "switch"]} opts
+  (let [{:keys [command diff?]
+         :or {command "switch"
+              diff? true}} opts
         hostname (-> (bp/shell {:out :string} "hostname")
                      :out)]
     (bp/shell
@@ -29,7 +38,8 @@
       :continue true}
      (format "sudo nixos-rebuild --flake .#%s %s --impure"
              hostname
-             command))))
+             command))
+    (when diff? (diff!))))
 
 (defn search! [{:keys [opts]}]
   (let [{:keys [query]} opts
