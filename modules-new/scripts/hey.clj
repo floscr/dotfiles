@@ -41,6 +41,10 @@
              command))
     (when diff? (diff!))))
 
+(defn rollback! [args]
+  (let [arg (assoc-in args [:opts :command] "--rollback switch")]
+    (rebuild! arg)))
+
 (defn search! [{:keys [opts]}]
   (let [{:keys [query]} opts
         pkgs (-> (bp/shell {:out :string} "nix search nixpkgs" query "--json" "--quiet")
@@ -65,6 +69,7 @@
   {:rebuild {:fn rebuild!}
    :search {:args->opts [:query] :fn search!}
    :garbage-collect {:fn garbage-collect!}
+   :rollback {:cmds [] :fn rollback!}
    :help {:cmds [] :fn help}})
 
 (def table
@@ -74,6 +79,7 @@
         {:cmds ["search"] :template :search}
         {:cmds ["gc"] :template :garbage-collect}
         {:cmds ["garbage-collect"] :template :garbage-collect}
+        {:cmds ["rollback"] :template :rollback}
         {:cmds [] :template :help}]
       (map (fn [x] (merge x (get table-templates (:template x)))))))
 
