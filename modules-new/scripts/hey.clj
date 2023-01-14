@@ -43,7 +43,12 @@
 
 (defn update! [{:keys [_opts]}]
   (println "Updating NixOS flake")
-  (bp/shell {:out :string} "nix flake update" (System/getenv "DOTFILES")))
+  (bp/shell {:out :string} "sudo nix flake update" (System/getenv "DOTFILES")))
+
+(defn upgrade! [args]
+  (println "Upgrading NixOS flake")
+  (update! args)
+  (rebuild! args))
 
 (defn rollback! [args]
   (let [arg (assoc-in args [:opts :command] "--rollback switch")]
@@ -80,6 +85,8 @@
    :rollback        {:fn rollback!
                      :description "Roll back to last generation"}
    :update          {:fn update!
+                     :description "Update flake lockfile"}
+   :upgrade         {:fn upgrade!
                      :description "Update flake lockfile and rebuild"}
    :help            {:fn help}})
 
@@ -88,6 +95,8 @@
         {:cmds ["rebuild"]         :template :rebuild}
         {:cmds ["u"]               :template :update}
         {:cmds ["update"]          :template :update}
+        {:cmds ["up"]              :template :upgrade}
+        {:cmds ["upgrade"]         :template :upgrade}
         {:cmds ["s"]               :template :search}
         {:cmds ["search"]          :template :search}
         {:cmds ["gc"]              :template :garbage-collect}
