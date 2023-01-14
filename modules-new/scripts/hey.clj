@@ -46,12 +46,18 @@
 
 ;; Main ------------------------------------------------------------------------
 
+(def table-templates
+  {:rebuild {:fn rebuild!}
+   :search {:args->opts [:query] :fn search!}
+   :help {:cmds [] :fn help}})
+
 (def table
-  [{:cmds ["re"] :fn rebuild!}
-   {:cmds ["rebuild"] :fn rebuild!}
-   {:cmds ["s"] :args->opts [:query] :fn search!}
-   {:cmds ["search"] :fn search!}
-   {:cmds [] :fn help}])
+  (->> [{:cmds ["re"] :template :rebuild}
+        {:cmds ["rebuild"] :template :rebuild}
+        {:cmds ["s"] :template :search}
+        {:cmds ["search"] :template :search}
+        {:cmds [] :template :help}]
+      (map (fn [x] (merge x (get table-templates (:template x)))))))
 
 (defn -main [& args]
   (cli/dispatch table args))
