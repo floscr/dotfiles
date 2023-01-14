@@ -66,22 +66,27 @@
 ;; Main ------------------------------------------------------------------------
 
 (def table-templates
-  {:rebuild {:fn rebuild!}
-   :search {:args->opts [:query] :fn search!}
-   :garbage-collect {:fn garbage-collect!}
-   :rollback {:cmds [] :fn rollback!}
-   :help {:cmds [] :fn help}})
+  {:rebuild         {:fn rebuild!
+                     :description "Rebuild current system flake"}
+   :search          {:fn search!
+                     :description "Searches nixpkgs for a package"
+                     :args->opts [:query]}
+   :garbage-collect {:fn garbage-collect!
+                     :description "Garbage collect and optimize store"}
+   :rollback        {:fn rollback!
+                     :description "Roll back to last generation"}
+   :help            {:fn help}})
 
 (def table
-  (->> [{:cmds ["re"] :template :rebuild}
-        {:cmds ["rebuild"] :template :rebuild}
-        {:cmds ["s"] :template :search}
-        {:cmds ["search"] :template :search}
-        {:cmds ["gc"] :template :garbage-collect}
+  (->> [{:cmds ["re"]              :template :rebuild}
+        {:cmds ["rebuild"]         :template :rebuild}
+        {:cmds ["s"]               :template :search}
+        {:cmds ["search"]          :template :search}
+        {:cmds ["gc"]              :template :garbage-collect}
         {:cmds ["garbage-collect"] :template :garbage-collect}
-        {:cmds ["rollback"] :template :rollback}
-        {:cmds [] :template :help}]
-      (map (fn [x] (merge x (get table-templates (:template x)))))))
+        {:cmds ["rollback"]        :template :rollback}
+        {:cmds []                  :template :help}]
+       (map (fn [x] (merge x (get table-templates (:template x)))))))
 
 (defn -main [& args]
   (cli/dispatch table args))
