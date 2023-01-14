@@ -41,9 +41,13 @@
              command))
     (when diff? (diff!))))
 
+(bp/shell {:out :string
+           :dir "/tmp"} "pwd")
+
 (defn update! [{:keys [_opts]}]
   (println "Updating NixOS flake")
-  (bp/shell {:out :string} "sudo nix flake update" (System/getenv "DOTFILES")))
+  (bp/shell {:dir (:dir opts)
+             :out :string} "sudo nix flake update" (System/getenv "DOTFILES")))
 
 (defn upgrade! [args]
   (println "Upgrading NixOS flake")
