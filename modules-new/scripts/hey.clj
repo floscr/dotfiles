@@ -41,6 +41,10 @@
              command))
     (when diff? (diff!))))
 
+(defn update! [{:keys [_opts]}]
+  (println "Updating NixOS flake")
+  (bp/shell {:out :string} "nix flake update" (System/getenv "DOTFILES")))
+
 (defn rollback! [args]
   (let [arg (assoc-in args [:opts :command] "--rollback switch")]
     (rebuild! arg)))
@@ -75,11 +79,15 @@
                      :description "Garbage collect and optimize store"}
    :rollback        {:fn rollback!
                      :description "Roll back to last generation"}
+   :update          {:fn update!
+                     :description "Update flake lockfile and rebuild"}
    :help            {:fn help}})
 
 (def table
   (->> [{:cmds ["re"]              :template :rebuild}
         {:cmds ["rebuild"]         :template :rebuild}
+        {:cmds ["u"]               :template :update}
+        {:cmds ["update"]          :template :update}
         {:cmds ["s"]               :template :search}
         {:cmds ["search"]          :template :search}
         {:cmds ["gc"]              :template :garbage-collect}
