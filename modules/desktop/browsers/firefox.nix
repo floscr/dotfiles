@@ -59,7 +59,7 @@ in
           # The extensions still have to be loaded manually
           # but its still better than having to install them by hand
           darkreader
-          https-everywhere
+          # https-everywhere
           multi-account-containers
           org-capture
           react-devtools
