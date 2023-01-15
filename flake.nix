@@ -119,7 +119,7 @@
           dotfiles = import ./.;
         }
         // mapModulesRec ./modules import
-        // mapModulesRec ./modules-new import;
+        // mapModulesRec ./new/modules import;
 
       nixosConfigurations =
         mapHosts ./hosts { };
