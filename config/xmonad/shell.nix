@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> { } }:
+{ pkgs ? import <nixpkgs> { config = { allowBroken = true; }; } }:
 let
   ghc = pkgs.haskellPackages.ghcWithPackages (pkgs: [
     pkgs.xmonad
@@ -11,7 +11,7 @@ in
 pkgs.mkShell {
   buildInputs = with pkgs; [
     ghc
-    haskellPackages.brittany
+    # haskellPackages.brittany
     haskellPackages.stylish-haskell
   ];
 }
