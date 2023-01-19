@@ -45,6 +45,7 @@ with lib.my;
     scripts = {
       screen-capture.enable = true;
       zzz.enable = true;
+      invert_colors.enable = true;
     };
   };
 

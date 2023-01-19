@@ -138,10 +138,6 @@ doCenterFloatRetainSize win = do
 
 toggleFloat = floatOrNot (withFocused $ windows . W.sink) (withFocused $ doCenterFloatRetainSize)
 
-toggleInvert :: X ()
-toggleInvert  = withFocused $ \w ->
-  spawn $ "xprop -f TAG_INVERT 8c -set TAG_INVERT \"1\" -id " ++ (show w)
-
 toggleSticky :: X ()
 toggleSticky = wsContainingCopies >>= \ws -> case ws of
   [] -> windows copyToAll
@@ -350,7 +346,6 @@ myKeyboardBindings =
   , ("M-S-v"       , spawn "rofi-greenclip")
   , ("M-S-<Return>", namedScratchpadAction myScratchpads "emacs-scratch")
   , ("M-C-'"       , spawn "rofi_org_bookmarks")
-  , ("M-i"         , toggleInvert)
 
     -- Move window to corner
   , ("M-S-w 1", sequence_ [(moveWindowToRelativePosition 0 0), withFocused (keysMoveWindow (0, 32))])
