@@ -64,7 +64,7 @@ import           XMonad.Util.EZConfig                (additionalKeys,
 import           XMonad.Util.NamedScratchpad         as NS
 import           XMonad.Util.Paste                   (sendKey)
 import           XMonad.Util.PositionStore
-import           XMonad.Util.Run                     (spawnPipe)
+import           XMonad.Util.Run                     (spawnPipe, runProcessWithInput, safeSpawn)
 import           XMonad.Util.Scratchpad
 
 import           Control.Arrow                       (second, (***))
@@ -137,6 +137,10 @@ doCenterFloatRetainSize win = do
   return ()
 
 toggleFloat = floatOrNot (withFocused $ windows . W.sink) (withFocused $ doCenterFloatRetainSize)
+
+toggleInvert :: X ()
+toggleInvert  = withFocused $ \w ->
+  spawn $ "xprop -f TAG_INVERT 8c -set TAG_INVERT \"1\" -id " ++ (show w)
 
 toggleSticky :: X ()
 toggleSticky = wsContainingCopies >>= \ws -> case ws of
@@ -346,6 +350,7 @@ myKeyboardBindings =
   , ("M-S-v"       , spawn "rofi-greenclip")
   , ("M-S-<Return>", namedScratchpadAction myScratchpads "emacs-scratch")
   , ("M-C-'"       , spawn "rofi_org_bookmarks")
+  , ("M-i"         , toggleInvert)
 
     -- Move window to corner
   , ("M-S-w 1", sequence_ [(moveWindowToRelativePosition 0 0), withFocused (keysMoveWindow (0, 32))])

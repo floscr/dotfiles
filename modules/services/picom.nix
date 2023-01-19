@@ -45,6 +45,7 @@ in
 
       settings = {
         shadow-radius = 20;
+        invert-color-include = [ "TAG_INVERT@:8c = 1" ];
 
         # xinerama-shadow-crop = true;
         # frame-opacity = 1;
