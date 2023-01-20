@@ -28,13 +28,13 @@
     (bp/shell {:continue true} "nvd diff" a b)))
 
 (defn rebuild! [{:keys [opts]}]
-  (let [{:keys [command diff?]
+  (let [{:keys [command diff? dir]
          :or {command "switch"
               diff? true}} opts
         hostname (-> (bp/shell {:out :string} "hostname")
                      :out)]
     (bp/shell
-     {:dir (:dir opts)
+     {:dir dir
       :continue true}
      (format "sudo nixos-rebuild --flake .#%s %s --impure"
              hostname

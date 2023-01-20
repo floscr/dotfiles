@@ -11,18 +11,18 @@ in
 
   config =
     let
-      script-name = "invert_colors";
-      package = (writeBabashkaScriptBin script-name ./invert_colors.clj);
-      bin = "${package}/bin/${script-name}";
+      pkg = (pkgs.writeBb "invert_colors" {
+        content = ./invert_colors.clj;
+      });
     in
     {
       user.packages = with pkgs; [
-        package
+        pkg
       ];
       modules.bindings.items = [
         {
           xmonadBinding = "M-i";
-          command = "${bin}";
+          command = "${pkg}/bin/invert_colors";
           description = "Invert Colors";
         }
       ];
