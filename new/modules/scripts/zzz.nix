@@ -11,25 +11,26 @@ in
 
   config =
     let
-      script-name = "zzz";
-      package = (writeBabashkaScriptBin script-name ./src/zzz.clj);
-      bin = "${package}/bin/${script-name}";
-      dir = cfg.plugins.record.dir;
+      pkg = (pkgs.writeBb "zzz" {
+        content = ./src/zzz.clj;
+        deps = with pkgs; [
+          dunst
+        ];
+      });
     in
     {
       user.packages = with pkgs; [
-        package
-        dunst
+        pkg
       ];
       modules.bindings.items = [
         {
           xmonadBinding = "M-<Backspace>";
-          command = "zzz";
+          command = "${pkg}/bin/zzz";
           description = "Turn off display (zzz)";
         }
         {
           xmonadBinding = "M-S-<Backspace>";
-          command = "zzz sleep";
+          command = "${pkg}/bin/zzz sleep";
           description = "Sleep (zzz)";
         }
       ];

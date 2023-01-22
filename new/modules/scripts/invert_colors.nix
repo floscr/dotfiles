@@ -11,21 +11,21 @@ in
 
   config =
     let
-      pkg = (pkgs.writeBb "invert_colors" {
+      invert_colors = (pkgs.writeBb "invert_colors" {
         content = ./src/invert_colors.clj;
       });
     in
     {
-      user.packages = with pkgs; [
-        pkg
-      ];
+      user.packages = with pkgs;
+        [
+          invert_colors
+        ];
       modules.bindings.items = [
         {
           xmonadBinding = "M-i";
-          command = "${pkg}/bin/invert_colors";
+          command = "${invert_colors}/bin/invert_colors";
           description = "Invert Colors";
         }
       ];
-
     };
 }

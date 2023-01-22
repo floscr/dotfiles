@@ -111,8 +111,8 @@
         mapModules ./overlays import;
 
       packages."${system}" =
-        mapModules ./packages
-          (p: pkgs.callPackage p { });
+        mapModules ./packages (p: pkgs.callPackage p { })
+        // mapModules ./new/packages (p: pkgs.callPackage p { });
 
       nixosModules =
         {
