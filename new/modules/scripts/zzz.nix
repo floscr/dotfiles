@@ -12,7 +12,7 @@ in
   config =
     let
       script-name = "zzz";
-      package = (writeBabashkaScriptBin script-name ./zzz.clj);
+      package = (writeBabashkaScriptBin script-name ./src/zzz.clj);
       bin = "${package}/bin/${script-name}";
       dir = cfg.plugins.record.dir;
     in

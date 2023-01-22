@@ -7,8 +7,8 @@ with lib;
     (pkgs.writeScriptBin
       script-name
       ("${pkgs.babashka}/bin/bb "
-        # Fixes execution path when in a repository with another bb.edn file
-        + "--deps-root ${../.} --classpath ${../.} "
+        + "--deps-root $HOME/.config/dotfiles/new/modules/scripts "
+        + "--config $HOME/.config/dotfiles/new/modules/scripts/bb.edn "
         + "${path} "
         + "$@"));
 }

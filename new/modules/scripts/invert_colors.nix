@@ -12,7 +12,7 @@ in
   config =
     let
       pkg = (pkgs.writeBb "invert_colors" {
-        content = ./invert_colors.clj;
+        content = ./src/invert_colors.clj;
       });
     in
     {

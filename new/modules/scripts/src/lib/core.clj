@@ -1,5 +1,5 @@
 #!/usr/bin/env bb
-(ns lib
+(ns lib.core
  (:require [babashka.cli :as cli]
            [babashka.fs :as fs]
            [babashka.process :as bp]))

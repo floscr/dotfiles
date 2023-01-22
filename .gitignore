@@ -4,3 +4,4 @@
 result
 .nrepl-port
 /.cpcache/
+/.clj-kondo/

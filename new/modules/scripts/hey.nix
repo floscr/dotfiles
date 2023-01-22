@@ -9,14 +9,15 @@ in
     enable = mkBoolOpt true;
   };
 
-  config = {
-    user.packages = with pkgs; [
-      (writeBb "hey" {
-        content = ./hey.clj;
-        deps = [
-          nvd
-        ];
-      })
-    ];
-  };
+  config =
+    let
+      script-name = "hey";
+      package = (writeBabashkaScriptBin script-name ./src/hey.clj);
+      bin = "${package}/bin/${script-name}";
+    in
+    {
+      user.packages = with pkgs; [
+        package
+      ];
+    };
 }

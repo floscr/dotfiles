@@ -1,21 +1,16 @@
-#!/usr/bin/env bb
 (ns hey
-  (:require [babashka.cli :as cli]
-            [babashka.fs :as fs]
-            [babashka.process :as bp]
-            [clojure.string :as str]
-            [cheshire.core :as json]
-            [clojure.java.io :as io]))
+  (:require
+   [babashka.cli :as cli]
+   [babashka.fs :as fs]
+   [babashka.process :as bp]
+   [cheshire.core :as json]
+   [clojure.string :as str]
+   [lib.shell :as shell]))
 
 ;; Variables -------------------------------------------------------------------
 
 (def opts
   {:dir (-> (fs/expand-home "~/.config/dotfiles") (str))})
-
-;; Helpers ---------------------------------------------------------------------
-
-(defmacro bold [str]
-  `(str "\033[1m" ~str "\033[0m"))
 
 ;; Commands --------------------------------------------------------------------
 
@@ -30,7 +25,8 @@
 (defn rebuild! [{:keys [opts]}]
   (let [{:keys [command diff? dir]
          :or {command "switch"
-              diff? true}} opts
+              diff? true
+              dir (str (fs/expand-home "~/.config/dotfiles"))}} opts
         hostname (-> (bp/shell {:out :string} "hostname")
                      :out)]
     (bp/shell
@@ -40,9 +36,6 @@
              hostname
              command))
     (when diff? (diff!))))
-
-(bp/shell {:out :string
-           :dir "/tmp"} "pwd")
 
 (defn update! [{:keys [_opts]}]
   (println "Updating NixOS flake")
@@ -64,9 +57,9 @@
                  (:out)
                  (json/parse-string keyword))]
     (doseq [{:keys [pname description]} (vals pkgs)]
-      (println (bold pname) "\n" (if (str/blank? description)
-                                   ""
-                                   (str description "\n"))))
+      (println (shell/bold pname) "\n" (if (str/blank? description)
+                                         ""
+                                         (str description "\n"))))
     pkgs))
 
 (defn garbage-collect! [{:keys []}]
@@ -120,4 +113,5 @@
 
   (def q (search! {:opts {:query "cowsay"}}))
   (vals q)
-  (-main "re"))
+  (-main "re")
+  (-main))
