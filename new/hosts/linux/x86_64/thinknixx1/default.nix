@@ -79,7 +79,6 @@ with lib.my;
       clojure.enable = true;
     };
     desktop = {
-      # bspwm.enable = true;
       xmonad.enable = true;
       mime.enable = true;
       gtk-emacs-bindings.enable = true;
