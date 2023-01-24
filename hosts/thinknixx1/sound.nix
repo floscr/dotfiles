@@ -125,11 +125,6 @@
       command = "switch-sound-monitor";
     }
     {
-      description = "Toggle Headphone Audio Output";
-      categories = "Script, Audio";
-      command = "nimx toggleHeadphoneAudioOutput";
-    }
-    {
       description = "Player: Metadata";
       categories = "Script, Audio";
       command = "notify-send \"$(playerctl metadata)\"";
