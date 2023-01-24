@@ -60,11 +60,17 @@
             :path
             (#(bp/process "mpv" % "&")))))
 
+(defn play-last! []
+  (when-let [{:keys [path]} (-> (log-items) (last))]
+    (bp/process "mpv" path "&")))
+
 ;; Main ------------------------------------------------------------------------
 
 (def table
   [{:cmds ["add-log"] :args->opts [:event :path :title] :fn add-log!}
-   {:cmds ["list-log"] :fn list-log!}])
+   {:cmds ["list-log"] :fn list-log!}
+   {:cmds ["rofi-log"] :fn rofi-history!}
+   {:cmds ["play-last"] :fn play-last!}])
 
 (defn -main [& args]
   (cli/dispatch table args))
