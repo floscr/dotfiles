@@ -20,7 +20,6 @@ with lib.my;
     calibre
     unzip
     s-tui
-    custom.nim-utils.get_url_title
     custom.nim-utils.bose_battery_level
     unstable.signal-desktop
     jellyfin-media-player
@@ -46,6 +45,7 @@ with lib.my;
       screen-capture.enable = true;
       zzz.enable = true;
       invert_colors.enable = true;
+      get_url_title.enable = true;
     };
   };
 
