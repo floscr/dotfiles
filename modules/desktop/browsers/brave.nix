@@ -54,7 +54,7 @@ in
         "gbmdgpbipfallnflgajpaliibnhdgobh" # Json Viewer
         "icpgjfneehieebagbmdbhnlpiopdcmna" # New Tab Redirect
         "kbmfpngjjgdllneeigpgjifpgocmfgmb" # Reddit Enhancement Suite
-        "lhaoghhllmiaaagaffababmkdllgfcmc" # Atomic Chrome
+        "godiecgffnchndlihlpaajjcplehddca" # Ghost Text (Atomic Chrome)
         "ndiaggkadcioihmhghipjmgfeamgjeoi" # Add URL To Window Title
         "kkkjlfejijcjgjllecmnejhogpbcigdc" # Org Protocol Capture
       ];
