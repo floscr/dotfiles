@@ -131,7 +131,6 @@ with lib.my;
       espanso.enable = true;
       screendrawing.enable = true;
       syncthing.enable = true;
-      polybar.enable = false;
       dunst.enable = true;
       greenclip.enable = true;
       hotplug.enable = true;

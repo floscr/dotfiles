@@ -20,10 +20,6 @@ in
       sxhkd
       dunst
       libnotify
-      (polybar.override {
-        pulseSupport = true;
-        nlSupport = true;
-      })
     ];
 
     services = {
