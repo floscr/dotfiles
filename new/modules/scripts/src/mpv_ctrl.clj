@@ -15,12 +15,17 @@
                       (edn/read-string (slurp log-file)))
                     [])
         new-entries (conj entries entry)]
-    (spit log-file new-entries)))
+    (when (= last entries entry)
+      (spit log-file new-entries))))
 
 (defn- log-items []
   (when (fs/exists? log-file)
     (->> (slurp log-file)
          (edn/read-string))))
+
+(defn safe-parse-int [val]
+  (try (Integer/parseInt val)
+     (catch Exception _ nil)))
 
 ;; Commands --------------------------------------------------------------------
 
