@@ -50,13 +50,15 @@
         rofi-lines (->> items
                         (map #(:title %))
                         (str/join "\n"))]
-    (-> (bp/sh {:in rofi-lines} "rofi -i -levenshtein-sort -dmenu -p \"Play\" -format i")
-        :out
-        (str/trim)
-        (Integer/parseInt)
-        (#(nth items %))
-        :path
-        (#(bp/sh "mpv" %)))))
+    (some-> (bp/sh {:in rofi-lines
+                    :continue true}
+                   "rofi -i -levenshtein-sort -dmenu -p \"Play\" -format i")
+            :out
+            (str/trim)
+            (safe-parse-int)
+            (#(nth items %))
+            :path
+            (#(bp/process "mpv" % "&")))))
 
 ;; Main ------------------------------------------------------------------------
 
