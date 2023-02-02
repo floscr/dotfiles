@@ -89,7 +89,6 @@ with lib.my;
       #   };
       # };
       apps = {
-        zoom.enable = true;
         rofi.enable = true;
         transmission.enable = true;
         font-manager.enable = true;

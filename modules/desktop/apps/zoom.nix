@@ -1,15 +1,14 @@
-{ options, config, lib, pkgs, ... }:
-
+{ options, config, pkgs, lib, ... }:
 with lib;
-with lib.my;
-let cfg = config.modules.zoom;
+let
+  cfg = config.modules.desktop.apps.zoom;
 in
 {
   options.modules.desktop.apps.zoom = {
-    enable = mkBoolOpt false;
+    enable = my.mkBoolOpt false;
   };
 
-  config = {
+  config = mkIf cfg.enable {
     programs.firejail = {
       enable = true;
       wrappedBinaries = {

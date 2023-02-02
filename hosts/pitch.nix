@@ -4,7 +4,6 @@ with lib;
 with lib.my;
 {
   user.packages = with pkgs; [
-    zoom-us
     nodePackages.mermaid-cli # Mermaid Diagrams CLI, mmdc
     google-chrome # For cypress
   ];
@@ -14,7 +13,7 @@ with lib.my;
       clojure.enable = true;
     };
     desktop.apps = {
-      zoom.enable = true;
+      zoom.enable = false;
     };
   };
 
