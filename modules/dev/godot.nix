@@ -5,7 +5,7 @@ with lib.my;
 let cfg = config.modules.dev.godot;
 in
 {
-  options.modules.dev.clojure = {
+  options.modules.dev.godot = {
     enable = mkBoolOpt false;
   };
 
