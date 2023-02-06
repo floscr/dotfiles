@@ -1,1 +1,2 @@
-{:paths ["src" "src/lib"]}
+{:paths ["src" "src/lib"]
+ :deps {lambdaisland/uri {:mvn/version "1.13.95"}}}

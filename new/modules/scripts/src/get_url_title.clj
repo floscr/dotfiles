@@ -1,10 +1,14 @@
 (ns get_url_title
   (:require
-   [babashka.pods :as pods]
-   [clojure.core.match :refer [match]]
+   [babashka.cli :as cli]
    [babashka.curl :as curl]
    [babashka.fs :as fs]
-   [babashka.cli :as cli]))
+   [babashka.pods :as pods]
+   [cheshire.core :as json]
+   [clojure.core.match :refer [match]]
+   [clojure.string :as str]
+   [lambdaisland.uri :as uri]
+   [lib.shell :refer [sh]]))
 
 ;; HTML Parsing with jsoup pod binary
 (pods/load-pod (-> (fs/expand-home "~/.config/dotfiles/new/modules/scripts/deps/pod-jaydeesimon-jsoup.bin") (str)))
@@ -13,18 +17,46 @@
 (defn exit! []
   (System/exit 1))
 
-(defn get-title [url]
+(defn gh-get-pr-title [url path]
+ (when-let [{:keys [title author number]} (some-> (sh (format "gh pr view %s --json title,author,number" url))
+                                                  (json/parse-string keyword))]
+   (let [[_ user repository] (str/split path #"/")]
+     (str "PR from " (:name author) ": " title
+          " (" user "/" repository "/" "#" number ")"))))
+
+(defn curl-get-title [url]
   (match
    (curl/get url {:throw false})
    {:status 200 :body body} (some-> body (jsoup/select "title") first :text)
    :else nil))
 
+(defn get-title [url]
+  (match [(uri/uri url)]
+         [{:host "github.com" :path path} :guard [#(str/includes? (:path %) "/pull")]] (gh-get-pr-title url path)
+         :else (curl-get-title url)))
+
 (comment
+  (get-title "https://github.com/NixOS/nixpkgs/pull/214898")
+  ;; => "PR from R. RyanTM: babashka: 1.1.172 -> 1.1.173 (NixOS/nixpkgs/#214898)"
   (get-title "https://matthiasott.com/notes/the-thing-with-leading-in-css")
-  ;; Github
-  (get-title "https://github.com/rafaelsgirao/dotfiles/blob/0932e73b6b180b6f12c0cf69c5ee3898fa6bf8b0/nixos/modules/graphical.nix#L158")
-  ;; Youtube
-  (get-title "https://www.youtube.com/watch?v=bXRDfxp_4H0")
+  ;; => "The Thing With Leading in CSS · Matthias Ott – User Experience Designer"
+  (curl-get-title "https://github.com/rafaelsgirao/dotfiles/blob/0932e73b6b180b6f12c0cf69c5ee3898fa6bf8b0/nixos/modules/graphical.nix#L158")
+  ;; => "dotfiles/graphical.nix at 0932e73b6b180b6f12c0cf69c5ee3898fa6bf8b0 · rafaelsgirao/dotfiles · GitHub"
+  (curl-get-title "https://www.youtube.com/watch?v=bXRDfxp_4H0")
+  ;; => "Through the looking glass w Data Rabbit: \"A System built for Seeing\" (by Ryan Robitaille) - YouTube"
+  nil)
+
+(defn get-rss [url]
+  (match
+   (curl/get url {:throw false})
+   {:status 200 :body body} (when-let [[link] (some-> body
+                                                              (jsoup/select "[type='application/atom+xml']"))]
+                                      (get-in link [:attrs "href"]))
+   :else nil))
+
+(comment
+  (get-rss "http://yummymelon.com/devnull/")
+  ;; => "http://yummymelon.com/devnull/feeds/all.atom.xml"
   nil)
 
 ;; Commands --------------------------------------------------------------------
@@ -32,7 +64,18 @@
 (defn help! [_]
   (println "Help"))
 
-(defn main! [{:keys [opts]}]
+(defn get-rss-cmd [{:keys [opts]}]
+  (let [{:keys [url]} opts]
+    (if (empty? url)
+      (help! {})
+      (if-let [title (get-rss url)]
+        (do (println title)
+            title)
+        (do
+          (println "Could not get rss feed for url: " url)
+          (exit!))))))
+
+(defn get-url-cmd [{:keys [opts]}]
   (let [{:keys [url]} opts]
     (if (empty? url)
       (help! {})
@@ -46,7 +89,9 @@
 ;; Main ------------------------------------------------------------------------
 
 (def table
-  [{:cmds [] :args->opts [:url] :fn main!}])
+  [{:cmds ["url"] :args->opts [:url] :fn get-url-cmd}
+   {:cmds ["rss"] :args->opts [:url] :fn get-rss-cmd}
+   {:cmds [] :args->opts [:url] :fn get-url-cmd}])
 
 (defn -main [& args]
   (cli/dispatch table args))
