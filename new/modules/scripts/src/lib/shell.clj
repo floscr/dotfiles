@@ -8,17 +8,16 @@
 
 (defn sh
   "Wrapper around `babashka.process/sh` that returns `:out` or `nil` when `cmd` failed."
-  ([cmd] (sh cmd nil nil))
-  ([cmd opts] (sh cmd opts nil))
-  ([cmd opts prev]
-   (let [{:keys [exit out err]} (bp/sh cmd opts prev)]
-     (when (= exit 0)
-       out))))
+  ([cmd] (sh cmd nil))
+  ([cmd opts]
+   (let [{:keys [exit out _err]} (if opts
+                                   (bp/sh cmd opts)
+                                   (bp/sh cmd))]
+     (when (zero? exit) out))))
 
 (defn sh-lines
-  ([cmd] (sh-lines cmd nil nil))
-  ([cmd opts] (sh-lines cmd opts nil))
-  ([cmd opts lines]
-   (some-> (sh cmd opts lines)
+  ([cmd] (sh-lines cmd nil))
+  ([cmd opts] (sh-lines cmd opts)
+   (some-> (sh cmd opts)
            (str/trim)
            (str/split-lines))))
