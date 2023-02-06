@@ -51,6 +51,7 @@ with lib.my;
       invert_colors.enable = true;
       get_url_title.enable = true;
       mpv_ctrl.enable = true;
+      watch_last.enable = true;
     };
   };
 
