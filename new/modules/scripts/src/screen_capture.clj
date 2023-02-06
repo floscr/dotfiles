@@ -1,10 +1,11 @@
 #!/usr/bin/env bb
 (ns screen-capture
-  (:require [babashka.cli :as cli]
-            [babashka.fs :as fs]
-            [babashka.process :as bp]
-            [clojure.string :as str]
-            [clojure.java.io :as io]))
+  (:require
+   [babashka.cli :as cli]
+   [babashka.fs :as fs]
+   [babashka.process :as bp]
+   [clojure.string :as str]
+   [lib.clipboard :refer [set-clip]]))
 
 ;; Variables -------------------------------------------------------------------
 
@@ -108,14 +109,14 @@
                                                      (:height screenkey-opts)
                                                      x
                                                      (+ y (- height (:height screenkey-opts))))))
-      (bp/process "ffmpeg"
-                  "-y" ; Ignore globals
-                  "-f" "x11grab"
-                  "-show_region" "1"
-                  "-s" (format "%dx%d" width height)
-                  "-i" (format ":0.0+%d,%d" x y)
-                  "-framerate" "30"
-                  path))))
+      [path (bp/process "ffmpeg"
+                        "-y"                 ; Ignore globals
+                        "-f" "x11grab"
+                        "-show_region" "1"
+                        "-s" (format "%dx%d" width height)
+                        "-i" (format ":0.0+%d,%d" x y)
+                        "-framerate" "30"
+                        path)])))
 
 (defn toggle-capture-animated! [args]
   (let [file stop-file]
@@ -129,13 +130,15 @@
             (do (println "Stop file found but process not running. Retrying to record.")
                 (toggle-capture-animated! args))
             (println "Stopped running screen recording."))))
-      (let [proc (capture-animated! args)
+      (let [[path proc] (capture-animated! args)
             pid (some-> (:proc proc)
                         (.pid)
                         (str))]
         (when proc
           (fs/write-lines file [pid])
-          @proc)))))
+          @proc
+          (bp/shell (format "notify-send 'Recording saved to %s\nCopied path to clipboard!'" path))
+          (set-clip path))))))
 
 (defn help
   [_]
