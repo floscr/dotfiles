@@ -12,11 +12,13 @@ in
   config = mkIf cfg.enable {
     user.packages = with pkgs; [
       babashka
-      clojure
       clj-kondo
-      unstable.clojure-lsp
+      clojure
+      jet
       joker
       leiningen
+      openjdk17
+      unstable.clojure-lsp
       zprint
     ];
     home.configFile."clojure/deps.edn".text = ''
