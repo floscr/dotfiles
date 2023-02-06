@@ -12,6 +12,7 @@ with lib.my;
     # ./bindings.nix
   ];
 
+
   home.file = {
     # ".config/espanso/user/email.yml".source = config.age.secrets.espanso-private-emails.path;
   };
@@ -29,6 +30,9 @@ with lib.my;
     zip
     scdl
   ] ++ flake-packages;
+
+  hardware.logitech.wireless.enable = true;
+  hardware.logitech.wireless.enableGraphical = true;
 
   hardware.usb.wakeupDisabled = [
     {
