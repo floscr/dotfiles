@@ -33,11 +33,6 @@ in
 
     modules.bindings.items = [
       {
-        description = "Toggle Monitor Brightness";
-        categories = "Script";
-        command = "toggle_external_display_brightness";
-      }
-      {
         description = "Max Monitor Brightness";
         categories = "Script";
         command = "ddcutil setvcp 10 100";

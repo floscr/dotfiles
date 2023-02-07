@@ -16,15 +16,17 @@ in
       });
     in
     {
-      user.packages = with pkgs;
-        [
-          monitor_brightness
-        ];
+      user.packages = with pkgs; [
+        monitor_brightness
+      ];
       modules.bindings.items = [
         {
-          xmonadBinding = "M-i";
-          command = "${monitor_brightness}/bin/monitor_brightness";
-          description = "Invert Colors";
+          command = "${monitor_brightness}/bin/monitor_brightness toggle";
+          description = "Toggle Monitor Brightness";
+        }
+        {
+          command = "${monitor_brightness}/bin/monitor_brightness max";
+          description = "Max Monitor Brightness";
         }
       ];
     };

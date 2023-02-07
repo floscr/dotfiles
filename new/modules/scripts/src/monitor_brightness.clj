@@ -2,7 +2,7 @@
   (:require
    [babashka.cli :as cli]
    [babashka.process :as bp]
-   [lib.shell :refer [sh-lines]]
+   [lib.shell :as shell]
    [clojure.string :as str]))
 
 ;; Config ----------------------------------------------------------------------
@@ -12,25 +12,40 @@
 ;; Helpers ---------------------------------------------------------------------
 
 (defn display-brightness [display-id]
-  (some->> (sh-lines (format "sudo ddcutil getvcp %d" display-id))
+  (some->> (shell/sh-lines (format "sudo ddcutil getvcp %d" display-id))
            (filter #(str/starts-with? % "VCP code"))
            (first)
            (re-find #"current value =\s+(\d+)")
            (last)
            (Integer/parseInt)))
 
+(defn set-display-brightness! [display-id brightness]
+  (bp/sh (format "sudo ddcutil setvcp %d %d" display-id brightness))
+  (println "Set the brightness to: " brightness))
+
 ;; Commands --------------------------------------------------------------------
 
-(defn toggle-brightness! []
+(defn toggle-brightness-cmd [_]
   (when-let [brightness (display-brightness (get-in displays [:external :id]))]
-    (let [new-brightness (if (>= brightness 80) 50 25)]
-      (bp/shell (format "ddcutil setvcp 10 %d" new-brightness))
-      (println "Set the brightness to " new-brightness))))
+    (let [high 55
+          low 25
+          new-brightness (if (>= brightness high) low high)]
+      (set-display-brightness! (get-in displays [:external :id]) new-brightness)
+      new-brightness)))
+
+(defn set-brightness-cmd [{:keys [opts]}]
+  (set-display-brightness! (get-in displays [:external :id]) (:value opts)))
+
+(defn set-max-brightness-cmd []
+  (set-display-brightness! (get-in displays [:external :id]) 100))
 
 ;; Main ------------------------------------------------------------------------
 
 (def table
-  [{:cmds ["toggle"] :fn toggle-brightness!}])
+  [{:cmds ["toggle"] :fn toggle-brightness-cmd}
+   {:cmds ["max"] :fn set-max-brightness-cmd}
+   {:cmds ["set"] :args->opts [:value]
+    :coerce {:value :int} :fn set-brightness-cmd}])
 
 (defn -main [& args]
   (cli/dispatch table args))
@@ -38,5 +53,8 @@
 (apply -main *command-line-args*)
 
 (comment
-  (-main)
+  (display-brightness (get-in displays [:external :id]))
+  (-main "toggle")
+  (-main "max")
+  (-main "set" "33")
   nil)

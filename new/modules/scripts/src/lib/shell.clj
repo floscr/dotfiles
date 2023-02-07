@@ -17,7 +17,7 @@
 
 (defn sh-lines
   ([cmd] (sh-lines cmd nil))
-  ([cmd opts] (sh-lines cmd opts)
+  ([cmd opts]
    (some-> (sh cmd opts)
            (str/trim)
            (str/split-lines))))
