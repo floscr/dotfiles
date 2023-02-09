@@ -118,6 +118,20 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' l
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.<->.<->' '^[-[:alnum:]]##(.[-[:alnum:]]##)##' '*@*'
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 
+_bb_tasks() {
+    local BB_TASKS=(`bb tasks|bb -io '(->> *input* (drop 2) (map #(-> % (str/split #" ") first)))'`)
+    compadd -a BB_TASKS
+
+    # complete subcommands and options
+    local BB_HELP=(`bb help|bb -io '(->> *input* (map #(->> % (re-find #"^  ([-a-z]+)") second)) (filter some?))'`)
+    compadd -a BB_HELP
+    # OR to complete options
+    # _gnu_generic #complete options
+
+    _files # autocomplete filenames as well
+}
+compdef _bb_tasks bb
+
 # fzf
 if command -v fzf >/dev/null; then
   # fuzzy completion with 'z' when called without args
