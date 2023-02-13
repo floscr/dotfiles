@@ -99,28 +99,20 @@ in
         type = "Application";
         mimeType = [ "x-scheme-handler/org-protocol" ];
       };
+      desktopEntries."my-emacsclient" =
+        let
+          cmd = (pkgs.writeScriptBin "my-emacsclient-cmd" ''
+            #!${pkgs.stdenv.shell}
+            emacsclient -n --alternate-editor="emacs" $@ &
+          '');
+        in
+        {
+          name = "Emacsclient";
+          exec = "${cmd}/bin/my-emacsclient-cmd -- %u";
+          icon = "emacs-icon";
+          type = "Application";
+        };
     };
-    # home.mimeApps = {
-    #   enable = true;
-    #   defaultApplications = {
-    #     "application/x-directory" = "emacs-dired.desktop";
-    #     "inode/directory" = "emacs-dired.desktop";
-    #     "text/english" = "emacs.desktop";
-    #     "text/plain" = "emacs.desktop";
-    #     "text/x-c" = "emacs.desktop";
-    #     "text/x-c++" = "emacs.desktop";
-    #     "text/x-c++hdr" = "emacs.desktop";
-    #     "text/x-c++src" = "emacs.desktop";
-    #     "text/x-chdr" = "emacs.desktop";
-    #     "text/x-csrc" = "emacs.desktop";
-    #     "text/x-java" = "emacs.desktop";
-    #     "text/x-makefile" = "emacs.desktop";
-    #     "text/x-moc" = "emacs.desktop";
-    #     "text/x-pascal" = "emacs.desktop";
-    #     "text/x-tcl" = "emacs.desktop";
-    #     "text/x-tex" = "emacs.desktop";
-    #   };
-    # };
 
     home.configFile.".aspell.conf".text = ''
       dict-dir $HOME/.nix-profile/lib/aspell
