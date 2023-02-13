@@ -17,6 +17,7 @@ in
       jet
       joker
       leiningen
+      neil
       openjdk17
       unstable.clojure-lsp
       zprint
