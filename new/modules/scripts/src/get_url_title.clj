@@ -49,14 +49,24 @@
 (defn get-rss [url]
   (match
    (curl/get url {:throw false})
-   {:status 200 :body body} (when-let [[link] (some-> body
-                                                              (jsoup/select "[type='application/atom+xml']"))]
-                                      (get-in link [:attrs "href"]))
+   {:status 200 :body body} (when-let [link (some-> body
+                                                    (#(or (some-> (jsoup/select % "[type='application/atom+xml']") (first))
+                                                          (some-> (jsoup/select % "[type='application/rss+xml']") (first))
+                                                          (some-> (jsoup/select % "[type='application/+xml']") (first))))
+                                                    (get-in [:attrs "href"]))]
+                              (cond
+                                (-> link uri/uri :host) link
+                                :else (let [{:keys [scheme host]} (uri/uri url)]
+                                        (str scheme "://" host (when-not (str/starts-with? link "/") "/") link))))
    :else nil))
 
 (comment
+  (get-rss "https://dawranliou.com/blog/")
+  ;; => "https://dawranliou.com/atom.xml"
   (get-rss "http://yummymelon.com/devnull/")
   ;; => "http://yummymelon.com/devnull/feeds/all.atom.xml"
+  (get-rss "https://rattlin.blog/bbgum.html")
+  ;; => "https://rattlin.blog/atom.xml"
   nil)
 
 ;; Commands --------------------------------------------------------------------
