@@ -40,6 +40,11 @@ with lib.my;
       vendor = "046d";
       product = "c051";
     }
+    {
+      # Logitech Mx Master USB Receiver
+      vendor = "046d";
+      product = "c548";
+    }
   ];
 
   services.atd.enable = true;
