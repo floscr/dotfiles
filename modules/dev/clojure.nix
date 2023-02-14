@@ -22,11 +22,6 @@ in
       unstable.clojure-lsp
       zprint
     ];
-    home.configFile."clojure/deps.edn".text = ''
-      {
-        ;; Fix doom clojure buffer eval
-        :deps {cider/cider-nrepl {:mvn/version "0.26.0"}}
-      }
-    '';
+    home.configFile."clojure/deps.edn".source = ./deps.edn;
   };
 }
