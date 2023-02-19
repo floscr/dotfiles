@@ -55,17 +55,6 @@ in
       home-manager.users.${config.user.name}.programs.firefox = {
         enable = true;
         package = firefoxWrapped;
-        extensions = with pkgs.nur.repos.rycee.firefox-addons; [
-          # The extensions still have to be loaded manually
-          # but its still better than having to install them by hand
-          darkreader
-          # https-everywhere
-          multi-account-containers
-          org-capture
-          react-devtools
-          ublock-origin
-          vimium
-        ];
       };
 
       # Prevent auto-creation of ~/Desktop. The trailing slash is necessary; see
