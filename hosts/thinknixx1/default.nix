@@ -91,7 +91,7 @@ with lib.my;
       bluetooth.enable = true;
       keyboard.enable = true;
       external-display.enable = true;
-      scanner.enable = false;
+      scanner.enable = true;
       battery.enable = true;
       fs = {
         enable = true;

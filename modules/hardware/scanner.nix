@@ -17,8 +17,8 @@ in
     hardware.sane.enable = true;
     hardware.sane.extraBackends = with pkgs; [
       epkowa
-      unstable.utsushi
+      pkgs.utsuhiPkgs.utsushi
     ];
-    services.udev.packages = [ pkgs.unstable.utsushi ];
+    services.udev.packages = [ pkgs.utsuhiPkgs.utsushi ];
   };
 }

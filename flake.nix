@@ -7,6 +7,8 @@
       nixpkgs-unstable.url = "nixpkgs/master";
       nixos-hardware.url = "github:nixos/nixos-hardware";
 
+      utsushi-nixpkgs.url = "github:nixos/nixpkgs/fbf68b6e4a8c5f518977a3e4b1ec4828efbb8efd";
+
       home-manager.url = "github:rycee/home-manager/master";
       home-manager.inputs.nixpkgs.follows = "nixpkgs";
       agenix.url = "github:ryantm/agenix";
@@ -31,6 +33,7 @@
     , home-manager
     , nixpkgs
     , nixpkgs-unstable
+    , utsushi-nixpkgs
     , nur
     , org_print_scan
     , emacs-nixpkgs
@@ -90,6 +93,7 @@
       };
       pkgs = mkPkgs nixpkgs [ self.overlay nur.overlay ];
       uPkgs = mkPkgs nixpkgs-unstable [ ];
+      utsushiPkgs = mkPkgs utsushi-nixpkgs [ ];
       emacsPkgs = mkEmacsPkgs emacs-nixpkgs;
       myCustomPkgs = mkExtraPkgs nixpkgs;
 
@@ -104,6 +108,7 @@
           emacsPkgs = emacsPkgs;
           custom = myCustomPkgs;
           unstable = uPkgs;
+          utsuhiPkgs = utsushiPkgs;
           user = self.packages."${system}";
         };
 

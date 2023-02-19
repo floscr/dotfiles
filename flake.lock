@@ -600,7 +600,8 @@
         "nur": "nur",
         "org_print_scan": "org_print_scan",
         "rofi_cmder": "rofi_cmder",
-        "rofi_org_bookmarks": "rofi_org_bookmarks"
+        "rofi_org_bookmarks": "rofi_org_bookmarks",
+        "utsushi-nixpkgs": "utsushi-nixpkgs"
       }
     },
     "utils": {
@@ -615,6 +616,22 @@
       "original": {
         "owner": "numtide",
         "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "utsushi-nixpkgs": {
+      "locked": {
+        "lastModified": 1641260762,
+        "narHash": "sha256-gjt8IqoO6c0WWKLSWLbtWeVG6RHRRX/FoWvY1E/KvdM=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "fbf68b6e4a8c5f518977a3e4b1ec4828efbb8efd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "fbf68b6e4a8c5f518977a3e4b1ec4828efbb8efd",
         "type": "github"
       }
     }
