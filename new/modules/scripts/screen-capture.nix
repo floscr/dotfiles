@@ -41,7 +41,7 @@ in
           modules.bindings.items = [
             {
               xmonadBinding = "M-S-s";
-              command = "${bin} single";
+              command = "${bin} static";
               description = "Screenshot";
             }
             {
