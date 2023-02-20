@@ -8,7 +8,8 @@
    [clojure.core.match :refer [match]]
    [clojure.string :as str]
    [lambdaisland.uri :as uri]
-   [lib.shell :refer [sh]]))
+   [lib.shell :refer [sh]]
+   [lib.web :as lw]))
 
 ;; HTML Parsing with jsoup pod binary
 (pods/load-pod (-> (fs/expand-home "~/.config/dotfiles/new/modules/scripts/deps/pod-jaydeesimon-jsoup.bin") (str)))
@@ -30,16 +31,26 @@
    {:status 200 :body body} (some-> body (jsoup/select "title") first :text)
    :else nil))
 
+(defn twitter->thread-reader [url]
+  (let [threadreader-url (str "https://threadreaderapp.com/search?q=" (lw/uri-escape url))]
+    (match (curl/get threadreader-url)
+           {:status 200 :body body} (let [[{:keys [attrs text]}] (some-> body (jsoup/select "#tweet_1"))]
+                                      [(format "Tweet by %s: %s" (get attrs "data-screenname") text) threadreader-url])
+           :else [url threadreader-url])))
+
 (defn get-title [url]
   (match [(uri/uri url)]
-         [{:host "github.com" :path path} :guard [#(str/includes? (:path %) "/pull")]] (gh-get-pr-title url path)
-         :else (curl-get-title url)))
+         [{:host "github.com" :path path} :guard [#(str/includes? (:path %) "/pull")]] [(gh-get-pr-title url path)]
+         [{:host "twitter.com"}] (twitter->thread-reader url)
+         :else [(curl-get-title url)]))
 
 (comment
+  (get-title "https://twitter.com/mattpocockuk/status/1625838626742435842")
+  ;; => ["Tweet by mattpocockuk: If you don't know generics, I promise you'll understand them by the end of this thread. I like a challenge." "https://threadreaderapp.com/search?q=https%3A%2F%2Ftwitter.com%2Fmattpocockuk%2Fstatus%2F1625838626742435842"]
   (get-title "https://github.com/NixOS/nixpkgs/pull/214898")
-  ;; => "PR from R. RyanTM: babashka: 1.1.172 -> 1.1.173 (NixOS/nixpkgs/#214898)"
+  ;; => ["PR from R. RyanTM: babashka: 1.1.172 -> 1.1.173 (NixOS/nixpkgs/#214898)"]
   (get-title "https://matthiasott.com/notes/the-thing-with-leading-in-css")
-  ;; => "The Thing With Leading in CSS · Matthias Ott – User Experience Designer"
+  ;; => ["The Thing With Leading in CSS · Matthias Ott – User Experience Designer"]
   (curl-get-title "https://github.com/rafaelsgirao/dotfiles/blob/0932e73b6b180b6f12c0cf69c5ee3898fa6bf8b0/nixos/modules/graphical.nix#L158")
   ;; => "dotfiles/graphical.nix at 0932e73b6b180b6f12c0cf69c5ee3898fa6bf8b0 · rafaelsgirao/dotfiles · GitHub"
   (curl-get-title "https://www.youtube.com/watch?v=bXRDfxp_4H0")
@@ -60,6 +71,10 @@
                                         (str scheme "://" host (when-not (str/starts-with? link "/") "/") link))))
    :else nil))
 
+(defn org-link
+  [url title]
+  (format "[[%s][%s]]" url title))
+
 (comment
   (get-rss "https://dawranliou.com/blog/")
   ;; => "https://dawranliou.com/atom.xml"
@@ -75,26 +90,31 @@
   (println "Help"))
 
 (defn get-rss-cmd [{:keys [opts]}]
-  (let [{:keys [url]} opts]
+  (let [{:keys [url org]} opts]
     (if (empty? url)
       (help! {})
-      (if-let [title (get-rss url)]
-        (do (println title)
-            title)
-        (do
-          (println "Could not get rss feed for url: " url)
-          (exit!))))))
+      (let [title (get-rss url)
+            title-str (if org (org-link title url) title)]
+        (if title-str
+          (do (println title-str)
+              title-str)
+          (do
+            (println "Could not get rss feed for url: " url)
+            (exit!)))))))
 
-(defn get-url-cmd [{:keys [opts]}]
-  (let [{:keys [url]} opts]
+(defn get-url-cmd [{:keys [opts] :as args}]
+  (let [{:keys [url org]} opts]
     (if (empty? url)
       (help! {})
-      (if-let [title (get-title url)]
-        (do (println title)
-            title)
-        (do
-          (println "Could not get title for url: " url)
-          (exit!))))))
+      (let [[title adapted-url] (get-title url)
+            url* (or adapted-url url)
+            title-str (if org (org-link url* title) title)]
+        (if title-str
+          (do (println title-str)
+              title-str)
+          (do
+            (println "Could not get title for url: " url*)
+            (exit!)))))))
 
 ;; Main ------------------------------------------------------------------------
 
