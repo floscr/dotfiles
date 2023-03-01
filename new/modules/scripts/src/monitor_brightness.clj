@@ -2,8 +2,9 @@
   (:require
    [babashka.cli :as cli]
    [babashka.process :as bp]
-   [lib.shell :as shell]
-   [clojure.string :as str]))
+   [clojure.string :as str]
+   [lib.num :as num]
+   [lib.shell :as shell]))
 
 ;; Config ----------------------------------------------------------------------
 
@@ -17,7 +18,7 @@
            (first)
            (re-find #"current value =\s+(\d+)")
            (last)
-           (Integer/parseInt)))
+           (num/parse-int)))
 
 (defn set-display-brightness! [display-id brightness]
   (bp/sh (format "sudo ddcutil setvcp %d %d" display-id brightness))
