@@ -7,6 +7,7 @@
    [clojure.string :as str]
    [lib.clipboard :refer [set-clip]]
    [lib.fp :as fp]
+   [lib.num :as num]
    [lib.shell :as lib.sh]))
 
 ;; Variables -------------------------------------------------------------------
@@ -51,9 +52,6 @@
        (bp/shell "notify-send -u critical" "-t" update-every-ms (format "Recording in %d" i))
        (bp/shell "sleep" update-every)))))
 
-(defn parse-int [str]
-  (Integer/parseInt str))
-
 (defn get-x-rect []
   (when-let [[width height x y]
              (some-> (bp/shell {:out :string
@@ -61,7 +59,7 @@
                     :out
                     (fp/discard-> str/blank?)
                     (str/split #" ")
-                    (#(map parse-int %)))]
+                    (#(map num/parse-int %)))]
     {:width width
      :height height
      :x x
