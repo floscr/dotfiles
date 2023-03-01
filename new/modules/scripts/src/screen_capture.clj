@@ -6,7 +6,8 @@
    [babashka.process :as bp]
    [clojure.string :as str]
    [lib.clipboard :refer [set-clip]]
-   [lib.fp :as fp]))
+   [lib.fp :as fp]
+   [lib.shell :as lib.sh]))
 
 ;; Variables -------------------------------------------------------------------
 
@@ -49,9 +50,6 @@
      (doseq [i repeater]
        (bp/shell "notify-send -u critical" "-t" update-every-ms (format "Recording in %d" i))
        (bp/shell "sleep" update-every)))))
-
-(defmacro bold [str]
-  `(str "\033[1m" ~str "\033[0m"))
 
 (defn parse-int [str]
   (Integer/parseInt str))
@@ -135,11 +133,11 @@
    "Capture a screen area\n"
    "\n"
 
-   (bold "USAGE\n")
+   (lib.sh/bold "USAGE\n")
    cli-command " <command> <file> [flags]\n"
    "\n"
 
-   (bold "COMMANDS\n")
+   (lib.sh/bold "COMMANDS\n")
 
    "static: Capture a screenshot in region\n"
    "png: Capture png\n"
