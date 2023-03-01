@@ -10,6 +10,11 @@ configuration {
   display-window: "";
   display-combi: "";
 
+  kb-remove-to-eol: "";
+  kb-accept-entry: "Control+m,Return,KP_Enter";
+  kb-row-up: "Up,Control+p,Control+k";
+  kb-row-down: "Down,Control+n,Control+j";
+
   monitor: "-4";
 
   /* Allow hover and mouse click */
