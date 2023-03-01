@@ -5,7 +5,8 @@
    [babashka.fs :as fs]
    [babashka.process :as bp]
    [clojure.string :as str]
-   [lib.clipboard :refer [set-clip]]))
+   [lib.clipboard :refer [set-clip]]
+   [lib.fp :as fp]))
 
 ;; Variables -------------------------------------------------------------------
 
@@ -55,24 +56,12 @@
 (defn parse-int [str]
   (Integer/parseInt str))
 
-(defn keep-> [x pred]
-  (when (pred x) x))
-
-(defn keep-> [pred x]
-  (when (pred x) x))
-
-(defn discard-> [x pred]
-  (when-not (pred x) x))
-
-(defn discard->> [pred x]
-  (when-not (pred x) x))
-
 (defn get-x-rect []
   (when-let [[width height x y]
              (some-> (bp/shell {:out :string
                                 :continue true} "slop -nof '%w %h %x %y'")
                     :out
-                    (discard-> str/blank?)
+                    (fp/discard-> str/blank?)
                     (str/split #" ")
                     (#(map parse-int %)))]
     {:width width
