@@ -26,7 +26,7 @@ in
         }
         {
           command = "${monitor_brightness}/bin/monitor_brightness max";
-          description = "Max Monitor Brightness";
+          description = "Max Monitor Brightness (External)";
         }
       ];
     };

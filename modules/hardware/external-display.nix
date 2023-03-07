@@ -33,7 +33,7 @@ in
 
     modules.bindings.items = [
       {
-        description = "Max Monitor Brightness";
+        description = "Max Monitor Brightness (Internal)";
         categories = "Script";
         command = "ddcutil setvcp 10 100";
       }
