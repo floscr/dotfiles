@@ -60,8 +60,8 @@ in
       };
       fonts =
         with pkgs; [
-          fira-code
-          fira-code-symbols
+          firaCodePkgs.fira-code
+          firaCodePkgs.fira-code-symbols
           unstable.iosevka
           roboto
           roboto-mono

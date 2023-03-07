@@ -33,7 +33,7 @@ in
             mono = {
               family = "Fira Code";
               size = 8;
-              pkg = pkgs.fira-code;
+              pkg = pkgs.firaCodePkgs.fira-code;
             };
             terminal = {
               family = "Iosevka";

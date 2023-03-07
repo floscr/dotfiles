@@ -7,6 +7,9 @@
       nixpkgs-unstable.url = "nixpkgs/master";
       nixos-hardware.url = "github:nixos/nixos-hardware";
 
+      # Fix bad fira code rendering by locking it
+      fira-code-pkgs.url = "github:nixos/nixpkgs/a3e6348d2c68103b0c96e35b3d94c4ea0e6f9e50";
+
       utsushi-nixpkgs.url = "github:nixos/nixpkgs/fbf68b6e4a8c5f518977a3e4b1ec4828efbb8efd";
 
       home-manager.url = "github:rycee/home-manager/master";
@@ -33,6 +36,7 @@
     , home-manager
     , nixpkgs
     , nixpkgs-unstable
+    , fira-code-pkgs
     , utsushi-nixpkgs
     , nur
     , org_print_scan
@@ -93,6 +97,7 @@
       };
       pkgs = mkPkgs nixpkgs [ self.overlay nur.overlay ];
       uPkgs = mkPkgs nixpkgs-unstable [ ];
+      firaCodePkgs = mkPkgs fira-code-pkgs [ self.overlay nur.overlay ];
       utsushiPkgs = mkPkgs utsushi-nixpkgs [ ];
       emacsPkgs = mkEmacsPkgs emacs-nixpkgs;
       myCustomPkgs = mkExtraPkgs nixpkgs;
@@ -106,6 +111,7 @@
       overlay =
         final: prev: {
           emacsPkgs = emacsPkgs;
+          firaCodePkgs = firaCodePkgs;
           custom = myCustomPkgs;
           unstable = uPkgs;
           utsuhiPkgs = utsushiPkgs;
