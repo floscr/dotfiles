@@ -34,7 +34,7 @@ in
             xclip
             dunst
             maim
-            ffmpeg
+            ffmpeg-full
             slop
             screenkey
           ];
