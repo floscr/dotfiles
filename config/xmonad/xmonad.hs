@@ -441,8 +441,8 @@ myMouseBindings (XConfig { XMonad.modMask = modMask }) =
       , ((myModMask, button3), (\w -> focus w >> Flex.mouseResizeWindow w))
 
       -- Logitech Up/Down Buttons to switch workspaces
-      , ((0, 8), (\_ -> prevWS))
-      , ((0, 9), (\_ -> nextWS))
+      , ((0, 8), (\_ -> nextWS))
+      , ((0, 9), (\_ -> prevWS))
       ]
 
 ------------------------------------------------------------------------
