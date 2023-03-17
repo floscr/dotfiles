@@ -67,6 +67,14 @@
 
 ;; Commands --------------------------------------------------------------------
 
+(defn divisible-by-two? [n]
+  (= 0 (rem n 2)))
+
+(defn divisible-by-two [n]
+  (if (divisible-by-two? n)
+    n
+    (inc n)))
+
 (defn capture-static! [{:keys [opts]}]
   (println opts)
   (let [{:keys [extension]
@@ -84,7 +92,16 @@
         ext "mp4"
         path (or (:file opts)
                  (filename (:animated default-dirs) ext))
-        {:keys [width height x y]} (get-x-rect)]
+        {:keys [width height x y]} (get-x-rect)
+        cmd ["ffmpeg"
+             "-y" ; Ignore globals
+             "-f" "x11grab"
+             "-show_region" "1"
+             "-s" (format "%dx%d" (divisible-by-two width) (divisible-by-two height))
+             "-i" (format ":0.0+%d,%d" x y)
+             "-framerate" "30"
+             "-vf" "format=yuv420p"
+             path]]
     (when width
       (when (pos? countdown)
         (notification-countdown! countdown))
