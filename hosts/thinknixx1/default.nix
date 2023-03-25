@@ -102,6 +102,7 @@ with lib.my;
     };
     dev = {
       tools.enable = true;
+      godot.enable = true;
       node.enable = true;
       nim.enable = true;
       docker.enable = true;
