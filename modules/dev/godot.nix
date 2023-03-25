@@ -47,8 +47,9 @@ in
   };
 
   config = mkIf cfg.enable {
-    user.packages = with pkgs; [
+    user.packages = [
       godot
+      pkgs.aseprite
     ];
   };
 }
