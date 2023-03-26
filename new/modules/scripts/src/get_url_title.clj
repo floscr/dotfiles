@@ -40,11 +40,13 @@
 
 (defn get-title [url]
   (match [(uri/uri url)]
-         [{:host "github.com" :path path} :guard [#(str/includes? (:path %) "/pull")]] [(gh-get-pr-title url path)]
+         [{:host "github.com" :path path} :guard [#(some-> (:path %) (str/includes? "/pull"))]] [(gh-get-pr-title url path)]
          [{:host "twitter.com"}] (twitter->thread-reader url)
          :else [(curl-get-title url)]))
 
 (comment
+  (get-title "https://httpstat.us")
+  ;; => ["httpstat.us"]
   (get-title "https://twitter.com/mattpocockuk/status/1625838626742435842")
   ;; => ["Tweet by mattpocockuk: If you don't know generics, I promise you'll understand them by the end of this thread. I like a challenge." "https://threadreaderapp.com/search?q=https%3A%2F%2Ftwitter.com%2Fmattpocockuk%2Fstatus%2F1625838626742435842"]
   (get-title "https://github.com/NixOS/nixpkgs/pull/214898")
