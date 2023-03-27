@@ -3,6 +3,7 @@
    [babashka.cli :as cli]
    [babashka.process :as bp]
    [clojure.string :as str]
+   [lib.notifications :as notifications]
    [lib.num :as num]
    [lib.shell :as shell]))
 
@@ -20,7 +21,8 @@
            (last)
            (num/parse-int)))
 
-(defn set-display-brightness! [display-id brightness]
+(defn set-display-brightness! [display-id brightness & {:keys [brightness-label]}]
+  (notifications/show (format "New monitor brightness: %s" (or brightness-label brightness)) {:clear-after-s 3})
   (bp/sh (format "sudo ddcutil setvcp %d %d" display-id brightness))
   (println "Set the brightness to: " brightness))
 
@@ -28,11 +30,11 @@
 
 (defn toggle-brightness-cmd [_]
   (when-let [brightness (display-brightness (get-in displays [:external :id]))]
-    (let [high 55
-          low 25
-          new-brightness (if (>= brightness high) low high)]
-      (set-display-brightness! (get-in displays [:external :id]) new-brightness)
-      new-brightness)))
+    (let [high [55 "High (55)"]
+          low [25 "Low (25)"]
+          new-brightness (if (>= brightness (first high)) low high)]
+      (set-display-brightness! (get-in displays [:external :id]) (first new-brightness) {:brightness-label (last new-brightness)})
+      (first new-brightness))))
 
 (defn set-brightness-cmd [{:keys [opts]}]
   (set-display-brightness! (get-in displays [:external :id]) (:value opts)))
