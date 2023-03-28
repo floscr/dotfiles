@@ -568,6 +568,7 @@ manageWindowsHook = composeAll
   , ("steam_app_" `isPrefixOf`) <$> className --> floating
   -- , className =? "Emacs" --> insertPosition Master Newer
   , className =? "Emacs" <&&> title =? "doom-capture" --> doFloat
+  , className =? "Emacs" <&&> title =? "emacs-float-scratch" --> doFloat
   , className =? "Pavucontrol" --> doFloatToMouseCenter
   , className =? "Dragon" --> doFloatToMouse (0.05, 0.05)
   ]

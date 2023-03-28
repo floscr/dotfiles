@@ -37,6 +37,12 @@ with lib.my;
           description = "Emacs Org Capture";
         }
         {
+          binding = "super + shift + x";
+          xmonadBinding = "M-S-g";
+          command = "emacsclient -a '' -e '(+my|scratch-popup)'";
+          description = "Emacs Org Capture";
+        }
+        {
           binding = "super + XF86MonBrightnessDown";
           xmonadBinding = "M-<XF86MonBrightnessDown>";
           command = "light -S 0.01";
