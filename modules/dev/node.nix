@@ -14,6 +14,7 @@ in
       nodejs-14_x
       yarn
       nodePackages.prettier
+      nodePackages.parcel
     ];
 
     env.ADBLOCK = "1"; # Stop node packages from showing ads in my darn CLI...
