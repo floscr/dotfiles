@@ -123,6 +123,7 @@ with lib.my;
         rofi.enable = true;
         transmission.enable = true;
         font-manager.enable = true;
+        zoom-noop.enable = true;
       };
       gaming = {
         steam.enable = true;
