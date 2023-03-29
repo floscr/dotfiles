@@ -24,7 +24,7 @@ in
       (
         let
           script-name = "screen-capture";
-          package = (writeBabashkaScriptBin script-name ./src/screen_capture.clj);
+          package = (writeBabashkaScriptBin script-name ./src/screen_capture.clj "");
           bin = "${package}/bin/${script-name}";
           dir = cfg.plugins.record.dir;
         in

@@ -12,7 +12,7 @@ in
   config =
     let
       script-name = "hey";
-      package = (writeBabashkaScriptBin script-name ./src/hey.clj);
+      package = (writeBabashkaScriptBin script-name ./src/hey.clj "");
       bin = "${package}/bin/${script-name}";
     in
     {

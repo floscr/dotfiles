@@ -3,10 +3,11 @@
 with builtins;
 with lib;
 {
-  writeBabashkaScriptBin = script-name: path:
+  writeBabashkaScriptBin = script-name: path: env:
     (pkgs.writeScriptBin
       script-name
-      ("${pkgs.babashka}/bin/bb "
+      ("${env} "
+        + "${pkgs.babashka}/bin/bb "
         + "--deps-root $HOME/.config/dotfiles/new/modules/scripts "
         + "--config $HOME/.config/dotfiles/new/modules/scripts/bb.edn "
         + "${path} "
