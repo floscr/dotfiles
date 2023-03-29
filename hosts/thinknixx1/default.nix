@@ -22,6 +22,7 @@ with lib.my;
     unzip
     s-tui
     custom.nim-utils.bose_battery_level
+    user.alpacacpp
     unstable.signal-desktop
     jellyfin-media-player
     lsof
