@@ -64,5 +64,6 @@ with inputs;
     vim
     wget
     nvd # Nix version diff tool
+    file
   ];
 }
