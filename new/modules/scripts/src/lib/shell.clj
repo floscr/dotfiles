@@ -21,3 +21,8 @@
    (some-> (sh cmd opts)
            (str/trim)
            (str/split-lines))))
+
+(defn md5 [path]
+  (when-let [[result] (lib.shell/sh-lines ["md5sum" path])]
+    (-> (str/split result #" ")
+        first)))
