@@ -18,6 +18,27 @@
    ;; :secondary (get-clip "secondary")
    ;; :buffer-cut (get-clip "buffer-cut")
 
+(defn content-type []
+  (->> (shell/sh-lines ["xclip" "-selection" "clipboard" "-t" "TARGETS" "-o"])
+       (keep (fn [x]
+               (let [[_ image-kind] (re-find #"image/(\w+)" x)]
+                 (cond
+                   image-kind (keyword image-kind)
+                   (= "STRING" x) :string
+                   :else nil))))
+       (first)))
+
+(defn content-or-file []
+  (let [kind (content-type)]
+    (case kind
+      :string [:string (shell/sh ["xclip" "-o" "-selection" "clipboard"])]
+      (let [file (fs/create-temp-file {:prefix "clojure-clipboard" :suffix (str "." (name kind))})]
+        #_(fs/create-file filename)
+        (bp/sh ["xclip" "-o" "-selection" "clipboard" "-t" (str "image/" (name kind))] {:out (fs/file file)})
+        [:file file]))))
+
+(comment
+  (content-or-file))
 
 (defn values []
   (->> (get-all)
