@@ -58,6 +58,7 @@ with lib.my;
       get_url_title.enable = true;
       mpv_ctrl.enable = true;
       watch_last.enable = true;
+      org_attach.enable = true;
     };
   };
 

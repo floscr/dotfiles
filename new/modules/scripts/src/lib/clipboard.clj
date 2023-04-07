@@ -1,8 +1,10 @@
 (ns lib.clipboard
   (:require
-   [clojure.string :as string]
+   [babashka.fs :as fs]
    [babashka.process :as bp]
-   [clojure.java.shell :as sh]))
+   [clojure.java.shell :as sh]
+   [clojure.string :as string]
+   [lib.shell :as shell]))
 
 ;; Read clipboard --------------------------------------------------------------
 
