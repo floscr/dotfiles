@@ -21,26 +21,6 @@
 (defn scheme? [s]
   (some? (:scheme (uri/uri s))))
 
-
-((comp str/upper-case str/lower-case) "Foo")
-((comp fs/regular-file? fs/expand-home last)
- [:string "/home/floscr/Documents/Org/.attach/3c/0d6094-64bc-4ca9-9858-a5402ce6eeb3/_20220216_173724EaQLXxTUMAAJQel.jpeg"])
-
-
-(comment
-
-  (-> (clipboard/content-or-file)
-      (apply (comp last))
-      fs/expand-home
-      fs/regular-file?)
-  (detect-clipboard-contents)
-
-  (-> "/home/floscr/Documents/Org/.attach/3c/0d6094-64bc-4ca9-9858-a5402ce6eeb3/_20220216_173724EaQLXxTUMAAJQel.jpeg"
-      fs/expand-home
-      (#(vec [:file (fs/file %)])))
-  nil)
-
-
 (defn- detect-clipboard-contents []
   (let [clip (clipboard/content-or-file)]
     (match clip
@@ -79,21 +59,6 @@
 (defn org-link [file]
   (let [path (fs/relativize clojure-attach-dir file)]
     (format "[[my-attach:%s]]" path)))
-
-(comment
-  (defonce file (atom (download-url [nil "https://github.com/babashka/babashka/raw/master/logo/icon.png"])))
-  @file
-
-  (-> (attach-file @file) (org-link))
-  (md5-filename (last @file))
-
-  (fs/split-ext (fs/file-name (last @file)))
-
-  (= (lib.shell/md5 (lib.fs/expand "~/Downloads/foo"))
-     (lib.shell/md5 (str (last @file))))
-
-  (fs/copy (last @file) (lib.fs/expand "~/Downloads/foo"))
-  nil)
 
 (defn attach-clipboard []
   (let [clip (detect-clipboard-contents)]
