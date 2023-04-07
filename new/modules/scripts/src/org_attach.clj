@@ -72,7 +72,7 @@
 (defn attach-file [file]
   (match file
          [:file f] (let [dest (fs/path clojure-attach-dir (md5-filename f))]
-                     (fs/copy f dest)
+                     (try (fs/copy f dest) (catch java.nio.file.FileAlreadyExistsException _))
                      dest)
          :else {:error (str "Could not attach " file)}))
 
@@ -106,10 +106,11 @@
 
 ;; Commands --------------------------------------------------------------------
 
-(defn main [_args]
-  (-> (attach-clipboard)
-      (doto lib.clipboard/set-clip)
-      (doto println)))
+(defn main [{:keys [opts]}]
+  (let [{:keys [yank]} opts]
+    (cond-> (attach-clipboard)
+        yank (doto lib.clipboard/set-clip)
+        :else (doto println))))
 
 ;; Main ------------------------------------------------------------------------
 
@@ -122,6 +123,7 @@
 (apply -main *command-line-args*)
 
 (comment
+  (main {})
   (-main)
   (-main "sub")
   nil)
