@@ -119,7 +119,7 @@
       (let [[pid] (fs/read-all-lines file)]
         (fs/delete file)
         ;; Try to kill the process with pid from stop-file
-        (let [{:keys [exit]} (bp/shell {:continue true} "kill" pid)
+        (let [{:keys [exit]} (bp/shell {:continue true} "kill" "-2" pid)
               could-not-find-pid? (= exit 1)]
           (if could-not-find-pid?
             (do (println "Stop file found but process not running. Retrying to record.")
