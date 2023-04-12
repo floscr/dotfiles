@@ -111,14 +111,7 @@
                                                      (:height screenkey-opts)
                                                      x
                                                      (+ y (- height (:height screenkey-opts))))))
-      [path (bp/process "ffmpeg"
-                        "-y"                 ; Ignore globals
-                        "-f" "x11grab"
-                        "-show_region" "1"
-                        "-s" (format "%dx%d" width height)
-                        "-i" (format ":0.0+%d,%d" x y)
-                        "-framerate" "30"
-                        path)])))
+      [path (bp/process cmd)])))
 
 (defn toggle-capture-animated! [args]
   (let [file stop-file]
