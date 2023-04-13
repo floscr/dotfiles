@@ -30,7 +30,7 @@ with lib.my;
     xournal
     zip
     scdl
-    # openai-whisper-cpp
+    openai-whisper-cpp
 
   ] ++ flake-packages;
 
