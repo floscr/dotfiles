@@ -12,12 +12,12 @@ in
   config =
     let
       script-name = "chatgpt";
-      package = (writeBabashkaScriptBin script-name ./src/chatgpt.clj "OPENAI_TOKEN_FILE=${config.age.secrets.openai.path}");
-      bin = "${package}/bin/${script-name}";
+      # package = (writeBabashkaScriptBin script-name ./src/chatgpt.clj "OPENAI_TOKEN_FILE=${config.age.secrets.openai.path}");
+      # bin = "${package}/bin/${script-name}";
     in
     {
       user.packages = with pkgs; [
-        package
+        # package
       ];
     };
 }
