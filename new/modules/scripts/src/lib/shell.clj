@@ -15,14 +15,14 @@
                                    (bp/sh cmd))]
      (when (zero? exit) out))))
 
-(defn sh-lines
-  ([cmd] (sh-lines cmd nil))
+(defn lines
+  ([cmd] (lines cmd nil))
   ([cmd opts]
    (some-> (sh cmd opts)
            (str/trim)
            (str/split-lines))))
 
 (defn md5 [path]
-  (when-let [[result] (lib.shell/sh-lines ["md5sum" path])]
+  (when-let [[result] (lib.shell/lines ["md5sum" path])]
     (-> (str/split result #" ")
         first)))

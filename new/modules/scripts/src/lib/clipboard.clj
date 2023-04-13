@@ -21,7 +21,7 @@
    ;; :buffer-cut (get-clip "buffer-cut")
 
 (defn content-type []
-  (->> (shell/sh-lines ["xclip" "-selection" "clipboard" "-t" "TARGETS" "-o"])
+  (->> (shell/lines ["xclip" "-selection" "clipboard" "-t" "TARGETS" "-o"])
        (keep (fn [x]
                (let [[_ image-kind] (re-find #"image/(\w+)" x)]
                  (cond
