@@ -90,7 +90,7 @@ with lib.my;
     };
     hardware = {
       webcam.logitech-c920.enable = true;
-      trackpad.enable = true;
+      trackpad.enable = false;
       audio.enable = true;
       bluetooth.enable = true;
       keyboard.enable = true;
