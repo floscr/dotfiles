@@ -2,6 +2,7 @@
   (:require
    [babashka.cli :as cli]
    [babashka.fs :as fs]
+   [babashka.process :as bp]
    [babashka.http-client :as http]
    [clojure.core.match :refer [match]]
    [clojure.java.io :as io]
@@ -31,17 +32,26 @@
            [:file x] [:file x]
            :else [:error (str "Could not find matching schema for clipboard" \newline clip)])))
 
+(comment
+  (let [file (fs/file (fs/create-temp-file {:prefix "org-attach" :suffix ".mp4"}))]
+    ["yt-dlp" (str "\"" "https://twitter.com/fasc1nate/status/1602755629042786304" "\"") "-o" file])
+
+  nil)
+
 (defn download-url [[_ url]]
   (let [resp (http/get url {:throw false
                             :as :stream})]
-    (match resp
-           {:status 200 :headers headers :body body} (let [content-type (get headers "content-type")
-                                                           [_ ext] (re-find #".+/(\w+)" content-type)]
-                                                       (if (re-find #"^text/html" content-type)
-                                                         [:error "Pased url is html"]
-                                                         (let [file (fs/file (fs/create-temp-file {:prefix "org-attach" :suffix (str "." ext)}))]
-                                                           (io/copy body file)
-                                                           [:file file])))
+    (match [(uri/uri url) resp]
+           [{:host "twitter.com"} {:status 200}] (let [file (fs/file (fs/create-temp-file {:prefix "org-attach" :suffix ".mp4"}))]
+                                                   (lib.shell/sh ["yt-dlp" (str "\"" url "\"") "-o" file])
+                                                   [:file file])
+           [_ {:status 200 :headers headers :body body}] (let [content-type (get headers "content-type")
+                                                               [_ ext] (re-find #".+/(\w+)" content-type)]
+                                                           (if (re-find #"^text/html" content-type)
+                                                             [:error "Pased url is html"]
+                                                             (let [file (fs/file (fs/create-temp-file {:prefix "org-attach" :suffix (str "." ext)}))]
+                                                               (io/copy body file)
+                                                               [:file file])))
            :else [:error resp])))
 
 (defn md5-filename [file]
