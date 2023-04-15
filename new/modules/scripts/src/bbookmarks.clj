@@ -1,4 +1,4 @@
-(ns bbookmark
+(ns bbookmarks
   (:require
    [babashka.cli :as cli]
    [babashka.fs :as fs]
@@ -11,7 +11,7 @@
 
 ;; Config ----------------------------------------------------------------------
 
-(def script-name "bbookmark")
+(def script-name "bbookmarks")
 
 (def config-path (xdg/config-path script-name))
 
@@ -64,19 +64,29 @@
 ;; Commands --------------------------------------------------------------------
 
 (defn list-bookmarks-cmd [{:keys [opts]}]
-  (let [{:keys [parent debug? with-action?]} opts
+  (let [{:keys [parent debug with-action]} opts
         items (->> (list-bookmarks (or parent (:parent defaults)))
-                   (m/fmap (fn [xs] (map (fn [{:keys [name file command]}]
-                                           (let [name (or name file)
-                                                 action (when with-action? (or command (-> file fs/expand-home str)))]
-                                             (if action
-                                               {:name name :action action}
+                   (m/fmap (fn [xs] (map (fn [{:keys [name file commands]
+                                               :or {commands []}}]
+                                           (let [name (or name file)]
+                                             (if with-action
+                                               (let [file-action (some->> file
+                                                                          fs/expand-home
+                                                                          str
+                                                                          (conj [:open-file])
+                                                                          (vector))
+                                                     commands (into (or file-action []) commands)]
+                                                   [name commands])
                                                name)))
                                          xs))))
-        result (if debug?
+        result (if debug
                  items
                  (->> (exc/extract items [])
-                      (str/join "\n")))]
+                      (reduce (fn [acc cur]
+                                (if with-action
+                                  (str acc (first cur) "\n" (second cur) "\n\n")
+                                  (str acc cur "\n"))) "")
+                      (str/trim)))]
     (doto result println)))
 
 (defn main [args]
@@ -101,6 +111,8 @@
 
   (list-bookmarks-cmd {})
 
+  (-main "list" "--with-action?")
+
   (-main "list")
   (-main "list" "foo")
 
@@ -108,7 +120,7 @@
 
   (b (list-bookmarks))
   (list-bookmarks-cmd {})
-  (list-bookmarks-cmd {:opts {:with-action? true}})
+  (list-bookmarks-cmd {:opts {:with-action true :debug true}})
 
   (match (exc/success {:foo 1})
          {:success {:foo x}} x
