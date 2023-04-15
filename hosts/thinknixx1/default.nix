@@ -31,7 +31,6 @@ with lib.my;
     zip
     scdl
     openai-whisper-cpp
-
   ] ++ flake-packages;
 
   hardware.logitech.wireless.enable = true;
@@ -90,7 +89,7 @@ with lib.my;
     };
     hardware = {
       webcam.logitech-c920.enable = true;
-      trackpad.enable = false;
+      trackpad.enable = true;
       audio.enable = true;
       bluetooth.enable = true;
       keyboard.enable = true;
