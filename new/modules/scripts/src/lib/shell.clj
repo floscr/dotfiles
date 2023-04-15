@@ -23,6 +23,6 @@
            (str/split-lines))))
 
 (defn md5 [path]
-  (when-let [[result] (lib.shell/lines ["md5sum" path])]
+  (when-let [[result] (lines ["md5sum" path])]
     (-> (str/split result #" ")
         first)))
