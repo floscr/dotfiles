@@ -64,11 +64,15 @@
 ;; Commands --------------------------------------------------------------------
 
 (defn list-bookmarks-cmd [{:keys [opts]}]
-  (let [{:keys [parent debug?]} opts
+  (let [{:keys [parent debug? with-action?]} opts
         items (->> (list-bookmarks (or parent (:parent defaults)))
-                   (m/fmap (fn [xs] (map (fn [x] (match x
-                                                   {:name name} name
-                                                   {:file file} file)) xs))))
+                   (m/fmap (fn [xs] (map (fn [{:keys [name file command]}]
+                                           (let [name (or name file)
+                                                 action (when with-action? (or command (-> file fs/expand-home str)))]
+                                             (if action
+                                               {:name name :action action}
+                                               name)))
+                                         xs))))
         result (if debug?
                  items
                  (->> (exc/extract items [])
@@ -104,6 +108,7 @@
 
   (b (list-bookmarks))
   (list-bookmarks-cmd {})
+  (list-bookmarks-cmd {:opts {:with-action? true}})
 
   (match (exc/success {:foo 1})
          {:success {:foo x}} x
