@@ -89,14 +89,21 @@
                       (str/trim)))]
     (doto result println)))
 
-(defn main [args]
-  args)
+(defn add-bookmarks-cmd [{:keys [opts]}]
+  (let [{:keys [input parent]} opts
+        parent (or parent (:parent defaults))
+        items (->> input
+                   (edn/read-string)
+                   (exc/try-on)
+                   (m/fmap (fn [x] (if (or (seq? x) (vector? x)) x [x]))))]
+    items))
 
 ;; Main ------------------------------------------------------------------------
 
 (def table
   [{:cmds ["list"] :args->opts [:parent] :fn list-bookmarks-cmd}
-   {:cmds ["list"] :fn list-bookmarks-cmd}])
+   {:cmds ["list"] :fn list-bookmarks-cmd}
+   {:cmds ["add"] :args->opts [:input] :fn add-bookmarks-cmd}])
 
 (defn -main [& args]
   (cli/dispatch table args))
@@ -108,6 +115,8 @@
   (defmacro b [& body]
     `(binding [read-bookmarks-file! #(exc/success {})]
        ~@body))
+
+  (add-bookmarks-cmd {:opts {:input "[{:file \"foo\" :name \"bar\"}]"}})
 
   (list-bookmarks-cmd {})
 
