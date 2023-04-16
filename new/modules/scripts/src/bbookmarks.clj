@@ -6,6 +6,7 @@
    [cats.monad.exception :as exc]
    [clojure.core.match :refer [match]]
    [clojure.edn :as edn]
+   [clojure.pprint :as pprint]
    [clojure.string :as str]
    [lib.xdg :as xdg]))
 
@@ -45,13 +46,13 @@
   ([item parent coll]
    (update coll parent (fnil conj []) (assoc item :id (random-uuid)))))
 
-(defn add-bookmark!
-  ([item]
-   (add-bookmark! item (:parent defaults)))
-  ([item parent]
-   (->> (exc/extract (read-bookmarks-file!) nil)
-        (add-bookmark item parent)
-        (save-bookmarks!))))
+(defn add-bookmarks!
+  ([items]
+   (add-bookmarks! items (:parent defaults)))
+  ([items parent]
+   (m/mlet [coll (read-bookmarks-file!)
+            :let [new-coll (reduce (fn [acc cur] (add-bookmark cur parent coll)) coll items)]]
+     (save-bookmarks! new-coll))))
 
 (defn list-bookmarks
   ([] (list-bookmarks (:parent defaults)))
@@ -91,12 +92,12 @@
 
 (defn add-bookmarks-cmd [{:keys [opts]}]
   (let [{:keys [input parent]} opts
-        parent (or parent (:parent defaults))
-        items (->> input
-                   (edn/read-string)
-                   (exc/try-on)
-                   (m/fmap (fn [x] (if (or (seq? x) (vector? x)) x [x]))))]
-    items))
+        parent (or parent (:parent defaults))]
+    (->> input
+         (edn/read-string)
+         (exc/try-on)
+         (m/fmap (fn [x] (if (or (seq? x) (vector? x)) x [x])))
+         (m/fmap add-bookmarks!))))
 
 ;; Main ------------------------------------------------------------------------
 
@@ -135,6 +136,6 @@
          {:success {:foo x}} x
          {:failure error} error)
 
-  (b (add-bookmark! {:file "~/.config/doom/modules/private/work/config.org"}))
+  (b (add-bookmarks! [{:file "findme"}]))
 
   nil)
