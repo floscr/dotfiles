@@ -6,7 +6,6 @@
    [cats.monad.exception :as exc]
    [clojure.core.match :refer [match]]
    [clojure.edn :as edn]
-   [clojure.pprint :as pprint]
    [clojure.string :as str]
    [lib.xdg :as xdg]))
 
@@ -62,20 +61,25 @@
        (exc/success coll*)
        (exc/failure (Exception. (format "No such parent found: %s" parent)))))))
 
+(defn file->action [file]
+  (some->> file
+           fs/expand-home
+           str
+           (conj [:open-file])
+           (vector)))
+
 ;; Commands --------------------------------------------------------------------
 
 (defn list-bookmarks-cmd [{:keys [opts]}]
   (let [{:keys [parent debug with-action]} opts
-        items (->> (list-bookmarks (or parent (:parent defaults)))
+        parent (or parent (:parent defaults))
+        items (->> (list-bookmarks parent)
                    (m/fmap (fn [xs] (map (fn [{:keys [name file commands]
-                                               :or {commands []}}]
+                                               :or {commands []}
+                                               :as x}]
                                            (let [name (or name file)]
                                              (if with-action
-                                               (let [file-action (some->> file
-                                                                          fs/expand-home
-                                                                          str
-                                                                          (conj [:open-file])
-                                                                          (vector))
+                                               (let [file-action (file->action file)
                                                      commands (into (or file-action []) commands)]
                                                    [name commands])
                                                name)))
@@ -139,3 +143,9 @@
   (b (add-bookmarks! [{:file "findme"}]))
 
   nil)
+
+;; Convert old bookmarks format
+(comment
+  (-> (slurp "/home/floscr/Code/Work/Pitch/pitch-app/bookmarks.json")
+      (cheshire.core/parse-string keyword)
+      (vec)))
