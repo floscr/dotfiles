@@ -14,7 +14,7 @@
 ;; Helpers ---------------------------------------------------------------------
 
 (defn display-brightness [display-id]
-  (some->> (shell/sh-lines (format "sudo ddcutil getvcp %d" display-id))
+  (some->> (shell/lines (format "sudo ddcutil getvcp %d" display-id))
            (filter #(str/starts-with? % "VCP code"))
            (first)
            (re-find #"current value =\s+(\d+)")
