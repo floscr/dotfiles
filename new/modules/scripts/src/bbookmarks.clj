@@ -61,12 +61,16 @@
        (exc/success coll*)
        (exc/failure (Exception. (format "No such parent found: %s" parent)))))))
 
-(defn file->action [file]
-  (some->> file
+(defn file->action [file parent {:keys [relative-to]}]
+  (when file
+    (let [file* (if (= relative-to :parent)
+                  (fs/path parent file)
+                  file)]
+      (->> file*
            fs/expand-home
            str
            (conj [:open-file])
-           (vector)))
+           (vector)))))
 
 ;; Commands --------------------------------------------------------------------
 
@@ -76,10 +80,10 @@
         items (->> (list-bookmarks parent)
                    (m/fmap (fn [xs] (map (fn [{:keys [name file commands]
                                                :or {commands []}
-                                               :as x}]
+                                               :as item}]
                                            (let [name (or name file)]
                                              (if with-action
-                                               (let [file-action (file->action file)
+                                               (let [file-action (file->action file parent item)
                                                      commands (into (or file-action []) commands)]
                                                    [name commands])
                                                name)))
