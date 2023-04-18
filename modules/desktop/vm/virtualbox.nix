@@ -18,7 +18,10 @@ in
         enable = true;
       };
 
-      user.extraGroups = [ "vboxusers" ];
+      virtualisation.libvirtd.enable = true;
+      boot.kernelModules = [ "kvm-amd" "kvm-intel" ];
+
+      user.extraGroups = [ "vboxusers" "qemu-libvirtd" "libvirtd" "libvirt" ];
     }
     (mkIf cfg.vagrant.enable {
       environment.systemPackages = with pkgs; [
