@@ -61,10 +61,10 @@
        (exc/success coll*)
        (exc/failure (Exception. (format "No such parent found: %s" parent)))))))
 
-(defn file->action [file parent {:keys [relative-to]}]
+(defn file->action [file parent {:keys [relative-to]} & {:keys [project-root]}]
   (when file
     (let [file* (if (= relative-to :parent)
-                  (fs/path parent file)
+                  (fs/path (or project-root parent) file)
                   file)]
       (->> file*
            fs/expand-home
@@ -75,7 +75,7 @@
 ;; Commands --------------------------------------------------------------------
 
 (defn list-bookmarks-cmd [{:keys [opts]}]
-  (let [{:keys [parent debug with-action]} opts
+  (let [{:keys [parent debug with-action project-root]} opts
         parent (or parent (:parent defaults))
         items (->> (list-bookmarks parent)
                    (m/fmap (fn [xs] (map (fn [{:keys [name file commands]
@@ -83,7 +83,7 @@
                                                :as item}]
                                            (let [name (or name file)]
                                              (if with-action
-                                               (let [file-action (file->action file parent item)
+                                               (let [file-action (file->action file parent item :project-root project-root)
                                                      commands (into (or file-action []) commands)]
                                                    [name commands])
                                                name)))
