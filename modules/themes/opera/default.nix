@@ -38,7 +38,7 @@ in
             terminal = {
               family = "Iosevka";
               size = 10;
-              pkg = pkgs.unstable.iosevka;
+              pkg = pkgs.iosevka-bin;
             };
             ui = sans;
           };
