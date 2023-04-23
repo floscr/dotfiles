@@ -73,8 +73,8 @@ in
 
           # Unicode and Symbols
           font-awesome
-          noto-fonts
-          noto-fonts-cjk
+          firaCodePkgs.noto-fonts
+          firaCodePkgs.noto-fonts-cjk
           symbola
         ] ++ (mapAttrsToList (_: v: v.pkg) config.modules.theme.fonts);
     };
