@@ -29,6 +29,7 @@ with lib.my;
     gparted
     xournal
     zip
+    unrar
     scdl
     openai-whisper-cpp
     pins.nix-search-cli
