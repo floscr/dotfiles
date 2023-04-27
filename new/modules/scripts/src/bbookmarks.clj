@@ -112,7 +112,8 @@
 (def table
   [{:cmds ["list"] :args->opts [:parent] :fn list-bookmarks-cmd}
    {:cmds ["list"] :fn list-bookmarks-cmd}
-   {:cmds ["add"] :args->opts [:input] :fn add-bookmarks-cmd}])
+   {:cmds ["add"] :args->opts [:input] :fn add-bookmarks-cmd}
+   {:cmds ["remove"] :args->opts [:input] :fn add-bookmarks-cmd}])
 
 (defn -main [& args]
   (cli/dispatch table args))
@@ -150,6 +151,8 @@
 
 ;; Convert old bookmarks format
 (comment
-  (-> (slurp "/home/floscr/Code/Work/Pitch/pitch-app/bookmarks.json")
-      (cheshire.core/parse-string keyword)
-      (vec)))
+  (->> (read-bookmarks-file!)
+       (m/fmap (fn [edn]
+                 (->> (mapv (fn [[k vs]] [k (mapv #(if (:id %) % (assoc % :id (random-uuid))) vs)]) edn)
+                      (into {})
+                      (save-bookmarks!))))))
