@@ -7,21 +7,26 @@
       nixpkgs-unstable.url = "nixpkgs/master";
       nixos-hardware.url = "github:nixos/nixos-hardware";
 
-      # Fix bad fira code rendering by locking it
+      # Package lock overrides
       fira-code-pkgs.url = "github:nixos/nixpkgs/a3e6348d2c68103b0c96e35b3d94c4ea0e6f9e50";
-
       utsushi-nixpkgs.url = "github:nixos/nixpkgs/fbf68b6e4a8c5f518977a3e4b1ec4828efbb8efd";
 
+      # External packages
       home-manager.url = "github:rycee/home-manager/master";
       home-manager.inputs.nixpkgs.follows = "nixpkgs";
       agenix.url = "github:ryantm/agenix";
       agenix.inputs.nixpkgs.follows = "nixpkgs";
+      nix-search-cli = {
+        url = github:peterldowns/nix-search-cli;
+        inputs.nixpkgs.follows = "nixpkgs";
+      };
 
       # secrets = { url = "/etc/dotfiles-private"; flake = false; };
 
       emacs-nixpkgs.url = "github:nixos/nixpkgs/a3e6348d2c68103b0c96e35b3d94c4ea0e6f9e50";
       emacs-overlay.url = "github:nix-community/emacs-overlay/b50178f76a7868d0aca28278451141269df137fe";
       nur.url = "github:nix-community/NUR";
+
 
       flake-utils.url = "github:ursi/flake-utils/d939d2e5d73cd3468a05661e4471838b64547e6b";
       org_print_scan.url = "github:floscr/org_print_scan";
@@ -32,19 +37,20 @@
 
   outputs =
     inputs @ { self
-    , flake-utils
-    , home-manager
-    , nixpkgs
-    , nixpkgs-unstable
-    , fira-code-pkgs
-    , utsushi-nixpkgs
-    , nur
-    , org_print_scan
     , emacs-nixpkgs
     , emacs-overlay
+    , fira-code-pkgs
+    , flake-utils
+    , home-manager
+    , nim-utils
+    , nix-search-cli
+    , nixpkgs
+    , nixpkgs-unstable
+    , nur
+    , org_print_scan
     , rofi_cmder
     , rofi_org_bookmarks
-    , nim-utils
+    , utsushi-nixpkgs
     , ...
     }:
     let
@@ -84,6 +90,9 @@
         ] ++ [
           (_: super:
             {
+              pins = {
+                nix-search-cli = nix-search-cli.packages.${system}.nix-search;
+              };
               flake-packages = flake-utils.defaultPackages system
                 {
                   inherit

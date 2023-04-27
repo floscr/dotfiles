@@ -50,15 +50,9 @@
     (rebuild! arg)))
 
 (defn search! [{:keys [opts]}]
-  (let [{:keys [query]} opts
-        pkgs (-> (bp/shell {:out :string} "nix search nixpkgs" query "--json" "--quiet")
-                 (:out)
-                 (json/parse-string keyword))]
-    (doseq [{:keys [pname description]} (vals pkgs)]
-      (println (shell/bold pname) "\n" (if (str/blank? description)
-                                         ""
-                                         (str description "\n"))))
-    pkgs))
+  (let [{:keys [query]} opts]
+    (bp/shell ["nix-search" query])))
+
 
 (defn garbage-collect! [{:keys []}]
   (println "Cleaning up your user profile...")

@@ -31,6 +31,7 @@ with lib.my;
     zip
     scdl
     openai-whisper-cpp
+    pins.nix-search-cli
   ] ++ flake-packages;
 
   hardware.logitech.wireless.enable = true;
