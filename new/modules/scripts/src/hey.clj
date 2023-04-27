@@ -53,6 +53,8 @@
   (let [{:keys [query]} opts]
     (bp/shell ["nix-search" query])))
 
+(defn shell! [{:keys [args]}]
+  (bp/shell (concat ["nix-shell" "-p"] args)))
 
 (defn garbage-collect! [{:keys []}]
   (println "Cleaning up your user profile...")
@@ -69,6 +71,8 @@
    :search          {:fn search!
                      :description "Searches nixpkgs for a package"
                      :args->opts [:query]}
+   :shell           {:fn shell!
+                     :description "Star a nix shell with packages"}
    :garbage-collect {:fn garbage-collect!
                      :description "Garbage collect and optimize store"}
    :rollback        {:fn rollback!
@@ -88,6 +92,8 @@
         {:cmds ["upgrade"]         :template :upgrade}
         {:cmds ["s"]               :template :search}
         {:cmds ["search"]          :template :search}
+        {:cmds ["sh"]              :template :shell}
+        {:cmds ["shell"]           :template :shell}
         {:cmds ["gc"]              :template :garbage-collect}
         {:cmds ["garbage-collect"] :template :garbage-collect}
         {:cmds ["rollback"]        :template :rollback}
