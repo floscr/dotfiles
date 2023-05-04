@@ -118,12 +118,12 @@ with lib.my;
       xmonad.enable = true;
       mime.enable = true;
       gtk-emacs-bindings.enable = true;
-      # vm = {
-      #   virtualbox = {
-      #     enable = true;
-      #     vagrant.enable = true;
-      #   };
-      # };
+      vm = {
+        virtualbox = {
+          enable = true;
+          vagrant.enable = true;
+        };
+      };
       apps = {
         rofi.enable = true;
         transmission.enable = true;
