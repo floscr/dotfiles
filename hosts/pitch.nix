@@ -6,6 +6,7 @@ with lib.my;
   user.packages = with pkgs; [
     nodePackages.mermaid-cli # Mermaid Diagrams CLI, mmdc
     google-chrome # For cypress
+    epiphany
   ];
 
   modules = {
