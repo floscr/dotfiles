@@ -1,4 +1,6 @@
 #!/usr/bin/env zsh
 
-alias e='emacsclient -n'
+function e() {
+  emacsclient -n "${1:-.}"
+}
 ediff() { e --eval "(ediff-files \"$1\" \"$2\")"; }
