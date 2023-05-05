@@ -64,7 +64,9 @@
 
 (defn execute-cmd [{:keys [opts]}]
   (let [{:keys [command dir]} opts
-        cwd (lib.fs/current-directory)
+        cwd (if (fs/absolute? dir)
+              dir
+              (lib.fs/current-directory))
         not-in-git-repo-err (format "Not in a git directory: %s" cwd)]
     (m/mlet [git-root (-> (lib.fs/find-git-root cwd)
                           (lib.monad/some-try not-in-git-repo-err))
@@ -88,7 +90,6 @@
 (comment
   (execute-cmd {:opts {:command "ls -la"}})
   (execute-cmd {:opts {:command "ls" :dir "new"}})
-  (execute-cmd {:opts {:command "ls" :dir "/tmp"}})
   nil)
 
 ;; Main ------------------------------------------------------------------------
