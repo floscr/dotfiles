@@ -87,14 +87,14 @@
   (let [{:keys [parent debug with-action project-root]} opts
         parent (or parent (:parent defaults))
         items (->> (list-bookmarks parent)
-                   (m/fmap (fn [xs] (map (fn [{:keys [name file commands]
+                   (m/fmap (fn [xs] (map (fn [{:keys [name id file commands]
                                                :or {commands []}
                                                :as item}]
                                            (let [name (or name file)]
                                              (if with-action
                                                (let [file-action (file->action file parent item :project-root project-root)
                                                      commands (into (or file-action []) commands)]
-                                                   [name commands])
+                                                   [name id commands])
                                                name)))
                                          xs))))
         result (if debug
@@ -102,7 +102,7 @@
                  (->> (exc/extract items [])
                       (reduce (fn [acc cur]
                                 (if with-action
-                                  (str acc (first cur) "\n" (second cur) "\n\n")
+                                  (str acc (str/join "\n" cur) "\n\n")
                                   (str acc cur "\n"))) "")
                       (str/trim)))]
     (doto result println)))
