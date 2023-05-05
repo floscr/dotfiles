@@ -35,11 +35,11 @@
 
 (def ^:dynamic save-config-file!
   (fn [coll]
-    (let [{:keys [config-path bookmarks-file]} defaults]
+    (let [{:keys [config-path config-file]} defaults]
       (-> (fs/create-dirs config-path)
           (exc/try-on)
           (m/bind (fn [_] (exc/try-on
-                           (spit (str bookmarks-file) coll))))
+                           (spit (str config-file) coll))))
           (m/bind (fn [_] (exc/success coll)))))))
 
 (defn add-bookmark
@@ -113,7 +113,8 @@
     (->> input
          (edn/read-string)
          (exc/try-on)
-         (m/fmap (fn [x] (if (or (seq? x) (vector? x)) x [x]))))))
+         (m/fmap (fn [x] (if (or (seq? x) (vector? x)) x [x])))
+         (m/fmap add-bookmarks!))))
 
 (defn remove-bookmarks-cmd [{:keys [opts]}]
   (let [{:keys [id]} opts]
@@ -140,9 +141,9 @@
 (apply -main *command-line-args*)
 
 (comment
-
   (defmacro b [& body]
-    `(binding [read-config-file! #(exc/success {})]
+    `(binding [read-config-file! #(exc/success {})
+               save-config-file! #()]
        ~@body))
 
   (add-bookmarks-cmd {:opts {:input "[{:file \"foo\" :name \"bar\"}]"}})
@@ -174,7 +175,6 @@
        (m/fmap (fn [edn]
                  (->> (mapv (fn [[k vs]] [k (mapv #(if (:id %) % (assoc % :id (random-uuid))) vs)]) edn)
                       (into {})
-                      
                       (save-config-file!)))))
 
   (defn remove-with-id [coll id]
