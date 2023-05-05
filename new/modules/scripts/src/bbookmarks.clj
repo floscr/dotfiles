@@ -76,12 +76,10 @@
            (vector)))))
 
 (defn remove-with-id [id coll]
-  (walk/prewalk
-   (fn [el]
-     (match el
-            [_ {:id id}] nil
-            :else el))
-   coll))
+  (->> coll
+       (eduction (map (fn [[k v]] [k (remove #(= (:id %) id) v)]))
+                 (filter (fn [[_ v]] (seq v))))
+       (into (hash-map))))
 
 ;; Commands --------------------------------------------------------------------
 
