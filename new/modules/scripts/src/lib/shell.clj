@@ -1,10 +1,18 @@
 (ns lib.shell
   (:require
    [babashka.process :as bp]
+   [cats.monad.exception :as exc]
+   [cats.core :as m]
    [clojure.string :as str]))
 
 (defmacro bold [str]
   `(str "\033[1m" ~str "\033[0m"))
+
+(defn sh-exc
+  ([cmd] (sh-exc cmd nil))
+  ([cmd opts]
+   (->> (exc/try-on (bp/shell cmd (merge {:out :string} opts)))
+        (m/fmap (comp str/trim :out)))))
 
 (defn sh
   "Wrapper around `babashka.process/sh` that returns `:out` or `nil` when `cmd` failed."
