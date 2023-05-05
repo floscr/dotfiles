@@ -86,11 +86,14 @@ in
                 /etc/profiles/per-user/floscr/bin/xmonadctl restart
             }
 
+            display_count=$(xrandr | grep -w " connected" | grep -v "eDP-1 connected" | wc -l)
 
             if [[ $(xrandr | grep "^DP-3 connected") ]]; then
+              echo "HotPlug: Connecting LG Display"
               connectLG
               setup
-            else
+            elif [[ "$display_count" -eq 0 ]]; then
+              echo "HotPlug: Solo Laptop Display"
               disconnect
               setup
             fi
