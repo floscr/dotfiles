@@ -4,11 +4,9 @@
    [babashka.fs :as fs]
    [cats.core :as m]
    [cats.monad.exception :as exc]
-   [clojure.core.match :refer [match]]
    [clojure.edn :as edn]
    [clojure.pprint :as pprint]
    [clojure.string :as str]
-   [clojure.walk :as walk]
    [lib.xdg :as xdg]))
 
 ;; Config ----------------------------------------------------------------------
