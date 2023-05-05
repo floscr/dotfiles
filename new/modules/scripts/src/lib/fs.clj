@@ -1,6 +1,12 @@
 (ns lib.fs
   (:require [babashka.fs :as fs]))
 
+(defn current-directory
+  "Returns the current execution directory.
+  For the repl this will be the path where the repl has been launched."
+  []
+  (System/getProperty "user.dir"))
+
 (defn find-parent-with
   "Traverse updward from a `path` until `pred` function returns true."
   [pred path]
