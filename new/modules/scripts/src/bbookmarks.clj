@@ -144,6 +144,8 @@
                save-config-file! (fn [x] (reset! state x) (exc/success x))]
        ~@body))
 
+  (remove-with-id (-> @state (get "main") first :id) (assoc @state "foo" []))
+
   (b (add-bookmarks! [{:file "findme"}]))
   (b (add-bookmarks! [{:file "findme"}] "foo"))
 
