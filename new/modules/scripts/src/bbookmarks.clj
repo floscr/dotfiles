@@ -6,6 +6,7 @@
    [cats.monad.exception :as exc]
    [clojure.core.match :refer [match]]
    [clojure.edn :as edn]
+   [clojure.pprint :as pprint]
    [clojure.string :as str]
    [clojure.walk :as walk]
    [lib.xdg :as xdg]))
@@ -39,7 +40,8 @@
       (-> (fs/create-dirs config-path)
           (exc/try-on)
           (m/bind (fn [_] (exc/try-on
-                           (spit (str config-file) coll))))
+                           (spit (str config-file)
+                                 (with-out-str (pprint/pprint coll))))))
           (m/bind (fn [_] (exc/success coll)))))))
 
 (defn add-bookmark
@@ -114,18 +116,14 @@
          (edn/read-string)
          (exc/try-on)
          (m/fmap (fn [x] (if (or (seq? x) (vector? x)) x [x])))
-         (m/fmap add-bookmarks!))))
+         (m/fmap (fn [xs] (add-bookmarks! xs parent))))))
 
 (defn remove-bookmarks-cmd [{:keys [opts]}]
   (let [{:keys [id]} opts]
-
-    (m/mlet [id (or (parse-uuid id)
-                    (exc/failure (Exception. (format "Could not parse uuid: %s" id))))
+    (m/mlet [id (exc/try-on (parse-uuid id))
              coll (read-config-file!)]
       (->> (exc/try-on (remove-with-id id coll))
-           (m/fmap save-config-file!)))
-    (->> (read-config-file!)
-         (m/fmap #(remove-with-id id %)))))
+           (m/fmap save-config-file!)))))
 
 ;; Main ------------------------------------------------------------------------
 
@@ -141,55 +139,14 @@
 (apply -main *command-line-args*)
 
 (comment
+  (defonce state (atom {}))
+  (reset! state {})
   (defmacro b [& body]
-    `(binding [read-config-file! #(exc/success {})
-               save-config-file! #()]
+    `(binding [read-config-file! #(exc/success @state)
+               save-config-file! (fn [x] (reset! state x) (exc/success x))]
        ~@body))
 
-  (add-bookmarks-cmd {:opts {:input "[{:file \"foo\" :name \"bar\"}]"}})
-
-  (list-bookmarks-cmd {})
-
-  (-main "list" "--with-action?")
-
-  (-main "list")
-  (-main "list" "foo")
-
-  (b (read-config-file!))
-
-  (b (list-bookmarks))
-  (list-bookmarks-cmd {})
-  (list-bookmarks-cmd {:opts {:with-action true :debug true}})
-
-  (match (exc/success {:foo 1})
-         {:success {:foo x}} x
-         {:failure error} error)
-
   (b (add-bookmarks! [{:file "findme"}]))
-
-  nil)
-
-;; Convert old bookmarks format
-(comment
-  (->> (read-config-file!)
-       (m/fmap (fn [edn]
-                 (->> (mapv (fn [[k vs]] [k (mapv #(if (:id %) % (assoc % :id (random-uuid))) vs)]) edn)
-                      (into {})
-                      (save-config-file!)))))
-
-  (defn remove-with-id [coll id]
-    (walk/prewalk
-     (fn [el]
-       (match el
-              [_ {:id id}] nil
-              :else el))
-     coll))
-
-  (def nested-map {:a {:b {:c {:id 2}, :d {:e {:f {:id 1}, :g "value"}}}}})
-
-  (remove-with-id nested-map 1)
-
-  (match [1 2]
-         [k v] k)
+  (b (add-bookmarks! [{:file "findme"}] "foo"))
 
   nil)
