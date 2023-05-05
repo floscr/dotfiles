@@ -7,32 +7,33 @@
    [clojure.core.match :refer [match]]
    [clojure.edn :as edn]
    [clojure.string :as str]
+   [clojure.walk :as walk]
    [lib.xdg :as xdg]))
 
 ;; Config ----------------------------------------------------------------------
 
-(def script-name "bbookmarks")
+(def script-name (str *ns*))
 
 (def config-path (xdg/config-path script-name))
 
-(def bookmarks-file (fs/path config-path (format "%s.edn" script-name)))
+(def config-file (fs/path config-path (format "%s.edn" script-name)))
 
 (def ^:dynamic defaults {:config-path config-path
-                         :parent "main"
-                         :bookmarks-file bookmarks-file})
+                         :config-file config-file
+                         :parent "main"})
 
 ;; Helpers ---------------------------------------------------------------------
 
-(def ^:dynamic read-bookmarks-file!
+(def ^:dynamic read-config-file!
   (fn []
-    (m/mlet [contents (-> (:bookmarks-file defaults)
+    (m/mlet [contents (-> (:config-file defaults)
                           (str)
                           (slurp)
                           (edn/read-string)
                           (exc/try-on))]
       (m/return contents))))
 
-(def ^:dynamic save-bookmarks!
+(def ^:dynamic save-config-file!
   (fn [coll]
     (let [{:keys [config-path bookmarks-file]} defaults]
       (-> (fs/create-dirs config-path)
@@ -49,14 +50,14 @@
   ([items]
    (add-bookmarks! items (:parent defaults)))
   ([items parent]
-   (m/mlet [coll (read-bookmarks-file!)
+   (m/mlet [coll (read-config-file!)
             :let [new-coll (reduce (fn [acc cur] (add-bookmark cur parent coll)) coll items)]]
-     (save-bookmarks! new-coll))))
+     (save-config-file! new-coll))))
 
 (defn list-bookmarks
   ([] (list-bookmarks (:parent defaults)))
   ([parent]
-   (m/mlet [coll (read-bookmarks-file!)]
+   (m/mlet [coll (read-config-file!)]
      (if-let [coll* (get coll parent)]
        (exc/success coll*)
        (exc/failure (Exception. (format "No such parent found: %s" parent)))))))
@@ -71,6 +72,14 @@
            str
            (conj [:open-file])
            (vector)))))
+
+(defn remove-with-id [id coll]
+  (walk/prewalk
+   (fn [el]
+     (match el
+            [_ {:id id}] nil
+            :else el))
+   coll))
 
 ;; Commands --------------------------------------------------------------------
 
@@ -104,8 +113,18 @@
     (->> input
          (edn/read-string)
          (exc/try-on)
-         (m/fmap (fn [x] (if (or (seq? x) (vector? x)) x [x])))
-         (m/fmap add-bookmarks!))))
+         (m/fmap (fn [x] (if (or (seq? x) (vector? x)) x [x]))))))
+
+(defn remove-bookmarks-cmd [{:keys [opts]}]
+  (let [{:keys [id]} opts]
+
+    (m/mlet [id (or (parse-uuid id)
+                    (exc/failure (Exception. (format "Could not parse uuid: %s" id))))
+             coll (read-config-file!)]
+      (->> (exc/try-on (remove-with-id id coll))
+           (m/fmap save-config-file!)))
+    (->> (read-config-file!)
+         (m/fmap #(remove-with-id id %)))))
 
 ;; Main ------------------------------------------------------------------------
 
@@ -113,7 +132,7 @@
   [{:cmds ["list"] :args->opts [:parent] :fn list-bookmarks-cmd}
    {:cmds ["list"] :fn list-bookmarks-cmd}
    {:cmds ["add"] :args->opts [:input] :fn add-bookmarks-cmd}
-   {:cmds ["remove"] :args->opts [:input] :fn add-bookmarks-cmd}])
+   {:cmds ["remove"] :args->opts [:id] :fn remove-bookmarks-cmd}])
 
 (defn -main [& args]
   (cli/dispatch table args))
@@ -123,7 +142,7 @@
 (comment
 
   (defmacro b [& body]
-    `(binding [read-bookmarks-file! #(exc/success {})]
+    `(binding [read-config-file! #(exc/success {})]
        ~@body))
 
   (add-bookmarks-cmd {:opts {:input "[{:file \"foo\" :name \"bar\"}]"}})
@@ -135,7 +154,7 @@
   (-main "list")
   (-main "list" "foo")
 
-  (b (read-bookmarks-file!))
+  (b (read-config-file!))
 
   (b (list-bookmarks))
   (list-bookmarks-cmd {})
@@ -151,8 +170,26 @@
 
 ;; Convert old bookmarks format
 (comment
-  (->> (read-bookmarks-file!)
+  (->> (read-config-file!)
        (m/fmap (fn [edn]
                  (->> (mapv (fn [[k vs]] [k (mapv #(if (:id %) % (assoc % :id (random-uuid))) vs)]) edn)
                       (into {})
-                      (save-bookmarks!))))))
+                      
+                      (save-config-file!)))))
+
+  (defn remove-with-id [coll id]
+    (walk/prewalk
+     (fn [el]
+       (match el
+              [_ {:id id}] nil
+              :else el))
+     coll))
+
+  (def nested-map {:a {:b {:c {:id 2}, :d {:e {:f {:id 1}, :g "value"}}}}})
+
+  (remove-with-id nested-map 1)
+
+  (match [1 2]
+         [k v] k)
+
+  nil)
