@@ -1,9 +1,11 @@
+#!/usr/bin/env bb
 (ns bbuild
   (:require
    [babashka.cli :as cli]
    [babashka.fs :as fs]
    [cats.core :as m]
    [cats.monad.exception :as exc]
+   [cats.monad.maybe :as maybe]
    [clojure.edn :as edn]
    [clojure.pprint :as pprint]
    [clojure.string :as str]
@@ -27,14 +29,16 @@
 
 ;; Helpers ---------------------------------------------------------------------
 
+(defn try-read-edn [path]
+  (m/mlet [contents (exc/try-on (->> path
+                                     (str)
+                                     (slurp)
+                                     (edn/read-string)))]
+    (m/return contents)))
+
 (def ^:dynamic read-config-file!
   (fn []
-    (m/mlet [contents (-> (:config-file defaults)
-                          (str)
-                          (slurp)
-                          (edn/read-string)
-                          (exc/try-on))]
-      (m/return contents))))
+    (try-read-edn (:config-file defaults))))
 
 (def ^:dynamic save-config-file!
   (fn [coll]
@@ -45,6 +49,11 @@
                            (spit (str config-file)
                                  (with-out-str (pprint/pprint coll))))))
           (m/bind (fn [_] (exc/success coll)))))))
+
+(def ^:dynamic read-project-config-file!
+  (fn [root]
+    (-> (fs/path root (fs/file-name config-file))
+        (try-read-edn))))
 
 (defn add-item
   ([item parent coll]
@@ -64,7 +73,7 @@
 
 (defn execute-cmd [{:keys [opts]}]
   (let [{:keys [command dir]} opts
-        cwd (if (fs/absolute? dir)
+        cwd (if (some-> dir (fs/absolute?))
               dir
               (lib.fs/current-directory))
         not-in-git-repo-err (format "Not in a git directory: %s" cwd)]
@@ -76,18 +85,45 @@
                             (cond
                               (nil? dir) worktree-or-git-root
                               (fs/relative? dir) (fs/path worktree-or-git-root dir)
-                              (fs/absolute? dir) dir))
-             output (sh-exc command {:dir (str execution-dir)})]
+                              (fs/absolute? dir) (str worktree-or-git-root)))
+             output (sh-exc (str/join " " command) {:dir (str execution-dir)})]
       (->> output
            (m/return)
+           (lib.monad/tap println)
            (lib.monad/tap (fn [_]
                             (->
-                             {:command command
+                             {:command (str/join " " command)
                               :updated-at (System/currentTimeMillis)}
-                             (cond-> dir (assoc :dir dir))
+                             (cond-> dir (assoc :dir (str execution-dir)))
                              (#(add-items! [%] (str git-root))))))))))
 
+(defn list-items [dir]
+  (m/mlet [coll (read-config-file!)]
+    (if-let [coll* (get coll (str dir))]
+      (exc/success coll*)
+      (exc/failure (Exception. (format "No such dir found: %s" dir))))))
+
+(defn list-items-cmd [{:keys [opts]}]
+  (let [{:keys [dir debug with-action]} opts
+        parent (lib.fs/find-git-root (or dir (lib.fs/current-directory)))
+        items (->> (list-items parent)
+                   (m/fmap (fn [xs] (map (fn [{:keys [command id]}]
+                                           (if with-action
+                                             [command id]
+                                             command))
+                                         xs))))
+        result (if debug
+                 items
+                 (->> (exc/extract items [])
+                      (reduce (fn [acc cur]
+                                (if with-action
+                                  (str acc (str/join "\n" cur) "\n\n")
+                                  (str acc cur "\n"))) "")
+                      (str/trim)))]
+    (doto result println)))
+
 (comment
+  (list-items-cmd {:opts {:dir "/home/floscr/Code/Projects/org-web/projects/backend/src/com/org_web/feat/org/agenda/core.clj"}})
   (execute-cmd {:opts {:command "ls -la"}})
   (execute-cmd {:opts {:command "ls" :dir "new"}})
   nil)
@@ -95,8 +131,10 @@
 ;; Main ------------------------------------------------------------------------
 
 (def table
-  [#_{:cmds ["history"] :fn list-items-cmd}
-   {:cmds ["execute"] :args->opts [:command] :fn execute-cmd}])
+  [{:cmds ["list"] :fn list-items-cmd}
+   {:cmds ["execute"]
+    :coerce {:command []} :args->opts (repeat :command)
+    :fn execute-cmd}])
    ;; {:cmds ["remove"] :args->opts [:id] :fn remove-item-cmd}
 
 
