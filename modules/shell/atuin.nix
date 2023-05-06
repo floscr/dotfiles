@@ -21,10 +21,9 @@ in
       {
         rcInit = ''
           export ATUIN_NOBIND="true"
-          eval "$(atuin init zsh)"
+          eval "$(atuin init zsh --disable-up-arrow)"
 
           bindkey '^r' _atuin_search_widget
-          unset HISTFILE
         '';
       };
 
