@@ -76,7 +76,6 @@
     (inc n)))
 
 (defn capture-static! [{:keys [opts]}]
-  (println opts)
   (let [{:keys [extension]
          :or {extension "png"}} opts
         path (or (:file opts)
