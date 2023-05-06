@@ -75,7 +75,7 @@
 
 (defn remove-with-id [id coll]
   (->> coll
-       (eduction (map (fn [[k v]] [k (remove #(= (:id %) id) v)]))
+       (eduction (map (fn [[k v]] [k (into [] (remove #(= (:id %) id) v))]))
                  (filter (fn [[_ v]] (seq v))))
        (into (hash-map))))
 
