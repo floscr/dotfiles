@@ -1,7 +1,8 @@
 (ns lib.monad
   (:require
    [cats.core :as m]
-   [cats.monad.exception :as exc]))
+   [cats.monad.exception :as exc]
+   [cats.monad.maybe :as maybe]))
 
 (defn some-try
   "Convert a nillable `v` into an `exception` monad with `err` as the failure message."
