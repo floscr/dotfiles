@@ -51,7 +51,7 @@
    (add-bookmarks! items (:parent defaults)))
   ([items parent]
    (m/mlet [coll (read-config-file!)]
-     (let [new-coll (reduce (fn [_acc cur] (add-bookmark cur parent coll)) coll items)]
+     (let [new-coll (reduce (fn [acc cur] (add-bookmark cur parent acc)) coll items)]
        (save-config-file! new-coll)))))
 
 (defn list-bookmarks
