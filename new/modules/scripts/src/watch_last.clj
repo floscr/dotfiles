@@ -7,12 +7,12 @@
 
 ;; pods ------------------------------------------------------------------------
 
-(pods/load-pod (lfs/expand "~/.config/dotfiles/new/modules/scripts/deps/pod-babashka-go-sqlite3.bin"))
+(pods/load-pod "pod-babashka-go-sqlite3")
 (require '[pod.babashka.go-sqlite3 :as sqlite])
 
 ;; Config ----------------------------------------------------------------------
 
-(def db (lfs/expand "~/.config/BraveSoftware/Brave-Browser/Profile 2/History"))
+(def db (lib.fs/expand "~/.config/BraveSoftware/Brave-Browser/Profile 2/History"))
 
 (def tmp-db "/tmp/brave-profile-2-history")
 

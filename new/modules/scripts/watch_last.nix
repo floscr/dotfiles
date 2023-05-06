@@ -19,7 +19,21 @@ in
       {
         user.packages = with pkgs; [
           pkg
-          # go
+          (pkgs.buildGoModule rec {
+            name = "pod-babashka-go-sqlite3";
+            pname = "pod-babashka-go-sqlite3";
+
+            src = pkgs.fetchFromGitHub {
+              owner = "babashka";
+              repo = "pod-babashka-go-sqlite3";
+              rev = "dcc850d";
+              sha256 = "sha256-Oq0BZ7700IP/yo5XZm6+iKAwuwu3Z0sMZ+9G4VBl8DQ=";
+            };
+
+            vendorSha256 = "sha256-T989LzKmv3KftJkbcdIMvmV72EjpY7Ddxc55OCpI7sM=";
+
+            nativeBuildInputs = [ ];
+          })
         ];
         modules.bindings.items = [
           {
