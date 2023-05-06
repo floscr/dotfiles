@@ -68,6 +68,7 @@ with lib.my;
   modules = {
     bindings.enable = true;
     shell = {
+      atuin.enable = true;
       bat.enable = true;
       sysz.enable = true;
       direnv.enable = true;
