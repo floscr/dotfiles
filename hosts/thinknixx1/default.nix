@@ -130,6 +130,7 @@ with lib.my;
         transmission.enable = true;
         font-manager.enable = true;
         zoom-noop.enable = true;
+        slack-noop.enable = true;
       };
       gaming = {
         steam.enable = true;
