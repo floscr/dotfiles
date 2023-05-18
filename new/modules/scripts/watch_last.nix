@@ -15,6 +15,7 @@ in
         pkg = (pkgs.writeBb "watch_last" {
           content = ./src/watch_last.clj;
         });
+        cmd = "${pkg}/bin/watch_last";
       in
       {
         user.packages = with pkgs; [
@@ -38,7 +39,11 @@ in
         modules.bindings.items = [
           {
             description = "Reopen last watched";
-            command = "watch_last";
+            command = cmd;
+          }
+          {
+            description = "Reopen last watched History";
+            command = "${cmd} rofi";
           }
         ];
       }

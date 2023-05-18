@@ -3,7 +3,8 @@
    [babashka.cli :as cli]
    [babashka.pods :as pods]
    [babashka.process :as bp]
-   [lib.fs :as lfs]))
+   [lib.fs :as lfs]
+   [lib.rofi :as rofi]))
 
 ;; pods ------------------------------------------------------------------------
 
@@ -21,20 +22,28 @@
 (defn query-history! []
   ;; Copy database as it might be locked and in use from current browser
   (bp/sh (format "cp %s %s" (pr-str db) (pr-str tmp-db)))
-  (->> (sqlite/query tmp-db "select datetime(last_visit_time/1000000-11644473600,'unixepoch'),url from urls where url like '%watchseries%' order by last_visit_time desc limit 5")
+  (->> (sqlite/query tmp-db "select datetime(last_visit_time/1000000-11644473600,'unixepoch'),url from urls where url like '%watchseries%' order by last_visit_time desc limit 20")
        (map :url)))
 
 ;; Commands --------------------------------------------------------------------
 
-(defn reopen-last-watched [_]
+(defn reopen-last-watched-cmd [_]
   (some-> (query-history!)
           first
           (#(bp/shell (format "xdg-open %s" (pr-str %))))))
 
+(defn rofi-history-cmd
+  ([] (rofi-history-cmd {}))
+  ([_]
+   (some-> (query-history!)
+           (rofi/select)
+           (#(bp/shell (format "xdg-open %s" (pr-str %)))))))
+
 ;; Main ------------------------------------------------------------------------
 
 (def table
-  [{:cmds [] :fn reopen-last-watched}])
+  [{:cmds ["rofi"] :fn rofi-history-cmd}
+   {:cmds [] :fn reopen-last-watched-cmd}])
 
 (defn -main [& args]
   (cli/dispatch table args))
@@ -43,4 +52,5 @@
 
 (comment
   (-main)
+  (rofi-history-cmd)
   nil)
