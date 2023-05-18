@@ -1,15 +1,12 @@
-{ stdenv
-, lib
-, fetchFromGitHub
-,
-}:
+{ stdenv, lib, fetchFromGitHub }:
+
 stdenv.mkDerivation rec {
   pname = "alpacacpp";
   version = "0.0.1";
   src = fetchFromGitHub {
     owner = "zanussbaum";
     repo = "gpt4all.cpp";
-    rev = "41e9929";
+    rev = "f8fdcccc5d253229808c0ceb9c5faae1ba42f68c";
     sha256 = "sha256-80ff7577GhHYgxy5PcD5lTbVWZG5L3NyFRZXOq3bieg=";
   };
   nativeBuildInputs = [ ];
