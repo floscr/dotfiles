@@ -169,7 +169,7 @@ with lib.my;
       vim.enable = true;
     };
     services = {
-      wireguard.enable = true;
+      wireguard.enable = false;
       secure-mode-scripts.enable = true;
       android.enable = true;
       espanso.enable = true;
