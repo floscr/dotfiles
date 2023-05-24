@@ -72,7 +72,7 @@
      (save-config-file! new-coll))))
 
 (defn execute-cmd [{:keys [opts]}]
-  (let [{:keys [command dir]} opts
+  (let [{:keys [command dir term]} opts
         cwd (if (some-> dir (fs/absolute?))
               dir
               (lib.fs/current-directory))
@@ -86,7 +86,10 @@
                               (nil? dir) worktree-or-git-root
                               (fs/relative? dir) (fs/path worktree-or-git-root dir)
                               (fs/absolute? dir) (str worktree-or-git-root)))
-             output (sh-exc (str/join " " command) {:dir (str execution-dir)})]
+             output (sh-exc (str (when term (format "alacritty --hold -e %s -c '" "/run/current-system/sw/bin/sh" #_(System/getenv "SHELL")))
+                                 (str/join " " command)
+                                 (when term "' &"))
+                            {:dir (str execution-dir)})]
       (->> output
            (m/return)
            (lib.monad/tap println)
@@ -94,8 +97,8 @@
                             (->
                              {:command (str/join " " command)
                               :updated-at (System/currentTimeMillis)}
-                             (cond-> dir (assoc :dir (str execution-dir)))
-                             (#(add-items! [%] (str git-root))))))))))
+                             (cond-> (and dir (not= (fs/path dir) (fs/path git-root))) (assoc :dir (str (fs/path execution-dir))))
+                             (#(add-items! [%] (str (fs/path git-root)))))))))))
 
 (defn list-items [dir]
   (m/mlet [coll (read-config-file!)]
@@ -105,7 +108,7 @@
 
 (defn list-items-cmd [{:keys [opts]}]
   (let [{:keys [dir debug with-action]} opts
-        parent (lib.fs/find-git-root (or dir (lib.fs/current-directory)))
+        parent (fs/path (lib.fs/find-git-root (or dir (lib.fs/current-directory))))
         items (->> (list-items parent)
                    (m/fmap (fn [xs] (map (fn [{:keys [command id]}]
                                            (if with-action
@@ -132,9 +135,7 @@
 
 (def table
   [{:cmds ["list"] :fn list-items-cmd}
-   {:cmds ["execute"]
-    :coerce {:command []} :args->opts (repeat :command)
-    :fn execute-cmd}])
+   {:cmds ["execute"] :coerce {:command []} :args->opts (repeat :command) :fn execute-cmd}])
    ;; {:cmds ["remove"] :args->opts [:id] :fn remove-item-cmd}
 
 
