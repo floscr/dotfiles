@@ -87,7 +87,7 @@
 
 (defn capture-animated! [{:keys [opts]}]
   (let [{:keys [countdown screenkey]
-         :or {countdown 3}} opts
+         :or {countdown 1}} opts
         ext "mp4"
         path (or (:file opts)
                  (filename (:animated default-dirs) ext))
