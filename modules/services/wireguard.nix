@@ -8,7 +8,7 @@ in {
     enable = mkBoolOpt false;
   };
 
-  config = {
+  config = mkIf cfg.enable {
     environment.systemPackages = [ pkgs.wireguard-tools ];
 
     networking.firewall = {
