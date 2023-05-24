@@ -1,11 +1,11 @@
+#!/usr/bin/env bb
 (ns hey
   (:require
    [babashka.cli :as cli]
    [babashka.fs :as fs]
    [babashka.process :as bp]
-   [cheshire.core :as json]
-   [clojure.string :as str]
-   [lib.shell :as shell]))
+   [clojure.pprint :as pprint]
+   [clojure.string :as str]))
 
 ;; Variables -------------------------------------------------------------------
 
@@ -60,10 +60,18 @@
   (println "Cleaning up your user profile...")
   (bp/shell opts "sudo nix-collect-garbage" "-d"))
 
-(defn help [{:keys []}]
-  (println "Help"))
+(defn table->str [cmds-table table-templates]
+  (->> (group-by :template cmds-table)
+       (map (fn [[_ vs]] (map :cmds vs)))))
+
+(defn help [cmds-table table-templates]
+  (println (str *ns*))
+  (println)
+  (println (table->str cmds-table table-templates)))
 
 ;; Main ------------------------------------------------------------------------
+
+(declare cmds-table)
 
 (def table-templates
   {:rebuild         {:fn rebuild!
@@ -81,23 +89,26 @@
                      :description "Update flake lockfile"}
    :upgrade         {:fn upgrade!
                      :description "Update flake lockfile and rebuild"}
-   :help            {:fn help}})
+   :help            {:fn (fn [& _] (help cmds-table table-templates))}})
+
+(def ^:private cmds-table
+  [{:cmds ["rebuild"]         :template :rebuild}
+   {:cmds ["re"]              :template :rebuild}
+   {:cmds ["update"]          :template :update}
+   {:cmds ["u"]               :template :update}
+   {:cmds ["upgrade"]         :template :upgrade}
+   {:cmds ["up"]              :template :upgrade}
+   {:cmds ["search"]          :template :search}
+   {:cmds ["s"]               :template :search}
+   {:cmds ["shell"]           :template :shell}
+   {:cmds ["sh"]              :template :shell}
+   {:cmds ["garbage-collect"] :template :garbage-collect}
+   {:cmds ["gc"]              :template :garbage-collect}
+   {:cmds ["rollback"]        :template :rollback}
+   {:cmds []                  :template :help}])
 
 (def table
-  (->> [{:cmds ["re"]              :template :rebuild}
-        {:cmds ["rebuild"]         :template :rebuild}
-        {:cmds ["u"]               :template :update}
-        {:cmds ["update"]          :template :update}
-        {:cmds ["up"]              :template :upgrade}
-        {:cmds ["upgrade"]         :template :upgrade}
-        {:cmds ["s"]               :template :search}
-        {:cmds ["search"]          :template :search}
-        {:cmds ["sh"]              :template :shell}
-        {:cmds ["shell"]           :template :shell}
-        {:cmds ["gc"]              :template :garbage-collect}
-        {:cmds ["garbage-collect"] :template :garbage-collect}
-        {:cmds ["rollback"]        :template :rollback}
-        {:cmds []                  :template :help}]
+  (->> cmds-table
        (map (fn [x] (merge x (get table-templates (:template x)))))))
 
 (defn -main [& args]
@@ -108,8 +119,7 @@
 ;; Testing ---------------------------------------------------------------------
 
 (comment
+  (table->str cmds-table table-templates)
 
-  (def q (search! {:opts {:query "cowsay"}}))
-  (vals q)
   (-main "re")
   (-main))
