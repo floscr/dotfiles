@@ -47,7 +47,7 @@ Config { font = "xft:Iosevka Mono-10:medium"
                         , "--on-icon-pattern"   , ""
                         , "--idle-icon-pattern" , ""
                         , "-A" , "5"
-                        , "-a" , "notify-send -u critical --hint=string:x-dunst-stack-tag:low_battery -a Battery -i /run/current-system/sw/share/icons/Papirus-Dark/48x48/status/battery-empty.svg \"Battery Low\" \"Your computer will turn of soon\""
+                        , "-a" , "dunstify -u critical -a Battery \"Battery Low\" \"Your computer will turn of soon\" > /tmp/battery_notification_id"
                 ] 50
         ]
         , sepChar = "%"

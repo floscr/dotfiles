@@ -7,6 +7,7 @@ in
 {
   options.modules.hardware.battery = {
     enable = mkBoolOpt false;
+    id = mkStrOpt "ACPI0003:00 00000080 00000001";
   };
 
   config = mkIf cfg.enable {
@@ -21,6 +22,18 @@ in
         CPU_SCALING_GOVERNOR_ON_BAT=powersave
         ENERGY_PERF_POLICY_ON_BAT=powersave
       '';
+    };
+    services.acpid = {
+      enable = true;
+      handlers = {
+        acConnect = {
+          event = "ac_adapter ${cfg.id}";
+          action = ''
+            echo "AC Adapter connected"
+            ${pkgs.dunst}/bin/dunstify -C $(cat /tmp/battery_notification_id)
+          '';
+        };
+      };
     };
   };
 }
