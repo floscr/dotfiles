@@ -62,6 +62,7 @@ with lib.my;
       mpv_ctrl.enable = true;
       watch_last.enable = true;
       org_attach.enable = true;
+      bbluetooth.enable = true;
     };
   };
 
