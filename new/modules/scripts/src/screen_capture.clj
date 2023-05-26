@@ -112,27 +112,29 @@
                                                      (+ y (- height (:height screenkey-opts))))))
       [path (bp/process cmd)])))
 
+(defn remove-stop-file! []
+  (let [pid (some->> (when (fs/exists? stop-file)
+                       (fs/read-all-lines stop-file))
+                     (first))
+        {:keys [exit]} (some->> pid (bp/shell {:continue true} "ps" "-o" pid))
+        running? (= 1 exit)]
+    (prn pid exit)
+    (when running?
+      (bp/shell {:continue true} "kill" "-2" pid)
+      (fs/delete stop-file)
+      true)))
+
 (defn toggle-capture-animated! [args]
-  (let [file stop-file]
-    (if (fs/exists? file)
-      (let [[pid] (fs/read-all-lines file)]
-        (fs/delete file)
-        ;; Try to kill the process with pid from stop-file
-        (let [{:keys [exit]} (bp/shell {:continue true} "kill" "-2" pid)
-              could-not-find-pid? (= exit 1)]
-          (if could-not-find-pid?
-            (do (println "Stop file found but process not running. Retrying to record.")
-                (toggle-capture-animated! args))
-            (println "Stopped running screen recording."))))
-      (let [[path proc] (capture-animated! args)
-            pid (some-> (:proc proc)
-                        (.pid)
-                        (str))]
-        (when proc
-          (fs/write-lines file [pid])
-          @proc
-          (bp/shell (format "notify-send 'Recording saved to %s\nCopied path to clipboard!'" path))
-          (set-clip path))))))
+  (when-not (remove-stop-file!)
+    (let [[path proc] (capture-animated! args)
+          pid (some-> (:proc proc)
+                      (.pid)
+                      (str))]
+      (when proc
+        (fs/write-lines stop-file [pid])
+        @proc
+        (bp/shell (format "notify-send 'Recording saved to %s\nCopied path to clipboard!'" path))
+        (set-clip path)))))
 
 (defn help
   [_]
