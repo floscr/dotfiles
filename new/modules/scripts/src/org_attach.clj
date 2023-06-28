@@ -2,11 +2,9 @@
   (:require
    [babashka.cli :as cli]
    [babashka.fs :as fs]
-   [babashka.process :as bp]
    [babashka.http-client :as http]
    [clojure.core.match :refer [match]]
    [clojure.java.io :as io]
-   [clojure.string :as str]
    [lambdaisland.uri :as uri]
    [lib.clipboard :as clipboard]
    [lib.fs]
