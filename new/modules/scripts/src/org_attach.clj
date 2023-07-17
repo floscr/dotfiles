@@ -20,15 +20,21 @@
 (defn scheme? [s]
   (some? (:scheme (uri/uri s))))
 
-(defn- detect-clipboard-contents []
-  (let [clip (clipboard/content-or-file)]
-    (match clip
+(defn- match-typed [clip]
+  (match clip
            ([:string x] :guard (comp scheme? last)) [:url x]
            ([:string x] :guard (comp fs/regular-file? fs/expand-home last)) (-> x
                                                                                 (fs/expand-home)
                                                                                 (#(vec [:file (fs/file %)])))
            [:file x] [:file x]
-           :else [:error (str "Could not find matching schema for clipboard" \newline clip)])))
+           :else [:error (str "Could not find matching schema for clipboard" \newline clip)]))
+
+(defn- clipboard-content->typed []
+  (let [clip (clipboard/content-or-file)]
+    (match-typed clip)))
+
+(defn string->typed [str]
+  (match-typed [:string str]))
 
 (comment
   (let [file (fs/file (fs/create-temp-file {:prefix "org-attach" :suffix ".mp4"}))]
@@ -68,27 +74,29 @@
   (let [path (fs/relativize clojure-attach-dir file)]
     (format "[[my-attach:%s]]" path)))
 
-(defn attach-clipboard []
-  (let [clip (detect-clipboard-contents)]
-    (-> (match clip
-               [:url _] (-> (download-url clip)
-                            (attach-file))
-               [:file _] (attach-file clip)
-               [:error e] (throw (Exception. (str "Error: " \newline e))))
-        (org-link))))
+(defn attach-typed [typed]
+  (-> (match typed
+             [:url _] (-> (download-url typed)
+                          (attach-file))
+             [:file _] (attach-file typed)
+             [:error e] (throw (Exception. (str "Error: " \newline e))))
+      (org-link)))
 
 ;; Commands --------------------------------------------------------------------
 
 (defn main [{:keys [opts]}]
-  (let [{:keys [yank]} opts]
-    (cond-> (attach-clipboard)
+  (let [{:keys [url yank]} opts
+        typed (if url
+                (string->typed url)
+                (clipboard-content->typed))]
+    (cond-> (attach-typed typed)
         yank (doto lib.clipboard/set-clip)
         :else (doto println))))
 
 ;; Main ------------------------------------------------------------------------
 
 (def table
-  [{:cmds [] :fn main}])
+  [{:cmds [] :fn main :args->opts [:url]}])
 
 (defn -main [& args]
   (cli/dispatch table args))
