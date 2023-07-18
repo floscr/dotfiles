@@ -74,6 +74,6 @@ with lib.my;
   programs.light.enable = true;
   user.extraGroups = [ "video" ];
 
-  services.xserver.libinput.enable = true;
-  services.xserver.libinput.disableWhileTyping = true;
+  # services.xserver.libinput.enable = true;
+  # services.xserver.libinput.disableWhileTyping = true;
 }

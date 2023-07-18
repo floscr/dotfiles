@@ -11,10 +11,9 @@ in
 
   config = mkIf cfg.enable {
     user.packages = with pkgs; [
-      nodejs-14_x
+      nodejs-18_x
       yarn
       nodePackages.prettier
-      nodePackages.parcel
     ];
 
     env.ADBLOCK = "1"; # Stop node packages from showing ads in my darn CLI...

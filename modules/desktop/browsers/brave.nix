@@ -50,13 +50,12 @@ in
         "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
         "dbepggeogbaibhgnhhndojpepiihcmeb" # Vimium
         "eimadpbcbfnmbkopoojfekhnkhdbieeh" # Dark Readerr
-        "fipfgiejfpcdacpjepkohdlnjonchnal" # Keyboard shortcuts
         "gbmdgpbipfallnflgajpaliibnhdgobh" # Json Viewer
-        "icpgjfneehieebagbmdbhnlpiopdcmna" # New Tab Redirect
         "kbmfpngjjgdllneeigpgjifpgocmfgmb" # Reddit Enhancement Suite
         "godiecgffnchndlihlpaajjcplehddca" # Ghost Text (Atomic Chrome)
+        "fipfgiejfpcdacpjepkohdlnjonchnal" # Keyboard shortcuts
+        "icpgjfneehieebagbmdbhnlpiopdcmna" # New Tab Redirect
         "ndiaggkadcioihmhghipjmgfeamgjeoi" # Add URL To Window Title
-        "kkkjlfejijcjgjllecmnejhogpbcigdc" # Org Protocol Capture
       ];
     };
   };
