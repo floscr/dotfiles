@@ -15,6 +15,8 @@ fi
 source $ZDOTDIR/config.zsh
 
 if [[ $TERM != dumb ]]; then
+  autoload -Uz compinit && compinit -u -d $ZSH_CACHE/zcompdump
+
   source $ZDOTDIR/keybinds.zsh
   source $ZDOTDIR/completion.zsh
   source $ZDOTDIR/aliases.zsh
@@ -42,7 +44,6 @@ if [[ $TERM != dumb ]]; then
   # Load nix generated files
   source $ZDOTDIR/extra.zshrc
 
-  autoload -Uz compinit && compinit -u -d $ZSH_CACHE/zcompdump
   autopair-init
 
   # For local-only configuration

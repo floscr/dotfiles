@@ -6,6 +6,11 @@ if [[ $TERM == dumb || -n $INSIDE_EMACS ]]; then
   PS1='$ '
 fi
 
+## Plugins
+# zgen
+# we handle compinit ourselves...
+export ZGEN_AUTOLOAD_COMPINIT=0
+
 ## General
 
 # Treat these characters as part of a word.
