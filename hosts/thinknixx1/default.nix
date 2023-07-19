@@ -12,11 +12,6 @@ with lib.my;
     # ./bindings.nix
   ];
 
-
-  home.file = {
-    # ".config/espanso/user/email.yml".source = config.age.secrets.espanso-private-emails.path;
-  };
-
   user.packages = with pkgs; [
     calibre
     unzip
@@ -170,10 +165,11 @@ with lib.my;
       vim.enable = true;
     };
     services = {
+      org-bb-capture.enable = true;
       wireguard.enable = false;
       secure-mode-scripts.enable = true;
       android.enable = true;
-      espanso.enable = true;
+      espanso.enable = false;
       screendrawing.enable = true;
       syncthing.enable = true;
       dunst.enable = true;
