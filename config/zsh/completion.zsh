@@ -134,12 +134,15 @@ compdef _bb_tasks bb
 
 # fzf
 if command -v fzf >/dev/null; then
-  # fuzzy completion with 'z' when called without args
-  unalias z 2> /dev/null
-  z() {
-    [ $# -gt 0 ] && _z "$*" && return
-    cd "$(_z -l 2>&1 | fzf --height 40% --nth 2.. --reverse --inline-info +s --tac --query "${*##-* }" | sed 's/^[0-9,.]* *//')"
-  }
+  # # fuzzy completion with 'z' when called without args
+  # unalias z 2> /dev/null
+  # z() {
+  #   if [ $# -gt 0 ]; then
+  #     _z "$*"
+  #     return
+  #   fi
+  #   cd "$(_z -l 2>&1 | fzf --height 40% --nth 2.. --reverse --inline-info +s --tac --query "${*##-* }" | sed 's/^[0-9,.]* *//')"
+  # }
 
   __git_log () {
     # format str implies:
