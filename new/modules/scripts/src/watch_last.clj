@@ -22,7 +22,7 @@
 (defn query-history! []
   ;; Copy database as it might be locked and in use from current browser
   (bp/sh (format "cp %s %s" (pr-str db) (pr-str tmp-db)))
-  (->> (sqlite/query tmp-db "select datetime(last_visit_time/1000000-11644473600,'unixepoch'),url from urls where url like '%watchseries%' order by last_visit_time desc limit 20")
+  (->> (sqlite/query tmp-db "select datetime(last_visit_time/1000000-11644473600,'unixepoch'),url from urls where url like '%watchseries%' order by last_visit_time desc limit 200")
        (map :url)))
 
 ;; Commands --------------------------------------------------------------------
