@@ -96,7 +96,8 @@
 ;; Main ------------------------------------------------------------------------
 
 (def table
-  [{:cmds [] :fn main :args->opts [:url]}])
+  [{:cmds ["help"] :fn (fn [_] (prn "org_attach <url>"))}
+   {:cmds [] :fn main :args->opts [:url]}])
 
 (defn -main [& args]
   (cli/dispatch table args))
@@ -106,5 +107,6 @@
 (comment
   (main {})
   (-main)
+  (-main "https://assets.orf.at/mims/2023/31/67/crops/w=347,q=80,r=2/1890170_2q_708567_hochwasser_st_paul_o.jpg?s=2649161261446ac9f7114bf50d8443163b824865")
   (-main "sub")
   nil)
