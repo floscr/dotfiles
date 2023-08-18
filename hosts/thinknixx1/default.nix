@@ -115,6 +115,7 @@ with lib.my;
       xmonad.enable = true;
       mime.enable = true;
       gtk-emacs-bindings.enable = true;
+      gtk.enable = true;
       vm = {
         virtualbox = {
           enable = true;
