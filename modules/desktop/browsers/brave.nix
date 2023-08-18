@@ -56,6 +56,7 @@ in
         "fipfgiejfpcdacpjepkohdlnjonchnal" # Keyboard shortcuts
         "icpgjfneehieebagbmdbhnlpiopdcmna" # New Tab Redirect
         "ndiaggkadcioihmhghipjmgfeamgjeoi" # Add URL To Window Title
+        "cankofcoohmbhfpcemhmaaeennfbnmgp" # Netflix 1080p
       ];
     };
   };
