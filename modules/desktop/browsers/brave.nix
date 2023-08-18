@@ -49,7 +49,7 @@ in
       extensions = [
         "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
         "dbepggeogbaibhgnhhndojpepiihcmeb" # Vimium
-        "eimadpbcbfnmbkopoojfekhnkhdbieeh" # Dark Readerr
+        "eimadpbcbfnmbkopoojfekhnkhdbieeh" # Dark Reader
         "gbmdgpbipfallnflgajpaliibnhdgobh" # Json Viewer
         "kbmfpngjjgdllneeigpgjifpgocmfgmb" # Reddit Enhancement Suite
         "godiecgffnchndlihlpaajjcplehddca" # Ghost Text (Atomic Chrome)
