@@ -27,6 +27,7 @@ with lib.my;
     scdl
     openai-whisper-cpp
     pins.nix-search-cli
+    timer
     exiftool
   ] ++ flake-packages;
 
