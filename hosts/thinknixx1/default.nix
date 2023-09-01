@@ -12,6 +12,30 @@ with lib.my;
     # ./bindings.nix
   ];
 
+
+  services.udev.extraRules = ''
+    SUBSYSTEM!="usb", GOTO="end_rules"
+
+    # RK3036
+    ATTRS{idVendor}=="2207", ATTRS{idProduct}=="301a", MODE="0666", GROUP="users"
+    # RK3128
+    ATTRS{idVendor}=="2207", ATTRS{idProduct}=="310c", MODE="0666", GROUP="users"
+    # RK3229
+    ATTRS{idVendor}=="2207", ATTRS{idProduct}=="320b", MODE="0666", GROUP="users"
+    # RK3288
+    ATTRS{idVendor}=="2207", ATTRS{idProduct}=="320a", MODE="0666", GROUP="users"
+    # RK3328
+    ATTRS{idVendor}=="2207", ATTRS{idProduct}=="320c", MODE="0666", GROUP="users"
+    # RK3368
+    ATTRS{idVendor}=="2207", ATTRS{idProduct}=="330a", MODE="0666", GROUP="users"
+    # RK3399
+    ATTRS{idVendor}=="2207", ATTRS{idProduct}=="330c", MODE="0666", GROUP="users"
+    # RK3566
+    ATTRS{idVendor}=="2207", ATTRS{idProduct}=="350a", MODE="0666", GROUP="users"
+
+    LABEL="end_rules"
+  '';
+
   user.packages = with pkgs; [
     calibre
     unzip
