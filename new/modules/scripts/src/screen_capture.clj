@@ -112,13 +112,20 @@
                                                      (+ y (- height (:height screenkey-opts))))))
       [path (bp/process cmd)])))
 
+(defn stop-file-pid []
+  (some->> (when (fs/exists? stop-file)
+             (fs/read-all-lines stop-file))
+           (first)))
+
+(defn process-running? [pid]
+  (when pid
+    (-> (bp/sh ["ps" pid])
+        (:exit)
+        (zero?))))
+
 (defn remove-stop-file! []
-  (let [pid (some->> (when (fs/exists? stop-file)
-                       (fs/read-all-lines stop-file))
-                     (first))
-        {:keys [exit]} (some->> pid (bp/shell {:continue true} "ps" "-o" pid))
-        running? (= 1 exit)]
-    (prn pid exit)
+  (let [pid (stop-file-pid)
+        running? (process-running? pid)]
     (when running?
       (bp/shell {:continue true} "kill" "-2" pid)
       (fs/delete stop-file)
@@ -175,6 +182,11 @@
 (apply -main *command-line-args*)
 
 ;; Testing ---------------------------------------------------------------------
+
+(comment
+  (-> (stop-file-pid)
+      (process-running?))
+  nil)
 
 (comment
   ;; {:cmds (single), :args (), :rest-cmds (), :opts {}, :dispatch [single]}
