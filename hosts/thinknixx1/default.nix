@@ -53,6 +53,8 @@ with lib.my;
     pins.nix-search-cli
     timer
     exiftool
+    appimage-run
+    usbutils
   ] ++ flake-packages;
 
   hardware.logitech.wireless.enable = true;
