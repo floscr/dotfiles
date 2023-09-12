@@ -30,11 +30,11 @@ alias jc='journalctl'
 
 alias dun='notify-send "done"'
 
-if command -v exa >/dev/null; then
-  alias exa="exa --group-directories-first";
-  alias l="exa -1";
-  alias ll="exa -lg";
-  alias la="LC_COLLATE=C exa -la";
+if command -v eza >/dev/null; then
+  alias exa="eza --group-directories-first";
+  alias l="eza -1";
+  alias ll="eza -lg";
+  alias la="LC_COLLATE=C eza -la";
 fi
 
 autoload -U zmv

@@ -56,7 +56,7 @@ in
       ccls
       # :lang javascript
       nodePackages.javascript-typescript-langserver
-      nodePackages.indium
+      # nodePackages.indium
       nodePackages.eslint_d
       # etc
       zstd # for undo-tree compression
@@ -86,7 +86,7 @@ in
 
     modules.shell.zsh.rcFiles = [ "${configDir}/emacs/aliases.zsh" ];
 
-    fonts.fonts = [ pkgs.emacs-all-the-icons-fonts ];
+    fonts.packages = [ pkgs.emacs-all-the-icons-fonts ];
 
     home = {
       defaultApplications = {

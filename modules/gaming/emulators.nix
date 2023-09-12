@@ -14,11 +14,6 @@ in
       user.packages = with pkgs; [
         mupen64plus
       ];
-
-      # Switch controller support
-      boot.extraModulePackages = with config.boot.kernelPackages; [
-        hid-nintendo
-      ];
     })
   ];
 }

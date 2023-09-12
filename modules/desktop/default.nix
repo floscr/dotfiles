@@ -58,7 +58,7 @@ in
         };
         useEmbeddedBitmaps = true;
       };
-      fonts =
+      packages =
         with pkgs; [
           firaCodePkgs.fira-code
           firaCodePkgs.fira-code-symbols

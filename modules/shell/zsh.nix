@@ -39,7 +39,7 @@ in
     user.packages = with pkgs; [
       (ripgrep.override { withPCRE2 = true; })
       bc
-      exa
+      eza
       pazi
       fd
       fzf
