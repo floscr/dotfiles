@@ -158,7 +158,6 @@ with lib.my;
       };
       gaming = {
         steam.enable = true;
-        emulators.n64.enable = true;
       };
       graphics = {
         gimp.enable = true;
