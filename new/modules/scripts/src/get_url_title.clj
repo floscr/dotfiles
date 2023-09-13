@@ -75,7 +75,9 @@
 
 (defn org-link
   [url title]
-  (format "[[%s][%s]]" url title))
+  (if title
+    (format "[[%s][%s]]" url title)
+    (format "[[%s]]" url)))
 
 (comment
   (get-rss "https://dawranliou.com/blog/")
