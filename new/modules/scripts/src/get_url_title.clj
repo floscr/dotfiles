@@ -56,6 +56,7 @@
   ;; => "dotfiles/graphical.nix at 0932e73b6b180b6f12c0cf69c5ee3898fa6bf8b0 · rafaelsgirao/dotfiles · GitHub"
   (curl-get-title "https://www.youtube.com/watch?v=bXRDfxp_4H0")
   ;; => "Through the looking glass w Data Rabbit: \"A System built for Seeing\" (by Ryan Robitaille) - YouTube"
+  (curl-get-title "https://github.com/floscr/dotfiles/blob/07156f2d059da2676d13d17d67eb8fed596557db/new/modules/scripts/src/get_url_title.clj")
   nil)
 
 (defn get-rss [url]
