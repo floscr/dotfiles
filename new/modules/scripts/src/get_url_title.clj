@@ -26,10 +26,9 @@
           " (" user "/" repository "/" "#" number ")"))))
 
 (defn curl-get-title [url]
-  (match
-   (curl/get url {:throw false})
-   {:status 200 :body body} (some-> body (jsoup/select "title") first :text)
-   :else nil))
+  (match (curl/get url {:throw false})
+         {:status 200 :body body} (some-> body (jsoup/select "title") first :text)
+         :else nil))
 
 (defn twitter->thread-reader [url]
   (let [threadreader-url (str "https://threadreaderapp.com/search?q=" (lw/uri-escape url))]
