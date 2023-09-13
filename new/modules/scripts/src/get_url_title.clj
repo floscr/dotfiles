@@ -15,8 +15,12 @@
 (pods/load-pod (-> (fs/expand-home "~/.config/dotfiles/new/modules/scripts/deps/pod-jaydeesimon-jsoup.bin") (str)))
 (require '[pod.jaydeesimon.jsoup :as jsoup])
 
-(defn exit! []
-  (System/exit 1))
+(defn exit!
+  ([] (exit! nil))
+  ([msg]
+   (when msg
+     (println msg))
+   (System/exit 1)))
 
 (defn gh-get-pr-title [url path]
  (when-let [{:keys [title author number]} (some-> (sh (format "gh pr view %s --json title,author,number" url))
@@ -90,35 +94,31 @@
 
 ;; Commands --------------------------------------------------------------------
 
+(defn print-title-or-exit! [url title {:keys [org error-msg]}]
+  (if title
+    (let [title-str (if org (org-link url title) title)]
+      (println title-str)
+      title-str)
+    (exit! (str (or error-msg "Could not get title for url:") " " url))))
+
 (defn help! [_]
   (println "Help"))
 
 (defn get-rss-cmd [{:keys [opts]}]
-  (let [{:keys [url org]} opts]
+  (let [{:keys [url]} opts]
     (if (empty? url)
       (help! {})
       (let [title (get-rss url)
-            title-str (if org (org-link title url) title)]
-        (if title-str
-          (do (println title-str)
-              title-str)
-          (do
-            (println "Could not get rss feed for url: " url)
-            (exit!)))))))
+            opts* (assoc opts :error-msg "Could not get rss feed for url:")]
+        (print-title-or-exit! url title opts*)))))
 
-(defn get-url-cmd [{:keys [opts] :as args}]
-  (let [{:keys [url org]} opts]
+(defn get-url-cmd [{:keys [opts]}]
+  (let [{:keys [url]} opts]
     (if (empty? url)
       (help! {})
       (let [[title adapted-url] (get-title url)
-            url* (or adapted-url url)
-            title-str (if org (org-link url* title) title)]
-        (if title-str
-          (do (println title-str)
-              title-str)
-          (do
-            (println "Could not get title for url: " url*)
-            (exit!)))))))
+            url* (or adapted-url url)]
+        (print-title-or-exit! url* title opts)))))
 
 ;; Main ------------------------------------------------------------------------
 
@@ -133,9 +133,19 @@
 (apply -main *command-line-args*)
 
 (comment
-  (-main "https://matthiasott.com/notes/the-thing-with-leading-in-css")
+  ;; 200
+  (-main "https://example.com")
+  (-main "https://example.com" :org true)
 
-  (with-redefs [exit! (fn [] "exit")]
+  ;; Rss
+  (-main "rss" "https://dawranliou.com/blog/" :org true)
+
+  ;; 404 Status Code
+  (with-redefs [exit! (fn [_] "exit")]
     (-main "https://httpstat.us/404"))
+
+  ;; 200 Website without title
+  (with-redefs [exit! (fn [_] "exit")]
+    (-main "https://github.com/floscr/dotfiles/blob/07156f2d059da2676d13d17d67eb8fed596557db/new/modules/scripts/src/get_url_title.clj"))
 
   nil)
