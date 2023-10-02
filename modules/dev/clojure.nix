@@ -14,6 +14,7 @@ in
       # wrapped babahska doesn't let me start bb repl anymore
       # Changed here: https://github.com/NixOS/nixpkgs/pull/241119
       babashka-unwrapped
+      unstable.lightningcss # uix
       clj-kondo
       clojure
       jet
