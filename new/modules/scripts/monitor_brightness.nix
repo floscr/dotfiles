@@ -2,10 +2,10 @@
 with lib;
 with lib.my;
 let
-  cfg = config.modules-new.scripts.invert_colors;
+  cfg = config.modules-new.scripts.monitor_brightness;
 in
 {
-  options.modules-new.scripts.invert_colors = with my; {
+  options.modules-new.scripts.monitor_brightness = with my; {
     enable = mkBoolOpt false;
   };
 

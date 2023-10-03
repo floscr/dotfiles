@@ -78,6 +78,7 @@ with lib.my;
   modules-new = {
     scripts = {
       screen-capture.enable = true;
+      monitor_brightness.enable = true;
       zzz.enable = true;
       invert_colors.enable = true;
       get_url_title.enable = true;
