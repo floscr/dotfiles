@@ -30,13 +30,17 @@ in
         groups = [ "wheel" ];
       }];
 
-      modules.bindings.items = [
+      modules.bindings.items = let cmd = "${monitor_brightness}/bin/monitor_brightness"; in [
         {
-          command = "${monitor_brightness}/bin/monitor_brightness toggle";
+          command = "${cmd} toggle";
           description = "Toggle Monitor Brightness";
         }
         {
-          command = "${monitor_brightness}/bin/monitor_brightness max";
+          command = "${cmd} rofi";
+          description = "Monitor Brightness (rofi)";
+        }
+        {
+          command = "${cmd} max";
           description = "Max Monitor Brightness (External)";
         }
       ];
