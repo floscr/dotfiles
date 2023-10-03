@@ -19,6 +19,17 @@ in
       user.packages = with pkgs; [
         monitor_brightness
       ];
+
+      security.sudo.extraRules = [{
+        commands = [
+          {
+            command = "${pkgs.ddcutil}/bin/ddcutil";
+            options = [ "NOPASSWD" ];
+          }
+        ];
+        groups = [ "wheel" ];
+      }];
+
       modules.bindings.items = [
         {
           command = "${monitor_brightness}/bin/monitor_brightness toggle";
