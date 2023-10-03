@@ -21,37 +21,13 @@ in
       cmd = "${monitor_brightness}/bin/monitor_brightness";
     in
     {
+      # Set the correct permissions to use ddcutil without sudo
       hardware.i2c.enable = true;
-
-      # boot.kernelModules = [ "i2c-dev" ];
-      # services.udev.extraRules = builtins.readFile
-      #   "${pkgs.ddcutil}/share/ddcutil/data/45-ddcutil-i2c.rules";
-
-      # # services.udev.extraRules = ''
-      # #   KERNEL=="i2c-12", SUBSYSTEM=="i2c-dev", GROUP=="ddc", MODE="0660"
-      # #   KERNEL=="i2c-18", SUBSYSTEM=="i2c-dev", GROUP=="ddc", MODE="0660"
-      # # '';
-      # user.extraGroups = [ "i2c" ];
-
 
       user.packages = with pkgs;
         [
           monitor_brightness
         ];
-      # security.sudo = {
-      #   extraConfig = ''
-      #     %wheel      ALL=(ALL:ALL) NOPASSWD: ${pkgs.ddcutil}/bin/ddcutil
-      #   '';
-      #   extraRules = [{
-      #     commands = [
-      #       {
-      #         command = "${pkgs.ddcutil}/bin/ddcutil";
-      #         options = [ "NOPASSWD" ];
-      #       }
-      #     ];
-      #     users = [ config.user.name ];
-      #   }];
-      # };
 
       modules.bindings.items = [
         {
