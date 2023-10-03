@@ -11,26 +11,49 @@ in
 
   config =
     let
+      ddcutil = "${pkgs.ddcutil}/bin/ddcutil";
       monitor_brightness = (pkgs.writeBb "monitor_brightness" {
         content = ./src/monitor_brightness.clj;
+        deps = with pkgs; [
+          dunst
+        ];
       });
+      cmd = "${monitor_brightness}/bin/monitor_brightness";
     in
     {
-      user.packages = with pkgs; [
-        monitor_brightness
-      ];
+      hardware.i2c.enable = true;
 
-      security.sudo.extraRules = [{
-        commands = [
-          {
-            command = "${pkgs.ddcutil}/bin/ddcutil";
-            options = [ "NOPASSWD" ];
-          }
+      # boot.kernelModules = [ "i2c-dev" ];
+      # services.udev.extraRules = builtins.readFile
+      #   "${pkgs.ddcutil}/share/ddcutil/data/45-ddcutil-i2c.rules";
+
+      # # services.udev.extraRules = ''
+      # #   KERNEL=="i2c-12", SUBSYSTEM=="i2c-dev", GROUP=="ddc", MODE="0660"
+      # #   KERNEL=="i2c-18", SUBSYSTEM=="i2c-dev", GROUP=="ddc", MODE="0660"
+      # # '';
+      # user.extraGroups = [ "i2c" ];
+
+
+      user.packages = with pkgs;
+        [
+          monitor_brightness
         ];
-        groups = [ "wheel" ];
-      }];
+      # security.sudo = {
+      #   extraConfig = ''
+      #     %wheel      ALL=(ALL:ALL) NOPASSWD: ${pkgs.ddcutil}/bin/ddcutil
+      #   '';
+      #   extraRules = [{
+      #     commands = [
+      #       {
+      #         command = "${pkgs.ddcutil}/bin/ddcutil";
+      #         options = [ "NOPASSWD" ];
+      #       }
+      #     ];
+      #     users = [ config.user.name ];
+      #   }];
+      # };
 
-      modules.bindings.items = let cmd = "${monitor_brightness}/bin/monitor_brightness"; in [
+      modules.bindings.items = [
         {
           command = "${cmd} toggle";
           description = "Toggle Monitor Brightness";
