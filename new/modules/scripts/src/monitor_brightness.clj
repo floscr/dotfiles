@@ -17,7 +17,7 @@
 ;; Helpers ---------------------------------------------------------------------
 
 (defn display-brightness [display-id]
-  (some->> (shell/lines (format "sudo ddcutil getvcp %d" display-id))
+  (some->> (shell/lines (format "ddcutil getvcp %d" display-id))
            (filter #(str/starts-with? % "VCP code"))
            (first)
            (re-find #"current value =\s+(\d+)")
@@ -29,7 +29,7 @@
   If you want a special name for the notification to display pass `brightness-label`."
   [display-id brightness & {:keys [brightness-label]}]
   (notifications/show (format "New monitor brightness: %s" (or brightness-label brightness)) {:clear-after-s 3})
-  (bp/sh (format "sudo ddcutil setvcp %d %d" display-id brightness))
+  (bp/sh (format "ddcutil setvcp %d %d" display-id brightness))
   (println "Set the brightness to: " brightness))
 
 ;; Commands --------------------------------------------------------------------
