@@ -31,9 +31,9 @@ in
     ];
 
     # Needed for netflix
-    nixpkgs.config.chromium = {
-      enableWideVine = true;
-    };
+    # nixpkgs.config.chromium = {
+    #   enableWideVine = true;
+    # };
 
     modules.bindings.items = [
       {

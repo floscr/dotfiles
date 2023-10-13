@@ -3,6 +3,7 @@
 {
   hardware.bluetooth = {
     enable = true;
+    package = pkgs.bluez5;
     powerOnBoot = true;
     settings = {
       Headset = {
@@ -70,12 +71,6 @@
       slave.pcm hw
     }
   '';
-
-  nixpkgs.config = {
-    packageOverrides = pkgs: {
-      bluez = pkgs.bluez5;
-    };
-  };
 
   environment.systemPackages = with pkgs; [
     playerctl

@@ -33,7 +33,7 @@ in
       (mkIf (cfg.enableMail) isync)
 
       (mkIf (config.programs.gnupg.agent.enable)
-        pinentry_emacs) # in-emacs gnupg prompts
+        pinentry-emacs) # in-emacs gnupg prompts
       zstd # for undo-fu-session/undo-tree compression
 
       ## Module dependencies
