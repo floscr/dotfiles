@@ -193,6 +193,7 @@ with lib.my;
       vim.enable = true;
     };
     services = {
+      ios.enable = true;
       org-bb-capture.enable = true;
       wireguard.enable = false;
       secure-mode-scripts.enable = true;
