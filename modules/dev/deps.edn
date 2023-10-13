@@ -1,2 +1,3 @@
 {:deps {cider/cider-nrepl {:mvn/version "0.26.0"}
+        pez/taplet {:mvn/version "0.1.2"}
         org.clojars.abhinav/snitch {:mvn/version "0.0.12"}}}
