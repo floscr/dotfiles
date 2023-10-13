@@ -38,6 +38,7 @@ with lib.my;
 
   user.packages = with pkgs; [
     calibre
+    magic-wormhole
     unzip
     s-tui
     custom.nim-utils.bose_battery_level
