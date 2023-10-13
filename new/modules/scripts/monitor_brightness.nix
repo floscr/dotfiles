@@ -11,7 +11,6 @@ in
 
   config =
     let
-      ddcutil = "${pkgs.ddcutil}/bin/ddcutil";
       monitor_brightness = (pkgs.writeBb "monitor_brightness" {
         content = ./src/monitor_brightness.clj;
         deps = with pkgs; [
@@ -26,6 +25,7 @@ in
 
       user.packages = with pkgs;
         [
+          ddcutil
           monitor_brightness
         ];
 
