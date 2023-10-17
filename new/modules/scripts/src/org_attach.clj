@@ -46,16 +46,18 @@
   (let [resp (http/get url {:throw false
                             :as :stream})]
     (match [(uri/uri url) resp]
-           [{:host "twitter.com"} {:status 200}] (let [file (fs/file (fs/create-temp-file {:prefix "org-attach" :suffix ".mp4"}))]
-                                                   (lib.shell/sh ["yt-dlp" (str "\"" url "\"") "-o" file])
-                                                   [:file file])
-           [_ {:status 200 :headers headers :body body}] (let [content-type (get headers "content-type")
-                                                               [_ ext] (re-find #".+/(\w+)" content-type)]
-                                                           (if (re-find #"^text/html" content-type)
-                                                             [:error "Pased url is html"]
-                                                             (let [file (fs/file (fs/create-temp-file {:prefix "org-attach" :suffix (str "." ext)}))]
-                                                               (io/copy body file)
-                                                               [:file file])))
+           [{:host "twitter.com"} {:status 200}]
+           (let [file (fs/file (fs/create-temp-file {:prefix "org-attach" :suffix ".mp4"}))]
+             (lib.shell/sh ["yt-dlp" (str "\"" url "\"") "-o" file])
+             [:file file])
+           [_ {:status 200 :headers headers :body body}]
+           (let [content-type (get headers "content-type")
+                 [_ ext] (re-find #".+/(\w+)" content-type)]
+             (if (re-find #"^text/html" content-type)
+               [:error "Pased url is html"]
+               (let [file (fs/file (fs/create-temp-file {:prefix "org-attach" :suffix (str "." ext)}))]
+                 (io/copy body file)
+                 [:file file])))
            :else [:error resp])))
 
 (defn md5-filename [file]
