@@ -25,3 +25,6 @@
 
 (defn uri-escape [uri]
   (str/escape uri uri-escape-table))
+
+(defn twitter-url->nitter [url]
+  (str/replace url "twitter.com" "nitter.net"))

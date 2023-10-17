@@ -3,12 +3,14 @@
    [babashka.cli :as cli]
    [babashka.fs :as fs]
    [babashka.http-client :as http]
+   [babashka.process :as bp]
    [clojure.core.match :refer [match]]
    [clojure.java.io :as io]
    [lambdaisland.uri :as uri]
    [lib.clipboard :as clipboard]
    [lib.fs]
-   [lib.shell]))
+   [lib.shell]
+   [lib.web]))
 
 ;; Config ----------------------------------------------------------------------
 
@@ -36,29 +38,31 @@
 (defn string->typed [str]
   (match-typed [:string str]))
 
-(comment
-  (let [file (fs/file (fs/create-temp-file {:prefix "org-attach" :suffix ".mp4"}))]
-    ["yt-dlp" (str "\"" "https://twitter.com/fasc1nate/status/1602755629042786304" "\"") "-o" file])
-
-  nil)
+(defn org-attach-temp-file!
+ "Returns file for a new temp file used for downloading things "
+ [& {:as opts}]
+ (fs/file (fs/create-temp-file (merge {:prefix "org-attach"} opts))))
 
 (defn download-url [[_ url]]
   (let [resp (http/get url {:throw false
                             :as :stream})]
     (match [(uri/uri url) resp]
-           [{:host "twitter.com"} {:status 200}]
-           (let [file (fs/file (fs/create-temp-file {:prefix "org-attach" :suffix ".mp4"}))]
-             (lib.shell/sh ["yt-dlp" (str "\"" url "\"") "-o" file])
-             [:file file])
-           [_ {:status 200 :headers headers :body body}]
-           (let [content-type (get headers "content-type")
-                 [_ ext] (re-find #".+/(\w+)" content-type)]
-             (if (re-find #"^text/html" content-type)
-               [:error "Pased url is html"]
-               (let [file (fs/file (fs/create-temp-file {:prefix "org-attach" :suffix (str "." ext)}))]
-                 (io/copy body file)
-                 [:file file])))
-           :else [:error resp])))
+      [{:host "twitter.com"} {:status 200}] (let [dir (fs/create-temp-dir)
+                                                  filename "video.mp4"
+                                                  output-file (fs/path dir filename)
+                                                  nitter-url (lib.web/twitter-url->nitter url)]
+                                              (bp/sh {:dir dir} "yt-dlp" nitter-url "-o" filename)
+                                              (if (fs/exists? output-file)
+                                                [:file output-file]
+                                                [:error (str "Could not download file " url " " output-file)]))
+      [_ {:status 200 :headers headers :body body}] (let [content-type (get headers "content-type")
+                                                          [_ ext] (re-find #".+/(\w+)" content-type)]
+                                                      (if (re-find #"^text/html" content-type)
+                                                        [:error "Pased url is html"]
+                                                        (let [file (org-attach-temp-file! :suffix (str "." ext))]
+                                                          (io/copy body file)
+                                                          [:file file])))
+      :else [:error resp])))
 
 (defn md5-filename [file]
   (let [md5 (lib.shell/md5 (str file))
@@ -104,11 +108,10 @@
 (defn -main [& args]
   (cli/dispatch table args))
 
-(apply -main *command-line-args*)
+(when (= *file* (System/getProperty "babashka.file"))
+  (apply -main *command-line-args*))
 
 (comment
-  (main {})
+  (-main "https://twitter.com/Rainmaker1973/status/1713574100638065097")
   (-main)
-  (-main "https://assets.orf.at/mims/2023/31/67/crops/w=347,q=80,r=2/1890170_2q_708567_hochwasser_st_paul_o.jpg?s=2649161261446ac9f7114bf50d8443163b824865")
-  (-main "sub")
   nil)
