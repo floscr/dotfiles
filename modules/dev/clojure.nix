@@ -24,6 +24,7 @@ in
       openjdk17
       unstable.clojure-lsp
       zprint
+      user.bootleg
     ];
     home.configFile."clojure/deps.edn".source = ./deps.edn;
   };
