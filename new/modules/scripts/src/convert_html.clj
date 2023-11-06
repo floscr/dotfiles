@@ -1,7 +1,8 @@
 (ns convert-html
   (:require
    [babashka.pods :as pods]
-   [clojure.string :as str]))
+   [clojure.string :as str]
+   [lib.clipboard :as clipboard]))
 
 (pods/load-pod "bootleg-wrapped")
 (require '[pod.retrogradeorbit.bootleg.utils :refer [convert-to]])
@@ -35,4 +36,6 @@
   (->> (->hiccup svg)
        (hiccup->str)))
 
-(-> (slurp *in*) (->uix) prn)
+(-> (clipboard/get-clip "primary")
+    (->uix)
+    println)
