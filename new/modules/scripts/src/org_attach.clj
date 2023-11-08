@@ -6,6 +6,7 @@
    [babashka.process :as bp]
    [clojure.core.match :refer [match]]
    [clojure.java.io :as io]
+   [clojure.string :as str]
    [lambdaisland.uri :as uri]
    [lib.clipboard :as clipboard]
    [lib.fs]
@@ -69,40 +70,49 @@
         [_f ext] (fs/split-ext (fs/file-name file))]
     (str md5 "." ext)))
 
-(defn attach-file [file]
+(defn attach-file [file {:keys [attach-dir]
+                         :or {attach-dir clojure-attach-dir}}]
   (match file
-         [:file f] (let [dest (fs/path clojure-attach-dir (md5-filename f))]
+         [:file f] (let [dest (fs/path attach-dir (md5-filename f))]
                      (try (fs/copy f dest) (catch java.nio.file.FileAlreadyExistsException _))
                      dest)
          :else {:error (str "Could not attach " file)}))
 
-(defn org-link [file]
-  (let [path (fs/relativize clojure-attach-dir file)]
+(defn org-link [file {:keys [attach-dir]
+                      :or {attach-dir clojure-attach-dir}}]
+  (let [path (fs/relativize attach-dir file)]
     (format "[[my-attach:%s]]" path)))
 
-(defn attach-typed [typed]
+(defn attach-typed [typed opts]
   (-> (match typed
              [:url _] (-> (download-url typed)
-                          (attach-file))
-             [:file _] (attach-file typed)
+                          (attach-file opts))
+             [:file _] (attach-file typed opts)
              [:error e] (throw (Exception. (str "Error: " \newline e))))
-      (org-link)))
+      (org-link opts)))
 
 ;; Commands --------------------------------------------------------------------
 
 (defn main [{:keys [opts]}]
-  (let [{:keys [url yank]} opts
+  (let [{:keys [url yank _attach-dir]} opts
         typed (if url
                 (string->typed url)
                 (clipboard-content->typed))]
-    (cond-> (attach-typed typed)
+    (cond-> (attach-typed typed opts)
         yank (doto lib.clipboard/set-clip)
         :else (doto println))))
+
+(defn help [_]
+  (let [help-str (-> ["org_attach <url>"
+                      "  --yank          Copy result to clipboard"
+                      "  --attach-dir    Change the attachment dir"]
+                     (str/join "\n"))]
+    (prn help-str)))
 
 ;; Main ------------------------------------------------------------------------
 
 (def table
-  [{:cmds ["help"] :fn (fn [_] (prn "org_attach <url>"))}
+  [{:cmds ["help"] :fn help}
    {:cmds [] :fn main :args->opts [:url]}])
 
 (defn -main [& args]
