@@ -73,8 +73,8 @@
 ;; Scanning Functions ----------------------------------------------------------
 
 (defn find-device! [{:keys [verbose? debug?] :as opts}]
-  (debug-prn opts "Looking up device...")
-  (m/mlet [devices (->> (lib.shell/sh-exc "scanimage -L")
+  (m/mlet [_ (exc/success (debug-prn opts "Looking up device..."))
+           devices (->> (lib.shell/sh-exc "scanimage -L")
                         (m/fmap #(str/split % #"\n")))
            device (lookup-device opts devices)]
     (debug-prn opts "Found device:" device)
