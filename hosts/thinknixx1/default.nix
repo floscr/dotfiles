@@ -78,6 +78,7 @@ with lib.my;
 
   modules-new = {
     scripts = {
+      bscan.enable = true;
       screen-capture.enable = true;
       monitor_brightness.enable = true;
       zzz.enable = true;
