@@ -124,15 +124,13 @@
       (m/return (assoc state :processed-file processed-file)))))
 
 (defn ocr! [_opts {:keys [processed-file ocr-opts] :as state}]
-  (let [{:keys [language format]
-         :or {language "deu"
-              format "pdf"}} ocr-opts
+  (let [{:keys [language]
+         :or {language "deu"}} ocr-opts
         [output] (fs/split-ext processed-file)]
     (m/mlet [_ (lib.shell/sh-exc ["tesseract" "-l" language
-                                  processed-file
-                                  output
-                                  "pdf"])]
-      (m/return (assoc state :ocr-file output)))))
+                                  processed-file output "pdf"])]
+      (m/return (assoc state :ocr-file {:pdf (lib.fs/rename-extension output "pdf")
+                                        :pdf-txt (lib.fs/rename-extension output "pdf.txt")})))))
 
 (comment
   (ocr! opts (m/extract @a))
