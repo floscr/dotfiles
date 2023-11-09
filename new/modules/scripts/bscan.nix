@@ -19,7 +19,7 @@ in
       {
         user.packages = with pkgs; [
           pkg
-          paperless
+          unpaper
         ];
       }
     );
