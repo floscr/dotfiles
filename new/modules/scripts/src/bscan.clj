@@ -100,6 +100,11 @@
     (m/return {:device device
                :scanned-file scan-temp-file})))
 
+(defn process [{:as opts} scan-exc]
+  (m/mlet [scan scan-exc
+           _ (exc/success (debug-prn opts "Processing File..."))]
+    (m/return scan)))
+
 (comment
   (defonce a (atom nil))
 
