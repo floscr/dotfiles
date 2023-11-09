@@ -20,6 +20,7 @@ in
         user.packages = with pkgs; [
           pkg
           unpaper
+          tesseract
         ];
       }
     );

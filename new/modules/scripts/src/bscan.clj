@@ -119,13 +119,29 @@
                            :scanned-file scan-temp-file))))
 
 (defn process! [opts {:keys [scanned-file] :as state}]
-  (m/mlet [processed-file (exc/success (lib.fs/rename-extension scanned-file "jpg"))
-           _ (lib.shell/sh-exc ["unpaper" scanned-file processed-file])]
-    (m/return (assoc state :processed-file processed-file))))
+  (let [processed-file (lib.fs/rename-extension scanned-file "tiff")]
+    (m/mlet [_ (lib.shell/sh-exc ["unpaper" scanned-file processed-file])]
+      (m/return (assoc state :processed-file processed-file)))))
+
+(defn ocr! [_opts {:keys [processed-file ocr-opts] :as state}]
+  (let [{:keys [language format]
+         :or {language "deu"
+              format "pdf"}} ocr-opts
+        [output] (fs/split-ext processed-file)]
+    (m/mlet [_ (lib.shell/sh-exc ["tesseract" "-l" language
+                                  processed-file
+                                  output
+                                  "pdf"])]
+      (m/return (assoc state :ocr-file output)))))
+
+(comment
+  (ocr! opts (m/extract @a))
+  nil)
 
 (def pipeline [find-device!
                scan!
-               process!])
+               process!
+               ocr!])
 
 (def verbose-pipeline [["Looking up device..."] find-device! ["Found device:" :device]
                        ["Scanning document..."] scan! ["Scanned document" :scanned-file str]
@@ -137,7 +153,9 @@
   (def opts {:debug? true
              :verbose? true})
 
-  (execute-pipeline opts verbose-pipeline)
+  (reset! a (execute-pipeline opts verbose-pipeline))
+
+  (ocr! opts (m/extract @a))
 
   (bp/shell "scanimage")
   nil)
