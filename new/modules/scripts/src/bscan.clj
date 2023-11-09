@@ -82,7 +82,7 @@
   device `v4l:/dev/video2' is a Noname Integrated Camera: Integrated I virtual device
   device `v4l:/dev/video0' is a Noname Integrated Camera: Integrated C virtual device
   device `epsonds:libusb:003:034' is a Epson ES-50 ESC/I-2"
-  [opts devices-str]
+  [_opts devices-str]
   (if-let [device-name (some->> devices-str
                                 (map #(re-find device-regex %))
                                 (filter some?)
@@ -102,7 +102,7 @@
            device (lookup-device opts devices)]
     (m/return {:device device})))
 
-(defn scan! [opts {:keys [device] :as state}]
+(defn scan! [_opts {:keys [device] :as state}]
   (m/mlet [scan-temp-file (-> (fs/create-temp-file {:prefix "bscan-"
                                                     :suffix ".pnm"})
                               (exc/success))
@@ -115,7 +115,7 @@
     (m/return (assoc state :device device
                            :scanned-file scan-temp-file))))
 
-(defn process! [opts {:keys [scanned-file] :as state}]
+(defn process! [_opts {:keys [scanned-file] :as state}]
   (let [processed-file (lib.fs/rename-extension scanned-file "tiff")]
     (m/mlet [_ (lib.shell/sh-exc ["unpaper" scanned-file processed-file])]
       (m/return (assoc state :processed-file processed-file)))))
