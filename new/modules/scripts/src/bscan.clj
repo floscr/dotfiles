@@ -85,19 +85,24 @@
            scan-temp-file (-> (fs/create-temp-file {:prefix "bscan-"
                                                     :suffix ".pnm"})
                               (exc/success))
+           _ (exc/success (debug-prn opts "Scanning document..."))
            _ (lib.shell/sh-exc ["scanimage"
                                 "--device" device
                                 "--mode" "Color"
                                 "--resolution" "300"
                                 "--format" "pnm"
                                 "--output" scan-temp-file])]
+    (debug-prn opts "Scanned document" (str scan-temp-file))
     (m/return {:device device
                :scanned-file scan-temp-file})))
 
-(defn process [{:as opts} scan-exc]
-  (m/mlet [scan scan-exc
-           _ (exc/success (debug-prn opts "Processing File..."))]
-    (m/return scan)))
+(defn process! [{:as opts} scan-exc]
+  (m/mlet [{:keys [scanned-file] :as data} scan-exc
+           processed-file (exc/success (lib.fs/rename-extension scanned-file "jpg"))
+           _ (exc/success (debug-prn opts "Processing File..."))
+           _ (lib.shell/sh-exc ["unpaper" scanned-file processed-file])]
+    (debug-prn opts "Processed document" (str processed-file))
+    (m/return (assoc data :processed-file processed-file))))
 
 (comment
   (defonce a (atom nil))
