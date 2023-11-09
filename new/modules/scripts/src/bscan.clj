@@ -41,7 +41,9 @@
   (let [msg (if (exc/failure? exc)
               (exc->error-message opts exc)
               (m/extract exc))]
-    (println "Error:" msg))
+    (if (exc/failure? exc)
+      (println "Error:" msg)
+      (println msg)))
   exc)
 
 (comment
