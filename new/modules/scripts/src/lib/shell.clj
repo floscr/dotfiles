@@ -11,7 +11,8 @@
 (defn sh-exc
   ([cmd] (sh-exc cmd nil))
   ([cmd opts]
-   (->> (exc/try-on (bp/shell cmd (merge {:out :string} opts)))
+   (->> (exc/try-on (bp/shell cmd (merge {:out :string
+                                          :err :string} opts)))
         (m/fmap (comp str/trim :out)))))
 
 (defn sh
