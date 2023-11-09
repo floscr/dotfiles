@@ -152,6 +152,37 @@
                        ["Scanning document..."] scan! ["Scanned document" :scanned-file str]
                        ["Processing scanned file..."] process! ["Processed document" :processed-file str]])
 
+;; Main ------------------------------------------------------------------------
+
+(defn continous-scan []
+  (bp/shell "stty -icanon -echo")
+  (println "Press `esc` to process scans.")
+  (println "Press `q` to quit")
+  (println "Press `Enter` to scan next file.")
+  (loop []
+    (let [k (.read System/in)
+          char (case k
+                 27 :esc
+                 113 \q
+                 10 :enter
+                 nil)
+          exit? (#{\q} char)
+          submit? (#{:esc} char)
+          continue? (#{:enter} char)]
+      (cond
+        continue? (do (prn "Continue")
+                      (recur))
+        submit? (lib.shell/exit! "Submitting!")
+        exit? (lib.shell/exit! "Early exit!")
+        :else (recur))))
+  (bp/shell "stty icanon echo"))
+
+(defn -main []
+  (continous-scan))
+
+(when (= *file* (System/getProperty "babashka.file"))
+  (apply -main *command-line-args*))
+
 (comment
   (defonce a (atom nil))
 
