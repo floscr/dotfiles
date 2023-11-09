@@ -57,6 +57,7 @@ with lib.my;
 
   environment.shellAliases = {
     specify = "npx @specifyapp/cli";
+    chrome = "google-chrome-stable";
   };
 
   modules.bindings.items = [

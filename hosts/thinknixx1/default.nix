@@ -45,6 +45,7 @@ with lib.my;
     unstable.signal-desktop
     jellyfin-media-player
     lsof
+    google-chrome
     gparted
     xournal
     zip
