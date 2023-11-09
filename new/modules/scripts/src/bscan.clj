@@ -110,7 +110,9 @@
   (def opts {:debug? true
              :verbose? true})
 
-  (process opts @a)
+  (->> (find-device! opts)
+       (scan! opts)
+       (process! opts))
 
   (->> (scan opts)
        (reset! a))
