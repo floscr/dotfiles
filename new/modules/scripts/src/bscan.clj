@@ -97,7 +97,8 @@
                                 "--resolution" "300"
                                 "--format" "pnm"
                                 "--output" scan-temp-file])]
-    (m/return scan-temp-file)))
+    (m/return {:device device
+               :scanned-file scan-temp-file})))
 
 (comment
   (defonce a (atom nil))
