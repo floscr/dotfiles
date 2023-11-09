@@ -5,6 +5,7 @@
    [cats.core :as m]
    [cats.monad.exception :as exc]
    [clojure.string :as str]
+   [lib.fp]
    [lib.fs]
    [lib.shell]
    [lib.web]))
@@ -105,8 +106,6 @@
                        ["Scanning document..."] scan! ["Scanned document" :scanned-file str]
                        ["Processing scanned file..."] process! ["Processed document" :processed-file str]])
 
-(defn apply-fns [x fns]
-  (reduce (fn [v f] (f v)) x fns))
 
 (defn execute! [opts pipeline]
   (reduce
@@ -116,7 +115,7 @@
        (vector? cur) (m/bind acc-mv (fn [state]
                                       (let [[msg & selectors] cur
                                             state-msg (when (seq? selectors)
-                                                        (apply-fns state (vec selectors)))
+                                                        (lib.fp/apply-fns state selectors))
                                             msgs (if state-msg [msg state-msg] [msg])]
                                         (apply println (debug-str msgs)))
                                       acc-mv))))
@@ -130,23 +129,6 @@
              :verbose? true})
 
   (execute! opts verbose-pipeline)
-
-  (-> (find-device! opts {})
-      (m/bind #(scan! opts %)))
-
-  (->> (find-device! opts)
-       (scan! opts)
-       (process! opts))
-
-  (->> (scan opts)
-       (reset! a))
-
-  (let [opts {:debug? true
-              :verbose? true}]
-    (->> (scan opts)
-         (process opts)
-         (exc-print! opts)))
-
 
   (bp/shell "scanimage")
   nil)
