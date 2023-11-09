@@ -80,14 +80,8 @@
     (debug-prn opts "Found device:" device)
     (m/return device)))
 
-(comment
-  (reset! a (find-device! {:debug? true}))
-
-  (exc-print! @a {:verbose? true})
-  nil)
-
-(defn scan [{:as opts}]
-  (m/mlet [device (find-device! opts)
+(defn scan! [{:as opts} device-exc]
+  (m/mlet [device device-exc
            scan-temp-file (-> (fs/create-temp-file {:prefix "bscan-"
                                                     :suffix ".pnm"})
                               (exc/success))
