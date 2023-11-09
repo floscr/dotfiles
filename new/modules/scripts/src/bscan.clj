@@ -88,7 +88,7 @@
 
 (defn scan [{:as opts}]
   (m/mlet [device (find-device! opts)
-           scan-temp-file (-> (fs/create-temp-file {:prefix "scan-"
+           scan-temp-file (-> (fs/create-temp-file {:prefix "bscan-"
                                                     :suffix ".pnm"})
                               (exc/success))
            _ (lib.shell/sh-exc ["scanimage"
