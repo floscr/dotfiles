@@ -108,10 +108,18 @@
 (comment
   (defonce a (atom nil))
 
+  (def opts {:debug? true
+             :verbose? true})
+
+  (process opts @a)
+
+  (->> (scan opts)
+       (reset! a))
 
   (let [opts {:debug? true
               :verbose? true}]
     (->> (scan opts)
+         (process opts)
          (exc-print! opts)))
 
 
