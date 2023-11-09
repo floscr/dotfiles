@@ -21,9 +21,6 @@
 (defn debug-str [msgs]
   (concat "i" msgs))
 
-(defn debug-prn [{:keys [debug?] :as _opts} & msgs]
-  (apply println (debug-str msgs)))
-
 (defn failure [& {:keys [message] :as opts}]
   (exc/failure
    (merge {:kind :scan/error} opts)
