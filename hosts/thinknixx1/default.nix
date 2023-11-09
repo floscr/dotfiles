@@ -12,6 +12,13 @@ with lib.my;
     # ./bindings.nix
   ];
 
+  # services.openssh.enable = true;
+  # programs.mosh.enable = true;
+
+
+  # networking.firewall = {
+  #   allowedUDPPorts = [ 51820 ];
+  # };
 
   services.udev.extraRules = ''
     SUBSYSTEM!="usb", GOTO="end_rules"
