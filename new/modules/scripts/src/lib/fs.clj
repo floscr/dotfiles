@@ -35,3 +35,17 @@
   Directly returns the string."
   [path]
   (-> path fs/expand-home str))
+
+(defn rename-extension [path new-ext]
+  (let [[file _] (fs/split-ext path)]
+    (if (fs/directory? path)
+      path
+      (fs/path (str file "." new-ext)))))
+
+(comment
+  (rename-extension "/" "JPG")
+  (rename-extension "/lol" "JPG")
+  (rename-extension "foo.png" "JPG")
+  (rename-extension "foo" "png")
+  (rename-extension "foo." "png")
+  nil)
