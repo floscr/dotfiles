@@ -56,6 +56,7 @@ with lib.my;
     exiftool
     appimage-run
     usbutils
+    geeqie
   ] ++ flake-packages;
 
   hardware.logitech.wireless.enable = true;
