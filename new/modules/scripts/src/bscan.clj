@@ -17,9 +17,11 @@
 
 ;; Helpers ---------------------------------------------------------------------
 
+(defn debug-str [msgs]
+  (concat "i" msgs))
+
 (defn debug-prn [{:keys [debug?] :as _opts} & msgs]
-  (when debug?
-    (apply println (concat "i" msgs))))
+  (apply println (debug-str msgs)))
 
 (defn failure [& {:keys [message] :as opts}]
   (exc/failure
@@ -72,34 +74,54 @@
 ;; Scanning Functions ----------------------------------------------------------
 
 (defn find-device! [opts _state]
-  (m/mlet [_ (exc/success (debug-prn opts "Looking up device..."))
-           devices (->> (lib.shell/sh-exc "scanimage -L")
+  (m/mlet [devices (->> (lib.shell/sh-exc "scanimage -L")
                         (m/fmap #(str/split % #"\n")))
            device (lookup-device opts devices)]
-    (debug-prn opts "Found device:" device)
     (m/return {:device device})))
 
 (defn scan! [opts {:keys [device] :as state}]
   (m/mlet [scan-temp-file (-> (fs/create-temp-file {:prefix "bscan-"
                                                     :suffix ".pnm"})
                               (exc/success))
-           _ (exc/success (debug-prn opts "Scanning document..."))
            _ (lib.shell/sh-exc ["scanimage"
                                 "--device" device
                                 "--mode" "Color"
                                 "--resolution" "300"
                                 "--format" "pnm"
                                 "--output" scan-temp-file])]
-    (debug-prn opts "Scanned document" (str scan-temp-file))
     (m/return (assoc state :device device
                            :scanned-file scan-temp-file))))
 
 (defn process! [opts {:keys [scanned-file] :as state}]
   (m/mlet [processed-file (exc/success (lib.fs/rename-extension scanned-file "jpg"))
-           _ (exc/success (debug-prn opts "Processing File..."))
            _ (lib.shell/sh-exc ["unpaper" scanned-file processed-file])]
-    (debug-prn opts "Processed document" (str processed-file))
     (m/return (assoc state :processed-file processed-file))))
+
+(def pipeline [find-device!
+               scan!
+               process!])
+
+(def verbose-pipeline [["Looking up device..."] find-device! ["Found device:" :device]
+                       ["Scanning document..."] scan! ["Scanned document" :scanned-file str]
+                       ["Processing scanned file..."] process! ["Processed document" :processed-file str]])
+
+(defn apply-fns [x fns]
+  (reduce (fn [v f] (f v)) x fns))
+
+(defn execute! [opts pipeline]
+  (reduce
+   (fn [acc-mv cur]
+     (cond
+       (fn? cur) (m/bind acc-mv #(cur opts %))
+       (vector? cur) (m/bind acc-mv (fn [state]
+                                      (let [[msg & selectors] cur
+                                            state-msg (when (seq? selectors)
+                                                        (apply-fns state (vec selectors)))
+                                            msgs (if state-msg [msg state-msg] [msg])]
+                                        (apply println (debug-str msgs)))
+                                      acc-mv))))
+   (exc/success {})
+   pipeline))
 
 (comment
   (defonce a (atom nil))
@@ -107,15 +129,7 @@
   (def opts {:debug? true
              :verbose? true})
 
-  (def pipeline [find-device!
-                 scan!
-                 process!])
-
-  (reduce
-   (fn [acc-mv cur-fn]
-     (m/bind acc-mv #(cur-fn opts %)))
-   (exc/success {})
-   pipeline)
+  (execute! opts verbose-pipeline)
 
   (-> (find-device! opts {})
       (m/bind #(scan! opts %)))
