@@ -132,8 +132,18 @@
       (m/return (assoc state :ocr-file {:pdf (lib.fs/rename-extension output "pdf")
                                         :pdf-txt (lib.fs/rename-extension output "pdf.txt")})))))
 
+(defn cleanup! [_opts {:keys [scanned-file processed-file ocr-file] :as state}]
+  (doall (->> [scanned-file
+               processed-file
+               (:pdf ocr-file)
+               (:pdf-txt ocr-file)]
+              (eduction (filter some?)
+                        (map fs/delete-if-exists))))
+  (exc/success (dissoc state :scanned-file :processed-file :ocr-file)))
+
 (comment
-  (ocr! opts (m/extract @a))
+  (reset! a (ocr! opts (m/extract @a)))
+  (cleanup! {} (m/extract @a))
   nil)
 
 (def pipeline [find-device!
