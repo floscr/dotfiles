@@ -5,6 +5,13 @@
    [cats.core :as m]
    [clojure.string :as str]))
 
+(defn exit!
+  ([] (exit! nil))
+  ([msg]
+   (when msg
+     (println msg))
+   (System/exit 1)))
+
 (defmacro bold [str]
   `(str "\033[1m" ~str "\033[0m"))
 
