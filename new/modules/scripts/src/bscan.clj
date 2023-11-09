@@ -50,7 +50,6 @@
   (exc-print! @a {})
   nil)
 
-
 (defn lookup-device
   "Look up device identifier via `device-regex` in output from 'scanimage -L' shell command.
 
@@ -72,17 +71,16 @@
 
 ;; Scanning Functions ----------------------------------------------------------
 
-(defn find-device! [{:keys [verbose? debug?] :as opts}]
+(defn find-device! [opts _state]
   (m/mlet [_ (exc/success (debug-prn opts "Looking up device..."))
            devices (->> (lib.shell/sh-exc "scanimage -L")
                         (m/fmap #(str/split % #"\n")))
            device (lookup-device opts devices)]
     (debug-prn opts "Found device:" device)
-    (m/return device)))
+    (m/return {:device device})))
 
-(defn scan! [{:as opts} device-exc]
-  (m/mlet [device device-exc
-           scan-temp-file (-> (fs/create-temp-file {:prefix "bscan-"
+(defn scan! [opts {:keys [device] :as state}]
+  (m/mlet [scan-temp-file (-> (fs/create-temp-file {:prefix "bscan-"
                                                     :suffix ".pnm"})
                               (exc/success))
            _ (exc/success (debug-prn opts "Scanning document..."))
@@ -93,22 +91,34 @@
                                 "--format" "pnm"
                                 "--output" scan-temp-file])]
     (debug-prn opts "Scanned document" (str scan-temp-file))
-    (m/return {:device device
-               :scanned-file scan-temp-file})))
+    (m/return (assoc state :device device
+                           :scanned-file scan-temp-file))))
 
-(defn process! [{:as opts} scan-exc]
-  (m/mlet [{:keys [scanned-file] :as data} scan-exc
-           processed-file (exc/success (lib.fs/rename-extension scanned-file "jpg"))
+(defn process! [opts {:keys [scanned-file] :as state}]
+  (m/mlet [processed-file (exc/success (lib.fs/rename-extension scanned-file "jpg"))
            _ (exc/success (debug-prn opts "Processing File..."))
            _ (lib.shell/sh-exc ["unpaper" scanned-file processed-file])]
     (debug-prn opts "Processed document" (str processed-file))
-    (m/return (assoc data :processed-file processed-file))))
+    (m/return (assoc state :processed-file processed-file))))
 
 (comment
   (defonce a (atom nil))
 
   (def opts {:debug? true
              :verbose? true})
+
+  (def pipeline [find-device!
+                 scan!
+                 process!])
+
+  (reduce
+   (fn [acc-mv cur-fn]
+     (m/bind acc-mv #(cur-fn opts %)))
+   (exc/success {})
+   pipeline)
+
+  (-> (find-device! opts {})
+      (m/bind #(scan! opts %)))
 
   (->> (find-device! opts)
        (scan! opts)
