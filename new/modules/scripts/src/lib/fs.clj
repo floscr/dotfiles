@@ -1,15 +1,6 @@
 (ns lib.fs
   (:require [babashka.fs :as fs]))
 
-(defn apply-fns
-  "Apply list of `fns` to a value `x`."
-  [x fns]
-  (reduce (fn [v f] (f v)) x (vec fns)))
-
-(comment
-  (apply-fns {:foo 1} [:foo str])
-  nil)
-
 (defn current-directory
   "Returns the current execution directory.
   For the repl this will be the path where the repl has been launched."
