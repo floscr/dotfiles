@@ -53,6 +53,31 @@
   (exc-print! @a {})
   nil)
 
+(defn execute-pipeline
+  "Executes a pipeline which is a list of functions that return a monadic value.
+  These functions take as arguments (fn [opts state]).
+  Whenever a part in the pipline fails the execution is halted.
+
+  The pipeline can also be filled with debugging messages for vebose printing of commands.
+  ['My string' :foo str]
+  Here the vector has the debugging message as the first string, and some accessors on the current state.
+  Which would print for the current state of: {:foo 1}
+  'My string 1'"
+  [opts pipeline]
+  (reduce
+   (fn [acc-mv cur]
+     (cond
+       (fn? cur) (m/bind acc-mv #(cur opts %))
+       (vector? cur) (m/bind acc-mv (fn [state]
+                                      (let [[msg & selectors] cur
+                                            state-msg (when (seq? selectors)
+                                                        (lib.fp/apply-fns state selectors))
+                                            msgs (if state-msg [msg state-msg] [msg])]
+                                        (apply println (debug-str msgs)))
+                                      acc-mv))))
+   (exc/success {})
+   pipeline))
+
 (defn lookup-device
   "Look up device identifier via `device-regex` in output from 'scanimage -L' shell command.
 
@@ -106,29 +131,13 @@
                        ["Scanning document..."] scan! ["Scanned document" :scanned-file str]
                        ["Processing scanned file..."] process! ["Processed document" :processed-file str]])
 
-
-(defn execute! [opts pipeline]
-  (reduce
-   (fn [acc-mv cur]
-     (cond
-       (fn? cur) (m/bind acc-mv #(cur opts %))
-       (vector? cur) (m/bind acc-mv (fn [state]
-                                      (let [[msg & selectors] cur
-                                            state-msg (when (seq? selectors)
-                                                        (lib.fp/apply-fns state selectors))
-                                            msgs (if state-msg [msg state-msg] [msg])]
-                                        (apply println (debug-str msgs)))
-                                      acc-mv))))
-   (exc/success {})
-   pipeline))
-
 (comment
   (defonce a (atom nil))
 
   (def opts {:debug? true
              :verbose? true})
 
-  (execute! opts verbose-pipeline)
+  (execute-pipeline opts verbose-pipeline)
 
   (bp/shell "scanimage")
   nil)
