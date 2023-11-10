@@ -13,36 +13,6 @@
    [lib.shell]
    [lib.web]))
 
-(defn async-call
-  "A function that emulates some asynchronous call."
-  [n]
-  (a/thread
-    (println "---> sending request" n)
-    (a/<! (a/timeout n))
-    (println "<--- receiving request" n)
-    n))
-
-(comment
-  (a/<!! (ctx/with-context channel/context
-           (->> (async-call 2000)
-                (m/fmap str))))
-  nil)
-
-(comment
-  (defonce xs (atom []))
-  (defonce scanner (m/extract (find-device! {} {})))
-  (reset! xs (conj @xs (scan! {} (m/extract scanner))))
-
-  @xs
-
-  (a/<!
-   (ctx/with-context channel/context
-     (m/mlet [xs (m/sequence (mapv #(a/thread (execute-pipeline {} process-pipeline %)) @xs))]
-       (m/return xs))))
-
-  nil)
-
-
 ;; Config ----------------------------------------------------------------------
 
 (def device-regex
@@ -181,6 +151,9 @@
                         (map fs/delete-if-exists))))
   (exc/success (dissoc state :scanned-file :processed-file :ocr-file)))
 
+(def process-pipeline [process!
+                       ocr!])
+
 (defn continous-scan!
   "Scanning continously until scanner fails.
   My scanner is a feed through scanner and --batch doesn't work, so here's the manual process."
@@ -188,48 +161,48 @@
   (bp/shell "stty -icanon -echo")
   (println "Continous scan")
   (println)
-  (println "Press `esc` to process scans.")
-  (println "Press `q` to quit")
+  (println "Press `esc` or `q` to process scans.")
+  (println "Press `C-c` to exit.")
   (println)
   (println "Insert paper into the feeder and press `Enter` to scan.")
   (println)
-  (let [files (loop [states []]
-                (let [k (.read System/in)
-                      char (case k
-                             27 :esc
-                             113 \q
-                             10 :enter
-                             nil)
-                      exit? (#{\q} char)
-                      process? (#{:esc} char)
-                      continue? (#{:enter} char)]
+  (let [file-threads
+        (loop [states []]
+          (let [k (.read System/in)
+                char (case k
+                       27 :esc
+                       113 \q
+                       10 :enter
+                       nil)
+                process? (#{:esc \q} char)
+                continue? (#{:enter} char)]
+            (cond
+              continue? (do
+                          (when-not (:verbose? opts)
+                            (print "Scanning document...")
+                            (flush))
+                          (let [document-state (scan! opts state)
+                                thread (a/thread (execute-pipeline {} process-pipeline document-state))]
 
-                  (cond
-                    continue? (do
-                                (when-not (:verbose? opts)
-                                  (print "Scanning document...")
-                                  (flush))
-                                (let [document-state (scan! opts state)]
-                                  (when-not (:verbose? opts)
-                                    (print " ...Scan complete \n")
-                                    (flush))
-                                  (print)
-                                  (println "Insert paper into the feeder and press `Enter` to scan.")
-                                  (println)
-                                  (recur (conj states document-state))))
-                    process? states
-                    exit? (lib.shell/exit! "Early exit!")
-                    :else (recur states))))]
+                            (when-not (:verbose? opts)
+                              (print " ...Scan complete \n")
+                              (flush))
+                            (print)
+                            (println "Insert paper into the feeder and press `Enter` to scan.")
+                            (println)
+                            (recur (conj states thread))))
+              process? states
+              :else (recur states))))]
     (bp/shell "stty icanon echo")
-    files))
-
-(comment
-  (reset! a (ocr! opts (m/extract @a)))
-  (cleanup! {} (m/extract @a))
-  nil)
-
-(def process-pipeline [process!
-                       ocr!])
+    (a/<!
+     (ctx/with-context channel/context
+       (m/mlet [file-excs (m/sequence file-threads)]
+         (ctx/with-context exc/context
+           (let [pdfs (->> (m/sequence file-excs)
+                           (m/extract)
+                           (mapv #(get-in % [:ocr-file :pdf])))]
+             (bp/sh (concat ["pdfunite"] pdfs ["out.pdf"]))))
+         (m/return file-excs))))))
 
 (def pipeline [find-device!
                scan!
