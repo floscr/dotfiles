@@ -151,9 +151,13 @@
   My scanner is a feed through scanner and --batch doesn't work, so here's the manual process."
   [opts state]
   (bp/shell "stty -icanon -echo")
+  (println "Continous scan")
+  (println)
   (println "Press `esc` to process scans.")
   (println "Press `q` to quit")
-  (println "Press `Enter` to scan next file.")
+  (println)
+  (println "Insert paper into the feeder and press `Enter` to scan.")
+  (println)
   (let [files (loop [states []]
                 (let [k (.read System/in)
                       char (case k
@@ -164,10 +168,20 @@
                       exit? (#{\q} char)
                       process? (#{:esc} char)
                       continue? (#{:enter} char)]
+
                   (cond
                     continue? (do
-                                (println "Feed paper into scanner")
-                                (recur (conj (scan! opts state))))
+                                (when-not (:verbose? opts)
+                                  (print "Scanning document...")
+                                  (flush))
+                                (let [document-state (scan! opts state)]
+                                  (when-not (:verbose? opts)
+                                    (print " ...Scan complete \n")
+                                    (flush))
+                                  (print)
+                                  (println "Insert paper into the feeder and press `Enter` to scan.")
+                                  (println)
+                                  (recur (conj states document-state))))
                     process? states
                     exit? (lib.shell/exit! "Early exit!")
                     :else (recur states))))]
