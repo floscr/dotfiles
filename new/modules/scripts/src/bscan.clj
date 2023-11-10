@@ -35,9 +35,10 @@
 
   @xs
 
-  (a/<!! (ctx/with-context channel/context
-           (m/mlet [xs (m/sequence (mapv #(a/thread (a/<! (execute-pipeline {} process-pipeline %))) @xs))]
-             (m/return xs))))
+  (a/<!
+   (ctx/with-context channel/context
+     (m/mlet [xs (m/sequence (mapv #(a/thread (execute-pipeline {} process-pipeline %)) @xs))]
+       (m/return xs))))
 
   nil)
 
