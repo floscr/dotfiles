@@ -18,7 +18,7 @@
 
 ;; Helpers ---------------------------------------------------------------------
 
-(defn debug-str [msgs]
+(defn info-str [msgs]
   (concat "i" msgs))
 
 (defn failure [& {:keys [message] :as opts}]
@@ -70,7 +70,7 @@
                                             state-msg (when (seq? selectors)
                                                         (lib.fp/apply-fns state selectors))
                                             msgs (if state-msg [msg state-msg] [msg])]
-                                        (apply println (debug-str msgs)))
+                                        (apply println (info-str msgs)))
                                       acc-mv))))
    (exc/success {})
    pipeline))
