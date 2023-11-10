@@ -129,6 +129,14 @@
       (m/return (assoc state :ocr-file {:pdf (lib.fs/rename-extension output "pdf")
                                         :pdf-txt (lib.fs/rename-extension output "pdf.txt")})))))
 
+;; (defn copy-final-file! [_opts {:keys [scanned-file processed-file ocr-file] :as state}]
+;;   (doall (->> [scanned-file
+;;                processed-file
+;;                (:pdf ocr-file)]
+;;               (eduction (filter some?)
+;;                         (map fs/delete-if-exists))))
+;;   (exc/success (dissoc state :scanned-file :processed-file :ocr-file)))
+
 (defn cleanup! [_opts {:keys [scanned-file processed-file ocr-file] :as state}]
   (doall (->> [scanned-file
                processed-file
@@ -137,6 +145,34 @@
               (eduction (filter some?)
                         (map fs/delete-if-exists))))
   (exc/success (dissoc state :scanned-file :processed-file :ocr-file)))
+
+(defn continous-scan!
+  "Scanning continously until scanner fails.
+  My scanner is a feed through scanner and --batch doesn't work, so here's the manual process."
+  [opts state]
+  (bp/shell "stty -icanon -echo")
+  (println "Press `esc` to process scans.")
+  (println "Press `q` to quit")
+  (println "Press `Enter` to scan next file.")
+  (let [files (loop [states []]
+                (let [k (.read System/in)
+                      char (case k
+                             27 :esc
+                             113 \q
+                             10 :enter
+                             nil)
+                      exit? (#{\q} char)
+                      process? (#{:esc} char)
+                      continue? (#{:enter} char)]
+                  (cond
+                    continue? (do
+                                (println "Feed paper into scanner")
+                                (recur (conj (scan! opts state))))
+                    process? states
+                    exit? (lib.shell/exit! "Early exit!")
+                    :else (recur states))))]
+    (bp/shell "stty icanon echo")
+    files))
 
 (comment
   (reset! a (ocr! opts (m/extract @a)))
@@ -154,31 +190,10 @@
 
 ;; Main ------------------------------------------------------------------------
 
-(defn continous-scan []
-  (bp/shell "stty -icanon -echo")
-  (println "Press `esc` to process scans.")
-  (println "Press `q` to quit")
-  (println "Press `Enter` to scan next file.")
-  (loop []
-    (let [k (.read System/in)
-          char (case k
-                 27 :esc
-                 113 \q
-                 10 :enter
-                 nil)
-          exit? (#{\q} char)
-          submit? (#{:esc} char)
-          continue? (#{:enter} char)]
-      (cond
-        continue? (do (prn "Continue")
-                      (recur))
-        submit? (lib.shell/exit! "Submitting!")
-        exit? (lib.shell/exit! "Early exit!")
-        :else (recur))))
-  (bp/shell "stty icanon echo"))
-
 (defn -main []
-  (continous-scan))
+  (let [opts {}]
+    (-> (find-device! opts {})
+        (m/bind #(continous-scan! opts %)))))
 
 (when (= *file* (System/getProperty "babashka.file"))
   (apply -main *command-line-args*))
