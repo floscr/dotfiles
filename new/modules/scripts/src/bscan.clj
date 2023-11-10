@@ -4,11 +4,29 @@
    [babashka.process :as bp]
    [cats.core :as m]
    [cats.monad.exception :as exc]
+   [clojure.core.async :as a]
+   [cats.labs.channel :as channel]
    [clojure.string :as str]
+   [cats.context :as ctx]
    [lib.fp]
    [lib.fs]
    [lib.shell]
    [lib.web]))
+
+(defn async-call
+  "A function that emulates some asynchronous call."
+  [n]
+  (a/go
+    (println "---> sending request" n)
+    (a/<! (a/timeout n))
+    (println "<--- receiving request" n)
+    n))
+
+(comment
+  (a/<!! (ctx/with-context channel/context
+           (->> (async-call 2000)
+                (m/fmap str))))
+  nil)
 
 ;; Config ----------------------------------------------------------------------
 
