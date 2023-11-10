@@ -2,12 +2,13 @@
   (:require
    [babashka.fs :as fs]
    [babashka.process :as bp]
-   [cats.core :as m]
-   [cats.monad.exception :as exc]
-   [clojure.core.async :as a]
-   [cats.labs.channel :as channel]
-   [clojure.string :as str]
    [cats.context :as ctx]
+   [cats.core :as m]
+   [cats.labs.channel :as channel]
+   [cats.monad.exception :as exc]
+   [cats.monad.maybe :as maybe]
+   [clojure.core.async :as a]
+   [clojure.string :as str]
    [lib.fp]
    [lib.fs]
    [lib.shell]
@@ -154,6 +155,9 @@
 (def process-pipeline [process!
                        ocr!])
 
+(m/mlet [x (exc/success 1)]
+  (m/return (maybe/just x)))
+
 (defn continous-scan!
   "Scanning continously until scanner fails.
   My scanner is a feed through scanner and --batch doesn't work, so here's the manual process."
@@ -194,15 +198,15 @@
               process? states
               :else (recur states))))]
     (bp/shell "stty icanon echo")
-    (a/<!
-     (ctx/with-context channel/context
-       (m/mlet [file-excs (m/sequence file-threads)]
-         (ctx/with-context exc/context
-           (let [pdfs (->> (m/sequence file-excs)
-                           (m/extract)
-                           (mapv #(get-in % [:ocr-file :pdf])))]
-             (bp/sh (concat ["pdfunite"] pdfs ["out.pdf"]))))
-         (m/return file-excs))))))
+    (let [pdf (a/<!
+               (ctx/with-context channel/context
+                 (-> (m/alet [file-excs (m/sequence file-threads)]
+                       (ctx/with-context exc/context
+                         (let [pdfs (->> (m/sequence file-excs)
+                                         (m/extract)
+                                         (mapv #(get-in % [:ocr-file :pdf])))]
+                           (bp/sh (concat ["pdfunite"] pdfs ["out.pdf"]))))))))]
+      (println pdf))))
 
 (def pipeline [find-device!
                scan!
