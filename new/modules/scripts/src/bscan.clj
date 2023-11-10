@@ -198,8 +198,7 @@
               process? states
               :else (recur states))))]
     (bp/shell "stty icanon echo")
-    (let [pdfs (->> (a/<! (ctx/with-context channel/context
-                            (m/sequence file-threads)))
+    (let [pdfs (->> (a/<! (m/sequence file-threads))
                     (m/sequence)
                     (m/extract)
                     (mapv #(get-in % [:ocr-file :pdf])))]
