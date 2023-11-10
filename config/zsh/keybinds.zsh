@@ -57,6 +57,8 @@ bindkey -M viins '^a' beginning-of-line
 bindkey -M viins '^e' end-of-line
 bindkey -M viins '^d' push-line-or-edit
 
+bindkey '^[.' insert-last-word
+
 bindkey -M vicmd '^k' kill-line
 bindkey -M vicmd 'H'  run-help
 
