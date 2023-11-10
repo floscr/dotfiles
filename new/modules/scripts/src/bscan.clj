@@ -158,10 +158,10 @@
 (m/mlet [x (exc/success 1)]
   (m/return (maybe/just x)))
 
-(defn continous-scan!
+(defn continuous-scan!
   "Scanning continously until scanner fails.
   My scanner is a feed through scanner and --batch doesn't work, so here's the manual process."
-  [opts state]
+  [{:keys [out] :as opts} state]
   (bp/shell "stty -icanon -echo")
   (println "Continous scan")
   (println)
@@ -220,7 +220,7 @@
 (defn -main []
   (let [opts {}]
     (-> (find-device! opts {})
-        (m/bind #(continous-scan! opts %)))))
+        (m/bind #(continuous-scan! opts %)))))
 
 (when (= *file* (System/getProperty "babashka.file"))
   (apply -main *command-line-args*))
