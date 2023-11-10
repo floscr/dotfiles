@@ -16,7 +16,7 @@
 (defn async-call
   "A function that emulates some asynchronous call."
   [n]
-  (a/go
+  (a/thread
     (println "---> sending request" n)
     (a/<! (a/timeout n))
     (println "<--- receiving request" n)
@@ -27,6 +27,20 @@
            (->> (async-call 2000)
                 (m/fmap str))))
   nil)
+
+(comment
+  (defonce xs (atom []))
+  (defonce scanner (m/extract (find-device! {} {})))
+  (reset! xs (conj @xs (scan! {} (m/extract scanner))))
+
+  @xs
+
+  (a/<!! (ctx/with-context channel/context
+           (m/mlet [xs (m/sequence (mapv #(a/thread (a/<! (execute-pipeline {} process-pipeline %))) @xs))]
+             (m/return xs))))
+
+  nil)
+
 
 ;; Config ----------------------------------------------------------------------
 
@@ -78,20 +92,22 @@
   Here the vector has the debugging message as the first string, and some accessors on the current state.
   Which would print for the current state of: {:foo 1}
   'My string 1'"
-  [opts pipeline]
-  (reduce
-   (fn [acc-mv cur]
-     (cond
-       (fn? cur) (m/bind acc-mv #(cur opts %))
-       (vector? cur) (m/bind acc-mv (fn [state]
-                                      (let [[msg & selectors] cur
-                                            state-msg (when (seq? selectors)
-                                                        (lib.fp/apply-fns state selectors))
-                                            msgs (if state-msg [msg state-msg] [msg])]
-                                        (apply println (info-str msgs)))
-                                      acc-mv))))
-   (exc/success {})
-   pipeline))
+  ([opts pipeline]
+   (execute-pipeline opts pipeline (exc/success {})))
+  ([opts pipeline state]
+   (reduce
+    (fn [acc-mv cur]
+      (cond
+        (fn? cur) (m/bind acc-mv #(cur opts %))
+        (vector? cur) (m/bind acc-mv (fn [state]
+                                       (let [[msg & selectors] cur
+                                             state-msg (when (seq? selectors)
+                                                         (lib.fp/apply-fns state selectors))
+                                             msgs (if state-msg [msg state-msg] [msg])]
+                                         (apply println (info-str msgs)))
+                                       acc-mv))))
+    state
+    pipeline)))
 
 (defn lookup-device
   "Look up device identifier via `device-regex` in output from 'scanimage -L' shell command.
@@ -210,6 +226,9 @@
   (reset! a (ocr! opts (m/extract @a)))
   (cleanup! {} (m/extract @a))
   nil)
+
+(def process-pipeline [process!
+                       ocr!])
 
 (def pipeline [find-device!
                scan!
