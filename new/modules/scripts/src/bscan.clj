@@ -198,15 +198,12 @@
               process? states
               :else (recur states))))]
     (bp/shell "stty icanon echo")
-    (let [pdf (a/<!
-               (ctx/with-context channel/context
-                 (-> (m/alet [file-excs (m/sequence file-threads)]
-                       (ctx/with-context exc/context
-                         (let [pdfs (->> (m/sequence file-excs)
-                                         (m/extract)
-                                         (mapv #(get-in % [:ocr-file :pdf])))]
-                           (bp/sh (concat ["pdfunite"] pdfs ["out.pdf"]))))))))]
-      (println pdf))))
+    (let [pdfs (->> (a/<! (ctx/with-context channel/context
+                            (m/sequence file-threads)))
+                    (m/sequence)
+                    (m/extract)
+                    (mapv #(get-in % [:ocr-file :pdf])))]
+        (bp/sh (concat ["pdfunite"] pdfs ["out.pdf"])))))
 
 (def pipeline [find-device!
                scan!
