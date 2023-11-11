@@ -1,8 +1,9 @@
 (ns bscan
   (:require
+   [babashka.cli :as cli]
    [babashka.fs :as fs]
    [babashka.process :as bp]
-   [cats.context :as ctx]
+   [cats.context :as context]
    [cats.core :as m]
    [cats.labs.channel :as channel]
    [cats.monad.exception :as exc]
@@ -161,50 +162,52 @@
 (defn continuous-scan!
   "Scanning continously until scanner fails.
   My scanner is a feed through scanner and --batch doesn't work, so here's the manual process."
-  [{:keys [out] :as opts} state]
-  (bp/shell "stty -icanon -echo")
-  (println "Continous scan")
-  (println)
-  (println "Press `esc` or `q` to process scans.")
-  (println "Press `C-c` to exit.")
-  (println)
-  (println "Insert paper into the feeder and press `Enter` to scan.")
-  (println)
-  (let [file-threads
-        (loop [states []]
-          (let [k (.read System/in)
-                char (case k
-                       27 :esc
-                       113 \q
-                       10 :enter
-                       nil)
-                process? (#{:esc \q} char)
-                continue? (#{:enter} char)]
-            (cond
-              continue? (do
-                          (when-not (:verbose? opts)
-                            (print "Scanning document...")
-                            (flush))
-                          (let [document-state (scan! opts state)
-                                thread (a/thread (execute-pipeline {} process-pipeline document-state))]
-
+  [opts state]
+  (let [out (get-in opts [:opts :out])]
+    (bp/shell "stty -icanon -echo")
+    (println "Continous scan")
+    (println)
+    (println "Press `esc` or `q` to process scans.")
+    (println "Press `C-c` to exit.")
+    (println)
+    (println "Insert paper into the feeder and press `Enter` to scan.")
+    (println)
+    (let [file-threads
+          (loop [states []]
+            (let [k (.read System/in)
+                  char (case k
+                         27 :esc
+                         113 \q
+                         10 :enter
+                         nil)
+                  process? (#{:esc \q} char)
+                  continue? (#{:enter} char)]
+              (cond
+                continue? (do
                             (when-not (:verbose? opts)
-                              (print " ...Scan complete \n")
+                              (print "Scanning document...")
                               (flush))
-                            (print)
-                            (println "Insert paper into the feeder and press `Enter` to scan.")
-                            (println)
-                            (recur (conj states thread))))
-              process? states
-              :else (recur states))))]
-    (bp/shell "stty icanon echo")
-    (let [[pdf-excs _failed-pds] (->> (a/<! (m/sequence file-threads))
-                                      (group-by exc/success?)
-                                      (vals))
-          pdfs (->> (m/sequence pdf-excs)
-                    (m/extract)
-                    (mapv #(get-in % [:ocr-file :pdf])))]
-      (bp/sh (concat ["pdfunite"] pdfs ["out.pdf"])))))
+                            (let [document-state (scan! opts state)
+                                  thread (a/thread (execute-pipeline {} process-pipeline document-state))]
+
+                              (when-not (:verbose? opts)
+                                (print " ...Scan complete \n")
+                                (flush))
+                              (print)
+                              (println "Insert paper into the feeder and press `Enter` to scan.")
+                              (println)
+                              (recur (conj states thread))))
+                process? states
+                :else (recur states))))]
+      (bp/shell "stty icanon echo")
+      (let [[pdf-excs _failed-pds] (->> (context/with-context channel/context
+                                          (a/<! (m/sequence file-threads)))
+                                        (group-by exc/success?)
+                                        (vals))
+            pdfs (->> (m/sequence pdf-excs)
+                      (m/extract)
+                      (mapv #(get-in % [:ocr-file :pdf])))]
+        (prn (bp/sh (concat ["pdfunite"] pdfs [out])))))))
 
 (def pipeline [find-device!
                scan!
@@ -215,12 +218,17 @@
                        ["Scanning document..."] scan! ["Scanned document" :scanned-file str]
                        ["Processing scanned file..."] process! ["Processed document" :processed-file str]])
 
+(defn main [opts]
+  (-> (find-device! opts {})
+      (m/bind #(continuous-scan! opts %))))
+
 ;; Main ------------------------------------------------------------------------
 
-(defn -main []
-  (let [opts {}]
-    (-> (find-device! opts {})
-        (m/bind #(continuous-scan! opts %)))))
+(def table
+  [{:cmds [] :fn main :args->opts [:out]}])
+
+(defn -main [& args]
+  (cli/dispatch table args))
 
 (when (= *file* (System/getProperty "babashka.file"))
   (apply -main *command-line-args*))
