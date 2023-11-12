@@ -154,13 +154,13 @@
   [opts state]
   (let [out (get-in opts [:opts :out])]
     (bp/shell "stty -icanon -echo")
-    (println "Continous scan")
-    (println)
-    (println "Press `esc` or `q` to process scans.")
-    (println "Press `C-c` to exit.")
-    (println)
-    (println "Insert paper into the feeder and press `Enter` to scan.")
-    (println)
+    (println "Continous scan
+
+Press `esc` or `q` to process scans.
+Press `C-c` to exit.
+
+Insert paper into the feeder and press `Enter` to scan.
+")
     (let [file-threads
           (loop [states []]
             (let [k (.read System/in)
