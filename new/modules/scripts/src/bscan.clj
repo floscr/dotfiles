@@ -7,7 +7,6 @@
    [cats.core :as m]
    [cats.labs.channel :as channel]
    [cats.monad.exception :as exc]
-   [cats.monad.maybe :as maybe]
    [clojure.core.async :as a]
    [clojure.string :as str]
    [lib.fp]
@@ -211,10 +210,11 @@ Insert paper into the feeder and press `Enter` to scan.
   (let [result (if-let [out (get-in opts [:opts :out])]
                  (-> (find-device! opts {})
                      (m/bind #(continuous-scan! opts %))
-                     (m/bind (exc/success (str "Successfully scanned to: " out))))
+                     (m/bind (fn [_] (exc/success (str "Successfully scanned to: " out)))))
                  (failure :kind :error/no-out-file
                           :message "Provide pdf out file as argument."))]
-    (exc-print! opts result)))
+    (exc-print! opts result)
+    result))
 
 ;; Main ------------------------------------------------------------------------
 
