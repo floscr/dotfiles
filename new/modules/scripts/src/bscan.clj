@@ -136,14 +136,6 @@
       (m/return (assoc state :ocr-file {:pdf (lib.fs/rename-extension output "pdf")
                                         :pdf-txt (lib.fs/rename-extension output "pdf.txt")})))))
 
-;; (defn copy-final-file! [_opts {:keys [scanned-file processed-file ocr-file] :as state}]
-;;   (doall (->> [scanned-file
-;;                processed-file
-;;                (:pdf ocr-file)]
-;;               (eduction (filter some?)
-;;                         (map fs/delete-if-exists))))
-;;   (exc/success (dissoc state :scanned-file :processed-file :ocr-file)))
-
 (defn cleanup! [_opts {:keys [scanned-file processed-file ocr-file] :as state}]
   (doall (->> [scanned-file
                processed-file
@@ -155,9 +147,6 @@
 
 (def process-pipeline [process!
                        ocr!])
-
-(m/mlet [x (exc/success 1)]
-  (m/return (maybe/just x)))
 
 (defn continuous-scan!
   "Scanning continously until scanner fails.
@@ -219,12 +208,13 @@
                        ["Processing scanned file..."] process! ["Processed document" :processed-file str]])
 
 (defn main [opts]
-  (->> (if-let [_out (get-in opts [:opts :out])]
-         (-> (find-device! opts {})
-             (m/bind #(continuous-scan! opts %)))
-         (failure :kind :error/no-out-file
-                  :message "Provide pdf out file as argument."))
-       (exc-print! opts)))
+  (let [result (if-let [out (get-in opts [:opts :out])]
+                 (-> (find-device! opts {})
+                     (m/bind #(continuous-scan! opts %))
+                     (m/bind (exc/success (str "Successfully scanned to: " out))))
+                 (failure :kind :error/no-out-file
+                          :message "Provide pdf out file as argument."))]
+    (exc-print! opts result)))
 
 ;; Main ------------------------------------------------------------------------
 
