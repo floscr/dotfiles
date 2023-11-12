@@ -21,6 +21,7 @@ in
           pkg
           unpaper
           tesseract
+          poppler_utils # pdfunite
         ];
       }
     );
