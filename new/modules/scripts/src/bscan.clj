@@ -207,7 +207,7 @@
             pdfs (->> (m/sequence pdf-excs)
                       (m/extract)
                       (mapv #(get-in % [:ocr-file :pdf])))]
-        (prn (bp/sh (concat ["pdfunite"] pdfs [out])))))))
+        (lib.shell/sh-exc (concat ["pdfunite"] pdfs [out]))))))
 
 (def pipeline [find-device!
                scan!
@@ -219,8 +219,12 @@
                        ["Processing scanned file..."] process! ["Processed document" :processed-file str]])
 
 (defn main [opts]
-  (-> (find-device! opts {})
-      (m/bind #(continuous-scan! opts %))))
+  (->> (if-let [_out (get-in opts [:opts :out])]
+         (-> (find-device! opts {})
+             (m/bind #(continuous-scan! opts %)))
+         (failure :kind :error/no-out-file
+                  :message "Provide pdf out file as argument."))
+       (exc-print! opts)))
 
 ;; Main ------------------------------------------------------------------------
 
