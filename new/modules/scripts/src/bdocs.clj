@@ -24,8 +24,10 @@
 
 (defn main [opts]
   (if (get-in opts [:opts :out-file])
-    (org-attach/main (assoc-in opts [:opts :attach-dir] attach-dir))
     (main opts)))
+                   (org-attach/main (-> opts
+                                        (assoc-in [:opts :attach-dir] attach-dir)
+                                        (assoc-in [:opts :url] file)))
 
 ;; Main ------------------------------------------------------------------------
 
