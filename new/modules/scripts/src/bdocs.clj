@@ -5,13 +5,25 @@
    [bscan]
    [cats.monad.exception :as exception]
    [lib.fs]
+   [lib.org :as org]
    [lib.shell]
    [lib.web]
-   org-attach))
+   [org-attach]))
 
 ;; Config ----------------------------------------------------------------------
 
+(def attach-file (lib.fs/expand "~/Code/Projects/bbeancount/ressource/documents.org"))
 (def attach-dir (lib.fs/expand "~/Code/Projects/bbeancount/.attach/"))
+
+;; Helpers ---------------------------------------------------------------------
+
+(defn org-document-headline [heading-str properties]
+  (let [ts (org/now-timestamp->str {:type :inactive})]
+    (str "** " heading-str "\n"
+         (org/properties->str
+          (merge properties
+                 {:DATE_CREATED ts
+                  :ORIGINAL_DATE ts})) "\n")))
 
 ;; Main ------------------------------------------------------------------------
 
@@ -23,11 +35,16 @@
         :else (doto println)))))
 
 (defn main [opts]
-  (if (get-in opts [:opts :out-file])
-    (main opts)))
+  (let [file (get-in opts [:opts :out-file])
+        digital? (some? file)
+        org-link (if digital?
                    (org-attach/main (-> opts
                                         (assoc-in [:opts :attach-dir] attach-dir)
                                         (assoc-in [:opts :url] file)))
+                   (main opts))
+        org-text (org-document-headline org-link (cond-> {}
+                                                   (not digital?) (assoc :SCANNED "t")))]
+    (fs/write-lines attach-file [org-text] {:append true})))
 
 ;; Main ------------------------------------------------------------------------
 
