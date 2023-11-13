@@ -5,7 +5,6 @@
    [babashka.http-client :as http]
    [babashka.process :as bp]
    [bscan]
-   [cats.monad.exception :as exception]
    [clojure.core.match :refer [match]]
    [clojure.java.io :as io]
    [clojure.string :as str]
@@ -16,8 +15,6 @@
    [lib.web]))
 
 ;; Config ----------------------------------------------------------------------
-
-(def scan-attach-dir (lib.fs/expand "~/Code/Projects/bbeancount/.attach/"))
 
 (def attach-dir (lib.fs/expand "~/Documents/Org/.attach/"))
 (def clojure-attach-dir (fs/path attach-dir "clojure-attach/"))
@@ -107,15 +104,6 @@
         yank (doto lib.clipboard/set-clip)
         :else (doto println))))
 
-(defn scan [opts]
-  (let [out-file (fs/create-temp-file {:prefix "bscan-" :suffix ".pdf"})
-        yank (get-in opts [:opts :yank])
-        opts (assoc-in opts [:opts :out] out-file)]
-    (when (exception/success? (bscan/main opts))
-      (cond-> (attach-typed [:file out-file] {:attach-dir scan-attach-dir})
-        yank (doto lib.clipboard/set-clip)
-        :else (doto println)))))
-
 (defn help [_]
   (let [help-str (-> ["org_attach <url>"
                       "  --yank          Copy result to clipboard"
@@ -127,7 +115,6 @@
 
 (def table
   [{:cmds ["help"] :fn help}
-   {:cmds ["scan"] :fn scan}
    {:cmds [] :fn main :args->opts [:url]}])
 
 (defn -main [& args]
