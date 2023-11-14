@@ -11,9 +11,7 @@ in
 
   config = mkIf cfg.enable {
     user.packages = with pkgs; [
-      # wrapped babahska doesn't let me start bb repl anymore
-      # Changed here: https://github.com/NixOS/nixpkgs/pull/241119
-      babashka-unwrapped
+      babashka
       unstable.lightningcss # uix
       clj-kondo
       clojure
