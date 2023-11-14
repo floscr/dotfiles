@@ -54,6 +54,7 @@ in
       ZSH_CACHE = "$XDG_CACHE_HOME/zsh";
       ZGEN_DIR = "$XDG_DATA_HOME/zsh";
       ZGEN_SOURCE = "$ZGEN_DIR/zgen.zsh";
+      LOCALE_ARCHIVE = "${pkgs.glibcLocales}/lib/locale/locale-archive";
     };
 
     home.configFile = {
