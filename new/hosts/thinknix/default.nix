@@ -170,6 +170,13 @@ with lib.my;
     defaultLocale = "en_US.UTF-8";
   };
 
+  home.sessionVariables =
+    {
+      LANG = "en_US.UTF-8";
+      LC_CTYPE = "en_US.UTF-8";
+      LC_ALL = "en_US.UTF-8";
+    };
+
   # Automatically log in since the disk is encrypted with a password anyway
   services.xserver.displayManager.autoLogin.enable = true;
   services.xserver.displayManager.autoLogin.user = config.user.name;
