@@ -12,7 +12,6 @@ with lib.my;
   ];
 
   user.packages = with pkgs; [
-    babashka
     appimage-run
     ffmpeg
     jellyfin-media-player
