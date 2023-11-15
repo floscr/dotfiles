@@ -11,7 +11,7 @@ in
 
   config = mkIf cfg.enable {
     user.packages = with pkgs; [
-      babashka
+      pkgs.user.babashka
       unstable.lightningcss # uix
       clj-kondo
       clojure

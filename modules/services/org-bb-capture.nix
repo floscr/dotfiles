@@ -12,7 +12,7 @@ in
     systemd.user.services.org-bb-capture = {
       description = "Org Capture Server";
       serviceConfig = {
-        ExecStart = "${pkgs.babashka}/bin/bb --config /home/floscr/Code/Projects/org_bb_capture/projects/server/bb.edn start";
+        ExecStart = "${pkgs.user.babashka}/bin/bb --config /home/floscr/Code/Projects/org_bb_capture/projects/server/bb.edn start";
       };
       wantedBy = [ "default.target" ];
     };

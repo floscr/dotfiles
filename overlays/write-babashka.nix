@@ -2,7 +2,7 @@ final: previous:
 with final;
 let
   bb = pkgs.writers.writeBash "nix-bb" ''
-    ${pkgs.babashka}/bin/bb \
+    ${pkgs.user.babashka}/bin/bb \
         --deps-root $HOME/.config/dotfiles/new/modules/scripts \
         --config $HOME/.config/dotfiles/new/modules/scripts/bb.edn \
         "$@"
