@@ -92,7 +92,7 @@ in
               echo "HotPlug: Connecting LG Display"
               connectLG
               setup
-            elif [[ "$display_count" -eq 0 ]]; then
+            elif [[ "$display_count" -eq 0 ]]
               echo "HotPlug: Solo Laptop Display"
               disconnect
               setup

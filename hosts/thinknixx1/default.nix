@@ -87,6 +87,7 @@ with lib.my;
 
   modules-new = {
     scripts = {
+      bhotplug.enable = true;
       bscan.enable = true;
       screen-capture.enable = true;
       monitor_brightness.enable = true;

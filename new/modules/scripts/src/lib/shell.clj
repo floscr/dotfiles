@@ -38,6 +38,9 @@
            (str/trim)
            (str/split-lines))))
 
+(defn whoami []
+  (some-> (lines "whoami") first))
+
 (defn md5 [path]
   (when-let [[result] (lines ["md5sum" path])]
     (-> (str/split result #" ")
