@@ -421,8 +421,8 @@ listMyServerCmds = spawn ("echo '" ++ asmc ++ "'") where asmc = unlines $ "Avail
 
 myStartupHook :: X ()
 myStartupHook = do
-  spawn "systemctl --user restart setup-monitor.service"
-  spawn "systemctl --user start setup-keyboard.service"
+  spawn "xsetroot -cursor_name left_ptr"
+  spawn "xrdb -merge /home/floscr/.config/xtheme/80-dpi"
 
 ------------------------------------------------------------------------
 -- Mouse bindings:
