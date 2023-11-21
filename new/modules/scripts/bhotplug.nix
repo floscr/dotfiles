@@ -20,8 +20,8 @@ in
         systemd.user.services.bhotplug = {
           description = "Load my monitor modifications";
           path = with pkgs; [
+            babashka
             coreutils
-            gnugrep
             systemd
             xorg.xrandr
             xorg.xsetroot
@@ -30,7 +30,7 @@ in
           serviceConfig = {
             Type = "oneshot";
             RemainAfterExit = true;
-            ExecStart = "${pkgs.user.babashka}/bin/bb /home/floscr/.config/dotfiles/new/modules/scripts/src/bhotplug.clj";
+            ExecStart = "${pkgs.babashka}/bin/bb /home/floscr/.config/dotfiles/new/modules/scripts/src/bhotplug.clj";
           };
           wantedBy = [ "default.target" ];
         };

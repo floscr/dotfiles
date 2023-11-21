@@ -11,8 +11,11 @@ in
   config = mkIf cfg.enable {
     systemd.user.services.org-bb-capture = {
       description = "Org Capture Server";
+      path = with pkgs; [
+        babashka
+      ];
       serviceConfig = {
-        ExecStart = "${pkgs.user.babashka}/bin/bb --config /home/floscr/Code/Projects/org_bb_capture/projects/server/bb.edn start";
+        ExecStart = "${pkgs.babashka}/bin/bb --config /home/floscr/Code/Projects/org_bb_capture/projects/server/bb.edn start";
       };
       wantedBy = [ "default.target" ];
     };
