@@ -10,7 +10,7 @@ in
   };
 
   config = mkIf cfg.enable (
-    let restartHotplugServiceCmd = "${pkgs.systemd}/bin/systemctl --user restart setup-monitor.service";
+    let restartHotplugServiceCmd = "${pkgs.systemd}/bin/systemctl --user restart bhotplug.service";
     in
     {
       nixpkgs.overlays = [ inputs.emacs-overlay.overlay ];
