@@ -59,12 +59,12 @@
 (defn hotplug-cmd [_opts]
   (let [outputs (connected-outputs)]
     (cond
-      (outputs "DP-3") (do
-                         (connect-lg!)
-                         (bp/sh "systemctl --user stop picom.service"))
-      :else (do
-              (connect-internal!)
-              (bp/sh "systemctl --user start picom.service")))
+      (outputs "DP-3") (do (connect-lg!)
+                           (bp/sh "systemctl --user stop picom.service")
+                           (println "Connecting to LG External Display."))
+      :else (do (connect-internal!)
+                (bp/sh "systemctl --user start picom.service")
+                (println "Disconnecting displays, activating internal display.")))
     (on-connect!)))
 
 ;; Main ------------------------------------------------------------------------
