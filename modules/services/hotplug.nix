@@ -25,14 +25,6 @@ in
         };
       };
 
-      modules.bindings.items = [
-        {
-          binding = "F12";
-          command = restartHotplugServiceCmd;
-          description = "Hotplug Monitor";
-        }
-      ];
-
       # Jesus christ udev
       # https://superuser.com/a/1401322
       services.udev.extraRules = ''ACTION=="change", KERNEL=="card0", SUBSYSTEM=="drm", ENV{HOTPLUG}=="1", ENV{SYSTEMD_USER_WANTS}+="hotplug-monitor@$env{SEQNUM}.service", TAG+="systemd"'';
