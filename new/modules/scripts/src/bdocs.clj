@@ -27,29 +27,29 @@
 
 ;; Main ------------------------------------------------------------------------
 
+(defn main [opts]
+  (let [file (get-in opts [:opts :out-file])
+        digital? (not (get-in opts [:opts :scan?]))
+        org-link (org-attach/main (-> opts
+                                      (assoc-in [:opts :attach-dir] attach-dir)
+                                      (assoc-in [:opts :url] file)))
+        org-text (org-document-headline org-link (cond-> {}
+                                                   (not digital?) (assoc :SCANNED "t")))]
+    (fs/write-lines attach-file [org-text] {:append true})))
+      
 (defn scan- [opts]
   (let [out-file (fs/create-temp-file {:prefix "bscan-" :suffix ".pdf"})
         opts (assoc-in opts [:opts :out] out-file)]
     (when (exception/success? (bscan/main opts))
-      (cond-> (org-attach/attach-typed [:file out-file] {:attach-dir attach-dir})
-        :else (doto println)))))
-
-(defn main [opts]
-  (let [file (get-in opts [:opts :out-file])
-        digital? (some? file)
-        org-link (if digital?
-                   (org-attach/main (-> opts
-                                        (assoc-in [:opts :attach-dir] attach-dir)
-                                        (assoc-in [:opts :url] file)))
-                   (main opts))
-        org-text (org-document-headline org-link (cond-> {}
-                                                   (not digital?) (assoc :SCANNED "t")))]
-    (fs/write-lines attach-file [org-text] {:append true})))
+      (main (-> opts
+                (assoc-in [:opts :out-file] out-file)
+                (assoc-in [:opts :scan?] true))))))
 
 ;; Main ------------------------------------------------------------------------
 
 (def table
-  [{:cmds [] :fn main :args->opts [:out-file]}])
+  [{:cmds ["scan"] :fn scan-}
+   {:cmds [] :fn main :args->opts [:out-file]}])
 
 (defn -main [& args]
   (cli/dispatch table args))
