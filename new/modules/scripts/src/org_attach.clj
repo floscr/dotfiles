@@ -45,25 +45,32 @@
  [& {:as opts}]
  (fs/file (fs/create-temp-file (merge {:prefix "org-attach"} opts))))
 
+(defn download-url-file! [{:keys [headers body]}]
+  (let [content-type (get headers "content-type")
+        [_ ext] (re-find #".+/(\w+)" content-type)]
+    (if (re-find #"^text/html" content-type)
+      [:error "Pased url is html"]
+      (let [file (org-attach-temp-file! :suffix (str "." ext))]
+        (io/copy body file)
+        [:file file]))))
+
+(defn download-twitter! [url]
+  (let [dir (fs/create-temp-dir)
+        filename "video.mp4"
+        output-file (fs/path dir filename)
+        nitter-url (lib.web/twitter-url->nitter url)]
+    (bp/sh {:dir dir} "yt-dlp" nitter-url "-o" filename)
+    (if (fs/exists? output-file)
+      [:file output-file]
+      [:error (str "Could not download file " url " " output-file)])))
+
 (defn download-url [[_ url]]
   (let [resp (http/get url {:throw false
                             :as :stream})]
     (match [(uri/uri url) resp]
-      [{:host "twitter.com"} {:status 200}] (let [dir (fs/create-temp-dir)
-                                                  filename "video.mp4"
-                                                  output-file (fs/path dir filename)
-                                                  nitter-url (lib.web/twitter-url->nitter url)]
-                                              (bp/sh {:dir dir} "yt-dlp" nitter-url "-o" filename)
-                                              (if (fs/exists? output-file)
-                                                [:file output-file]
-                                                [:error (str "Could not download file " url " " output-file)]))
-      [_ {:status 200 :headers headers :body body}] (let [content-type (get headers "content-type")
-                                                          [_ ext] (re-find #".+/(\w+)" content-type)]
-                                                      (if (re-find #"^text/html" content-type)
-                                                        [:error "Pased url is html"]
-                                                        (let [file (org-attach-temp-file! :suffix (str "." ext))]
-                                                          (io/copy body file)
-                                                          [:file file])))
+           [{:host "twitter.com"} {:status 200}] (download-twitter! url)
+      [_ {:status 200 :headers headers :body body}] (download-url-file! {:headers headers
+                                                                         :body body})
       :else [:error resp])))
 
 (defn md5-filename [file]
@@ -124,6 +131,7 @@
   (apply -main *command-line-args*))
 
 (comment
-  (-main "https://twitter.com/Rainmaker1973/status/1713574100638065097")
+  (attach-typed [:url "https://twitter.com/ninja_padrino/status/1711566146733052156"] {})
+  (-main "https://twitter.com/ninja_padrino/status/1711566146733052156")
   (-main)
   nil)
