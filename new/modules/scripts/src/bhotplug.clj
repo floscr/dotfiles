@@ -51,7 +51,7 @@
   (bp/sh "xsetroot -cursor_name left_ptr")
   (bp/sh "/etc/profiles/per-user/floscr/bin/emacsclient -e \"(my-ui|adjust-ui-to-display)\"")
   (bp/sh "/etc/profiles/per-user/floscr/bin/reloadWallpaper")
-  (bp/sh "xrdb -merge ~/.config/xtheme/80-dpi")
+  (bp/sh "xrdb -merge /home/floscr/.config/xtheme/80-dpi")
   (bp/sh "/etc/profiles/per-user/floscr/bin/xmonadctl restart"))
 
 ;; Commands --------------------------------------------------------------------
