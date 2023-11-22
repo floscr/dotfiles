@@ -34,6 +34,14 @@ in
           };
           wantedBy = [ "default.target" ];
         };
+
+        modules.bindings.items = [
+          {
+            xmonadBinding = "<F12>";
+            command = "${pkg}/bin/bhotplug";
+            description = "Hotplug Monitor";
+          }
+        ];
       }
     );
 }
