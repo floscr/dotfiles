@@ -15,13 +15,14 @@
   (->> (shell/lines "bluetoothctl devices")
        (map split-device-info)))
 
+(defn bluetooth-enable! [on?]
+  (bp/sh ["bluetooth" (if on? "on" "off")]))
+
 (defn rofi-connect! []
+  (bluetooth-enable! true)
   (let [{:keys [id]} (rofi/select (devices) {:prompt "BT connect"
                                              :to-title :name})]
     (bp/sh ["bluetoothctl" "connect" id])))
-
-(defn bluetooth-enable! [on?]
-  (bp/sh ["bluetooth" (if on? "on" "off")]))
 
 (comment
   (rofi-connect!)
