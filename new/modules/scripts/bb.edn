@@ -1,3 +1,5 @@
 {:paths ["src" "src/lib"]
  :deps {funcool/cats {:mvn/version "2.4.2"}
-        lambdaisland/uri {:mvn/version "1.13.95"}}}
+        lambdaisland/uri {:mvn/version "1.13.95"}
+        tick/tick {:git/url "https://github.com/juxt/tick.git"
+                   :sha "f64344801839ed1428db01d012bcd6d3a30093e6"}}}
