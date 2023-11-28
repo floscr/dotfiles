@@ -117,7 +117,7 @@
 (def table
   [;; Server
    {:cmds ["serve"] :fn serve-cmd}
-   ;; Client])
+   ;; Client
    {:cmds ["start"] :fn start-cmd}
    {:cmds ["stop"] :fn stop-cmd}])
 
