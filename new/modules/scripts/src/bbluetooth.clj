@@ -7,6 +7,18 @@
 
 ;; Helpers ---------------------------------------------------------------------
 
+(defn bose-qc-35-prepare-connection!
+  "Some extra settings to ensure high quality bluetooth is available for bose qc35."
+  []
+  (->> ["power on"
+        "discoverable on"
+        "pairable on"
+        "agent NoInputNoOutput"
+        "default-agent"
+        "connect 04 :52:C7:C6:1B:68"]
+       (mapv #(bp/sh ["bluetoothctl" %])))
+  (bp/sh "pacmd set-card-profile bluez_card.04_52_C7_C6_1B_68 a2dp_sink_aac"))
+
 (defn split-device-info [device-str]
   (let [[_ id name] (re-find #"Device (\S+) (.+)$" device-str)]
     {:id id :name name}))
@@ -18,11 +30,16 @@
 (defn bluetooth-enable! [on?]
   (bp/sh ["bluetooth" (if on? "on" "off")]))
 
+(defn device-connect! [{:keys [name id]}]
+  (bluetooth-enable! true)
+  (when (= name "Flo Bose")
+    (bose-qc-35-prepare-connection!))
+  (bp/sh ["bluetoothctl" "connect" id]))
+
 (defn rofi-connect! []
   (bluetooth-enable! true)
-  (let [{:keys [id]} (rofi/select (devices) {:prompt "BT connect"
-                                             :to-title :name})]
-    (bp/sh ["bluetoothctl" "connect" id])))
+  (-> (rofi/select (devices) {:prompt "BT connect" :to-title :name})
+      (device-connect!)))
 
 (comment
   (rofi-connect!)
@@ -43,6 +60,7 @@
 
 (def table
   [{:cmds [] :fn rofi-connect-cmd}
+   {:cmds ["connect"] :fn rofi-connect-cmd :args->opts [:device]}
    {:cmds ["rofi"] :fn rofi-connect-cmd}
    {:cmds ["on"] :fn bluetootho-on-cmd}
    {:cmds ["off"] :fn bluetootho-off-cmd}])
