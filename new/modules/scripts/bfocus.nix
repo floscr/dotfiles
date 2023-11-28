@@ -21,7 +21,7 @@ in
         # Lightweight alternative to query focus time
         (writeScriptBin "bfocus-time" ''
           #!${stdenv.shell}
-          ${wget}/bin/wget --method=GET 'http://localhost:${port}/print-current-timer' -qO-
+          ${wget}/bin/wget --method=GET 'http://localhost:${toString port}/print-current-timer' -qO-
           exit 0
         '')
       ];
