@@ -100,11 +100,26 @@
     (println "serving at port" port)
     @(promise)))
 
+;; Client ----------------------------------------------------------------------
+
+(defn send-command! [command opts]
+  (let [port (get-in opts [:opts :port] (:port config))]
+    (http/get (str "http://localhost:" port "/" command))))
+
+(defn start-cmd [opts]
+  (send-command! "start" opts))
+
+(defn stop-cmd [opts]
+  (send-command! "stop" opts))
+
 ;; Main ------------------------------------------------------------------------
 
 (def table
-  ;; Server
-  [{:cmds ["serve"] :fn serve-cmd}])
+  [;; Server
+   {:cmds ["serve"] :fn serve-cmd}
+   ;; Client])
+   {:cmds ["start"] :fn start-cmd}
+   {:cmds ["stop"] :fn stop-cmd}])
 
 (defn -main [& args]
   (cli/dispatch table args))
