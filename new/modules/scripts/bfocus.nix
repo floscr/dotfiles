@@ -25,6 +25,15 @@ in
           exit 0
         '')
       ];
+      systemd.user.services.bfocus-server = {
+        enable = true;
+        description = "Focus timer";
+        serviceConfig = {
+          ExecStart = "${pkg}/bin/bfocus serve --port ${toString port}";
+        };
+        wantedBy = [ "default.target" ];
+      };
+
     }
   );
 }
