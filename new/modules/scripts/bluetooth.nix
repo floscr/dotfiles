@@ -24,7 +24,11 @@ in
         modules.bindings.items = [
           {
             description = "Bluetooth: Connect device";
-            command = "${cmd} connect";
+            command = "${cmd} rofi";
+          }
+          {
+            xmonadBinding = "M-o a";
+            command = "${cmd} rofi";
           }
           {
             description = "Bluetooth: Off";
