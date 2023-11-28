@@ -60,7 +60,7 @@
 (defn print-current-timer-route [opts]
   (if-let [duration (current-timer!)]
     {:status 200
-     :body (lib.time/format-duration duration)}
+     :body (str (lib.time/format-duration duration) "\n")}
     {:status 500}))
 
 (comment

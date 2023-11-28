@@ -29,6 +29,10 @@ Config { font = "xft:Iosevka Mono-10:medium"
 
                 , Run Com "bose_battery_level" ["04:52:C7:C6:1B:68"] "bose_battery_level" 50
 
+                , Run Com "/etc/profiles/per-user/floscr/bin/bfocus-time" [] "timer" 10
+
+                -- , Run Com "wget" ["--method=GET" "'http://localhost:42069/print-current-timer'" "-qO-"] "" 10
+
                 , Run Battery [
                         "--template" , "<acstatus>"
                         , "--Low"      , "25"
@@ -52,5 +56,5 @@ Config { font = "xft:Iosevka Mono-10:medium"
         ]
         , sepChar = "%"
         , alignSep = "}{"
-        , template = " %UnsafeStdinReader% } { %bose_battery_level%     %multicpu%     %memory%     %disku%     %date%     %battery% "
+        , template = " %UnsafeStdinReader% } { %timer% %bose_battery_level%     %multicpu%     %memory%     %disku%     %date%     %battery% "
         }

@@ -87,6 +87,7 @@ with lib.my;
 
   modules-new = {
     scripts = {
+      bfocus.enable = true;
       bhotplug.enable = true;
       bscan.enable = true;
       screen-capture.enable = true;
