@@ -2,6 +2,7 @@
   (:require
    [cats.monad.either :as either]
    [cats.core :as m]
+   [babashka.http-client :as http]
    [lib.time]
    [org.httpkit.server :as server]
    [tick.core :as t]))
@@ -20,38 +21,56 @@
 (defonce !state (atom {:config config}))
 
 (defn set-current-timer [{:keys [start duration]} state]
-  (assoc state :time/current {:start (or start (t/now))
+  (assoc state :time/current {:status :timer/active
+                              :start (or start (t/now))
                               :duration (or duration (:default-duration config))}))
+
+(defn remove-current-timer [state]
+  (dissoc state :time/current))
 
 (defn remaining-timer-duration [state]
   (when-let [{:keys [start duration]} (:time/current state)]
-    (t/between (t/now)
-               (lib.time/+ start duration))))
+    (t/between (t/now) (lib.time/+ start duration))))
 
-(defn current-timer [state]
-  (or (some-> (remaining-timer-duration state)
-              (either/right))
-      (either/left :error/no-timer)))
-
-;; Routes ----------------------------------------------------------------------
+(defn current-timer! []
+  (remaining-timer-duration @!state))
 
 (defn start-timer! [opts]
   (->> (set-current-timer opts @!state)
        (reset! !state)))
 
+(defn stop-timer! [opts]
+  (->> (remove-current-timer @!state)
+       (reset! !state)))
+
+;; Routes ----------------------------------------------------------------------
+
+(defn main-route [opts]
+  {:status 200
+   :body "Hello"})
+
+(defn print-current-timer-route [opts]
+  (if-let [duration (current-timer!)]
+    {:status 200
+     :body (lib.time/format-duration duration)}
+    {:status 500}))
+
 (comment
   (start-timer! {})
-  (m/mlet [duration (current-timer @!state)]
-    (m/return (lib.time/format-duration duration)))
+  (stop-timer! {})
+  (current-timer!)
+  (print-current-timer-route {})
   nil)
-
 
 ;; Server ----------------------------------------------------------------------
 
 (def routes
   [{:path     "/"
     :method   :get
-    :response ()}])
+    :response main-route}
+   {:path "/print-current-timer"
+    :method :get
+    :response print-current-timer-route}])
 
 (defn server-start! []
   (server/run-server #(ruuter/route routes %) {:port (:port config)}))
@@ -81,4 +100,6 @@
                                                       :event-logger println
                                                       :warn-logger println
                                                       :error-logger println})
-         (reset! srv))))
+         (reset! srv)))
+
+  (http/get "http://localhost:42069/"))
