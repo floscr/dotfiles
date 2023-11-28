@@ -49,6 +49,14 @@
   {:status 200
    :body "Hello"})
 
+(defn start-route [opts]
+  (start-timer! opts)
+  {:status 200})
+
+(defn stop-route [opts]
+  (stop-timer! opts)
+  {:status 200})
+
 (defn print-current-timer-route [opts]
   (if-let [duration (current-timer!)]
     {:status 200
@@ -68,6 +76,12 @@
   [{:path     "/"
     :method   :get
     :response main-route}
+   {:path "/start"
+    :method :get
+    :response start-route}
+   {:path "/stop"
+    :method :get
+    :response stop-route}
    {:path "/print-current-timer"
     :method :get
     :response print-current-timer-route}])
@@ -102,4 +116,6 @@
                                                       :error-logger println})
          (reset! srv)))
 
-  (http/get "http://localhost:42069/"))
+  (http/get "http://localhost:42069/start")
+  (http/get "http://localhost:42069/stop")
+  (http/get "http://localhost:42069/print-current-timer"))
