@@ -1,7 +1,6 @@
 (ns bfocus
   (:require
-   [cats.monad.either :as either]
-   [cats.core :as m]
+   [babashka.cli :as cli]
    [babashka.http-client :as http]
    [lib.time]
    [org.httpkit.server :as server]
@@ -86,21 +85,32 @@
     :method :get
     :response print-current-timer-route}])
 
-(defn server-start! []
-  (server/run-server #(ruuter/route routes %) {:port (:port config)}))
+(defn server-start! [{:keys [port]
+                      :or {port (:port config)}}]
+  (server/run-server #(ruuter/route routes %) {:port port}))
 
 (defn server-stop! [srv]
   (srv))
 
 ;; Server ----------------------------------------------------------------------
 
-(defn main []
-  (server-start!)
-  (println "serving" (:server-url config))
-  @(promise))
+(defn serve-cmd [opts]
+  (let [port (get-in opts [:opts :port] (:port config))]
+    (server-start! {:port port})
+    (println "serving at port" port)
+    @(promise)))
+
+;; Main ------------------------------------------------------------------------
+
+(def table
+  ;; Server
+  [{:cmds ["serve"] :fn serve-cmd}])
+
+(defn -main [& args]
+  (cli/dispatch table args))
 
 (when (= *file* (System/getProperty "babashka.file"))
-  (main))
+  (apply -main *command-line-args*))
 
 ;; Repl ------------------------------------------------------------------------
 
