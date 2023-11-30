@@ -423,6 +423,7 @@ myStartupHook :: X ()
 myStartupHook = do
   spawn "xsetroot -cursor_name left_ptr"
   spawn "xrdb -merge /home/floscr/.config/xtheme/80-dpi"
+  spawn "systemctl restart --user setup-keyboard.service"
 
 ------------------------------------------------------------------------
 -- Mouse bindings:
