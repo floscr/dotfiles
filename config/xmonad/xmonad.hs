@@ -24,6 +24,7 @@ import           XMonad.Actions.GroupNavigation      (Direction (Backward, Forwa
 import           XMonad.Actions.Navigation2D
 import           XMonad.Actions.TagWindows           (addTag, delTag, hasTag)
 import           XMonad.Actions.WithAll              (killAll, sinkAll)
+import           XMonad.Actions.EasyMotion           (selectWindow)
 
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.DynamicProperty        (dynamicPropertyChange)
@@ -302,6 +303,9 @@ myKeys conf@(XConfig { XMonad.modMask = modMask }) =
 
        -- Quit xmonad
        , ((modMask .|. shiftMask .|. controlMask, xK_q), io (exitWith ExitSuccess))
+
+       -- Easymotion
+       , ((modMask, xK_period), selectWindow def >>= (`whenJust` windows . W.focusWindow))
 
        -- Reload xmonad
        , ((modMask .|. shiftMask, xK_r)                , restart "xmonad" True)
