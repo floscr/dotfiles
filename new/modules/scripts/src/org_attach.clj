@@ -68,7 +68,7 @@
   (let [resp (http/get url {:throw false
                             :as :stream})]
     (match [(uri/uri url) resp]
-           [{:host "twitter.com"} {:status 200}] (download-twitter! url)
+           [{:host "twitter.com"} _] (download-twitter! url)
       [_ {:status 200 :headers headers :body body}] (download-url-file! {:headers headers
                                                                          :body body})
       :else [:error resp])))
