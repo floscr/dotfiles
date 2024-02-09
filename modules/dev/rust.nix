@@ -13,6 +13,10 @@ in
     user.packages = with pkgs; [
       rustup
       rust-analyzer
+      rustfmt
+      rnix-lsp
+      racer
+      clippy
     ];
 
     env.RUSTUP_HOME = "$XDG_DATA_HOME/rustup";
