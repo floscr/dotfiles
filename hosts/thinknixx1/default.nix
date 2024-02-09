@@ -148,10 +148,9 @@ with lib.my;
       tools.enable = true;
       godot.enable = true;
       node.enable = true;
-      nim.enable = true;
-      docker.enable = true;
       nix.enable = true;
       clojure.enable = true;
+      rust.enable = true;
     };
     desktop = {
       xmonad.enable = true;
