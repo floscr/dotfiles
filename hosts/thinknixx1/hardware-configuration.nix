@@ -63,8 +63,8 @@
       # libvdpau-va-gl
 
       # # Vulkan
-      # amdvlk
-      # vulkan-loader
+      amdvlk
+      vulkan-loader
     ];
   };
 
