@@ -1,6 +1,7 @@
 (ns convert-html
   (:require
    [babashka.pods :as pods]
+   [clojure.pprint :refer [pprint]]
    [clojure.string :as str]
    [lib.clipboard :as clipboard]))
 
@@ -38,4 +39,4 @@
 
 (-> (clipboard/get-clip "primary")
     (->uix)
-    println)
+    (doto clipboard/set-clip))
