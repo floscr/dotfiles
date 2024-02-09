@@ -346,6 +346,7 @@ myKeyboardBindings =
   , ("M-S-f"       , toggleFloat)
   , ("M-f"         , toggleFull)
   , ("M-<Space>"   , spawn "rofi_cmder")
+  , ("M-S-<Space>"   , spawn "/home/floscr/Code/Projects/iced-prompt/run")
   , ("M-'", spawn "rofi-pass -dmenu -theme theme/passmenu.rasi")
   , ("M-S-v"       , spawn "rofi-greenclip")
   , ("M-S-<Return>", namedScratchpadAction myScratchpads "emacs-scratch")
@@ -512,6 +513,8 @@ myManageHook = composeAll
   , manageDocks
   , namedScratchpadManageHook myScratchpads
   , myScratchpadHook
+  , title =? "Iced Query" --> hasBorder False
+  , className =? "Iced Query" --> hasBorder False
   ]
 
 isOverlayWindow :: Query Bool
@@ -565,6 +568,7 @@ manageWindowsHook = composeAll
   , resource =? "kdesktop" --> doIgnore
   , className =? "mpv" --> doFloat
   , className =? "zoom" --> doFloat
+  , className =? "Focus timer" --> floating
 
   -- Gimp
   , ("Gimp" `isPrefixOf`) <$> className <&&> title =? "gimp-action-search-dialog" --> floating
@@ -576,6 +580,8 @@ manageWindowsHook = composeAll
   , className =? "Emacs" <&&> title =? "emacs-float-scratch" --> doFloat
   , className =? "Pavucontrol" --> doFloatToMouseCenter
   , className =? "Dragon" --> doFloatToMouse (0.05, 0.05)
+  -- , className =? "Todos - Iced" --> floating
+  -- , title =? "Todos - Iced" --> doFloat
   ]
  where
   role                 = stringProperty "WM_WINDOW_ROLE"
