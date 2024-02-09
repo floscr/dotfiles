@@ -14,6 +14,9 @@ in
       nodejs-18_x
       yarn
       nodePackages.prettier
+      bun
+      deno
+      pkgs.nodePackages.typescript-language-server
     ];
 
     env.ADBLOCK = "1"; # Stop node packages from showing ads in my darn CLI...
