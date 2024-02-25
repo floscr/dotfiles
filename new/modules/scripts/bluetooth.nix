@@ -31,12 +31,12 @@ in
             command = "${cmd} rofi";
           }
           {
-            description = "Bluetooth: Off";
-            command = "${cmd} off";
-          }
-          {
             description = "Bluetooth: On";
             command = "${cmd} on";
+          }
+          {
+            description = "Bluetooth: Off";
+            command = "${cmd} off";
           }
         ];
       }
