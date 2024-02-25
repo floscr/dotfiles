@@ -59,8 +59,7 @@
 ;; Main ------------------------------------------------------------------------
 
 (def table
-  [{:cmds [] :fn rofi-connect-cmd}
-   {:cmds ["connect"] :fn rofi-connect-cmd :args->opts [:device]}
+  [{:cmds ["connect"] :fn rofi-connect-cmd :args->opts [:device]}
    {:cmds ["rofi"] :fn rofi-connect-cmd}
    {:cmds ["on"] :fn bluetootho-on-cmd}
    {:cmds ["off"] :fn bluetootho-off-cmd}])
