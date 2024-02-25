@@ -2,7 +2,8 @@
 
 with lib;
 with lib.my;
-let cfg = config.modules.desktop.term.alacritty;
+let
+  cfg = config.modules.desktop.term.alacritty;
   inherit (config.modules.theme) fonts;
 in
 {
@@ -56,12 +57,6 @@ in
           };
           size = fonts.terminal.size;
         };
-        keybindings = [
-          { key = "Escape"; mode = "Vi"; action = "ClearSelection"; }
-          { key = "y"; mode = "Vi"; action = "Copy"; }
-          { key = "y"; mode = "Vi"; action = "ClearSelection"; }
-          { key = "N"; mods = "Super"; action = ''SpawnNewInstance''; }
-        ];
         window = {
           dimensions = {
             columns = 81;
