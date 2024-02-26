@@ -2,10 +2,10 @@
 with lib;
 with lib.my;
 let
-  cfg = config.modules-new.scripts.bscan;
+  cfg = config.modules-new.scripts.bbeancount;
 in
 {
-  options.modules-new.scripts.bscan = with my; {
+  options.modules-new.scripts.bbeancount = with my; {
     enable = mkBoolOpt false;
   };
 
