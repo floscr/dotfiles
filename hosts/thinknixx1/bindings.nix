@@ -3,12 +3,9 @@
 {
   modules.bindings.items = [
     {
-      description = "Nautilus";
-      command = "nautilus";
-    }
-    {
-      description = "Boomer";
-      command = "${pkgs.user.boomer}/bin/boomer";
+      description = "Dir: ~";
+      command = "bb /home/floscr/Code/Projects/iced-prompt/scripts/src/file_explorer.clj ~";
+      action = "next";
     }
   ];
 }

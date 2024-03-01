@@ -9,7 +9,7 @@ with lib.my;
     # ./throttled.nix
     ../personal.nix
     ../pitch.nix
-    # ./bindings.nix
+    ./bindings.nix
   ];
 
   # services.openssh.enable = true;
