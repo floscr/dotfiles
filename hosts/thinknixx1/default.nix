@@ -65,6 +65,7 @@ with lib.my;
     appimage-run
     usbutils
     geeqie
+    watchexec
   ] ++ flake-packages;
 
   hardware.logitech.wireless.enable = true;
