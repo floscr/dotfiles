@@ -45,6 +45,7 @@ with lib.my;
 
   user.packages = with pkgs; [
     figma-linux
+    textsnatcher
     calibre
     magic-wormhole
     unzip
