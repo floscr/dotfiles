@@ -44,6 +44,7 @@ with lib.my;
   '';
 
   user.packages = with pkgs; [
+    figma-linux
     calibre
     magic-wormhole
     unzip
