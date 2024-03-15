@@ -13,6 +13,7 @@ in
     user.packages = with pkgs; [
       htop
       jq
+      watchexec
     ];
   };
 }
