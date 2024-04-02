@@ -150,7 +150,7 @@ with lib.my;
     };
     dev = {
       tools.enable = true;
-      godot.enable = true;
+      godot.enable = false;
       node.enable = true;
       nix.enable = true;
       clojure.enable = true;
