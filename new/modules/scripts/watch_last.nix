@@ -31,7 +31,7 @@ in
               sha256 = "sha256-Oq0BZ7700IP/yo5XZm6+iKAwuwu3Z0sMZ+9G4VBl8DQ=";
             };
 
-            vendorSha256 = "sha256-T989LzKmv3KftJkbcdIMvmV72EjpY7Ddxc55OCpI7sM=";
+            vendorHash = "sha256-T989LzKmv3KftJkbcdIMvmV72EjpY7Ddxc55OCpI7sM=";
 
             nativeBuildInputs = [ ];
           })

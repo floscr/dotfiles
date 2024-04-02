@@ -14,7 +14,6 @@ in
       rustup
       rust-analyzer
       rustfmt
-      rnix-lsp
       racer
       clippy
     ];
