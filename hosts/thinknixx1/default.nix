@@ -110,6 +110,7 @@ with lib.my;
     bindings.enable = true;
     shell = {
       atuin.enable = true;
+      tmux.enable = true;
       bat.enable = true;
       sysz.enable = true;
       direnv.enable = true;
