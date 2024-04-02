@@ -59,7 +59,6 @@ with lib.my;
     xournal
     zip
     unrar
-    scdl
     openai-whisper-cpp
     pins.nix-search-cli
     timer
@@ -68,6 +67,7 @@ with lib.my;
     usbutils
     geeqie
     watchexec
+    user.scdl
   ] ++ flake-packages;
 
   hardware.logitech.wireless.enable = true;
