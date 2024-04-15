@@ -192,8 +192,9 @@ with lib.my;
         firefox.enable = true;
         brave.enable = true;
         brave.profiles = [
-          { dir = "Profile 1"; alias = "Pitch"; }
           { dir = "Profile 2"; alias = "Personal"; }
+          { dir = "Profile 3"; alias = "Johanna"; }
+          { dir = "Profile 4"; alias = "Hyma"; }
         ];
       };
       term = {
