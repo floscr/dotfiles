@@ -94,6 +94,7 @@ with lib.my;
       bblock.enable = true;
       bhotplug.enable = true;
       bscan.enable = true;
+      bdocs.enable = true;
       screen-capture.enable = true;
       monitor_brightness.enable = true;
       zzz.enable = true;
