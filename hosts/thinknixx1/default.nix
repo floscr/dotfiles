@@ -9,6 +9,7 @@ with lib.my;
     # ./throttled.nix
     ../personal.nix
     ../pitch.nix
+    ../penpot.nix
     ./bindings.nix
   ];
 
@@ -150,6 +151,7 @@ with lib.my;
       sensors.enable = true;
     };
     dev = {
+      docker.enable = true;
       tools.enable = true;
       godot.enable = false;
       node.enable = true;
