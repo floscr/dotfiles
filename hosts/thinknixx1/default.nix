@@ -10,6 +10,7 @@ with lib.my;
     ../personal.nix
     ../pitch.nix
     ../penpot.nix
+    ../hyma.nix
     ./bindings.nix
   ];
 
