@@ -106,7 +106,7 @@
   (m/mlet [devices (->> (lib.shell/sh-exc "scanimage -L")
                         (m/fmap #(str/split % #"\n")))
            device (lookup-device opts devices)]
-    (m/return {:device device})))
+          (m/return {:device device})))
 
 (defn scan! [_opts {:keys [device] :as state}]
   (m/mlet [scan-temp-file (-> (fs/create-temp-file {:prefix "bscan-"
@@ -118,13 +118,13 @@
                                 "--resolution" "300"
                                 "--format" "pnm"
                                 "--output" scan-temp-file])]
-    (m/return (assoc state :device device
+          (m/return (assoc state :device device
                            :scanned-file scan-temp-file))))
 
 (defn process! [_opts {:keys [scanned-file] :as state}]
   (let [processed-file (lib.fs/rename-extension scanned-file "tiff")]
     (m/mlet [_ (lib.shell/sh-exc ["unpaper" scanned-file processed-file])]
-      (m/return (assoc state :processed-file processed-file)))))
+            (m/return (assoc state :processed-file processed-file)))))
 
 (defn ocr! [_opts {:keys [processed-file ocr-opts] :as state}]
   (let [{:keys [language]
@@ -132,8 +132,8 @@
         [output] (fs/split-ext processed-file)]
     (m/mlet [_ (lib.shell/sh-exc ["tesseract" "-l" language
                                   processed-file output "pdf"])]
-      (m/return (assoc state :ocr-file {:pdf (lib.fs/rename-extension output "pdf")
-                                        :pdf-txt (lib.fs/rename-extension output "pdf.txt")})))))
+            (m/return (assoc state :ocr-file {:pdf (lib.fs/rename-extension output "pdf")
+                                              :pdf-txt (lib.fs/rename-extension output "pdf.txt")})))))
 
 (defn cleanup! [_opts {:keys [scanned-file processed-file ocr-file] :as state}]
   (doall (->> [scanned-file
