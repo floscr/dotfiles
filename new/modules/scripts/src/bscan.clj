@@ -115,6 +115,8 @@
            _ (lib.shell/sh-exc ["scanimage"
                                 "--device" device
                                 "--mode" "Color"
+                                "-x" "210"     ;; width = 210mm (DIN A4 width)
+                                "-y" "297"     ;; height = 297mm (DIN A4 height)
                                 "--resolution" "300"
                                 "--format" "pnm"
                                 "--output" scan-temp-file])]
