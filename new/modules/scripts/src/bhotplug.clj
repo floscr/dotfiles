@@ -1,9 +1,9 @@
 #!/usr/bin/env bb
 (ns bhotplug
   (:require
-    [clojure.string :as str]
-    [babashka.cli :as cli]
-    [babashka.process :as bp]))
+   [clojure.string :as str]
+   [babashka.cli :as cli]
+   [babashka.process :as bp]))
 
 ;; Helpers ---------------------------------------------------------------------
 
@@ -43,8 +43,12 @@
         (map first))
        (into #{})))
 
+(defn usbc-display-connected? []
+  (some? (get (connected-outputs) "DP-3")))
+
 (comment
   (connected-outputs)
+  (usbc-display-connected?)
   nil)
 
 (defn on-connect! []
