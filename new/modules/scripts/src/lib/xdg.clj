@@ -12,7 +12,11 @@
 (defn config-path [& args]
   (path "XDG_CONFIG_HOME" args))
 
+(defn data-path [& args]
+  (path "XDG_DATA_HOME" args))
+
 (comment
   (cache-path)
   (config-path)
+  (data-path)
   nil)
