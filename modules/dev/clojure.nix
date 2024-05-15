@@ -21,6 +21,7 @@ in
       neil
       openjdk17
       unstable.clojure-lsp
+      cljfmt
       zprint
       user.bootleg
     ];
