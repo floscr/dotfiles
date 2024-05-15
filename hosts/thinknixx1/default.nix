@@ -46,6 +46,8 @@ with lib.my;
   '';
 
   user.packages = with pkgs; [
+    arduino
+    arduino-cli
     figma-linux
     textsnatcher
     calibre
@@ -262,7 +264,7 @@ with lib.my;
 
   # Monitor backlight control
   programs.light.enable = true;
-  user.extraGroups = [ "video" ];
+  user.extraGroups = [ "video" "dialout" ];
 
   home.configFile = {
     "gtk-3.0/bookmarks".text = ''
