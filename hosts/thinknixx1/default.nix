@@ -60,6 +60,7 @@ with lib.my;
     jellyfin-media-player
     lsof
     google-chrome
+    chrysalis
     gparted
     xournal
     zip
