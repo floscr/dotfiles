@@ -2,29 +2,38 @@
   (:require
    [babashka.fs :as fs]
    clojure.walk
-   [lib.acf-parser :as acf-parser]))
+   [lib.acf-parser :as acf-parser]
+   [lib.num :as num]
+   [lib.xdg :as xdg]))
 
 ;; Helpers ---------------------------------------------------------------------
 
 (defn steam-apps-dir []
-  (fs/path (System/getenv "XDG_DATA_HOME") "Steam/steamapps"))
+  (xdg/data-path "Steam/steamapps"))
 
 (defn all-steam-games []
-  (let [configs (-> (steam-apps-dir)
-                    (fs/list-dir "*.acf"))]
+  (let [configs (->> (fs/list-dir (steam-apps-dir) "*.acf"))]
     configs))
 
+(defn acf->game-map [acf]
+  {:name (get-in acf ["AppState" "name"])
+   :id (get-in acf ["AppState" "appid"])
+   :last-played (some-> (get-in acf ["AppState" "LastPlayed"])
+                        (num/safe-parse-int))})
+
+(def ignore-steam-apps-with-name #{"Steamworks Common Redistributables"
+                                   "Steam Linux Runtime 2.0 (soldier)"
+                                   "Steam Linux Runtime 3.0 (sniper)"
+                                   "Proton Experimental"
+                                   "Proton 7.0"})
+
 (comment
-  (-> (all-steam-games)
-      (first))
-  ;; => #object[sun.nio.fs.UnixPath 0x372084dd "/home/floscr/.local/share/Steam/steamapps/appmanifest_228980.acf"]
-
   (->> (all-steam-games)
-       (first)
-       (str)
-       (slurp)
-       (acf-parser/parse))
-
+       (eduction
+        (map (comp acf->game-map acf-parser/parse slurp str))
+        (remove #(ignore-steam-apps-with-name (:name %))))
+       (sort-by :last-played)
+       (reverse))
   nil)
 
 (defn run []
