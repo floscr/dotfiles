@@ -1,7 +1,7 @@
 (ns bsteam
   (:require
    [babashka.fs :as fs]
-   [clojure.pprint :refer [pprint]]
+   [cuerdas.core :as str]
    clojure.walk
    [lib.acf-parser :as acf-parser]
    [lib.num :as num]
@@ -37,8 +37,10 @@
 ;; Main ------------------------------------------------------------------------
 
 (defn -main [& args]
-  (-> (list-steam-games)
-      (doto pprint)))
+  (let [games (list-steam-games)
+        names-list (-> (reduce #(str %1 "\n" (:name %2)) "" games)
+                       (str/ltrim))]
+    (println names-list)))
 
 (apply -main *command-line-args*)
 
