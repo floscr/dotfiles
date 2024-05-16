@@ -1,41 +1,35 @@
 (ns lib.acf-parser
   (:require
-   [strojure.parsesso.char :as char]
-   [strojure.parsesso.parser :as p]))
+   [clojure.string :as str]
+   [instaparse.core :as insta]))
 
-(def double-quote (char/is "\""))
+(defn strip-quotes [s]
+  (subs s 1 (dec (count s))))
 
-(def *whitespace (p/*many char/white?))
+;; Inspired by https://wildh4ckademistappeared.wordpress.com/2015/03/10/json-parser-in-19-lines-of-code/
+(def parser
+  (insta/parser "
+ACF = KEY_VALUE_PAIR
+<VALUE> = STRING|OBJECT
+<WHITESPACE> = <#'\\s+'>
+KEY_VALUE_PAIR = STRING WHITESPACE* VALUE
+OBJECT = CURLY_OPEN WHITESPACE* ?[KEY_VALUE_PAIR WHITESPACE* (WHITESPACE* KEY_VALUE_PAIR WHITESPACE*)*] CURLY_CLOSE
+<CURLY_OPEN> = <'{'>
+<CURLY_CLOSE> = <'}'>
+STRING = #'\"[^\"]+\"'
+"))
 
-(def escaped-double-quote
-  (-> (p/after (char/is "\\") double-quote)
-      (p/value (constantly "\""))))
+(def transformer
+  {:KEY_VALUE_PAIR (fn [k v] {(strip-quotes (second k)) (case (first v)
+                                                          :STRING (strip-quotes (second v))
+                                                          :OBJECT (into {} (rest v))
+                                                          v)})})
 
-(def string-literal
-  "String literal parsing that allows escaped double-quotes characters."
-  (p/for [_ double-quote
-          content (p/*many (p/alt (p/maybe escaped-double-quote)
-                                  (p/token-not double-quote)))
-          _ double-quote]
-    (p/result content)))
-
-(def string-field
-  (p/after double-quote (p/*many-till p/any-token double-quote)))
-
-(def key-value-pair
-  (p/for [_ *whitespace
-          k (p/value string-literal char/str*)
-          _ *whitespace
-          v (p/alt (p/value (p/maybe string-field) char/str*)
-                   (-> (p/after (char/is "{")
-                                *whitespace ;; Needed for empty records
-                                (p/*many-till (p/maybe key-value-pair)
-                                              (char/is "}")))
-                       (p/value #(into {} %))))
-          _ *whitespace]
-    (p/result {k v})))
-
-(def parse (partial p/parse key-value-pair))
+(defn parse [s]
+  (->> (str/trim s)
+       (parser)
+       (second)
+       (insta/transform transformer)))
 
 (comment
   (-> (slurp "/home/floscr/.config/dotfiles/new/modules/scripts/src/lib/acf_example.acf")

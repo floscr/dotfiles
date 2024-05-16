@@ -1,6 +1,7 @@
 (ns bsteam
   (:require
    [babashka.fs :as fs]
+   [clojure.pprint :refer [pprint]]
    clojure.walk
    [lib.acf-parser :as acf-parser]
    [lib.num :as num]
@@ -11,9 +12,13 @@
 (defn steam-apps-dir []
   (xdg/data-path "Steam/steamapps"))
 
-(defn all-steam-games []
-  (let [configs (->> (fs/list-dir (steam-apps-dir) "*.acf"))]
-    configs))
+(def ignore-steam-apps-with-name
+  "Ignore these steam applications"
+  #{"Steamworks Common Redistributables"
+    "Steam Linux Runtime 2.0 (soldier)"
+    "Steam Linux Runtime 3.0 (sniper)"
+    "Proton Experimental"
+    "Proton 7.0"})
 
 (defn acf->game-map [acf]
   {:name (get-in acf ["AppState" "name"])
@@ -21,27 +26,19 @@
    :last-played (some-> (get-in acf ["AppState" "LastPlayed"])
                         (num/safe-parse-int))})
 
-(def ignore-steam-apps-with-name #{"Steamworks Common Redistributables"
-                                   "Steam Linux Runtime 2.0 (soldier)"
-                                   "Steam Linux Runtime 3.0 (sniper)"
-                                   "Proton Experimental"
-                                   "Proton 7.0"})
-
-(comment
-  (->> (all-steam-games)
+(defn list-steam-games []
+  (->> (fs/list-dir (steam-apps-dir) "*.acf")
        (eduction
         (map (comp acf->game-map acf-parser/parse slurp str))
         (remove #(ignore-steam-apps-with-name (:name %))))
        (sort-by :last-played)
-       (reverse))
-  nil)
-
-(defn run []
-  ())
+       (reverse)))
 
 ;; Main ------------------------------------------------------------------------
 
-(defn -main [& args])
+(defn -main [& args]
+  (-> (list-steam-games)
+      (doto pprint)))
 
 (apply -main *command-line-args*)
 
