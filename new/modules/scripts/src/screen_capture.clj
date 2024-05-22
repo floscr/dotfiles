@@ -56,10 +56,10 @@
   (when-let [[width height x y]
              (some-> (bp/shell {:out :string
                                 :continue true} "slop -nof '%w %h %x %y'")
-                    :out
-                    (fp/discard-> str/blank?)
-                    (str/split #" ")
-                    (#(map num/parse-int %)))]
+                     :out
+                     (fp/discard-> str/blank?)
+                     (str/split #" ")
+                     (#(map num/parse-int %)))]
     {:width width
      :height height
      :x x
