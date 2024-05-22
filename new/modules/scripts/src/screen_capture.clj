@@ -131,7 +131,7 @@
       (fs/delete stop-file)
       true)))
 
-(defn toggle-capture-animated! [args]
+(defn toggle-capture-animated! [{:keys [opts] :as args}]
   (when-not (remove-stop-file!)
     (let [[path proc] (capture-animated! args)
           pid (some-> (:proc proc)
@@ -140,6 +140,8 @@
       (when proc
         (fs/write-lines stop-file [pid])
         @proc
+        (when (:screenkey opts)
+          (bp/shell "pkill -f screenkey"))
         (bp/shell (format "notify-send 'Recording saved to %s\nCopied path to clipboard!'" path))
         (set-clip path)))))
 
