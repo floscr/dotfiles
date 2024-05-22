@@ -4,9 +4,11 @@
    [babashka.cli :as cli]
    [babashka.fs :as fs]
    [babashka.process :as bp]
+   [cheshire.core :as json]
    [clojure.string :as str]
    [lib.clipboard :refer [set-clip]]
    [lib.fp :as fp]
+   [lib.fs]
    [lib.num :as num]
    [lib.shell :as lib.sh]))
 
@@ -131,6 +133,40 @@
       (fs/delete stop-file)
       true)))
 
+(defn trim-ending-shortcut-length! [path]
+  (when-let [duration (some-> (bp/sh "ffprobe"
+                                     "-v" "quiet"
+                                     "-show_format"
+                                     "-of" "default=noprint_wrappers=1:nokey=1"
+                                     "-print_format" "json"
+                                     "-i" "/home/floscr/Media/Screenrecording/2024-05-22-17-43:35.mp4")
+                              :out
+                              (json/parse-string)
+                              (get-in ["format" "duration"])
+                              (num/safe-parse-float))]
+    (let [temp-file-path (lib.fs/fs-temp-file-path {:suffix ".mp4"})]
+      (prn ["ffmpeg"
+            "-i" path
+                 ;; Change the duration
+            "-t" (max 0.75 (- duration 0.75))
+                 ;; Copy the codec
+            "-c" "copy"
+            temp-file-path])
+      (bp/shell ["ffmpeg"
+                 "-i" path
+                 ;; Change the duration
+                 "-t" (max 0.75 (- duration 3))
+                 ;; Copy the codec
+                 "-c" "copy"
+                 temp-file-path])
+      (fs/delete path)
+      (fs/copy temp-file-path path))))
+
+(comment
+  (let [path "/home/floscr/Media/Screenrecording/2024-05-22-17-43:35.mp4"]
+    (trim-ending-shortcut-length! path))
+  nil)
+
 (defn toggle-capture-animated! [{:keys [opts] :as args}]
   (when-not (remove-stop-file!)
     (let [[path proc] (capture-animated! args)
@@ -141,9 +177,12 @@
         (fs/write-lines stop-file [pid])
         @proc
         (when (:screenkey opts)
-          (bp/shell "pkill -f screenkey"))
+          (trim-ending-shortcut-length! path))
         (bp/shell (format "notify-send 'Recording saved to %s\nCopied path to clipboard!'" path))
-        (set-clip path)))))
+        (set-clip path)
+        ;; Keep at end, otherwise it kills the whole process?
+        (when (:screenkey opts)
+          (bp/sh "pkill -f screenkey"))))))
 
 (defn help
   [_]

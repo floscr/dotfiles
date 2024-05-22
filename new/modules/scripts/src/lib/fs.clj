@@ -42,6 +42,13 @@
       path
       (fs/path (str file "." new-ext)))))
 
+(defn fs-temp-file-path
+  "Create a temp file path without the file."
+  [& opts]
+  (let [file (fs/create-temp-file opts)]
+    (fs/delete file)
+    (str file)))
+
 (comment
   (rename-extension "/" "JPG")
   (rename-extension "/lol" "JPG")
