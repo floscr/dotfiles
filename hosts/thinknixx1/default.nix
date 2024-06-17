@@ -169,12 +169,12 @@ with lib.my;
       mime.enable = true;
       gtk-emacs-bindings.enable = true;
       gtk.enable = true;
-      vm = {
-        virtualbox = {
-          enable = true;
-          vagrant.enable = true;
-        };
-      };
+      # vm = {
+      #   virtualbox = {
+      #     enable = true;
+      #     vagrant.enable = true;
+      #   };
+      # };
       apps = {
         rofi.enable = true;
         transmission.enable = true;
