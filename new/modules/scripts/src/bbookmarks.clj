@@ -132,4 +132,5 @@
 (defn -main [& args]
   (cli/dispatch table args))
 
-(apply -main *command-line-args*)
+(when (= *file* (System/getProperty "babashka.file"))
+  (apply -main *command-line-args*))
