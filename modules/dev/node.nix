@@ -12,6 +12,7 @@ in
   config = mkIf cfg.enable {
     user.packages = with pkgs; [
       nodejs-18_x
+      corepack
       yarn
       nodePackages.prettier
       bun
