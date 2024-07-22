@@ -30,18 +30,6 @@
       load-module module-bluetooth-policy
       load-module module-bluetooth-discover
       load-module module-switch-on-connect
-
-      # Internal Microphone
-      load-module alsa-source device=hw:0,0
-      .ifexists module-udev-detect.so
-      .endif
-
-      # Filter out mic echo
-      .ifexists module-echo-cancel.so
-      load-module module-echo-cancel aec_method=webrtc aec_args="analog_gain_control=0\ digital_gain_control=1" source_name=echocancel sink_name=echocancel1
-      # set-default-source echocancel
-      # set-default-sink echocancel1
-      .endif
     '';
 
     # https://medium.com/@gamunu/enable-high-quality-audio-on-linux-6f16f3fe7e1f
