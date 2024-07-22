@@ -12,6 +12,9 @@ alias mv='mv -i'
 alias mkdir='mkdir -p'
 alias wget='wget -c'
 
+SMORGAS_DIR="~/Code/Smorgasbord"
+alias smo="bb --deps-root $SMORGAS_DIR $SMORGAS_DIR/smorgus.clj"
+
 alias rg='noglob rg'
 alias ag='noglob ag -p $HOME/.config/ag/agignore'
 
