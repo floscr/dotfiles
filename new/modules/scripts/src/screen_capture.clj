@@ -95,6 +95,7 @@
                  (filename (:animated default-dirs) ext))
         {:keys [width height x y]} (get-x-rect)
         cmd ["ffmpeg"
+             "-xerror"
              "-y" ; Ignore globals
              "-f" "x11grab"
              "-show_region" "1"
@@ -112,7 +113,8 @@
                                                      (:height screenkey-opts)
                                                      x
                                                      (+ y (- height (:height screenkey-opts))))))
-      [path (bp/process cmd)])))
+      {:path path
+       :process (bp/process cmd)})))
 
 (defn stop-file-pid []
   (some->> (when (fs/exists? stop-file)
@@ -167,22 +169,32 @@
     (trim-ending-shortcut-length! path))
   nil)
 
+(def ffmpeg-success-exit-codes
+  "Toggling ffmpeg with a shortcut will never result in a 0 exit code, so we accept `255` exit code."
+  #{0 255})
+
 (defn toggle-capture-animated! [{:keys [opts] :as args}]
   (when-not (remove-stop-file!)
-    (let [[path proc] (capture-animated! args)
-          pid (some-> (:proc proc)
+    (let [{:keys [path process] :as _result} (capture-animated! args)
+          pid (some-> (:proc process)
                       (.pid)
                       (str))]
-      (when proc
+      (when process
         (fs/write-lines stop-file [pid])
-        @proc
-        (when (:screenkey opts)
-          (trim-ending-shortcut-length! path))
-        (bp/shell (format "notify-send 'Recording saved to %s\nCopied path to clipboard!'" path))
-        (set-clip path)
-        ;; Keep at end, otherwise it kills the whole process?
-        (when (:screenkey opts)
-          (bp/sh "pkill -f screenkey"))))))
+        (let [{:keys [exit err]} @process
+              success? (get ffmpeg-success-exit-codes exit)]
+          (if success?
+            (do
+              (when (:screenkey opts)
+                (trim-ending-shortcut-length! path))
+              (bp/shell (format "notify-send 'Recording saved to %s\nCopied path to clipboard!'" path))
+              (set-clip path))
+            (let [err-file (fs/create-temp-file)]
+              (spit (str err-file) (slurp err))
+              (bp/shell "notify-send" "-u" "critical" "ERROR during recording" (str "Error output saved to: " err-file))))
+          ;; Keep at end, otherwise it kills the whole process?
+          (when (:screenkey opts)
+            (bp/sh "pkill -f screenkey")))))))
 
 (defn help
   [_]
@@ -241,10 +253,9 @@
   (-main "toggle")
   (-main "single" "/tmp/example.png")
 
-  (def proc (capture-animated! {:opts {:countdown 0}}))
+  (def process (capture-animated! {:opts {:countdown 0}}))
 
   (toggle-capture-animated! {:opts {:countdown 0}})
 
   ;; {:cmds (single sdfsdf), :args (), :rest-cmds (), :opts {:file sdfsdf}, :dispatch [single]}
-  (cli/parse-)
   nil)
