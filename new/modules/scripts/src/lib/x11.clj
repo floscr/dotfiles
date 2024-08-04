@@ -1,7 +1,26 @@
 (ns lib.x11
   (:require
    [babashka.process :as bp]
+   [lib.shell :refer [sh]]
    [clojure.string :as str]))
+
+(defn display-resolution []
+  (when-let [[width height] (some->> (sh "xrandr")
+                                     (str/split-lines)
+                                     (filter #(re-find #"\*" %))
+                                     (first)
+                                     (str/triml)
+                                     (#(str/split % #" "))
+                                     (first)
+                                     (#(str/split % #"x"))
+                                     (map parse-long)
+                                     (into []))]
+    {:width width
+     :height height}))
+
+(comment
+  (display-resolution)
+  nil)
 
 (defn match-window-info-line [line]
   (let [[_ k _ v] (re-find #"(.+?)(:?\s+)(.*)" line)
