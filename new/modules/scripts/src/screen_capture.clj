@@ -122,8 +122,6 @@
       {:path path
        :process (bp/process cmd)})))
 
-(+ 1248.17 672)
-
 (defn stop-file-pid []
   (some->> (when (fs/exists? stop-file)
              (fs/read-all-lines stop-file))
