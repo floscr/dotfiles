@@ -20,6 +20,8 @@ in
       ((emacsPackagesFor emacsNativeComp).emacsWithPackages
         (epkgs: [ ]))
 
+      parinfer-rust-emacs
+
       ## Doom dependencies
       git
       (ripgrep.override { withPCRE2 = true; })
