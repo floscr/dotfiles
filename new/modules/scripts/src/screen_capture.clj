@@ -10,7 +10,8 @@
    [lib.fp :as fp]
    [lib.fs]
    [lib.num :as num]
-   [lib.shell :as lib.sh]))
+   [lib.shell :as lib.sh]
+   [lib.x11]))
 
 ;; Variables -------------------------------------------------------------------
 
@@ -75,7 +76,7 @@
 (defn divisible-by-two [n]
   (if (divisible-by-two? n)
     n
-    (inc n)))
+    (dec n)))
 
 (defn capture-static! [{:keys [opts]}]
   (let [{:keys [extension]
@@ -94,12 +95,17 @@
         path (or (:file opts)
                  (filename (:animated default-dirs) ext))
         {:keys [width height x y]} (get-x-rect)
+        resolution (lib.x11/display-resolution)
+        safe-width (-> (- (min (+ x width) (dec (:width resolution))) x)
+                       (divisible-by-two))
+        safe-height (-> (- (min (+ y height) (dec (:height resolution))) y)
+                        (divisible-by-two))
         cmd ["ffmpeg"
              "-xerror"
              "-y" ; Ignore globals
              "-f" "x11grab"
              "-show_region" "1"
-             "-s" (format "%dx%d" (divisible-by-two width) (divisible-by-two height))
+             "-s" (format "%dx%d" safe-width safe-height)
              "-i" (format ":0.0+%d,%d" x y)
              "-framerate" "30"
              "-vf" "format=yuv420p"
@@ -115,6 +121,8 @@
                                                      (+ y (- height (:height screenkey-opts))))))
       {:path path
        :process (bp/process cmd)})))
+
+(+ 1248.17 672)
 
 (defn stop-file-pid []
   (some->> (when (fs/exists? stop-file)
