@@ -1,9 +1,12 @@
 (ns bluetooth
   (:require
+   [lib.recent]
    [babashka.cli :as cli]
    [babashka.process :as bp]
    [lib.rofi :as rofi]
    [lib.shell :as shell]))
+
+(def recent-db-name "bbluetooth")
 
 ;; Helpers ---------------------------------------------------------------------
 
@@ -24,8 +27,9 @@
     {:id id :name name}))
 
 (defn devices []
-  (->> (shell/lines "bluetoothctl devices")
-       (map split-device-info)))
+  (let [devices (->> (shell/lines "bluetoothctl devices")
+                     (map split-device-info))]
+    (lib.recent/sort! devices recent-db-name :id)))
 
 (defn bluetooth-enable! [on?]
   (bp/sh ["bluetooth" (if on? "on" "off")]))
@@ -34,6 +38,7 @@
   (bluetooth-enable! true)
   (when (= name "Flo Bose")
     (bose-qc-35-prepare-connection!))
+  (lib.recent/inc-db-entry! recent-db-name id)
   (bp/sh ["bluetoothctl" "connect" id]))
 
 (defn rofi-connect! []
