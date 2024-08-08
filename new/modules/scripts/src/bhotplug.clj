@@ -1,9 +1,10 @@
 #!/usr/bin/env bb
 (ns bhotplug
   (:require
-   [clojure.string :as str]
    [babashka.cli :as cli]
-   [babashka.process :as bp]))
+   [babashka.process :as bp]
+   [clojure.string :as str]
+   [lib.emacs :as emacs]))
 
 ;; Helpers ---------------------------------------------------------------------
 
@@ -53,7 +54,7 @@
 
 (defn on-connect! []
   (bp/sh "xsetroot -cursor_name left_ptr")
-  (bp/sh "/etc/profiles/per-user/floscr/bin/emacsclient -e \"(my-ui|adjust-ui-to-display)\"")
+  (emacs/run-cmd! "(my-ui|adjust-ui-to-display)")
   (bp/sh "/etc/profiles/per-user/floscr/bin/reloadWallpaper")
   (bp/sh "xrdb -merge /home/floscr/.config/xtheme/80-dpi")
   (bp/sh "/etc/profiles/per-user/floscr/bin/xmonadctl restart"))

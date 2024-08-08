@@ -1,8 +1,9 @@
 #!/usr/bin/env bb
 (ns zzz
- (:require [babashka.cli :as cli]
-           [babashka.fs :as fs]
-           [babashka.process :as bp]))
+ (:require
+  [babashka.cli :as cli]
+  [babashka.process :as bp]
+  [lib.emacs :as emacs]))
 
 (def cli-opts
   {:dry-run {:alias :d
@@ -20,7 +21,7 @@
    (when with-restore?
      (spit restore-file ""))
    (bp/shell {:continue true} "playerctl pause &")
-   (bp/shell {:continue true} "emacsclient -e \"(org-clock-out)\"")))
+   (emacs/run-cmd! "(org-clock-out)")))
 
 (defn sleep [{:keys [opts] :as args}]
   (let [{:keys [dry-run]} opts]
