@@ -9,8 +9,6 @@
   (bp/shell opts "emacsclient" "-e" cmd))
 
 (comment
-  (require '[clojure.string :as str])
-
   (open-file! ".")
   (open-file! "." {:opts {:dir "/tmp"}})
   (open-file! "." {:window? true})
