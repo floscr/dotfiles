@@ -46,6 +46,10 @@
   (inc-db-entry! "test" "test")
   (inc-db-entry! "test" "bar")
 
+  (do
+    (require 'lib.emacs)
+    (lib.emacs/open-file! (cache-file "test")))
+
   (sort! ["foo" "test" "bar"] "test")
 
   (sort! [{:id "foo"} {:id "test"} {:id "bar"}] "test" :id)
