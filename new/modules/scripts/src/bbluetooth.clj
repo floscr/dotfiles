@@ -29,7 +29,7 @@
 (defn devices []
   (let [devices (->> (shell/lines "bluetoothctl devices")
                      (map split-device-info))]
-    (lib.recent/sort! devices recent-db-name :id)))
+    (lib.recent/sort! devices recent-db-name {:key-fn :id})))
 
 (defn bluetooth-enable! [on?]
   (bp/sh ["bluetooth" (if on? "on" "off")]))

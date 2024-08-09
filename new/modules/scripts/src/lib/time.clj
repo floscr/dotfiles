@@ -3,6 +3,9 @@
    [tick.core :as t])
   (:refer-clojure :exclude [+ -]))
 
+(defn unix-timestamp []
+  (int (/ (.getTime (java.util.Date.)) 1000)))
+
 (defn format-duration [duration]
   (let [seconds (t/seconds duration)
         hours (/ seconds 3600)
