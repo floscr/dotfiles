@@ -22,7 +22,7 @@
                         (map #(str "/nix/var/nix/profiles/" %)))]
     (bp/shell {:continue true} "nvd diff" a b)))
 
-(defn rebuild! [{:keys [opts]}]
+(defn rebuild! [{:keys [opts] :as args}]
   (let [{:keys [command diff? dir]
          :or {command "switch"
               diff? true
@@ -30,7 +30,10 @@
         hostname (-> (bp/shell {:out :string} "hostname")
                      :out)
         {:keys [exit]} (bp/shell {:dir dir :continue true}
-                                 (format "sudo nixos-rebuild --flake .#%s %s --impure" hostname command))]
+                                 (->> (concat
+                                       ["sudo nixos-rebuild --flake" (str ".#" hostname) command "--impure"]
+                                       [(when (:show-trace opts) "--show-trace")])
+                                      (str/join " ")))]
     (when (zero? exit)
       (when diff? (diff!)))))
 
