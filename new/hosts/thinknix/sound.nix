@@ -57,13 +57,13 @@
     };
   };
 
-  sound.extraConfig = ''
-    # Use PulseAudio plugin hw
-    pcm.!default {
-      type plug
-      slave.pcm hw
-    }
-  '';
+  # sound.extraConfig = ''
+  #   # Use PulseAudio plugin hw
+  #   pcm.!default {
+  #     type plug
+  #     slave.pcm hw
+  #   }
+  # '';
 
   nixpkgs.config = {
     packageOverrides = pkgs: {
