@@ -1,6 +1,10 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
+  # Pipewire gets set somewhere and it collides with pulseaudio
+  # My setup works so I'm not ready to switch yet.
+  services.pipewire.enable = lib.mkForce false;
+
   hardware.bluetooth = {
     enable = true;
     package = pkgs.bluez5;
