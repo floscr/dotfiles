@@ -28,11 +28,11 @@
               diff? true
               dir (str (fs/expand-home "~/.config/dotfiles"))}} opts
         hostname (-> (bp/shell {:out :string} "hostname")
-                     :out)]
-    (bp/shell {:dir dir :continue true} (format "sudo nixos-rebuild --flake .#%s %s --impure"
-                                                hostname
-                                                command))
-    (when diff? (diff!))))
+                     :out)
+        {:keys [exit]} (bp/shell {:dir dir :continue true}
+                                 (format "sudo nixos-rebuild --flake .#%s %s --impure" hostname command))]
+    (when (zero? exit)
+      (when diff? (diff!)))))
 
 (defn update! [{:keys [_opts]}]
   (println "Updating NixOS flake")
