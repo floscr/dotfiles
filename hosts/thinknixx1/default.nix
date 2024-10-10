@@ -158,6 +158,7 @@ with lib.my;
     };
     dev = {
       docker.enable = true;
+      playwright.enable = false;
       tools.enable = true;
       godot.enable = false;
       node.enable = true;
