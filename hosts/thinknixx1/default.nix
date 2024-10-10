@@ -74,7 +74,7 @@ with lib.my;
     usbutils
     geeqie
     watchexec
-    user.scdl
+    scdl
   ] ++ flake-packages;
 
   hardware.logitech.wireless.enable = true;
