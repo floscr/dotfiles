@@ -18,9 +18,20 @@ with lib.my;
   # programs.mosh.enable = true;
 
 
-  # networking.firewall = {
-  #   allowedUDPPorts = [ 51820 ];
-  # };
+  networking.firewall = {
+    allowedTCPPorts = [
+      9630
+      1280
+      1290
+    ];
+    allowedUDPPorts = [
+      # 51820
+      # 60000
+      # 60002
+      # 60005
+      # 65535
+    ];
+  };
 
   services.udev.extraRules = ''
     SUBSYSTEM!="usb", GOTO="end_rules"
