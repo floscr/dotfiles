@@ -17,8 +17,13 @@ in
     user.packages = with pkgs; [
       ## Emacs itself
       binutils # native-comp needs 'as', provided by this
-      ((emacsPackagesFor emacsNativeComp).emacsWithPackages
-        (epkgs: [ ]))
+
+      ((emacsPackagesFor unstable.emacs).emacsWithPackages
+        (epkgs: with epkgs; [
+          treesit-grammars.with-all-grammars
+          vterm
+          mu4e
+        ]))
 
       parinfer-rust-emacs
 

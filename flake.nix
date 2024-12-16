@@ -23,7 +23,7 @@
 
       # secrets = { url = "/etc/dotfiles-private"; flake = false; };
 
-      emacs-overlay.url = "github:nix-community/emacs-overlay/b50178f76a7868d0aca28278451141269df137fe";
+      emacs-overlay.url = "github:nix-community/emacs-overlay";
       emacs-nixpkgs.url = "github:nixos/nixpkgs/6cee3b5893090b0f5f0a06b4cf42ca4e60e5d222";
       nur.url = "github:nix-community/NUR";
 
