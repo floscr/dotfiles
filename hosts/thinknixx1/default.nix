@@ -69,7 +69,6 @@ with lib.my;
     lsof
     google-chrome
     chrysalis
-    xournal
     zip
     unrar
     pins.nix-search-cli
@@ -222,7 +221,7 @@ with lib.my;
       vim.enable = true;
     };
     services = {
-      ios.enable = true;
+      ios.enable = false;
       org-bb-capture.enable = true;
       wireguard.enable = false;
       android.enable = true;

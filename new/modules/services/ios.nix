@@ -12,7 +12,7 @@ in
 
     services.usbmuxd = {
       enable = true;
-      package = pkgs.usbmuxd2;
+      package = pkgs.unstable.usbmuxd2;
       user = "floscr";
     };
 

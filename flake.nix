@@ -104,9 +104,9 @@
           )
         ];
       };
-      pkgs = mkPkgs nixpkgs [ self.overlay nur.overlay ];
+      pkgs = mkPkgs nixpkgs [ self.overlay nur.overlays.default ];
       uPkgs = mkPkgs nixpkgs-unstable [ ];
-      firaCodePkgs = mkPkgs fira-code-pkgs [ self.overlay nur.overlay ];
+      firaCodePkgs = mkPkgs fira-code-pkgs [ self.overlay nur.overlays.default ];
       utsushiPkgs = mkPkgs utsushi-nixpkgs [ ];
       emacsPkgs = mkEmacsPkgs emacs-nixpkgs;
       myCustomPkgs = mkExtraPkgs nixpkgs;

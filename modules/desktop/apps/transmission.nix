@@ -11,7 +11,7 @@ in
 
   config = mkIf cfg.enable {
     user.packages = with pkgs; [
-      transmission_3-gtk
+      transmission_4-gtk
     ];
     home-manager.users.${config.user.name}.xdg.mimeApps = {
       associations.added = {

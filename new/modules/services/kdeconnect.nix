@@ -11,7 +11,7 @@ in
 
   config = {
     user.packages = with pkgs; [
-      kdeconnect
+      plasma5Packages.kdeconnect-kde
     ];
 
     networking.firewall.allowedTCPPortRanges = [{
