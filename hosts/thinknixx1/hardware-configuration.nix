@@ -48,21 +48,17 @@
   hardware.cpu.intel.updateMicrocode = config.hardware.enableRedistributableFirmware;
 
   # Graphics
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    # driSupport = true;
-    driSupport32Bit = true;
-    # setLdLibraryPath = true;
+    enable32Bit = true;
+  };
+  hardware.opengl = {
     extraPackages = with pkgs; [
+      # Intel
       vaapiIntel
       libvdpau-va-gl
       intel-media-driver
-      # intel-media-driver
-      # vaapiIntel
-      # vaapiVdpau
-      # libvdpau-va-gl
-
-      # # Vulkan
+      # Vulkan
       amdvlk
       vulkan-loader
     ];
