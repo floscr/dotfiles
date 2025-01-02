@@ -225,7 +225,6 @@ with lib.my;
       ios.enable = true;
       org-bb-capture.enable = true;
       wireguard.enable = false;
-      secure-mode-scripts.enable = true;
       android.enable = true;
       espanso.enable = false;
       screendrawing.enable = true;
