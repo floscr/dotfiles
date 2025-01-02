@@ -86,10 +86,10 @@ in
           # Not using space for this one as it inserts a single space for some reason
           xcape -e 'Super_L=Super_L|p'
 
-          # Make space Control L whenn pressed.
+          # Make space Control L when pressed.
           spare_modifier="Hyper_L"
           xmodmap -e "keycode 65 = $spare_modifier"
-          xmodmap -e "remove mod4 = $spare_modifier"
+          xmodmap -e "remove mod3 = $spare_modifier"  # Remove from mod3 first
           xmodmap -e "add Control = $spare_modifier"
 
           # Turn of caps lock
