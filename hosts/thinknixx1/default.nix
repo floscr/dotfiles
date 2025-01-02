@@ -69,7 +69,6 @@ with lib.my;
     lsof
     google-chrome
     chrysalis
-    gparted
     xournal
     zip
     unrar

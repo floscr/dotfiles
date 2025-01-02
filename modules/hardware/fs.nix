@@ -16,13 +16,16 @@ in
   config = mkIf cfg.enable (mkMerge [
     {
       programs.udevil.enable = true;
-
       # Support for more filesystems, mostly to support external drives
       environment.systemPackages = with pkgs; [
         sshfs
         exfat
         ntfs3g
         hfsprogs
+      ];
+
+      user.packages = with pkgs; [
+        gparted
       ];
     }
 
