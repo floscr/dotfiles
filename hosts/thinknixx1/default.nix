@@ -58,7 +58,6 @@ with lib.my;
 
   user.packages = with pkgs; [
     zed-editor
-    figma-linux
     textsnatcher
     calibre
     magic-wormhole

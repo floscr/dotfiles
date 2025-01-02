@@ -9,5 +9,6 @@
     ])
     kubectl
     playwright
+    figma-linux
   ];
 }
