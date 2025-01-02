@@ -73,7 +73,6 @@ with lib.my;
     xournal
     zip
     unrar
-    openai-whisper-cpp
     pins.nix-search-cli
     timer
     exiftool
