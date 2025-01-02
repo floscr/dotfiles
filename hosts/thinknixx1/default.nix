@@ -58,7 +58,6 @@ with lib.my;
 
   user.packages = with pkgs; [
     arduino
-    gum
     arduino-cli
     zed-editor
     figma-linux

@@ -11,19 +11,28 @@ in
 
   config = mkIf cfg.enable {
     user.packages = with pkgs; [
-      pkgs.babashka
-      unstable.lightningcss # uix
-      clj-kondo
+      # Clojure
       clojure
-      jet
-      joker
-      leiningen
-      neil
       openjdk17
+
+      # Editing
       unstable.clojure-lsp
+
+      # Babashka
+      babashka
+      user.bootleg # HTML Conversion
+      gum
+
+      # Clojure CLIs
+      jet # JSON/EDN Query
+
+      # Formatting
+      clj-kondo
       cljfmt
       zprint
-      user.bootleg
+
+      # uix
+      unstable.lightningcss
     ];
     home.configFile."clojure/deps.edn".source = ./deps.edn;
   };
