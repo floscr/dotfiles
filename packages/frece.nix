@@ -16,7 +16,7 @@ rustPlatform.buildRustPackage rec {
   buildInputs = [ ];
 
   checkPhase = null;
-  cargoSha256 = "sha256-FEPRDZjbmiU6+M7J1YnWT5n0pQ7VLlPPIc87BvEtvi8=";
+  cargoHash = "sha256-FEPRDZjbmiU6+M7J1YnWT5n0pQ7VLlPPIc87BvEtvi8=";
 
   meta = with lib; {
     description =
