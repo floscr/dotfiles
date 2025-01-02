@@ -138,10 +138,6 @@ with lib.my;
       wget.enable = true;
       beancount.enable = true;
     };
-    scripts = {
-      measure.enable = true;
-      comma.enable = true;
-    };
     shared = {
       sudoers.enable = true;
     };
