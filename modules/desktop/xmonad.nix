@@ -28,9 +28,9 @@ in
     ];
 
     services = {
+      displayManager.defaultSession = "none+xmonad";
       xserver = {
         enable = true;
-        displayManager.defaultSession = "none+xmonad";
         windowManager.xmonad = {
           enable = true;
           enableContribAndExtras = true;
@@ -39,9 +39,11 @@ in
             haskell-language-server
           ];
           config = (builtins.readFile "${configDir}/xmonad/xmonad.hs") + (
-            let bindings = (fold
-              (cur: acc: if isNull cur.xmonadBinding then acc else ''${acc} , ("${cur.xmonadBinding}", spawn "${cur.command}")'') ""
-              config.modules.bindings.items); in
+            let
+              bindings = (fold
+                (cur: acc: if isNull cur.xmonadBinding then acc else ''${acc} , ("${cur.xmonadBinding}", spawn "${cur.command}")'') ""
+                config.modules.bindings.items);
+            in
             (
               ''
                 myNixKeys :: [(String, X ())]
