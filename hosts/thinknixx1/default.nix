@@ -57,8 +57,6 @@ with lib.my;
   '';
 
   user.packages = with pkgs; [
-    arduino
-    arduino-cli
     zed-editor
     figma-linux
     textsnatcher
