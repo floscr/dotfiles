@@ -10,7 +10,7 @@
   # This solves lagging noticeable on high-resolution screens.
   boot.kernelPackages = pkgs.linuxPackages_latest;
   environment.variables = {
-    VDPAU_DRIVER = lib.mkIf config.hardware.opengl.enable (lib.mkDefault "va_gl");
+    VDPAU_DRIVER = lib.mkIf config.hardware.graphics.enable (lib.mkDefault "va_gl");
   };
 
   # Allow usb controllers via HDMI
@@ -51,8 +51,6 @@
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
-  };
-  hardware.opengl = {
     extraPackages = with pkgs; [
       # Intel
       vaapiIntel
