@@ -263,8 +263,8 @@ with lib.my;
   };
 
   # Automatically log in since the disk is encrypted with a password anyway
-  services.xserver.displayManager.autoLogin.enable = true;
-  services.xserver.displayManager.autoLogin.user = config.user.name;
+  services.displayManager.autoLogin.enable = true;
+  services.displayManager.autoLogin.user = config.user.name;
 
   # Monitor backlight control
   programs.light.enable = true;
