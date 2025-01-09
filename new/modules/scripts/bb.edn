@@ -1,5 +1,6 @@
 {:paths ["src" "src/lib"]
  :deps {strojure/parsesso {:git/url "https://github.com/strojure/parsesso" :sha "28d28cb9b84cdbd990d0f6e0f4cd34ab1aacbc5f"}
+        clojure-term-colors/clojure-term-colors {:mvn/version "0.1.0"}
         io.github.babashka/instaparse-bb {:git/sha "059045f6a8450bda74eb30136ddd2c5475f788d1"}
         hiccup-find/hiccup-find {:mvn/version "2022.10.03"}
         funcool/cuerdas {:mvn/version "2023.11.09-407"}
