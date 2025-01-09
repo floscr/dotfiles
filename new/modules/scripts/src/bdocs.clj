@@ -12,8 +12,8 @@
 
 ;; Config ----------------------------------------------------------------------
 
-(def attach-file (lib.fs/expand "~/Code/Projects/bbeancount/ressource/documents.org"))
-(def attach-dir (lib.fs/expand "~/Code/Projects/bbeancount/.attach/"))
+(def attach-file (lib.fs/expand "~/Code/Smorgasbord/data/beancount/documents.org"))
+(def attach-dir (lib.fs/expand "~/Code/Smorgasbord/data/beancount/.attach"))
 
 ;; Helpers ---------------------------------------------------------------------
 
