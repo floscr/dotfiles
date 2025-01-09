@@ -23,4 +23,9 @@ rec {
   # countAttrs :: (name -> value -> bool) attrs
   countAttrs = pred: attrs:
     count (attr: pred attr.name attr.value) (attrsToList attrs);
+
+  joinAttrs = coll:
+    builtins.concatStringsSep "\n"
+      (map (key: "${key} ${coll.${key}}")
+        (builtins.attrNames coll));
 }

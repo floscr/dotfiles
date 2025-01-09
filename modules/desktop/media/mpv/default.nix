@@ -99,81 +99,64 @@ in
         # Automatically try to load next file
         "mpv/scripts/autoload.lua".source = ./scripts/autoload.lua;
 
-        "mpv/input.conf".text = ''
-          ### Mouse Bindings
-          WHEEL_UP      add volume 2
-          WHEEL_DOWN    add volume -2
-          WHEEL_LEFT    add volume -2
-          WHEEL_RIGHT   add volume 2
+        "mpv/input.conf".text = joinAttrs {
+          "WHEEL_UP" = "add volume 2";
+          "WHEEL_DOWN" = "add volume -2";
+          "WHEEL_LEFT" = "add volume -2";
+          "WHEEL_RIGHT" = "add volume 2";
 
-          ### Keyboard Bindings
+          "CTRL++" = "add video-zoom 0.5";
+          "CTRL+-" = "add video-zoom -0.5; script-message reset-pan-if-visible";
+          "CTRL+=" = "no-osd set video-zoom 0; script-message reset-pan-if-visible";
 
-          l seek  5
-          L seek  60
-          h seek -5
-          H seek -60
+          "CTRL+0" = "seek 0 absolute-percent";
+          "CTRL+1" = "seek 10 absolute-percent";
+          "CTRL+2" = "seek 20 absolute-percent";
+          "CTRL+3" = "seek 30 absolute-percent";
+          "CTRL+4" = "seek 40 absolute-percent";
+          "CTRL+5" = "seek 50 absolute-percent";
+          "CTRL+6" = "seek 60 absolute-percent";
+          "CTRL+7" = "seek 70 absolute-percent";
+          "CTRL+8" = "seek 80 absolute-percent";
+          "CTRL+9" = "seek 90 absolute-percent";
 
-          Ctrl+h playlist-prev
-          Ctrl+l playlist-next
+          "CTRL+A" = "add audio-delay -0.100";
+          "CTRL+a" = "add audio-delay 0.100";
 
-          BS revert-seek
-          Ctrl+0 seek 0 absolute-percent
-          Ctrl+1 seek 10 absolute-percent
-          Ctrl+2 seek 20 absolute-percent
-          Ctrl+3 seek 30 absolute-percent
-          Ctrl+4 seek 40 absolute-percent
-          Ctrl+5 seek 50 absolute-percent
-          Ctrl+6 seek 60 absolute-percent
-          Ctrl+7 seek 70 absolute-percent
-          Ctrl+8 seek 80 absolute-percent
-          Ctrl+9 seek 90 absolute-percent
+          "CTRL+h" = "playlist-prev";
+          "CTRL+l" = "playlist-next";
 
-          B script_message bookmarker-menu
-          b script_message bookmarker-quick-save
-          ctrl+b script_message bookmarker-quick-load
+          "CTRL+S" = "no-osd screenshot video";
 
-          k add volume 5
-          j add volume -5
-          K add volume 10
-          J add volume -10
+          "CTRL+y" = "script-binding copy-timestamped-url";
 
-          > multiply speed 11:10  # Extra speed
-          < multiply speed 9:10   # v speed
-          0 set speed 1.0         # Controlled speed
+          "B" = "script_message bookmarker-menu";
+          "b" = "script_message bookmarker-quick-save";
+          "CTRL+b" = "script_message bookmarker-quick-load";
 
-          a cycle audio
-          s cycle sub
+          "l" = "seek  5";
+          "L" = "seek  60";
+          "h" = "seek -5";
+          "H" = "seek -60";
+          "BS" = "revert-seek";
 
-          ctrl+a add audio-delay 0.100
-          ctrl+A add audio-delay -0.100
-
-          + add window-scale +0.08
-          - add window-scale -0.08
-          = set window-scale 1.0
-
-          ### Video Modifications
-          CTRL++ add video-zoom 0.5
-          CTRL+- add video-zoom -0.5; script-message reset-pan-if-visible
-          CTRL+= no-osd set video-zoom 0; script-message reset-pan-if-visible
-
-          # Toggle Pixel Interpolation
-          # a cycle-values scale nearest ewa_lanczossharp
-
-          # Toggle color management on or off
-          c cycle icc-profile-auto
-
-          # Screenshot of the window output
-          S no-osd screenshot video
-
-          # Toggle aspect ratio information on and off
-          A cycle-values video-aspect "-1" "no"
-
-          # playlist view
-          g script-message playlist-view-toggle
-
-          # Copy time-stamped
-          Ctrl+y script-binding copy-timestamped-url
-        '';
+          "k" = "add volume 5";
+          "j" = "add volume -5";
+          "K" = "add volume 10";
+          "J" = "add volume -10";
+          ">" = "multiply speed 11:10";
+          "<" = "multiply speed 9:10";
+          "0" = "set speed 1.0"; # Controlled speed
+          "a" = "cycle audio";
+          "s" = "cycle sub";
+          "S" = "cycle-values sub-visibility yes no";
+          "+" = "add window-scale +0.08";
+          "-" = "add window-scale -0.08";
+          "=" = "set window-scale 1.0";
+          "c" = "cycle icc-profile-auto"; # Toggle color management on or off
+          "A" = "cycle-values video-aspect \"-1\" \"no\"";
+          "g" = "script-message playlist-view-toggle";
+        };
 
         "mpv/mpv.conf".text = ''
           # Sync up video with audio
