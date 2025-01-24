@@ -141,6 +141,7 @@ with lib.my;
       sudoers.enable = true;
     };
     hardware = {
+      printer.brother.hl1210w = true;
       webcam.logitech-c920.enable = true;
       trackpad.enable = true;
       audio.enable = true;
