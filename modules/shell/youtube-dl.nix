@@ -12,7 +12,7 @@ in
   config = mkIf cfg.enable {
     user.packages = [
       # Fork of youtube-dl that deals with throttling of downloads
-      pkgs.yt-dlp
+      pkgs.unstable.yt-dlp
     ];
     environment.shellAliases = {
       youtube-dl = "yt-dlp";
