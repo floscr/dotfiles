@@ -47,10 +47,6 @@ take() {
   mkdir "$1" && cd "$1";
 }; compdef take=mkdir
 
-zman() {
-  PAGER="less -g -I -s '+/^       "$1"'" man zshall;
-}
-
 emptytrash() {
   rm -rf ~/.Trash
   mkdir ~/.Trash
