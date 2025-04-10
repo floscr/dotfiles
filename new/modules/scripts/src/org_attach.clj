@@ -24,6 +24,8 @@
 (defn scheme? [s]
   (some? (:scheme (uri/uri s))))
 
+;; TODO Add case for files not found
+;; Add better error handling
 (defn- match-typed [clip]
   (match clip
            ([:string x] :guard (comp scheme? last)) [:url x]
