@@ -1,8 +1,9 @@
 (ns bluetooth
   (:require
-   [lib.recent]
    [babashka.cli :as cli]
    [babashka.process :as bp]
+   [lib.notifications :as notifications]
+   [lib.recent]
    [lib.rofi :as rofi]
    [lib.shell :as shell]))
 
@@ -43,11 +44,14 @@
 
 (defn rofi-connect! []
   (bluetooth-enable! true)
-  (-> (rofi/select (devices) {:prompt "BT connect" :to-title :name})
-      (device-connect!)))
+  (let [{:keys [exit out] :as resp} (-> (rofi/select (devices) {:prompt "BT connect" :to-title :name})
+                                        (device-connect!))]
+    (when-not (zero? exit)
+      (notifications/error out))
+    resp))
 
 (comment
-  (rofi-connect!)
+  (def err (rofi-connect!))
   nil)
 
 ;; Commands --------------------------------------------------------------------
