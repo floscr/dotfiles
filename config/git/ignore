@@ -1,29 +1,32 @@
-# For emacs:
+# Emacs -----------------------------------------------------------------------
+
 *~
 *.*~
 \#*
 .\#*
 
-# For vim:
+# Vim -------------------------------------------------------------------------
+
 *.swp
 .*.sw[a-z]
 *.un~
 Session.vim
 .netrwhist
 
-# Ignore tags (from etags and ctags)
+# Tags -------------------------------------------------------------------------
+
 TAGS
 !TAGS/
 tags
 !tags/
 
-# Logs and databases #
-######################
+# Logs and databases ----------------------------------------------------------
+
 *.log
 *.cache
 
-# OS generated files #
-######################
+# OS generated files ----------------------------------------------------------
+
 .DS_Store?
 .DS_Store
 .CFUserTextEncoding
@@ -36,8 +39,8 @@ Thumbs.db
 .pid
 .sock
 
-# Code stuffs #
-###############
+# Code stuffs -----------------------------------------------------------------
+
 .svn
 .git
 .swp
@@ -51,8 +54,8 @@ tmp
 .codekit-cache
 config.codekit
 
-# Compiled thangs #
-###################
+# Compiled thangs -------------------------------------------------------------
+
 *.class
 *.exe
 *.o
