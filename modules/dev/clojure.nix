@@ -34,6 +34,6 @@ in
       # uix
       unstable.lightningcss
     ];
-    home.configFile."clojure/deps.edn".source = ./deps.edn;
+    # home.configFile."clojure/deps.edn".source = ./deps.edn;
   };
 }
