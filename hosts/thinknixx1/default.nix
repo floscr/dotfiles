@@ -79,6 +79,7 @@ with lib.my;
     geeqie
     watchexec
     scdl
+    unstable.aider-chat
   ] ++ flake-packages;
 
   hardware.logitech.wireless.enable = true;
