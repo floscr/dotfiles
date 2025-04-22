@@ -79,6 +79,7 @@ with lib.my;
     geeqie
     watchexec
     scdl
+    blender
     unstable.aider-chat
   ] ++ flake-packages;
 
