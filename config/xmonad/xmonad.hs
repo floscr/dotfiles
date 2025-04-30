@@ -588,9 +588,34 @@ toggleFull = withFocused
         sendMessage $ Toggle FULL
   )
 
+-- | Get the dimensions of the current screen
+getCurrentScreenDimensions :: X (Rectangle)
+getCurrentScreenDimensions = withWindowSet $ \ws -> do
+  let currentScreen = W.current ws
+      screenDetail = W.screenDetail currentScreen
+  return $ screenRect screenDetail
+
+-- | Calculate a centered window position within a source rectangle
+-- Takes minimum dimensions and maximum percentage of source rect
+calculateCenteredPosition :: Rectangle      -- ^ Source rectangle to center within
+                        -> (Int, Int)       -- ^ Minimum (width, height)
+                        -> (Double, Double) -- ^ Maximum (width%, height%) as decimals
+                        -> Rectangle        -- ^ Resulting centered rectangle
+calculateCenteredPosition (Rectangle rx ry rw rh) (minW, minH) (maxWP, maxHP) =
+  let -- Calculate target dimensions
+      maxW = floor $ fromIntegral rw * maxWP
+      maxH = floor $ fromIntegral rh * maxHP
+      -- Use max of minimum size and preferred size, but cap at maximum
+      targetW = min maxW (max minW (floor $ fromIntegral rw * 0.6))  -- Preferred = 60%
+      targetH = min maxH (max minH (floor $ fromIntegral rh * 0.6))
+      -- Center the window
+      targetX = rx + (fromIntegral rw - fromIntegral targetW) `div` 2
+      targetY = ry + (fromIntegral rh - fromIntegral targetH) `div` 2
+  in Rectangle targetX targetY (fromIntegral targetW) (fromIntegral targetH)
+
 manageWindowsHook = composeAll
   [ isFullscreen --> doFullFloat
-  , stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog" --> centerInRecordingArea
+  , stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog" --> centerInRecordingArea (500, 300) (0.8, 0.8)
   , resource =? "desktop_window" --> doIgnore
   , resource =? "kdesktop" --> doIgnore
   , className =? "mpv" --> doFloat
@@ -616,47 +641,20 @@ manageWindowsHook = composeAll
   doFloatToMouseCenter = doFloatToMouse (0.5, 0.5)
   floating             = customFloating $ W.RationalRect (1 / 4) (1 / 4) (2 / 4) (2 / 4)
   
-  centerInRecordingArea = do
+  -- | Center a window in the recording area if recording, otherwise center on screen
+  centerInRecordingArea minDims maxPercent = do
     rect <- liftX getRecordingRect
     case rect of
       Nothing -> doCenterFloat
-      Just (Rectangle rx ry rw rh) -> do
-        -- Get the current screen dimensions
-        windowset <- liftX $ gets windowset
-        let currentScreen = W.current windowset
-            screenDetail = W.screenDetail currentScreen
-            Rectangle _ _ sw sh = screenRect $ W.screenDetail currentScreen
-
-            -- Window width and height - min 500x300, max 80% of recording area
-            winW = min (fromIntegral rw * 8 `div` 10) (max 500 (fromIntegral rw * 6 `div` 10))
-            winH = min (fromIntegral rh * 8 `div` 10) (max 300 (fromIntegral rh * 6 `div` 10))
-
-            -- Calculate absolute positions centered in recording area
-            xPos = rx + (fromIntegral rw - winW) `div` 2
-            yPos = ry + (fromIntegral rh - winH) `div` 2
-
-        -- liftX $ io $ appendFile "/tmp/xmonad-dialog-debug.log" $
-        --   unlines [ "Recording rectangle:"
-        --          , "  x: " ++ show rx
-        --          , "  y: " ++ show ry
-        --          , "  w: " ++ show rw
-        --          , "  h: " ++ show rh
-        --          , "Screen dimensions:"
-        --          , "  w: " ++ show sw
-        --          , "  h: " ++ show sh
-        --          , "Calculated position:"
-        --          , "  x: " ++ show (fromIntegral xPos / fromIntegral sw)
-        --          , "  y: " ++ show (fromIntegral yPos / fromIntegral sh)
-        --          , "  w: " ++ show (fromIntegral winW / fromIntegral sw)
-        --          , "  h: " ++ show (fromIntegral winH / fromIntegral sh)
-        --          , "-------------------"
-        --          ]
-
+      Just recordingRect -> do
+        screenRect <- liftX getCurrentScreenDimensions
+        let targetRect = calculateCenteredPosition recordingRect minDims maxPercent
+            (Rectangle x y w h) = targetRect
         doRectFloat $ W.RationalRect
-          (fromIntegral xPos / fromIntegral sw)
-          (fromIntegral yPos / fromIntegral sh)
-          (fromIntegral winW / fromIntegral sw)
-          (fromIntegral winH / fromIntegral sh)
+          (fromIntegral x / fromIntegral (rect_width screenRect))
+          (fromIntegral y / fromIntegral (rect_height screenRect))
+          (fromIntegral w / fromIntegral (rect_width screenRect))
+          (fromIntegral h / fromIntegral (rect_height screenRect))
 
 myHandleEventHook :: Event -> X All
 myHandleEventHook = dynamicPropertyChange "WM_NAME"
