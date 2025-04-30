@@ -625,8 +625,6 @@ manageWindowsHook = composeAll
         windowset <- liftX $ gets windowset
         let currentScreen = W.current windowset
             screenDetail = W.screenDetail currentScreen
-            -- Assuming Rectangle is imported from elsewhere (e.g., X11.Rectangle)
-            -- since it's not in the W.StackSet module
             Rectangle _ _ sw sh = screenRect $ W.screenDetail currentScreen
 
             -- Window width and height - min 500x300, max 80% of recording area
