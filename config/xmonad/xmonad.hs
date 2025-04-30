@@ -1,9 +1,9 @@
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
+import           System.Directory                    (doesFileExist)
 import           System.Exit
 import           System.IO
-import           System.Directory                    (doesFileExist)
 import           XMonad                              hiding ((|||))
 import           XMonad.Core                         (withWindowSet)
 
@@ -17,6 +17,7 @@ import           XMonad.Layout.Named                 (named)
 import           XMonad.Layout.PerWorkspace          (onWorkspace)
 
 import           XMonad.Actions.CycleWS
+import           XMonad.Actions.EasyMotion           (selectWindow)
 import qualified XMonad.Actions.FlexibleResize       as Flex
 import           XMonad.Actions.FloatKeys            (keysMoveWindow,
                                                       keysMoveWindowTo)
@@ -25,7 +26,6 @@ import           XMonad.Actions.GroupNavigation      (Direction (Backward, Forwa
 import           XMonad.Actions.Navigation2D
 import           XMonad.Actions.TagWindows           (addTag, delTag, hasTag)
 import           XMonad.Actions.WithAll              (killAll, sinkAll)
-import           XMonad.Actions.EasyMotion           (selectWindow)
 
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.DynamicProperty        (dynamicPropertyChange)
@@ -66,7 +66,8 @@ import           XMonad.Util.EZConfig                (additionalKeys,
 import           XMonad.Util.NamedScratchpad         as NS
 import           XMonad.Util.Paste                   (sendKey)
 import           XMonad.Util.PositionStore
-import           XMonad.Util.Run                     (spawnPipe, runProcessWithInput, safeSpawn)
+import           XMonad.Util.Run                     (runProcessWithInput,
+                                                      safeSpawn, spawnPipe)
 import           XMonad.Util.Scratchpad
 
 import           Control.Arrow                       (second, (***))
@@ -537,8 +538,8 @@ getRecordingRect = do
           contents <- io $ readFile "/tmp/my-screen-capture-rect"
           let parts = words contents
           if length parts == 5 && head parts == "Rectangle"
-            then return $ Just $ Rectangle 
-              (read $ parts !! 1) 
+            then return $ Just $ Rectangle
+              (read $ parts !! 1)
               (read $ parts !! 2)
               (read $ parts !! 3)
               (read $ parts !! 4)
@@ -640,7 +641,7 @@ manageWindowsHook = composeAll
   doFloatToMouse       = \pos -> placeHook (inBounds (underMouse pos)) <+> doFloat
   doFloatToMouseCenter = doFloatToMouse (0.5, 0.5)
   floating             = customFloating $ W.RationalRect (1 / 4) (1 / 4) (2 / 4) (2 / 4)
-  
+
   -- | Center a window in the recording area if recording, otherwise center on screen
   centerInRecordingArea minDims maxPercent = do
     rect <- liftX getRecordingRect
