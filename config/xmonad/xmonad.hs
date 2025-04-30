@@ -589,22 +589,18 @@ toggleFull = withFocused
         sendMessage $ Toggle FULL
   )
 
--- | Get the dimensions of the current screen
 getCurrentScreenDimensions :: X (Rectangle)
 getCurrentScreenDimensions = withWindowSet $ \ws -> do
   let currentScreen = W.current ws
       screenDetail = W.screenDetail currentScreen
   return $ screenRect screenDetail
 
--- | Calculate a centered window position within a source rectangle
--- Takes minimum dimensions and maximum percentage of source rect
 calculateCenteredPosition :: Rectangle      -- ^ Source rectangle to center within
                         -> (Int, Int)       -- ^ Minimum (width, height)
                         -> (Double, Double) -- ^ Maximum (width%, height%) as decimals
                         -> Rectangle        -- ^ Resulting centered rectangle
 calculateCenteredPosition (Rectangle rx ry rw rh) (minW, minH) (maxWP, maxHP) =
-  let -- Calculate target dimensions
-      maxW = floor $ fromIntegral rw * maxWP
+  let maxW = floor $ fromIntegral rw * maxWP
       maxH = floor $ fromIntegral rh * maxHP
       -- Use max of minimum size and preferred size, but cap at maximum
       targetW = min maxW (max minW (floor $ fromIntegral rw * 0.6))  -- Preferred = 60%
