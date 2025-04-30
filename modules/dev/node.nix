@@ -18,10 +18,11 @@ in
 
       nodejs-18_x
       corepack
-      yarn
       nodePackages.prettier
-      bun
       deno
+
+      yarn
+      bun
     ];
 
     env.ADBLOCK = "1"; # Stop node packages from showing ads in my darn CLI...

@@ -77,6 +77,8 @@ in
       #   perlPackages.DBDPg
       #   perlPackages.DBDmysql)
 
+      emacs-lsp-booster
+
       perlPackages.FileMimeInfo # Mime type
     ];
 
