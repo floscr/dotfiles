@@ -3,6 +3,7 @@
 
 import           System.Exit
 import           System.IO
+import           System.Directory                    (doesFileExist)
 import           XMonad                              hiding ((|||))
 import           XMonad.Core                         (withWindowSet)
 
@@ -517,6 +518,32 @@ myManageHook = composeAll
   , className =? "Iced Query" --> hasBorder False
   ]
 
+isScreenRecording :: X Bool
+isScreenRecording = do
+  pid <- io $ runProcessWithInput "pgrep" ["-f", "ffmpeg.*x11grab"] ""
+  return $ not $ null pid
+
+getRecordingRect :: X (Maybe Rectangle)
+getRecordingRect = do
+  isRecording <- isScreenRecording
+  if not isRecording
+    then return Nothing
+    else do
+      -- Read the dimensions from /tmp/my-screen-capture-rect if it exists
+      exists <- io $ doesFileExist "/tmp/my-screen-capture-rect"
+      if not exists
+        then return Nothing
+        else do
+          contents <- io $ readFile "/tmp/my-screen-capture-rect"
+          let parts = words contents
+          if length parts == 5 && head parts == "Rectangle"
+            then return $ Just $ Rectangle 
+              (read $ parts !! 1) 
+              (read $ parts !! 2)
+              (read $ parts !! 3)
+              (read $ parts !! 4)
+            else return Nothing
+
 isOverlayWindow :: Query Bool
 isOverlayWindow = do
   isNotification      <- isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_NOTIFICATION"
@@ -563,8 +590,8 @@ toggleFull = withFocused
 
 manageWindowsHook = composeAll
   [ isFullscreen --> doFullFloat
+  , stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog" --> centerInRecordingArea
   , resource =? "desktop_window" --> doIgnore
-  , stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog" --> doRectFloat (W.RationalRect 0.25 0.25 0.5 0.5)
   , resource =? "kdesktop" --> doIgnore
   , className =? "mpv" --> doFloat
   , className =? "zoom" --> doFloat
@@ -588,6 +615,50 @@ manageWindowsHook = composeAll
   doFloatToMouse       = \pos -> placeHook (inBounds (underMouse pos)) <+> doFloat
   doFloatToMouseCenter = doFloatToMouse (0.5, 0.5)
   floating             = customFloating $ W.RationalRect (1 / 4) (1 / 4) (2 / 4) (2 / 4)
+  
+  centerInRecordingArea = do
+    rect <- liftX getRecordingRect
+    case rect of
+      Nothing -> doCenterFloat
+      Just (Rectangle rx ry rw rh) -> do
+        -- Get the current screen dimensions
+        windowset <- liftX $ gets windowset
+        let currentScreen = W.current windowset
+            screenDetail = W.screenDetail currentScreen
+            -- Assuming Rectangle is imported from elsewhere (e.g., X11.Rectangle)
+            -- since it's not in the W.StackSet module
+            Rectangle _ _ sw sh = screenRect $ W.screenDetail currentScreen
+
+            -- Window width and height - min 500x300, max 80% of recording area
+            winW = min (fromIntegral rw * 8 `div` 10) (max 500 (fromIntegral rw * 6 `div` 10))
+            winH = min (fromIntegral rh * 8 `div` 10) (max 300 (fromIntegral rh * 6 `div` 10))
+
+            -- Calculate absolute positions centered in recording area
+            xPos = rx + (fromIntegral rw - winW) `div` 2
+            yPos = ry + (fromIntegral rh - winH) `div` 2
+
+        -- liftX $ io $ appendFile "/tmp/xmonad-dialog-debug.log" $
+        --   unlines [ "Recording rectangle:"
+        --          , "  x: " ++ show rx
+        --          , "  y: " ++ show ry
+        --          , "  w: " ++ show rw
+        --          , "  h: " ++ show rh
+        --          , "Screen dimensions:"
+        --          , "  w: " ++ show sw
+        --          , "  h: " ++ show sh
+        --          , "Calculated position:"
+        --          , "  x: " ++ show (fromIntegral xPos / fromIntegral sw)
+        --          , "  y: " ++ show (fromIntegral yPos / fromIntegral sh)
+        --          , "  w: " ++ show (fromIntegral winW / fromIntegral sw)
+        --          , "  h: " ++ show (fromIntegral winH / fromIntegral sh)
+        --          , "-------------------"
+        --          ]
+
+        doRectFloat $ W.RationalRect
+          (fromIntegral xPos / fromIntegral sw)
+          (fromIntegral yPos / fromIntegral sh)
+          (fromIntegral winW / fromIntegral sw)
+          (fromIntegral winH / fromIntegral sh)
 
 myHandleEventHook :: Event -> X All
 myHandleEventHook = dynamicPropertyChange "WM_NAME"

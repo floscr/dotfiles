@@ -94,12 +94,13 @@
         ext "mp4"
         path (or (:file opts)
                  (filename (:animated default-dirs) ext))
-        {:keys [width height x y]} (get-x-rect)
+        {:keys [width height x y] :as rect} (get-x-rect)
         resolution (lib.x11/display-resolution)
         safe-width (-> (- (min (+ x width) (dec (:width resolution))) x)
                        (divisible-by-two))
         safe-height (-> (- (min (+ y height) (dec (:height resolution))) y)
                         (divisible-by-two))
+        _ (spit "/tmp/my-screen-capture-rect" (format "Rectangle %d %d %d %d" x y safe-width safe-height))
         cmd ["ffmpeg"
              "-xerror"
              "-y" ; Ignore globals
