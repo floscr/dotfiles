@@ -8,7 +8,6 @@ with lib.my;
     ./sound.nix
     # ./throttled.nix
     ../personal.nix
-    ../pitch.nix
     ../penpot.nix
     ../hyma.nix
     ./bindings.nix
@@ -81,6 +80,7 @@ with lib.my;
     scdl
     blender
     unstable.aider-chat
+    sox
   ] ++ flake-packages;
 
   hardware.logitech.wireless.enable = true;

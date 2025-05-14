@@ -16,7 +16,7 @@ in
       nodePackages.typescript-language-server
       nodePackages.eslint_d
 
-      nodejs-18_x
+      nodejs_23
       corepack
       nodePackages.prettier
       deno

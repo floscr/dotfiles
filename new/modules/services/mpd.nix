@@ -42,7 +42,7 @@ in
       };
     };
 
-    hardware.pulseaudio.tcp = {
+    services.pulseaudio.tcp = {
       enable = true;
       anonymousClients.allowedIpRanges = [ "127.0.0.1" ];
     };

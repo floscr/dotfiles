@@ -11,11 +11,11 @@ in
 
   config = mkIf cfg.enable {
     # sound.enable = true;
-    hardware.pulseaudio.enable = true;
+    services.pulseaudio.enable = true;
 
     # HACK Prevents ~/.esd_auth files by disabling the esound protocol module
     #      for pulseaudio, which I likely don't need. Is there a better way?
-    hardware.pulseaudio.configFile =
+    services.pulseaudio.configFile =
       let inherit (pkgs) runCommand pulseaudio;
         paConfigFile =
           runCommand "disablePulseaudioEsoundModule"
