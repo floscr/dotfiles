@@ -60,6 +60,7 @@
     playerctl
     pavucontrol
     blueman
+    alsa-utils
     (pkgs.writeScriptBin "switch-sound-monitor" ''
       #!${stdenv.shell}
 
