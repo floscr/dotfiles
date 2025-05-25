@@ -26,8 +26,16 @@ in
 
   config = mkIf cfg.enable {
     user.packages = with pkgs; [
-      brave
+      (
+        (brave.override {
+          commandLineArgs = [
+            # Disable KDE Wallet integration to prevent password prompts
+            "--password-store=basic"
+          ];
+        })
+      )
     ];
+
     modules.bindings.items = [
       {
         description = "Brave";
