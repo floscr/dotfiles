@@ -115,8 +115,21 @@
   [{:cmds ["fix"] :fn (fn [_] (nixos-fix-playwright!))}
    {:cmds ["run-wrapped"] :fn run-wrapped-cmd}])
 
+(defn dispatch [& args]
+  (try
+    (cli/dispatch table args)
+    (catch Exception e
+      (let [err-type (:type (ex-data e))]
+        (cond
+          (= :babashka.process/error err-type)
+          (let [{:keys [exit]} (ex-data e)]
+            ;; Assume that the subprocess has already printed an error message
+            (System/exit exit))
+          :else
+          (throw e))))))
+
 (defn -main [& args]
-  (cli/dispatch table args))
+  (apply dispatch args))
 
 (when (= *file* (System/getProperty "babashka.file"))
   (apply -main *command-line-args*))
