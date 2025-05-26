@@ -103,20 +103,21 @@ with lib.my;
 
   modules-new = {
     scripts = {
-      bfocus.enable = true;
       bblock.enable = true;
-      bhotplug.enable = true;
-      bscan.enable = true;
-      bdocs.enable = true;
-      screen-capture.enable = true;
-      monitor_brightness.enable = true;
-      zzz.enable = true;
-      invert_colors.enable = true;
-      get_url_title.enable = true;
-      mpv_ctrl.enable = true;
-      watch_last.enable = true;
-      org_attach.enable = true;
       bbluetooth.enable = true;
+      bdocs.enable = true;
+      bfocus.enable = true;
+      bhotplug.enable = true;
+      bplaywright.enable = true;
+      bscan.enable = true;
+      get_url_title.enable = true;
+      invert_colors.enable = true;
+      monitor_brightness.enable = true;
+      mpv_ctrl.enable = true;
+      org_attach.enable = true;
+      screen-capture.enable = true;
+      watch_last.enable = true;
+      zzz.enable = true;
     };
   };
 

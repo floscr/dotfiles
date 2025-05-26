@@ -8,7 +8,7 @@
       google-cloud-sdk.components.gke-gcloud-auth-plugin
     ])
     kubectl
-    playwright
+    python313Packages.playwright
     figma-linux
   ];
 }
