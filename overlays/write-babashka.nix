@@ -9,10 +9,16 @@ let
   '';
 in
 {
-  writeBb = name: { content, deps ? [ ] }:
+  writeBb = name: { content, deps ? [ ], env ? {} }:
+    let
+      envPrefix = lib.concatStringsSep " " (lib.mapAttrsToList (k: v: "${k}=${v}") env);
+      interpreter = if envPrefix == "" then bb else pkgs.writers.writeBash "nix-bb-with-env" ''
+        ${envPrefix} ${bb} "$@"
+      '';
+    in
     (writers.makeScriptWriter
       {
-        interpreter = bb;
+        interpreter = interpreter;
       }
       "/bin/${name}"
       content
