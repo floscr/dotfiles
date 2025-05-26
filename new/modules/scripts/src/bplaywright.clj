@@ -62,7 +62,7 @@
   So we override the playwright browsers config to fit the Nixos browser version."
   [{:keys [revision version] :as _browser-config}]
   (let [browsers-json-path (or (find-browsers-json)
-                               (throw (Exception. "Could not find browsers-json")))
+                               (throw (ex-info "Could not find browsers.json" {:type ::browsers-json-not-found})))
         fixed-json (-> (slurp browsers-json-path)
                        (json/parse-string)
                        (update "browsers" (fn [browsers]
@@ -121,6 +121,10 @@
     (catch Exception e
       (let [err-type (:type (ex-data e))]
         (cond
+          (= ::browsers-json-not-found err-type)
+          (do
+            (println "Error: " (ex-message e))
+            (System/exit 1))
           (= :babashka.process/error err-type)
           (let [{:keys [exit]} (ex-data e)]
             ;; Assume that the subprocess has already printed an error message
