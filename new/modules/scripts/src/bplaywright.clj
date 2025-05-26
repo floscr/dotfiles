@@ -90,10 +90,30 @@
 
 ;; Commands --------------------------------------------------------------------
 
+(defn run-wrapped-cmd
+  "Fix playwright and then run the provided command with the necessary environment variables"
+  [{:keys [opts args]}]
+  (println "Fixing playwright...")
+  (nixos-fix-playwright!)
+
+  (println "Running command with playwright environment variables...")
+  (let [browser-config (nixos-find-playwright-chromium-executable)
+        executable (:executable browser-config)
+        env-vars {"PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS" "1"
+                  "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD" "1"}
+        cmd (str/join " " args)]
+
+    (println "Using browser executable:" (str executable))
+    (println "Environment variables:" env-vars)
+    (println "Running command:" cmd)
+
+    (bp/shell {:extra-env env-vars} cmd)))
+
 ;; Main ------------------------------------------------------------------------
 
 (def table
-  [{:cmds ["fix"] :fn (fn [_] (nixos-fix-playwright!))}])
+  [{:cmds ["fix"] :fn (fn [_] (nixos-fix-playwright!))}
+   {:cmds ["run-wrapped"] :fn run-wrapped-cmd}])
 
 (defn -main [& args]
   (cli/dispatch table args))
