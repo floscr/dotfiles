@@ -1,15 +1,23 @@
-[ -d "$ZGEN_DIR" ] || git clone https://github.com/tarjoilija/zgen "$ZGEN_DIR"
-source $ZGEN_SOURCE
-if ! zgen saved; then
-  echo "Initializing zgen"
-  zgen load hlissner/zsh-autopair autopair.zsh
-  zgen load zsh-users/zsh-history-substring-search
-  zgen load zdharma/history-search-multi-word
-  zgen load zsh-users/zsh-completions src
-  zgen load junegunn/fzf shell
-  zgen load kutsan/zsh-system-clipboard
-  [ -z "$SSH_CONNECTION" ] && zgen load zdharma/fast-syntax-highlighting
-  zgen save
+# Only attempt to load zgen if we're in an interactive shell
+if [[ -o interactive ]]; then
+  # Clone zgen if it doesn't exist
+  [ -d "$ZGEN_DIR" ] || git clone https://github.com/tarjoilija/zgen "$ZGEN_DIR"
+  
+  # Only source zgen if the file exists
+  if [[ -f "$ZGEN_SOURCE" ]]; then
+    source "$ZGEN_SOURCE"
+    if ! zgen saved; then
+      echo "Initializing zgen"
+      zgen load hlissner/zsh-autopair autopair.zsh
+      zgen load zsh-users/zsh-history-substring-search
+      zgen load zdharma/history-search-multi-word
+      zgen load zsh-users/zsh-completions src
+      zgen load junegunn/fzf shell
+      zgen load kutsan/zsh-system-clipboard
+      [ -z "$SSH_CONNECTION" ] && zgen load zdharma/fast-syntax-highlighting
+      zgen save
+    fi
+  fi
 fi
 
 source $ZDOTDIR/config.zsh
@@ -44,7 +52,10 @@ if [[ $TERM != dumb ]]; then
   # Load nix generated files
   source $ZDOTDIR/extra.zshrc
 
-  autopair-init
+  # Only run autopair-init if the function exists
+  if typeset -f autopair-init > /dev/null; then
+    autopair-init
+  fi
 
   # For local-only configuration
   [ -f ~/.zshrc ] && source ~/.zshrc
