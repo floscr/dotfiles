@@ -63,7 +63,6 @@ with lib.my;
     exiftool
     gimp
     google-chrome
-    jellyfin-media-player
     lsof
     magic-wormhole
     ncspot
@@ -79,7 +78,6 @@ with lib.my;
     unzip
     usbutils
     watchexec
-    zed-editor
     zip
   ] ++ flake-packages;
 
