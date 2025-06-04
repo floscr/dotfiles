@@ -56,31 +56,31 @@ with lib.my;
   '';
 
   user.packages = with pkgs; [
-    zed-editor
-    textsnatcher
+    appimage-run
+    blender
     calibre
-    magic-wormhole
-    unzip
-    s-tui
     custom.nim-utils.bose_battery_level
-    unstable.signal-desktop
+    exiftool
+    gimp
+    google-chrome
     jellyfin-media-player
     lsof
-    google-chrome
-    chrysalis
-    zip
-    unrar
+    magic-wormhole
+    ncspot
     pins.nix-search-cli
-    timer
-    exiftool
-    appimage-run
-    usbutils
-    geeqie
-    watchexec
+    s-tui
     scdl
-    blender
-    unstable.aider-chat
     sox
+    textsnatcher
+    timer
+    unrar
+    unstable.aider-chat
+    unstable.signal-desktop
+    unzip
+    usbutils
+    watchexec
+    zed-editor
+    zip
   ] ++ flake-packages;
 
   hardware.logitech.wireless.enable = true;
