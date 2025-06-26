@@ -61,6 +61,8 @@ with lib.my;
     home-manager = {
       useUserPackages = true;
 
+      backupFileExtension = "back";
+
       # I only need a subset of home-manager's capabilities. That is, access to
       # its home.file, home.xdg.configFile and home.xdg.dataFile so I can deploy
       # files easily to my $HOME, but 'home-manager.users.hlissner.home.file.*'
