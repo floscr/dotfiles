@@ -57,6 +57,18 @@ if [[ $TERM != dumb ]]; then
     autopair-init
   fi
 
+  function use_default_directory() {
+    local default_dir_file="$HOME/.config/.default-directory"
+    if [[ -f "$default_dir_file" ]]; then
+      local target_dir=$(cat "$default_dir_file")
+      if [[ -d "$target_dir" ]]; then
+        cd "$target_dir"
+      fi
+    fi
+  }
+
+  use_default_directory
+
   # For local-only configuration
   [ -f ~/.zshrc ] && source ~/.zshrc
 fi
