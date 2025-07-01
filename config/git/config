@@ -38,5 +38,6 @@
     insteadOf = bb:
 [url "https://git.v0.com"]
     insteadOf = v0:
-[blame]
-	ignoreRevsFile = .git-blame-ignore-revs
+# Dont add this here will brake the blame
+# [blame]
+# 	ignoreRevsFile = .git-blame-ignore-revs
