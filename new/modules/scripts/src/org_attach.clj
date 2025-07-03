@@ -127,22 +127,23 @@
 
 (defn main [{:keys [opts]}]
   (let [{:keys [url yank screenshot _attach-dir]} opts
-        typed (if url
-                (string->typed url)
-                (clipboard-content->typed))]
+        [kind :as typed] (if url
+                           (string->typed url)
+                           (clipboard-content->typed))
+        url? (= kind :url)]
     (cond-> typed
-        screenshot take-screenshot!
+        (and url? screenshot) take-screenshot!
         :always (attach-typed opts)
         yank (doto lib.clipboard/set-clip)
         :else (doto println))))
 
 (defn help [_]
-  (let [help-str (-> ["org_attach <url>"
-                      "  --yank          Copy result to clipboard"
-                      "  --attach-dir    Change the attachment dir"
-                      "  --screenshot    Create a screenshot using playwright to attach"]
-                     (str/join "\n"))]
-    (prn help-str)))
+  (let [help-str (->> ["org_attach <url>"
+                       "  --yank          Copy result to clipboard"
+                       "  --attach-dir    Change the attachment dir"
+                       "  --screenshot    Create a screenshot using playwright to attach"]
+                      (str/join "\n"))]
+    (println help-str)))
 
 ;; Main ------------------------------------------------------------------------
 
