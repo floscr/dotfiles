@@ -80,16 +80,20 @@
         [_f ext] (fs/split-ext (fs/file-name file))]
     (str md5 "." ext)))
 
-(defn take-screenshot! [[_ url] & {:keys [width height]
+(defn take-screenshot! [[_ url] & {:keys [width height full-page? dst]
                                    :or {width 1280
-                                        height 720}}]
+                                        height 720
+                                        full-page? true
+                                        dst (fs/create-temp-file {:prefix "playwright-screenshot"
+                                                                  :suffix ".png"})}}]
   (try
-    (let [temp-file (fs/create-temp-file {:prefix "org-attach-playwright-screenshot"
-                                          :suffix ".png"})
-          args ["playwright" "screenshot" (format "--viewport-size=%s,%s" width height) url (str temp-file)]]
-      (prn args)
+    (let [args ["playwright" "screenshot"
+                (when (and width height) (format "--viewport-size=%s,%s" width height))
+                (when full-page? "--full-page")
+                url
+                (str dst)]]
       (bp/shell args)
-      [:file (str temp-file)])
+      [:file (str dst)])
     (catch Exception e
       [:error (str "Exception taking screenshot: " (.getMessage e))])))
 
