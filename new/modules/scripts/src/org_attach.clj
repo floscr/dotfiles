@@ -92,7 +92,7 @@
                 (when full-page? "--full-page")
                 url
                 (str dst)]]
-      (bp/shell args)
+      (apply (partial bp/shell {:out :string :err :string}) args)
       [:file (str dst)])
     (catch Exception e
       [:error (str "Exception taking screenshot: " (.getMessage e))])))
