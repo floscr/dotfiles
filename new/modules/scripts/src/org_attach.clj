@@ -80,6 +80,23 @@
         [_f ext] (fs/split-ext (fs/file-name file))]
     (str md5 "." ext)))
 
+(defn take-screenshot! [[_ url] & {:keys [width height]
+                                   :or {width 1280
+                                        height 720}}]
+  (try
+    (let [temp-file (fs/create-temp-file {:prefix "org-attach-playwright-screenshot"
+                                          :suffix ".png"})
+          args ["playwright" "screenshot" (format "--viewport-size=%s,%s" width height) url (str temp-file)]]
+      (prn args)
+      (bp/shell args)
+      [:file (str temp-file)])
+    (catch Exception e
+      [:error (str "Exception taking screenshot: " (.getMessage e))])))
+
+(comment
+  (take-screenshot! [:url "https://naeemnur.com/side-projects/"])
+  nil)
+
 (defn attach-file [file {:keys [attach-dir]
                          :or {attach-dir clojure-attach-dir}}]
   (match file
@@ -105,18 +122,21 @@
 ;; Commands --------------------------------------------------------------------
 
 (defn main [{:keys [opts]}]
-  (let [{:keys [url yank _attach-dir]} opts
+  (let [{:keys [url yank screenshot _attach-dir]} opts
         typed (if url
                 (string->typed url)
                 (clipboard-content->typed))]
-    (cond-> (attach-typed typed opts)
+    (cond-> typed
+        screenshot take-screenshot!
+        :always (attach-typed opts)
         yank (doto lib.clipboard/set-clip)
         :else (doto println))))
 
 (defn help [_]
   (let [help-str (-> ["org_attach <url>"
                       "  --yank          Copy result to clipboard"
-                      "  --attach-dir    Change the attachment dir"]
+                      "  --attach-dir    Change the attachment dir"
+                      "  --screenshot    Create a screenshot using playwright to attach"]
                      (str/join "\n"))]
     (prn help-str)))
 
