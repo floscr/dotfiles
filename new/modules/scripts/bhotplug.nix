@@ -30,7 +30,7 @@ in
           serviceConfig = {
             Type = "oneshot";
             RemainAfterExit = true;
-            ExecStart = "${pkgs.babashka}/bin/bb --deps-root $HOME/.config/dotfiles/new/modules/scripts /home/floscr/.config/dotfiles/new/modules/scripts/src/bhotplug.clj";
+            ExecStart = "${pkgs.babashka}/bin/bb --config $HOME/.config/dotfiles/new/modules/scripts/bb.edn $HOME/.config/dotfiles/new/modules/scripts/src/bhotplug.clj";
           };
           wantedBy = [ "default.target" ];
         };
