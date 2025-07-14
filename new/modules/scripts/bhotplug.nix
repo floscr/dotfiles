@@ -26,6 +26,7 @@ in
             xorg.xrandr
             xorg.xsetroot
             xorg.xrdb
+            emacs
           ];
           serviceConfig = {
             Type = "oneshot";
