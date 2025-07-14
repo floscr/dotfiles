@@ -10,8 +10,6 @@ in
   };
 
   config = mkIf cfg.enable (
-    let restartHotplugServiceCmd = "${pkgs.systemd}/bin/systemctl --user restart bhotplug.service";
-    in
     {
       nixpkgs.overlays = [ inputs.emacs-overlay.overlay ];
 
@@ -21,13 +19,13 @@ in
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = false;
-          ExecStart = restartHotplugServiceCmd;
+          ExecStart = "${pkgs.systemd}/bin/systemctl --user restart bhotplug.service";
         };
       };
 
       # Jesus christ udev
       # https://superuser.com/a/1401322
-      services.udev.extraRules = ''ACTION=="change", KERNEL=="card0", SUBSYSTEM=="drm", ENV{HOTPLUG}=="1", ENV{SYSTEMD_USER_WANTS}+="hotplug-monitor@$env{SEQNUM}.service", TAG+="systemd"'';
+      services.udev.extraRules = ''ACTION=="change", KERNEL=="card1", SUBSYSTEM=="drm", ENV{HOTPLUG}=="1", ENV{SYSTEMD_USER_WANTS}+="hotplug-monitor@$env{SEQNUM}.service", TAG+="systemd"'';
     }
   );
 }
