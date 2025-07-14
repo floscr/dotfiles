@@ -80,12 +80,13 @@
         [_f ext] (fs/split-ext (fs/file-name file))]
     (str md5 "." ext)))
 
-(defn take-screenshot! [[_ url] & {:keys [width height full-page? dst]
-                                   :or {width 1280
-                                        height 720
-                                        full-page? true
-                                        dst (fs/create-temp-file {:prefix "playwright-screenshot"
-                                                                  :suffix ".png"})}}]
+(defn take-screenshot!
+  [[_ url] & {:keys [width height full-page? dst]
+              :or {width 1280
+                   height 720
+                   full-page? true
+                   dst (fs/create-temp-file {:prefix "playwright-screenshot"
+                                             :suffix ".png"})}}]
   (try
     (let [args ["playwright" "screenshot"
                 (when (and width height) (format "--viewport-size=%s,%s" width height))
