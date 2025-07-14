@@ -146,6 +146,15 @@ toggleSticky = wsContainingCopies >>= \ws -> case ws of
   [] -> windows copyToAll
   _  -> killAllOtherCopies
 
+-- | Unfloat all windows in the current workspace
+unfloatAllWindows :: X ()
+unfloatAllWindows = withWindowSet $ \ws -> 
+  let floating = W.floating ws
+      current = W.workspace (W.current ws)
+      wins = W.integrate' (W.stack current)
+      floatingWins = filter (`M.member` floating) wins
+  in mapM_ (windows . W.sink) floatingWins
+
 -- Put the most recent clicked floating window on top
 floatClickFocusHandler :: Event -> X All
 floatClickFocusHandler ButtonEvent { ev_window = w } = do
@@ -399,6 +408,7 @@ myCommands =
   , ("layout-monocle-three-columns", sendMessage $ JumpToLayout "Three Columns")
   , ("layout-monocle-full"         , sendMessage $ JumpToLayout "Full")
   , ("restart", spawn "xmonad --recompile; xmonad --restart")
+  , ("unfloat-all", unfloatAllWindows)
   ]
 
 commandsList :: String
