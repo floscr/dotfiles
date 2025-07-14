@@ -26,7 +26,8 @@ in
             xorg.xrandr
             xorg.xsetroot
             xorg.xrdb
-            emacs
+            # Use the emacsclient from the custom Emacs package
+            (lib.mkIf config.modules.editors.emacs.enable config.modules.editors.emacs.package)
           ];
           serviceConfig = {
             Type = "oneshot";

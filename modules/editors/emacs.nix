@@ -2,13 +2,26 @@
 
 with lib;
 with lib.my;
-let cfg = config.modules.editors.emacs;
+let 
+  cfg = config.modules.editors.emacs;
+  emacsPkg = (pkgs.emacsPackagesFor pkgs.unstable.emacs).emacsWithPackages
+    (epkgs: with epkgs; [
+      treesit-grammars.with-all-grammars
+      vterm
+      pdf-tools
+      mu4e
+    ]);
 in
 {
   options.modules.editors.emacs = {
     enable = mkBoolOpt false;
     enableServer = mkBoolOpt false;
     enableMail = mkBoolOpt false;
+    package = mkOption {
+      type = types.package;
+      default = emacsPkg;
+      description = "The Emacs package to use";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -18,13 +31,7 @@ in
       ## Emacs itself
       binutils # native-comp needs 'as', provided by this
 
-      ((emacsPackagesFor unstable.emacs).emacsWithPackages
-        (epkgs: with epkgs; [
-          treesit-grammars.with-all-grammars
-          vterm
-          pdf-tools
-          mu4e
-        ]))
+      emacsPkg
 
       parinfer-rust-emacs
 
@@ -84,7 +91,7 @@ in
 
     services.emacs = {
       enable = cfg.enableServer;
-      package = pkgs.emacsPkgs.emacsNativeComp;
+      package = cfg.package;
     };
 
     env = {
