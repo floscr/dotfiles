@@ -3,7 +3,7 @@
 {
   user.packages = with pkgs; [
     obsidian
-    python313Packages.playwright
+    playwrightPkgs.python313Packages.playwright
     figma-linux
     python3
     (pkgs.python3.withPackages (p: (with p; [

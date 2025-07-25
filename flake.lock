@@ -698,6 +698,22 @@
         "type": "github"
       }
     },
+    "playwright-pkgs": {
+      "locked": {
+        "lastModified": 1746021374,
+        "narHash": "sha256-/VhfVWEoFanQT9/HYaUxr72o2HRzVnlPWkCvCvhSlhQ=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "c131f21806d773c2ecb50ce094de7cf1dbca5206",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "c131f21806d773c2ecb50ce094de7cf1dbca5206",
+        "type": "github"
+      }
+    },
     "rofi_cmder": {
       "inputs": {
         "flake-utils": "flake-utils_6",
@@ -753,6 +769,7 @@
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nur": "nur",
         "org_print_scan": "org_print_scan",
+        "playwright-pkgs": "playwright-pkgs",
         "rofi_cmder": "rofi_cmder",
         "rofi_org_bookmarks": "rofi_org_bookmarks",
         "scanner-pkgs": "scanner-pkgs"

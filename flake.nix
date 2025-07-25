@@ -7,9 +7,20 @@
       nixpkgs-unstable.url = "nixpkgs/master";
       nixos-hardware.url = "github:nixos/nixos-hardware";
 
-      # Package lock overrides
+      # Pins -------------------------------------------------------------------------
+
+      # Pin fira code - slow rebuilds, not necessary to update so often
       fira-code-pkgs.url = "github:nixos/nixpkgs/a3e6348d2c68103b0c96e35b3d94c4ea0e6f9e50";
+
+      # Pin scanner pkgs - instability issues, slow build
       scanner-pkgs.url = "github:nixos/nixpkgs/c131f21806d773c2ecb50ce094de7cf1dbca5206";
+
+      # Pin playwright - instability issues, slow build
+      playwright-pkgs.url = "github:nixos/nixpkgs/c131f21806d773c2ecb50ce094de7cf1dbca5206";
+
+      # Pin emacs - slow build
+      emacs-overlay.url = "github:nix-community/emacs-overlay";
+      emacs-nixpkgs.url = "github:nixos/nixpkgs/6cee3b5893090b0f5f0a06b4cf42ca4e60e5d222";
 
       # External packages
       home-manager.url = "github:rycee/home-manager/master";
@@ -22,11 +33,7 @@
       };
 
       # secrets = { url = "/etc/dotfiles-private"; flake = false; };
-
-      emacs-overlay.url = "github:nix-community/emacs-overlay";
-      emacs-nixpkgs.url = "github:nixos/nixpkgs/6cee3b5893090b0f5f0a06b4cf42ca4e60e5d222";
       nur.url = "github:nix-community/NUR";
-
 
       flake-utils.url = "github:ursi/flake-utils/d939d2e5d73cd3468a05661e4471838b64547e6b";
       org_print_scan.url = "github:floscr/org_print_scan";
@@ -51,6 +58,7 @@
     , rofi_cmder
     , rofi_org_bookmarks
     , scanner-pkgs
+    , playwright-pkgs
     , ...
     }:
     let
@@ -108,6 +116,7 @@
       uPkgs = mkPkgs nixpkgs-unstable [ ];
       firaCodePkgs = mkPkgs fira-code-pkgs [ self.overlay nur.overlays.default ];
       scannerPkgs = mkPkgs scanner-pkgs [ ];
+      playwrightPkgs = mkPkgs playwright-pkgs [ ];
       emacsPkgs = mkEmacsPkgs emacs-nixpkgs;
       myCustomPkgs = mkExtraPkgs nixpkgs;
 
@@ -124,6 +133,7 @@
           custom = myCustomPkgs;
           unstable = uPkgs;
           scannerPkgs = scannerPkgs;
+          playwrightPkgs = playwrightPkgs;
           user = self.packages."${system}";
         };
 

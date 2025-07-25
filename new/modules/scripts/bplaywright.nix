@@ -15,18 +15,18 @@ in
         pkg = (pkgs.writeBb "bplaywright" {
           content = ./src/bplaywright.clj;
           env = {
-            PLAYWRIGHT_BROWSERS_PATH = pkgs.playwright-driver.browsers;
+            PLAYWRIGHT_BROWSERS_PATH = pkgs.playwrightPkgs.playwright-driver.browsers;
           };
         });
       in
       {
         user.packages = with pkgs; [
-          python313Packages.playwright
-          playwright-driver.browsers
+          playwrightPkgs.python313Packages.playwright
+          playwrightPkgs.playwright-driver.browsers
           pkg
         ];
         env = {
-          PLAYWRIGHT_BROWSERS_PATH = pkgs.playwright-driver.browsers;
+          PLAYWRIGHT_BROWSERS_PATH = pkgs.playwrightPkgs.playwright-driver.browsers;
           PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "true";
         };

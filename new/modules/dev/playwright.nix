@@ -11,10 +11,10 @@ in
 
   config = mkIf cfg.enable {
     user.packages = with pkgs; [
-      playwright-driver.browsers
+      playwrightPkgs.playwright-driver.browsers
     ];
     env = {
-      PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
+      PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwrightPkgs.playwright-driver.browsers}";
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
     };
   };
