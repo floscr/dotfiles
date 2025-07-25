@@ -9,7 +9,7 @@
 
       # Package lock overrides
       fira-code-pkgs.url = "github:nixos/nixpkgs/a3e6348d2c68103b0c96e35b3d94c4ea0e6f9e50";
-      utsushi-nixpkgs.url = "github:nixos/nixpkgs/fbf68b6e4a8c5f518977a3e4b1ec4828efbb8efd";
+      scanner-pkgs.url = "github:nixos/nixpkgs/c131f21806d773c2ecb50ce094de7cf1dbca5206";
 
       # External packages
       home-manager.url = "github:rycee/home-manager/master";
@@ -50,7 +50,7 @@
     , org_print_scan
     , rofi_cmder
     , rofi_org_bookmarks
-    , utsushi-nixpkgs
+    , scanner-pkgs
     , ...
     }:
     let
@@ -107,7 +107,7 @@
       pkgs = mkPkgs nixpkgs [ self.overlay nur.overlays.default ];
       uPkgs = mkPkgs nixpkgs-unstable [ ];
       firaCodePkgs = mkPkgs fira-code-pkgs [ self.overlay nur.overlays.default ];
-      utsushiPkgs = mkPkgs utsushi-nixpkgs [ ];
+      scannerPkgs = mkPkgs scanner-pkgs [ ];
       emacsPkgs = mkEmacsPkgs emacs-nixpkgs;
       myCustomPkgs = mkExtraPkgs nixpkgs;
 
@@ -123,7 +123,7 @@
           firaCodePkgs = firaCodePkgs;
           custom = myCustomPkgs;
           unstable = uPkgs;
-          utsuhiPkgs = utsushiPkgs;
+          scannerPkgs = scannerPkgs;
           user = self.packages."${system}";
         };
 

@@ -11,14 +11,14 @@ in
 
   config = mkIf cfg.enable {
     user.packages = with pkgs; [
-      scantailor
+      scannerPkgs.scantailor
     ];
 
     hardware.sane.enable = true;
     hardware.sane.extraBackends = with pkgs; [
-      epkowa
-      pkgs.utsuhiPkgs.utsushi
+      scannerPkgs.epkowa
+      scannerPkgs.utsushi
     ];
-    services.udev.packages = [ pkgs.utsuhiPkgs.utsushi ];
+    services.udev.packages = [ pkgs.scannerPkgs.utsushi ];
   };
 }
