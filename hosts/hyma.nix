@@ -1,9 +1,15 @@
 { config, lib, pkgs, ... }:
 
 {
+  modules = {
+    editors.vscode.enable = true;
+  };
+
   user.packages = with pkgs; [
     obsidian
     playwrightPkgs.python313Packages.playwright
+    haxe
+    neko
     figma-linux
     python3
     (pkgs.python3.withPackages (p: (with p; [
