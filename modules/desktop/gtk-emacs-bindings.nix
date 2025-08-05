@@ -11,5 +11,6 @@ in
 
   config = mkIf cfg.enable {
     home.configFile."gtk-3.0/gtk.css".source = ./gtk-emacs-bindings.css;
+    home.configFile."gtk-4.0/gtk.css".source = ./gtk-emacs-bindings.css;
   };
 }

@@ -1,3 +1,8 @@
+/* Debug: This should make all entries have a red border if CSS is loaded */
+entry {
+    border: 1px solid red;
+}
+
 VteTerminal, vte-terminal {
     padding: 15px;
 }
