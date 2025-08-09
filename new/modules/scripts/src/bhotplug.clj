@@ -8,6 +8,18 @@
 
 ;; Helpers ---------------------------------------------------------------------
 
+(defn parse-refresh-rate [xrandr-output]
+  (->> (str/split-lines (:out xrandr-output))
+       (filter #(re-find #" connected" %))
+       (map #(str/split % #"\s+"))
+       (mapcat rest)
+       (filter #(re-find #"\*\([\d\.]+\)" %))
+       (map #(re-find #"\(\d+\.\d+\)" %))
+       (map #(str/replace % #"\(|\)" ""))
+       (filter number?)
+       (map str)
+       (map #(Float/parseFloat %))))
+
 (defn connect-lg! []
   (bp/sh ["xrandr"
           "--output" "eDP-1" "--off"
@@ -43,6 +55,11 @@
         (map #(str/split % #"\s+"))
         (map first))
        (into #{})))
+
+(comment
+  (connected-outputs)
+  nil)
+
 
 (defn usbc-display-connected? []
   (some? (get (connected-outputs) "DP-3")))
