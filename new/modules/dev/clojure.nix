@@ -23,17 +23,12 @@ in
       user.bootleg # HTML Conversion
       gum
 
-      # Clojure CLIs
-      jet # JSON/EDN Query
-
       # Formatting
       clj-kondo
-      cljfmt
-      zprint
-
-      # uix
-      unstable.lightningcss
     ];
-    # home.configFile."clojure/deps.edn".source = ./deps.edn;
+
+    env = {
+      LOCALE_ARCHIVE = "${pkgs.glibcLocales}/lib/locale/locale-archive";
+    };
   };
 }
