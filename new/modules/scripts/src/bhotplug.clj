@@ -32,14 +32,25 @@
           "--rotate" "normal"
           "--auto"]))
 
+(defn connect-hdmi-tv! []
+  (bp/sh ["xrandr"
+          "--output" "eDP-1" "--off"
+          "--output" "HDMI-1"
+          "--primary"
+          "--dpi" "96"
+          "--mode" "1920x1080"
+          "--pos" "0x0"
+          "--rotate" "normal"
+          "--auto"]))
+
 (defn connect-internal! []
   (bp/sh ["xrandr"
           "--output" "VIRTUAL1" "--off"
           "--output" "DP-1" "--off"
           "--output" "DP-3" "--off"
           "--output" "DP-1" "--off"
-          "--output" "HDMI1" "--off"
-          "--output" "HDMI2" "--off"
+          "--output" "HDMI-1" "--off"
+          "--output" "HDMI-2" "--off"
           "--output" "eDP-1"
           "--primary"
           "--dpi" "92"
@@ -64,9 +75,13 @@
 (defn usbc-display-connected? []
   (some? (get (connected-outputs) "DP-3")))
 
+(defn hdmi-tv-connected? []
+  (some? (get (connected-outputs) "HDMI-1")))
+
 (comment
   (connected-outputs)
   (usbc-display-connected?)
+  (hdmi-tv-connected?)
   nil)
 
 (defn on-connect! []
@@ -81,12 +96,18 @@
 (defn hotplug-cmd [_opts]
   (let [outputs (connected-outputs)]
     (cond
-      (outputs "DP-3") (do (connect-lg!)
-                           (bp/sh "systemctl --user stop picom.service")
-                           (println "Connecting to LG External Display."))
-      :else (do (connect-internal!)
-                (bp/sh "systemctl --user start picom.service")
-                (println "Disconnecting displays, activating internal display.")))
+      (outputs "DP-3")
+      (do (connect-lg!)
+          (bp/sh "systemctl --user stop picom.service")
+          (println "Connecting to LG External Display."))
+      (outputs "HDMI-1")
+      (do (connect-hdmi-tv!)
+          (bp/sh "systemctl --user stop picom.service")
+          (println "Connecting to HDMI TV for video playback."))
+      :else
+      (do (connect-internal!)
+          (bp/sh "systemctl --user start picom.service")
+          (println "Disconnecting displays, activating internal display.")))
     (on-connect!)))
 
 ;; Main ------------------------------------------------------------------------
