@@ -48,7 +48,7 @@ in
       system.userActivationScripts.setupSteamDir = ''mkdir -p "${cfg.libDir}"'';
 
       # better for steam proton games
-      systemd.extraConfig = "DefaultLimitNOFILE=1048576";
+      systemd.settings.Manager.DefaultLimitNOFILE = 1048576;
     }
 
     (mkIf cfg.hardware.enable {
