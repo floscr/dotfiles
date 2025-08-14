@@ -6,12 +6,17 @@
   };
 
   user.packages = with pkgs; [
+    figma-linux
     obsidian
-    playwrightPkgs.python313Packages.playwright
+
+    # Haxe
     haxe
     neko
-    figma-linux
-    python3
+
+    playwrightPkgs.python313Packages.playwright
+
+    poetry
+    python3Full
     (pkgs.python3.withPackages (p: (with p; [
       python-lsp-server
       python-lsp-ruff
