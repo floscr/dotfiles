@@ -136,6 +136,7 @@ in
         "datareporting.healthreport.uploadEnabled" = false;
         "datareporting.healthreport.service.enabled" = false;
         "datareporting.policy.dataSubmissionEnabled" = false;
+        "general.smoothScroll" = false;
       };
 
       # Use a stable profile name so we can target it in themes
