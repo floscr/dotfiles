@@ -56,7 +56,7 @@ in
         enable = true;
         package = firefoxWrapped;
         profiles.${cfg.profileName} = {
-          extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+          extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
             vimium
             ublock-origin
           ];
