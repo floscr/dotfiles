@@ -17,16 +17,18 @@
     entries))
 
 (comment
-  (->> (slurp "/home/floscr/Code/Work/Hyma/penpot/repo/prompt")
-       (parse-patches)
-       (map (fn [{:keys [filename search-src replace-src] :as block}]
-              (try
-                (let [path (str (fs/path "/home/floscr/Code/Work/Hyma/penpot/repo" filename))
-                      source (slurp path)
-                      modified (str/replace-first source search-src replace-src)]
-                  (spit path modified)
-                  :done)
-                (catch Exception _ block))))
-       (remove #(= :done %)))
+  (let [items (->> (slurp "/home/floscr/Code/Work/Hyma/penpot/repo/changes")
+                   (parse-patches)
+                   (map (fn [{:keys [filename search-src replace-src] :as block}]
+                         (try
+                          (let [path (str (fs/path "/home/floscr/Code/Work/Hyma/penpot/repo" filename))
+                                source (slurp path)
+                                modified (str/replace-first source search-src replace-src)]
+                            (spit path modified
+                               :done))
+                          (catch Exception _ block)))))
+        unfinished (remove #(= :done %) items)]
+    (prn (str (count items) "/" (- (count items) (count unfinished))))
+    unfinished)
 
   nil)
