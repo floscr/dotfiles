@@ -29,6 +29,7 @@ in
 
     env = {
       LOCALE_ARCHIVE = "${pkgs.glibcLocales}/lib/locale/locale-archive";
+      MAVEN_OPTS = "-Dmaven.repo.local=./.m2/repository";
     };
   };
 }
