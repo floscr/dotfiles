@@ -143,6 +143,11 @@ in
         "datareporting.healthreport.service.enabled" = false;
         "datareporting.policy.dataSubmissionEnabled" = false;
         "general.smoothScroll" = false;
+        # Disable search suggestions and trending searches
+        "browser.search.suggest.enabled" = false;
+        "browser.urlbar.suggest.searches" = false;
+        "browser.urlbar.trending.featureGate" = false;
+        "browser.urlbar.suggest.trending" = false;
       };
 
       # Use a stable profile name so we can target it in themes
