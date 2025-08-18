@@ -55,10 +55,12 @@ in
       home-manager.users.${config.user.name}.programs.firefox = {
         enable = true;
         package = firefoxWrapped;
-        extensions = with pkgs.nur.repos.rycee.firefox-addons; [
-          vimium
-          ublock-origin
-        ];
+        profiles.${cfg.profileName} = {
+          extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+            vimium
+            ublock-origin
+          ];
+        };
       };
 
       # Prevent auto-creation of ~/Desktop. The trailing slash is necessary; see
