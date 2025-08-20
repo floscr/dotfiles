@@ -73,7 +73,7 @@
 
 (defn log-cmd [{:keys [opts args]}]
   (init-db!)
-  (let [command (first args)
+  (let [command (or (:command opts) (first args))
         execution-dir (or (:execution-dir opts) (System/getProperty "user.dir"))]
     (if command
       (do
