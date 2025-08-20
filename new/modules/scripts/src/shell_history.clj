@@ -78,11 +78,8 @@
   (init-db!)
   (let [command (or (:command opts) (first args))
         execution-dir (or (:execution-dir opts) (System/getProperty "user.dir"))]
-    (if command
-      (do
-        (log-command! command execution-dir)
-        (println "Command logged:" command))
-      (println "Usage: shell_history log <command>"))))
+    (when command
+      (log-command! command execution-dir))))
 
 (defn list-cmd [_]
   (init-db!)
