@@ -71,17 +71,15 @@
 
 ;; CLI -------------------------------------------------------------------------
 
-(def cli-spec
-  {:log {:desc "Log a command"
-         :args->opts [:command]
-         :exec-args {:execution-dir (System/getProperty "user.dir")}}
-   :list {:desc "List commands by frequency"}
-   :project {:desc "List commands for current git project"}})
-
-(defn log-cmd [{:keys [command execution-dir]}]
+(defn log-cmd [{:keys [opts args]}]
   (init-db!)
-  (log-command! command execution-dir)
-  (println "Command logged:" command))
+  (let [command (first args)
+        execution-dir (or (:execution-dir opts) (System/getProperty "user.dir"))]
+    (if command
+      (do
+        (log-command! command execution-dir)
+        (println "Command logged:" command))
+      (println "Usage: shell_history log <command>"))))
 
 (defn list-cmd [_]
   (init-db!)
@@ -103,11 +101,9 @@
 ;; Main ------------------------------------------------------------------------
 
 (defn -main [& args]
-  (cli/dispatch
-    {:cmds cli-spec
-     :exec-args {:log log-cmd
-                 :list list-cmd
-                 :project project-cmd}}
-    args))
+  (let [table [{:cmds ["log"] :fn log-cmd :args->opts [:command]}
+               {:cmds ["list"] :fn list-cmd}
+               {:cmds ["project"] :fn project-cmd}]]
+    (cli/dispatch table args)))
 
 (apply -main *command-line-args*)
