@@ -22,7 +22,6 @@ in
       in
       {
         modules.shell.zsh.rcInit = ''
-          # Shell history logging
           preexec() {
             if [[ -n "$1" && "$1" != "shell_history"* ]]; then
               ${cmd} log "$1" >/dev/null 2>&1 &
