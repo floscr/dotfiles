@@ -38,15 +38,14 @@
     (catch Exception _ nil)))
 
 (defn log-command! [command execution-dir]
-  (let [git-root (get-git-root execution-dir)
-        upsert-sql (sql/format
-                    {:insert-into :commands
-                     :columns [:command :execution_dir :git_root :count :last_executed]
-                     :values [[command execution-dir git-root 1 "CURRENT_TIMESTAMP"]]
-                     :on-conflict [:command :execution_dir]
-                     :do-update-set {:count "count + 1"
-                                     :last_executed "CURRENT_TIMESTAMP"}})]
-    (sqlite/execute! db-path upsert-sql)))
+  (let [git-root (get-git-root execution-dir)]
+    (sqlite/execute! db-path
+      ["INSERT INTO commands (command, execution_dir, git_root, count, last_executed)
+        VALUES (?, ?, ?, 1, CURRENT_TIMESTAMP)
+        ON CONFLICT(command, execution_dir) DO UPDATE SET
+          count = count + 1,
+          last_executed = CURRENT_TIMESTAMP"
+       command execution-dir git-root])))
 
 (defn get-commands-by-frequency []
   (let [query (sql/format
