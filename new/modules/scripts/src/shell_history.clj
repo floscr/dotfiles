@@ -98,12 +98,123 @@
         (println (format "%4d  %s" count command))
         (println (format "      %s (%s)" execution_dir last_executed))))))
 
+(defn filter-commands [commands query]
+  (if (empty? query)
+    commands
+    (let [query-lower (str/lower-case query)]
+      (->> commands
+           (filter #(str/includes? (str/lower-case (:command %)) query-lower))
+           (sort-by #(str/index-of (str/lower-case (:command %)) query-lower))))))
+
+(defn clear-screen []
+  (print "\033[2J\033[H")
+  (flush))
+
+(defn move-cursor [row col]
+  (print (format "\033[%d;%dH" row col))
+  (flush))
+
+(defn hide-cursor []
+  (print "\033[?25l")
+  (flush))
+
+(defn show-cursor []
+  (print "\033[?25h")
+  (flush))
+
+(defn draw-prompt [query filtered-commands selected-idx]
+  (clear-screen)
+  (println (format "Command History > %s" query))
+  (println "")
+  (let [display-commands (take 10 filtered-commands)]
+    (doseq [[idx {:keys [command total_count]}] (map-indexed vector display-commands)]
+      (if (= idx selected-idx)
+        (println (format "\033[7m> %4d  %s\033[0m" total_count command))
+        (println (format "  %4d  %s" total_count command)))))
+  (move-cursor 1 (+ 18 (count query))))
+
+(defn read-key []
+  (let [k (.read System/in)]
+    (if (= k 27) ; ESC sequence
+      (let [k2 (.read System/in)]
+        (if (= k2 91) ; [
+          (let [k3 (.read System/in)]
+            (case k3
+              65 :up    ; Arrow up
+              66 :down  ; Arrow down
+              67 :right ; Arrow right  
+              68 :left  ; Arrow left
+              k3))
+          k2))
+      k)))
+
+(defn cleanup-terminal []
+  (clear-screen)
+  (show-cursor)
+  (bp/shell "stty icanon echo"))
+
+(defn interactive-cmd [_]
+  (init-db!)
+  (let [all-commands (get-commands-by-frequency)]
+    (bp/shell "stty -icanon -echo")
+    (hide-cursor)
+    (try
+      (loop [query ""
+             selected-idx 0]
+        (let [filtered-commands (filter-commands all-commands query)
+              max-idx (max 0 (dec (min 10 (count filtered-commands))))
+              current-idx (min selected-idx max-idx)]
+          (draw-prompt query filtered-commands current-idx)
+          (let [k (read-key)]
+            (cond
+              ;; Enter key (13)
+              (= k 13)
+              (when (and (seq filtered-commands) (<= current-idx (dec (count filtered-commands))))
+                (let [selected-command (:command (nth filtered-commands current-idx))]
+                  (cleanup-terminal)
+                  (println selected-command)))
+              
+              ;; Escape key or Ctrl+C (3)
+              (or (= k 27) (= k 3))
+              (cleanup-terminal)
+              
+              ;; Backspace (127 or 8)
+              (or (= k 127) (= k 8))
+              (recur (if (empty? query) query (subs query 0 (dec (count query)))) 0)
+              
+              ;; Arrow up or Ctrl+P (16)
+              (or (= k :up) (= k 16))
+              (recur query (max 0 (dec current-idx)))
+              
+              ;; Arrow down or Ctrl+N (14)
+              (or (= k :down) (= k 14))
+              (recur query (min max-idx (inc current-idx)))
+              
+              ;; Regular character
+              (and (integer? k) (>= k 32) (<= k 126))
+              (recur (str query (char k)) 0)
+              
+              ;; Default - continue loop
+              :else
+              (recur query current-idx)))))
+      (catch Exception e
+        (cleanup-terminal)
+        (throw e)))))
+
+(defn fzf-cmd [_]
+  (init-db!)
+  (let [commands (get-commands-by-frequency)]
+    (doseq [{:keys [command total_count]} commands]
+      (println command))))
+
 ;; Main ------------------------------------------------------------------------
 
 (def table
   [{:cmds ["log"] :fn log-cmd :args->opts [:command]}
    {:cmds ["list"] :fn list-cmd}
-   {:cmds ["project"] :fn project-cmd}])
+   {:cmds ["project"] :fn project-cmd}
+   {:cmds ["fzf"] :fn fzf-cmd}
+   {:cmds ["interactive"] :fn interactive-cmd}])
 
 (defn -main [& args]
   (cli/dispatch table args))

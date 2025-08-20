@@ -101,7 +101,7 @@ with lib.my;
 
   modules-new = {
     scripts = {
-      shell_history.enable = false;
+      shell_history.enable = true;
       bblock.enable = true;
       bbluetooth.enable = true;
       bdocs.enable = true;

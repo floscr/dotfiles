@@ -24,6 +24,34 @@ in
               ${cmd} log "$1" </dev/null >/dev/null 2>&1 &!
             fi
           }
+          
+          # # Function to select command from history with fzf
+          # shell-history-fzf() {
+          #   local selected_command
+          #   selected_command=$(${cmd} fzf | fzf --height=40% --reverse --prompt="Command: ")
+          #   if [[ -n "$selected_command" ]]; then
+          #     BUFFER="$selected_command"
+          #     CURSOR=$#BUFFER
+          #     zle redisplay
+          #   fi
+          # }
+
+          # # Function to select command from history with interactive prompt
+          # shell-history-interactive() {
+          #   local selected_command
+          #   selected_command=$(${cmd} interactive)
+          #   if [[ -n "$selected_command" ]]; then
+          #     BUFFER="$selected_command"
+          #     CURSOR=$#BUFFER
+          #     zle redisplay
+          #   fi
+          # }
+
+          # # Create zle widgets and bind keys
+          # zle -N shell-history-fzf
+          # zle -N shell-history-interactive
+          # bindkey '^R' shell-history-interactive
+          # bindkey '^F' shell-history-fzf
         '';
         user.packages = with pkgs; [
           pkg
