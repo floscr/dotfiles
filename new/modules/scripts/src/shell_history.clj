@@ -5,8 +5,7 @@
    [babashka.pods :as pods]
    [babashka.process :as bp]
    [clojure.string :as str]
-   [honeysql.core :as sql]
-   [honeysql.helpers :as helpers]))
+   [honeysql.core :as sql]))
 
 ;; Pods ------------------------------------------------------------------------
 
@@ -20,7 +19,7 @@
 
 (defn init-db! []
   (sqlite/execute! db-path
-    "CREATE TABLE IF NOT EXISTS commands (
+    ["CREATE TABLE IF NOT EXISTS commands (
        id INTEGER PRIMARY KEY AUTOINCREMENT,
        command TEXT NOT NULL,
        execution_dir TEXT NOT NULL,
@@ -29,7 +28,7 @@
        first_executed DATETIME DEFAULT CURRENT_TIMESTAMP,
        last_executed DATETIME DEFAULT CURRENT_TIMESTAMP,
        UNIQUE(command, execution_dir)
-     )"))
+     )"]))
 
 (defn get-git-root [dir]
   (try
@@ -39,30 +38,33 @@
     (catch Exception _ nil)))
 
 (defn log-command! [command execution-dir]
-  (let [git-root (get-git-root execution-dir)]
-    (sqlite/execute! db-path
-      "INSERT INTO commands (command, execution_dir, git_root, count, last_executed)
-       VALUES (?, ?, ?, 1, CURRENT_TIMESTAMP)
-       ON CONFLICT(command, execution_dir) DO UPDATE SET
-         count = count + 1,
-         last_executed = CURRENT_TIMESTAMP"
-      [command execution-dir git-root])))
+  (let [git-root (get-git-root execution-dir)
+        upsert-sql (sql/format
+                    {:insert-into :commands
+                     :columns [:command :execution_dir :git_root :count :last_executed]
+                     :values [[command execution-dir git-root 1 "CURRENT_TIMESTAMP"]]
+                     :on-conflict [:command :execution_dir]
+                     :do-update-set {:count "count + 1"
+                                     :last_executed "CURRENT_TIMESTAMP"}})]
+    (sqlite/execute! db-path upsert-sql)))
 
 (defn get-commands-by-frequency []
-  (sqlite/query db-path
-    "SELECT command, SUM(count) as total_count,
-            GROUP_CONCAT(DISTINCT execution_dir) as dirs
-     FROM commands
-     GROUP BY command
-     ORDER BY total_count DESC"))
+  (let [query (sql/format
+               {:select [:command
+                         [:%sum.count :total_count]
+                         [:%group_concat.execution_dir :dirs]]
+                :from [:commands]
+                :group-by [:command]
+                :order-by [[:total_count :desc]]})]
+    (sqlite/query db-path query)))
 
 (defn get-commands-for-project [git-root]
-  (sqlite/query db-path
-    "SELECT command, execution_dir, count, last_executed
-     FROM commands
-     WHERE git_root = ?
-     ORDER BY last_executed DESC"
-    [git-root]))
+  (let [query (sql/format
+               {:select [:command :execution_dir :count :last_executed]
+                :from [:commands]
+                :where [:= :git_root git-root]
+                :order-by [[:last_executed :desc]]})]
+    (sqlite/query db-path query)))
 
 (defn get-commands-for-current-project []
   (let [current-dir (System/getProperty "user.dir")
@@ -110,6 +112,9 @@
 (defn -main [& args]
   (cli/dispatch table args))
 
-(-main "log" "ls")
+(when (= *file* (System/getProperty "babashka.file"))
+  (apply -main *command-line-args*))
 
-(apply -main *command-line-args*)
+(comment
+  (-main "log" "ls")
+  nil)

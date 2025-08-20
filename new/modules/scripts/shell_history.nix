@@ -14,6 +14,9 @@ in
       let
         pkg = (pkgs.writeBb "shell_history" {
           content = ./src/shell_history.clj;
+          deps = {
+            "honeysql/honeysql" = "1.0.444";
+          };
         });
         cmd = "${pkg}/bin/shell_history";
       in
