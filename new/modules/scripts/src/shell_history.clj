@@ -4,7 +4,9 @@
    [babashka.fs :as fs]
    [babashka.pods :as pods]
    [babashka.process :as bp]
-   [clojure.string :as str]))
+   [clojure.string :as str]
+   [honeysql.core :as sql]
+   [honeysql.helpers :as helpers]))
 
 ;; Pods ------------------------------------------------------------------------
 
@@ -48,17 +50,17 @@
 
 (defn get-commands-by-frequency []
   (sqlite/query db-path
-    "SELECT command, SUM(count) as total_count, 
+    "SELECT command, SUM(count) as total_count,
             GROUP_CONCAT(DISTINCT execution_dir) as dirs
-     FROM commands 
-     GROUP BY command 
+     FROM commands
+     GROUP BY command
      ORDER BY total_count DESC"))
 
 (defn get-commands-for-project [git-root]
   (sqlite/query db-path
     "SELECT command, execution_dir, count, last_executed
-     FROM commands 
-     WHERE git_root = ? 
+     FROM commands
+     WHERE git_root = ?
      ORDER BY last_executed DESC"
     [git-root]))
 
@@ -100,10 +102,14 @@
 
 ;; Main ------------------------------------------------------------------------
 
+(def table
+  [{:cmds ["log"] :fn log-cmd :args->opts [:command]}
+   {:cmds ["list"] :fn list-cmd}
+   {:cmds ["project"] :fn project-cmd}])
+
 (defn -main [& args]
-  (let [table [{:cmds ["log"] :fn log-cmd :args->opts [:command]}
-               {:cmds ["list"] :fn list-cmd}
-               {:cmds ["project"] :fn project-cmd}]]
-    (cli/dispatch table args)))
+  (cli/dispatch table args))
+
+(-main "log" "ls")
 
 (apply -main *command-line-args*)
