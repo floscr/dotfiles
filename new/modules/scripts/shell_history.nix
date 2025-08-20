@@ -24,7 +24,7 @@ in
         modules.shell.zsh.rcInit = ''
           preexec() {
             if [[ -n "$1" && "$1" != "shell_history"* ]]; then
-              (set +m; ${cmd} log "$1" >/dev/null 2>&1 &)
+              nohup ${cmd} log "$1" >/dev/null 2>&1 &!
             fi
           }
         '';
