@@ -1,4 +1,4 @@
-(ns tty
+(ns lib.tty
   (:require [babashka.process :as process]
             [clojure.java.io :as io]))
 

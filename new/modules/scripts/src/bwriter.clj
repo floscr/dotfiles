@@ -1,31 +1,30 @@
 (ns bwriter
   (:require
-   [clojure.string :as str]
-   [tty]
-   [lib.str]))
+   [lib.str]
+   [lib.tty]))
 
 (defn print-screen-loop []
   (loop [s ""]
-    (let [k (tty/read-key)
-          k' (tty/interpret-key k)
+    (let [k (lib.tty/read-key)
+          k' (lib.tty/interpret-key k)
           s' (case k'
                :backspace (lib.str/drop-char s)
                (str s (char k)))]
-      (tty/clear-screen)
-      (tty/p s')
-      (when-not (tty/quit-alias? k')
+      (lib.tty/clear-screen)
+      (lib.tty/p s')
+      (when-not (lib.tty/quit-alias? k')
         (recur s')))))
 
 (defn -main []
   (try
-    (tty/start!)
+    (lib.tty/start!)
     (print-screen-loop)
-    (tty/exit!)
+    (lib.tty/exit!)
     (catch Exception e
-      (tty/exit!)
+      (lib.tty/exit!)
       (println e))
     (finally
-      (tty/exit!))))
+      (lib.tty/exit!))))
 
 (when (= *file* (System/getProperty "babashka.file"))
   (-main))
