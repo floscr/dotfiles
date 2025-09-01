@@ -3,3 +3,4 @@ result
 /.cpcache/
 *.port
 /new/modules/scripts/src/lib/.spotify.env
+/.eca/
