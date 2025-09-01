@@ -2,7 +2,7 @@
 
 with lib;
 with lib.my;
-let 
+let
   cfg = config.modules.editors.emacs;
   emacsPkg = (pkgs.emacsPackagesFor pkgs.unstable.emacs).emacsWithPackages
     (epkgs: with epkgs; [
