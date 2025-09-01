@@ -140,7 +140,7 @@ in
           "H" = "seek -60";
           "BS" = "revert-seek";
 
-          # Move subtlitles
+          # Shift / Move subtlitles
           "r" = "add sub-pos -1";
           "R" = "add sub-pos +1";
 
