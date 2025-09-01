@@ -84,6 +84,13 @@ in
       #   perlPackages.DBDPg
       #   perlPackages.DBDmysql)
 
+      (texlive.combine {
+        # LaTeX with org mode!
+        inherit (texlive)
+          scheme-medium wrapfig capt-of collection-langother ucs
+          collection-fontsextra collection-fontsrecommended;
+      })
+
       emacs-lsp-booster
 
       perlPackages.FileMimeInfo # Mime type
