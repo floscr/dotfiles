@@ -13,6 +13,11 @@ with lib;
     longitude = 55.88;
   };
 
+  # Automatic timezone
+  services.automatic-timezoned.enable = true;
+  services.geoclue2.enable = true;
+
+  # Fallback timezone if automatic detection fails
   time.timeZone = mkDefault "Europe/Vienna";
 
   users = {
