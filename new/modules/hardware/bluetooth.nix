@@ -14,7 +14,24 @@ in
 
   config = mkIf cfg.enable (mkMerge [
     {
-      hardware.bluetooth.enable = true;
+      hardware.bluetooth = {
+        enable = true;
+        package = pkgs.bluez5;
+        powerOnBoot = true;
+        settings = {
+          General = {
+            Enable = "Source,Sink,Media,Socket";
+            ControllerMode = "bredr";
+            # Disable headset profiles (HFP/HSP) to force A2DP for better audio quality
+            Disable = "Headset";
+            # Automatically enable and connect to trusted devices
+            AutoEnable = "true";
+            AutoConnect = "true";
+            MultiProfile = "multiple";
+          };
+        };
+      };
+
       user.packages = with pkgs; [
         bluez-tools
       ];
@@ -26,13 +43,15 @@ in
         # PulseAudio to be installed.  Only the full build has Bluetooth
         # support, so it must be selected here.
         package = pkgs.pulseaudioFull;
-        # Enable additional codecs
+        # Enable additional codecs and force A2DP
+        extraConfig = ''
+          # Disable HFP/HSP profiles to force A2DP for better audio quality
+          load-module module-bluetooth-discover headset=auto
+          .ifexists module-bluetooth-policy.so
+          load-module module-bluetooth-policy auto_switch=2
+          .endif
+        '';
       };
-
-      hardware.bluetooth.extraConfig = ''
-        [General]
-        Enable=Source,Sink,Media,Socket
-      '';
     })
   ]);
 }

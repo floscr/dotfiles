@@ -5,26 +5,6 @@
   # My setup works so I'm not ready to switch yet.
   services.pipewire.enable = lib.mkForce false;
 
-  hardware.bluetooth = {
-    enable = true;
-    package = pkgs.bluez5;
-    powerOnBoot = true;
-    settings = {
-      Headset = {
-        FastConnectable = "true";
-        HFP = "true";
-      };
-      General = {
-        ControllerMode = "bredr";
-        Disable = "Headset";
-        AutoEnable = "true";
-        AutoConnect = "true";
-        MultiProfile = "multiple";
-        Enable = "Source,Sink,Media,Socket";
-      };
-    };
-  };
-
   services.pulseaudio = {
     enable = true;
     support32Bit = true;
