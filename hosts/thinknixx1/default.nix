@@ -16,7 +16,6 @@ with lib.my;
   # services.openssh.enable = true;
   # programs.mosh.enable = true;
 
-
   networking.firewall = {
     allowedTCPPorts = [
       9630

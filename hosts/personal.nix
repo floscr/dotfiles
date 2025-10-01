@@ -8,6 +8,12 @@ with lib;
   # generated config replicates the default behaviour.
   networking.useDHCP = false;
 
+  # .local domains on network
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+  };
+
   location = {
     latitude = 12.5;
     longitude = 55.88;
