@@ -12,7 +12,7 @@ in
   config = mkIf cfg.enable {
     user.packages = with pkgs; [
       rustup
-      rust-analyzer
+      # rust-analyzer
       rustfmt
       racer
       clippy
