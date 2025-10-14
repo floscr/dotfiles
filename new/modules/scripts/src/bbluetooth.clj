@@ -2,6 +2,7 @@
   (:require
    [babashka.cli :as cli]
    [babashka.process :as bp]
+   [clojure.string :as str]
    [lib.notifications :as notifications]
    [lib.recent]
    [lib.rofi :as rofi]
@@ -14,7 +15,7 @@
 (defn get-card-name-for-device
   "Get PulseAudio card name from bluetooth device MAC address."
   [device-id]
-  (let [normalized-id (clojure.string/replace device-id ":" "_")
+  (let [normalized-id (str/replace device-id ":" "_")
         card-name (str "bluez_card." normalized-id)]
     card-name))
 
@@ -29,9 +30,9 @@
     (some (fn [profile]
             (try
               (let [result (bp/sh ["pactl" "set-card-profile" card-name profile])]
-                #_(when (zero? (:exit result))
-                    (notifications/show (str "Switched to A2DP profile: " profile))
-                    true))
+                (when (zero? (:exit result))
+                  (notifications/show (str "Switched to A2DP profile: " profile))
+                  true))
               (catch Exception _e nil)))
           profiles)))
 
