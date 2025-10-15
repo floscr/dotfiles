@@ -19,6 +19,29 @@
         card-name (str "bluez_card." normalized-id)]
     card-name))
 
+(defn get-current-profile
+  "Get the current profile for a bluetooth device card."
+  [device-id]
+  (let [card-name (get-card-name-for-device device-id)]
+    (try
+      (let [result (bp/sh ["pactl" "list" "cards"])]
+        (when (zero? (:exit result))
+          (let [output (:out result)
+                ;; Find the card section
+                card-section (re-find (re-pattern (str "(?s)Name: " (java.util.regex.Pattern/quote card-name) ".*?(?=Name:|\\z)")) output)]
+            (when card-section
+              ;; Extract active profile
+              (when-let [match (re-find #"Active Profile: (.+)" card-section)]
+                (second match))))))
+      (catch Exception _e nil))))
+
+(defn is-hfp-only?
+  "Check if device is connected with only HFP profile."
+  [device-id]
+  (when-let [profile (get-current-profile device-id)]
+    (and (str/includes? (str/lower-case profile) "hfp")
+         (not (str/includes? (str/lower-case profile) "a2dp")))))
+
 (defn set-a2dp-profile!
   "Force A2DP profile for a bluetooth device. Tries multiple profile names."
   [device-id]
@@ -60,16 +83,45 @@
 (defn bluetooth-enable! [on?]
   (bp/sh ["bluetooth" (if on? "on" "off")]))
 
-(defn device-connect! [{:keys [name id]}]
+(defn device-disconnect!
+  "Disconnect a bluetooth device."
+  [id]
+  (bp/sh ["bluetoothctl" "disconnect" id]))
+
+(defn device-connect-with-retry!
+  "Connect device and retry if only HFP is available, until A2DP sink is established."
+  [{:keys [id] :as _device} max-retries]
+  (loop [attempt 1]
+    (let [result (bp/sh ["bluetoothctl" "connect" id])]
+      (if-not (zero? (:exit result))
+        ;; Connection failed
+        result
+        ;; Connection succeeded, check profile
+        (do
+          (set-a2dp-profile! id)
+          (Thread/sleep 1000) ; Give it a moment to settle
+          (if (is-hfp-only? id)
+            (if (< attempt max-retries)
+              (do
+                (notifications/show (str "Only HFP available, retrying... (attempt " attempt "/" max-retries ")"))
+                (device-disconnect! id)
+                (Thread/sleep 2000) ; Wait before reconnecting
+                (recur (inc attempt)))
+              (do
+                (notifications/show (str "Failed to get A2DP after " max-retries " attempts"))
+                result))
+            (do
+              (when (> attempt 1)
+                (notifications/show (str "A2DP established on attempt " attempt)))
+              result)))))))
+
+(defn device-connect! [{:keys [name id] :as device}]
   (bluetooth-enable! true)
   (if (= name "Flo Bose")
     (bose-qc-35-prepare-connection!)
     (do
       (lib.recent/inc-db-entry! recent-db-name id)
-      (let [result (bp/sh ["bluetoothctl" "connect" id])]
-        ;; Always try to force A2DP after connection
-        (set-a2dp-profile! id)
-        result))))
+      (device-connect-with-retry! device 5))))
 
 (defn rofi-connect! []
   (bluetooth-enable! true)
