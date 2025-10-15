@@ -33,11 +33,11 @@ in
     env.NODE_REPL_HISTORY = "$XDG_CACHE_HOME/node/repl_history";
     env.PATH = [ "$(${pkgs.yarn}/bin/yarn global bin)" ];
 
-    home.configFile."npm/config".text = ''
-      cache=$XDG_CACHE_HOME/npm
-      prefix=$XDG_DATA_HOME/npm
-      update-notifier=false # I'll update via nix, thank you.
-      progress=false
-    '';
+    # home.configFile."npm/config".text = ''
+    #   cache=$XDG_CACHE_HOME/npm
+    #   prefix=$XDG_DATA_HOME/npm
+    #   update-notifier=false # I'll update via nix, thank you.
+    #   progress=false
+    # '';
   };
 }
