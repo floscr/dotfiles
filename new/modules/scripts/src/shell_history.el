@@ -13,21 +13,12 @@
 (defun shell-history|execute (&rest args)
   "Execute shell history script with ARGS.
 If first arg is :working-directory, use the next arg as working directory."
-  (let* ((working-dir (if (eq (car args) :working-directory)
-                          (progn (setq args (cddr args))
-                                 (cadr (member :working-directory args)))
-                        "/home/floscr/.config/dotfiles/new/modules/scripts"))
-         (default-directory "/home/floscr/.config/dotfiles/new/modules/scripts")
-         (script-dir "/home/floscr/.config/dotfiles/new/modules/scripts"))
-    (let ((default-directory (or working-dir script-dir)))
-      (->> (concat (format "cd %s && bb %s/src/shell_history.clj"
-                           (shell-quote-argument (or working-dir default-directory))
-                           script-dir)
-                   (-some->> args
-                             (-filter #'some?)
-                             (s-join " ")
-                             (s-prepend " ")))
-           (shell-command-to-string)))))
+  (let ((cmd (->> (concat "shell_history"
+                          (-some->> args
+                                    (-filter #'some?)
+                                    (s-join " ")
+                                    (s-prepend " "))))))
+    (shell-command-to-string cmd)))
 
 (defun shell-history/execute-command (command)
   "Execute COMMAND in the shell using the current buffer's default directory."
