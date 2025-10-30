@@ -87,13 +87,16 @@ in
     services.xserver.displayManager.sessionCommands = ''
       # GTK2_RC_FILES must be available to the display manager.
       export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc"
+      # Redirect xsession-errors to XDG state directory
+      export ERRFILE="$XDG_STATE_HOME/xsession-errors"
     '';
 
     # Clean up leftovers, as much as we can
     system.userActivationScripts.cleanupHome = ''
       pushd "${homeDir}"
       rm -rf .compose-cache .nv .pki .dbus .fehbg
-      [ -s .xsession-errors ] || rm -f .xsession-errors*
+      # Clean up old xsession-errors files since we moved them to XDG_STATE_HOME
+      rm -f .xsession-errors*
       popd
     '';
   };

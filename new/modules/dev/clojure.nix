@@ -27,9 +27,15 @@ in
       clj-kondo
     ];
 
+    # Trying to move clojure/java cache files, but it's mostly useless as its configured in multiple places
     env = {
       LOCALE_ARCHIVE = "${pkgs.glibcLocales}/lib/locale/locale-archive";
-      MAVEN_OPTS = "-Dmaven.repo.local=./.m2/repository";
+      GITLIBS = "$XDG_CACHE_HOME/gitlibs";
+
+      MAVEN_USER_HOME = "$XDG_CACHE_HOME/maven";
+      MAVEN_CONFIG = "$XDG_CONFIG_HOME/maven";
+      MAVEN_OPTS = "-Dmaven.repo.local=$XDG_CACHE_HOME/maven/repository";
+      BABASHKA_CLASSPATH_CACHE = "$XDG_CACHE_HOME/babashka";
     };
   };
 }
