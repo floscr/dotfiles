@@ -77,6 +77,7 @@ in
       zstd # for undo-tree compression
       pandoc # Convert stuf
       wmctrl # Window information
+      user.jsonrepair
       # Edb
       # (lib.mkIf (config.modules.editors.emacs.withEdbi)
       #   perlPackages.DBI
