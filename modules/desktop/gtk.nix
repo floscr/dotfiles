@@ -1,6 +1,7 @@
 { options, config, pkgs, lib, ... }:
 
 with lib;
+with lib.my;
 let
   cfg = config.modules.desktop.gtk;
 in
@@ -9,21 +10,40 @@ in
     enable = my.mkBoolOpt false;
   };
 
-  config = mkIf cfg.enable {
-    home.file.".config/gtk-2.0/gtkfilechooser.ini" = {
-      text = ''
+  config = mkIf cfg.enable (let
+    fileChooserSettings = ''
+      LocationMode=path-bar
+      ShowHidden=false
+      ShowSizeColumn=true
+      SortColumn=modified
+      SortOrder=descending
+      StartupMode=recent
+    '';
+  in {
+    home.configFile = {
+      "gtk-2.0/gtkfilechooser.ini".text = ''
         [Filechooser Settings]
-        LocationMode=path-bar
-        ShowHidden=false
-        ShowSizeColumn=true
+        ${fileChooserSettings}
         GeometryX=442
         GeometryY=212
         GeometryWidth=1036
         GeometryHeight=609
-        SortColumn=modified
-        SortOrder=ascending
-        StartupMode=recent
+      '';
+      
+      "gtk-3.0/bookmarks".text = ''
+        file://${homeDir}/Downloads
+        file://${homeDir}/Documents
+        file://${homeDir}/Media/Screencapture
+      '';
+      
+      "gtk-3.0/settings.ini".text = ''
+        [Settings]
+        gtk-recent-files-max-age=0
+        gtk-recent-files-enabled=true
+
+        [Filechooser Settings]
+        ${fileChooserSettings}
       '';
     };
-  };
+  });
 }
