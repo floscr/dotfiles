@@ -4,3 +4,4 @@ result
 *.port
 /new/modules/scripts/src/lib/.spotify.env
 /.eca/
+/.context/
