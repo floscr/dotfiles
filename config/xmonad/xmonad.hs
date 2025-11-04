@@ -71,7 +71,7 @@ import           XMonad.Util.Run                     (runProcessWithInput,
 import           XMonad.Util.Scratchpad
 
 import           Control.Arrow                       (second, (***))
-import           Control.Monad                       (filterM, when)
+import           Control.Monad                       (filterM, join, when)
 import           Control.Monad.Trans                 (lift)
 import           Control.Monad.Trans.Maybe
 
@@ -81,6 +81,7 @@ import qualified Data.Map                            as M
 import           Data.Maybe
 import           Data.Monoid                         (All (..), appEndo)
 import qualified Data.Text                           as T
+import           Data.Maybe                          (maybeToList)
 
 
 import qualified XMonad.StackSet                     as W
@@ -514,6 +515,26 @@ myLayoutHook =
   tiled          = ResizableTall 1 0.03 0.8 []
 
 ------------------------------------------------------------------------
+-- EWMH Fullscreen Support
+------------------------------------------------------------------------
+
+addNETSupported :: Atom -> X ()
+addNETSupported x   = withDisplay $ \dpy -> do
+    r               <- asks theRoot
+    a_NET_SUPPORTED <- getAtom "_NET_SUPPORTED"
+    a               <- getAtom "ATOM"
+    liftIO $ do
+       sup <- (join . maybeToList) <$> getWindowProperty32 dpy a_NET_SUPPORTED r
+       when (fromIntegral x `notElem` sup) $
+         changeProperty32 dpy r a_NET_SUPPORTED a propModeAppend [fromIntegral x]
+
+addEWMHFullscreen :: X ()
+addEWMHFullscreen   = do
+    wms <- getAtom "_NET_WM_STATE"
+    wfs <- getAtom "_NET_WM_STATE_FULLSCREEN"
+    mapM_ addNETSupported [wms, wfs]
+
+------------------------------------------------------------------------
 -- Window Rules
 ------------------------------------------------------------------------
 
@@ -727,7 +748,7 @@ defaults pipe =
       , logHook            = (myLogHook pipe) <+> historyHook <+> tagHook <+> raiseOverlays
       , layoutHook         = myLayoutHook
       , manageHook         = myManageHook
-      , startupHook        = myStartupHook <+> Ewmh.ewmhDesktopsStartup
+      , startupHook        = myStartupHook <+> Ewmh.ewmhDesktopsStartup <+> addEWMHFullscreen
       , handleEventHook    = def
                              <+> refocusLastWhen isFloat
                              <+> Ewmh.ewmhDesktopsEventHook
