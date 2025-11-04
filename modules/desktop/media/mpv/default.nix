@@ -38,11 +38,6 @@ in
       (mpv.override {
         scripts = [
           pkgs.mpvScripts.mpris # playerctl support
-          (fetchurl {
-            url = "https://gist.githubusercontent.com/ekisu/bba287693830055a6bad90081c1ad4e2/raw/65a97c59b9dcfc9de94864160124fbe5eb5f3aa3/peerflix-hook.lua";
-            sha256 = "08h6wzrhrp1i1pbzzrim8rwa1bkvjxdvs7rqqsnj6s4b77rg1x48";
-            passthru.scriptName = "peerflix-hook.lua";
-          })
         ];
       })
     ];
@@ -79,6 +74,11 @@ in
           url = "https://raw.githubusercontent.com/NurioHin/mpv-bookmarker/2fb1496c5a8c58f0af1379b380ae13170b242705/bookmarker-menu.lua";
           sha256 = "sha256-WmajuGvCiOQXddiqEEzvPpOxoYwlGrLfvjDm7+m2DFc=";
           passthru.scriptName = "bookmarker-menu.lua";
+        });
+
+        "mpv/scripts/peerflix-hook.lua".source = (pkgs.fetchurl {
+          url = "https://gist.githubusercontent.com/ekisu/bba287693830055a6bad90081c1ad4e2/raw/65a97c59b9dcfc9de94864160124fbe5eb5f3aa3/peerflix-hook.lua";
+          sha256 = "08h6wzrhrp1i1pbzzrim8rwa1bkvjxdvs7rqqsnj6s4b77rg1x48";
         });
 
         # Copy url with time stamp of web videos
@@ -218,7 +218,7 @@ in
           sub-file-paths=ass:srt:sub:subs:subtitles # search for external subs in the listed subdirectories
           embeddedfonts=yes                         # use embedded fonts for SSA/ASS subs
           sub-fix-timing=no                         # do not try to fix gaps (which might make it worse in some cases)
-          sub-ass-force-style=Kerning=yes           # allows you to override style parameters of ASS scripts
+          sub-ass-style-overrides=Kerning=yes       # allows you to override style parameters of ASS scripts
 
           sub-scale-by-window=yes
           sub-font-size=45
