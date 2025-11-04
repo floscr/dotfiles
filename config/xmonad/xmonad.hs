@@ -140,7 +140,16 @@ doCenterFloatRetainSize win = do
   windows $ W.float win (W.RationalRect ((1 - w) / 2) ((1 - (min h 0.9)) / 2) w (min h 0.9))
   return ()
 
-toggleFloat = floatOrNot (withFocused $ windows . W.sink) (withFocused $ doCenterFloatRetainSize)
+-- | Toggle float and remove scratchpad status when unfloating
+-- For scratchpad windows, change their title so they lose scratchpad status
+toggleFloat = floatOrNot unfloatAndRemoveScratch (withFocused $ doCenterFloatRetainSize)
+  where
+    unfloatAndRemoveScratch = withFocused $ \w -> do
+      -- Check if this is a scratchpad window
+      isScratch <- runQuery (title =? "scratchpad" <||> title =? "emacs-scratch") w
+      windows $ W.sink w
+      -- If it's a scratchpad, rename it so it's no longer recognized as one
+      when isScratch $ spawn $ "xdotool set_window --name 'terminal' " ++ show w
 
 toggleSticky :: X ()
 toggleSticky = wsContainingCopies >>= \ws -> case ws of
