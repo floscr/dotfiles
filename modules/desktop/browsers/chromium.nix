@@ -16,7 +16,7 @@ in
         #! ${pkgs.bash}/bin/bash
         # start chromium depending on which display is connected
 
-        export DEFAULT_ARGS="--enable-native-notifications --restore-last-session"
+        export DEFAULT_ARGS="--enable-native-notifications --restore-last-session --no-default-browser-check"
 
         if [[ $(xrandr | grep "^eDP-1 connected primary") ]]; then
           chromium-browser $DEFAULT_ARGS --force-device-scale-factor=1.2 $@
