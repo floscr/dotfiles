@@ -13,7 +13,8 @@ in
     (
       let
         pkg = (pkgs.writeBb "mpv_ctrl" {
-          content = ./src/mpv_ctrl.clj;
+          content = "${config.user.home}/.config/dotfiles/new/modules/scripts/src/mpv_ctrl.clj";
+          useSourcePath = true;
         });
       in
       {

@@ -12,7 +12,8 @@ in
     (
       let
         pkg = (pkgs.writeBb "bblock" {
-          content = ./src/bblock.clj;
+          content = "${config.user.home}/.config/dotfiles/new/modules/scripts/src/bblock.clj";
+          useSourcePath = true;
         });
       in
       {

@@ -12,7 +12,8 @@ in
   config =
     let
       pkg = (pkgs.writeBb "zzz" {
-        content = ./src/zzz.clj;
+        content = "${config.user.home}/.config/dotfiles/new/modules/scripts/src/zzz.clj";
+        useSourcePath = true;
         deps = with pkgs; [
           dunst
         ];

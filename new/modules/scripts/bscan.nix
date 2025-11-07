@@ -13,7 +13,8 @@ in
     (
       let
         pkg = (pkgs.writeBb "bscan" {
-          content = ./src/bscan.clj;
+          content = "${config.user.home}/.config/dotfiles/new/modules/scripts/src/bscan.clj";
+          useSourcePath = true;
         });
       in
       {

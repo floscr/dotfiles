@@ -12,7 +12,8 @@ in
   config =
     let
       invert_colors = (pkgs.writeBb "invert_colors" {
-        content = ./src/invert_colors.clj;
+        content = "${config.user.home}/.config/dotfiles/new/modules/scripts/src/invert_colors.clj";
+        useSourcePath = true;
       });
     in
     {

@@ -13,7 +13,8 @@ in
     (
       let
         pkg = (pkgs.writeBb "get_url_title" {
-          content = ./src/get_url_title.clj;
+          content = "${config.user.home}/.config/dotfiles/new/modules/scripts/src/get_url_title.clj";
+          useSourcePath = true;
         });
       in
       {

@@ -24,7 +24,8 @@ in
       (
         let
           script-name = "screen-capture";
-          package = (writeBabashkaScriptBin script-name ./src/screen_capture.clj "FFMPEG_BIN=${pkgs.ffmpeg-full}/bin/ffmpeg");
+          scriptPath = "${config.user.home}/.config/dotfiles/new/modules/scripts/src/screen_capture.clj";
+          package = (writeBabashkaScriptBin script-name scriptPath "FFMPEG_BIN=${pkgs.ffmpeg-full}/bin/ffmpeg");
           bin = "${package}/bin/${script-name}";
           dir = cfg.plugins.record.dir;
         in

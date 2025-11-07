@@ -13,7 +13,8 @@ in
     (
       let
         pkg = (pkgs.writeBb "bdocs" {
-          content = ./src/bdocs.clj;
+          content = "${config.user.home}/.config/dotfiles/new/modules/scripts/src/bdocs.clj";
+          useSourcePath = true;
         });
       in
       {

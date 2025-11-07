@@ -12,7 +12,8 @@ in
   config =
     let
       script-name = "hey";
-      package = (writeBabashkaScriptBin script-name ./src/hey.clj "");
+      scriptPath = "${config.user.home}/.config/dotfiles/new/modules/scripts/src/hey.clj";
+      package = (writeBabashkaScriptBin script-name scriptPath "");
       bin = "${package}/bin/${script-name}";
     in
     {

@@ -13,7 +13,8 @@ in
     (
       let
         pkg = (pkgs.writeBb "bplaywright" {
-          content = ./src/bplaywright.clj;
+          content = "${config.user.home}/.config/dotfiles/new/modules/scripts/src/bplaywright.clj";
+          useSourcePath = true;
           env = {
             PLAYWRIGHT_BROWSERS_PATH = pkgs.playwrightPkgs.playwright-driver.browsers;
           };

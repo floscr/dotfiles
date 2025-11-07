@@ -13,7 +13,8 @@ in
     (
       let
         pkg = (pkgs.writeBb "shell_history" {
-          content = ./src/shell_history.clj;
+          content = "${config.user.home}/.config/dotfiles/new/modules/scripts/src/shell_history.clj";
+          useSourcePath = true;
         });
         cmd = "${pkg}/bin/shell_history";
       in

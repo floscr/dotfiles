@@ -11,7 +11,8 @@ in
   config = mkIf cfg.enable (
     let
       browserScript = pkgs.writeBb "browser" {
-        content = ./src/browser.clj;
+        content = "${config.user.home}/.config/dotfiles/new/modules/scripts/src/browser.clj";
+        useSourcePath = true;
       };
     in
     {

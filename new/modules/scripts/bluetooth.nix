@@ -13,7 +13,8 @@ in
     (
       let
         pkg = (pkgs.writeBb "bbluetooth" {
-          content = ./src/bbluetooth.clj;
+          content = "${config.user.home}/.config/dotfiles/new/modules/scripts/src/bbluetooth.clj";
+          useSourcePath = true;
         });
         cmd = "${pkg}/bin/bbluetooth";
       in

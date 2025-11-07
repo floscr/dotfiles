@@ -12,7 +12,8 @@ in
     let
       port = 42069;
       pkg = (pkgs.writeBb "bfocus" {
-        content = ./src/bfocus.clj;
+        content = "${config.user.home}/.config/dotfiles/new/modules/scripts/src/bfocus.clj";
+        useSourcePath = true;
       });
     in
     {

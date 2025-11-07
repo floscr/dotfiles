@@ -12,7 +12,8 @@ in
   config =
     let
       monitor_brightness = (pkgs.writeBb "monitor_brightness" {
-        content = ./src/monitor_brightness.clj;
+        content = "${config.user.home}/.config/dotfiles/new/modules/scripts/src/monitor_brightness.clj";
+        useSourcePath = true;
         deps = with pkgs; [
           dunst
         ];

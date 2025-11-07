@@ -13,7 +13,8 @@ in
     (
       let
         pkg = (pkgs.writeBb "bhotplug" {
-          content = ./src/bhotplug.clj;
+          content = "${config.user.home}/.config/dotfiles/new/modules/scripts/src/bhotplug.clj";
+          useSourcePath = true;
         });
       in
       {

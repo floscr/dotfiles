@@ -13,7 +13,8 @@ in
     (
       let
         pkg = (pkgs.writeBb "watch_last" {
-          content = ./src/watch_last.clj;
+          content = "${config.user.home}/.config/dotfiles/new/modules/scripts/src/watch_last.clj";
+          useSourcePath = true;
         });
         cmd = "${pkg}/bin/watch_last";
       in

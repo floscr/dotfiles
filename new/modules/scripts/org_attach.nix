@@ -12,7 +12,8 @@ in
   config =
     let
       org_attach = (pkgs.writeBb "org_attach" {
-        content = ./src/org_attach.clj;
+        content = "${config.user.home}/.config/dotfiles/new/modules/scripts/src/org_attach.clj";
+        useSourcePath = true;
       });
     in
     {
