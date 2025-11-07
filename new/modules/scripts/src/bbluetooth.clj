@@ -1,12 +1,13 @@
-(ns bluetooth
+#!/usr/bin/env bb
+(ns bbluetooth
   (:require
    [babashka.cli :as cli]
    [babashka.process :as bp]
-   [clojure.string :as str]
    [lib.notifications :as notifications]
    [lib.recent]
    [lib.rofi :as rofi]
-   [lib.shell :as shell]))
+   [lib.shell :as shell]
+   [cuerdas.core :as str]))
 
 (def recent-db-name "bbluetooth")
 
@@ -39,8 +40,8 @@
   "Check if device is connected with only HFP profile."
   [device-id]
   (when-let [profile (get-current-profile device-id)]
-    (and (str/includes? (str/lower-case profile) "hfp")
-         (not (str/includes? (str/lower-case profile) "a2dp")))))
+    (and (str/includes? (str/lower profile) "hfp")
+         (not (str/includes? (str/lower profile) "a2dp")))))
 
 (defn set-a2dp-profile!
   "Force A2DP profile for a bluetooth device. Tries multiple profile names."
@@ -75,10 +76,42 @@
   (let [[_ id name] (re-find #"Device (\S+) (.+)$" device-str)]
     {:id id :name name}))
 
-(defn devices []
-  (let [devices (->> (shell/lines "bluetoothctl devices")
-                     (map split-device-info))]
+(defn bluetoothctl-info [device-id]
+  (bp/sh (str "bluetoothctl info " device-id)))
+
+(defn bluetoothctl-devices []
+  (shell/lines "bluetoothctl devices"))
+
+(into #{} (map (comp :name split-device-info) (bluetoothctl-devices)))
+
+(defn devices [& {:keys [keep-up?]}]
+  (let [devices (bluetoothctl-devices)
+        devices (into #{} (map split-device-info devices))]
     (lib.recent/sort! devices recent-db-name {:key-fn :id})))
+
+(defn available-devices
+  "Get all currently available (powered on and in range) devices."
+  []
+  (let [all-devices (devices)]
+    (filter
+     (fn [device]
+       (try
+         (let [info (bluetoothctl-info (:id device))]
+           ;; A device is available if it's showing up with valid info
+           ;; and not showing "Device not available" error
+           (and info
+                (str/includes? info "Device")
+                (not (str/includes? info "not available"))))
+         (catch Exception _e false)))
+     all-devices)))
+
+(defn device-connected?
+  "Check if a device is currently connected."
+  [device-id]
+  (try
+    (let [info (bp/shell (str "bluetoothctl info " device-id))]
+      (and info (str/includes? info "Connected: yes")))
+    (catch Exception _e false)))
 
 (defn bluetooth-enable! [on?]
   (bp/sh ["bluetooth" (if on? "on" "off")]))
@@ -146,13 +179,57 @@
 (defn bluetootho-off-cmd [_]
   (bluetooth-enable! false))
 
+(defn auto-connect-cmd
+  "Auto-connect to all available known devices."
+  [_]
+  (println "Enabling Bluetooth...")
+  (bluetooth-enable! true)
+  (Thread/sleep 1000) ;; Give Bluetooth a moment to power on
+
+  (println "Scanning for available devices...")
+  (let [all-devices (devices)
+        connected-count (atom 0)
+        failed-devices (atom [])]
+
+    (println (str "Found " (count all-devices) " known device(s)"))
+
+    (doseq [device all-devices]
+      (println (str "Checking " (:name device) " (" (:id device) ")..."))
+
+      ;; Check if already connected
+      (if (device-connected? (:id device))
+        (println (str "  ✓ Already connected to " (:name device)))
+
+        ;; Try to connect
+        (try
+          (let [result (device-connect! device)]
+            (if (zero? (:exit result))
+              (do
+                (println (str "  ✓ Connected to " (:name device)))
+                (swap! connected-count inc))
+              (do
+                (println (str "  ✗ Failed to connect to " (:name device)))
+                (swap! failed-devices conj (:name device)))))
+          (catch Exception e
+            (println (str "  ✗ Error connecting to " (:name device) ": " (.getMessage e)))
+            (swap! failed-devices conj (:name device))))))
+
+    (println)
+    (println (str "Auto-connect complete: " @connected-count " device(s) connected"))
+
+    (when (seq @failed-devices)
+      (println (str "Failed to connect to: " (str/join ", " @failed-devices))))
+
+    (notifications/show (str "Auto-connect complete: " @connected-count " device(s) connected"))))
+
 ;; Main ------------------------------------------------------------------------
 
 (def table
   [{:cmds ["connect"] :fn rofi-connect-cmd :args->opts [:device]}
    {:cmds ["rofi"] :fn rofi-connect-cmd}
    {:cmds ["on"] :fn bluetootho-on-cmd}
-   {:cmds ["off"] :fn bluetootho-off-cmd}])
+   {:cmds ["off"] :fn bluetootho-off-cmd}
+   {:cmds ["auto-connect"] :fn auto-connect-cmd}])
 
 (defn -main [& args]
   (cli/dispatch table args))
