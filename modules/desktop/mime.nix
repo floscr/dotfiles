@@ -7,7 +7,7 @@ in
 {
   options.modules.desktop.mime = with types; {
     enable = mkBoolOpt false;
-    browser = mkStrOpt "brave-browser.desktop";
+    browser = mkStrOpt "browser-launcher.desktop";
     directories = mkStrOpt "my-emacsclient.desktop";
     images = mkStrOpt "feh.desktop";
     text = mkStrOpt "my-emacsclient.desktop";
