@@ -78,6 +78,7 @@ with lib.my;
     usbutils
     watchexec
     zip
+    user.librepods
   ] ++ flake-packages;
 
   hardware.logitech.wireless.enable = true;
