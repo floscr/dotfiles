@@ -168,6 +168,9 @@ with lib.my;
       nix.enable = true;
       clojure.enable = true;
       rust.enable = true;
+      ai.enable = true;
+      ai.gemini.enable = true;
+      ai.codex.enable = true;
     };
     desktop = {
       xmonad.enable = true;
