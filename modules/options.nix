@@ -104,7 +104,7 @@ with lib.my;
 
     # must already begin with pre-existing PATH. Also, can't use binDir here,
     # because it contains a nix store path.
-    env.PATH = [ "$XDG_CONFIG_HOME/dotfiles/bin" "$PATH" ];
+    env.PATH = [ "$HOME/Code/My/bin" "$XDG_CONFIG_HOME/dotfiles/bin" "$PATH" ];
 
     environment.extraInit =
       concatStringsSep "\n"
