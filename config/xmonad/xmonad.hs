@@ -165,6 +165,38 @@ unfloatAllWindows = withWindowSet $ \ws ->
       floatingWins = filter (`M.member` floating) wins
   in mapM_ (windows . W.sink) floatingWins
 
+------------------------------------------------------------------------
+-- Terminal Management:
+------------------------------------------------------------------------
+
+-- | Check if a window is a terminal
+isTerminal :: Query Bool
+isTerminal = className =? "Alacritty"
+
+-- | Get all windows in the current workspace
+getWindowsInCurrentWorkspace :: X [Window]
+getWindowsInCurrentWorkspace = withWindowSet $ \ws -> 
+  return $ W.integrate' $ W.stack $ W.workspace $ W.current ws
+
+-- | Kill a specific window by ID
+killWindowById :: Window -> X ()
+killWindowById w = withDisplay $ \d -> io $ killClient d w >> return ()
+
+-- | Kill all terminals in current workspace and open a new one
+killTerminalsAndOpenNew :: X ()
+killTerminalsAndOpenNew = do
+  wins <- getWindowsInCurrentWorkspace
+  terminals <- filterM (runQuery isTerminal) wins
+  mapM_ killWindowById terminals
+  spawn (myTerminal ++ " --working-directory \"`xcwd`\"")
+
+-- | Kill all terminals in current workspace (without opening new)
+killAllTerminalsInWorkspace :: X ()
+killAllTerminalsInWorkspace = do
+  wins <- getWindowsInCurrentWorkspace
+  terminals <- filterM (runQuery isTerminal) wins
+  mapM_ killWindowById terminals
+
 -- Put the most recent clicked floating window on top
 floatClickFocusHandler :: Event -> X All
 floatClickFocusHandler ButtonEvent { ev_window = w } = do
@@ -370,7 +402,7 @@ myKeyboardBindings =
   , ("M-S-<Space>"   , spawn "/home/floscr/Code/Projects/iced-prompt/run")
   , ("M-'", spawn "rofi-pass -dmenu -theme theme/passmenu.rasi")
   , ("M-S-v"       , spawn "rofi-greenclip")
-  , ("M-S-<Return>", namedScratchpadAction myScratchpads "emacs-scratch")
+  , ("M-S-<Return>", killTerminalsAndOpenNew)
   , ("M-C-'"       , spawn "rofi_org_bookmarks")
 
     -- Move window to corner
@@ -419,6 +451,8 @@ myCommands =
   , ("layout-monocle-full"         , sendMessage $ JumpToLayout "Full")
   , ("restart", spawn "xmonad --recompile; xmonad --restart")
   , ("unfloat-all", unfloatAllWindows)
+  , ("kill-terminals-open-new", killTerminalsAndOpenNew)
+  , ("kill-all-terminals", killAllTerminalsInWorkspace)
   ]
 
 commandsList :: String
