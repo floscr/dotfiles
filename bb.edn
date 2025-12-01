@@ -1,0 +1,62 @@
+{:paths ["new/modules/scripts/src"]
+ :tasks
+ {:requires ([hey])
+  
+  rebuild
+  {:doc "Rebuild NixOS system"
+   :task (hey/rebuild! {:opts {:dir (str (babashka.fs/expand-home "~/.config/dotfiles"))
+                                :command "switch"
+                                :diff? true}})}
+  
+  re
+  {:doc "Rebuild NixOS system (alias)"
+   :task (run 'rebuild)}
+  
+  update
+  {:doc "Update flake lockfile"
+   :task (hey/update! {:opts {:dir (str (babashka.fs/expand-home "~/.config/dotfiles"))}})}
+  
+  u
+  {:doc "Update flake lockfile (alias)"
+   :task (run 'update)}
+  
+  upgrade
+  {:doc "Update flake and rebuild system"
+   :task (hey/upgrade! {:opts {:dir (str (babashka.fs/expand-home "~/.config/dotfiles"))
+                                :command "switch"
+                                :diff? true}})}
+  
+  up
+  {:doc "Update flake and rebuild system (alias)"
+   :task (run 'upgrade)}
+  
+  rollback
+  {:doc "Roll back to last generation"
+   :task (hey/rollback! {:opts {:dir (str (babashka.fs/expand-home "~/.config/dotfiles"))}})}
+  
+  diff
+  {:doc "Show diff between last two generations"
+   :task (hey/diff!)}
+  
+  gc
+  {:doc "Garbage collect and optimize store"
+   :task (hey/garbage-collect! {})}
+  
+  ;; Development
+  search
+  {:doc "Search nixpkgs for a package"
+   :task (if-let [query (first *command-line-args*)]
+           (hey/search! {:opts {:query query}})
+           (println "Usage: bb search <package-name>"))}
+  
+  s
+  {:doc "Search nixpkgs (alias)"
+   :task (run 'search)}
+  
+  shell
+  {:doc "Start a nix shell with packages"
+   :task (hey/shell! {:args *command-line-args*})}
+  
+  sh
+  {:doc "Start a nix shell (alias)"
+   :task (run 'shell)}}}
