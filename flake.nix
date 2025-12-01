@@ -92,7 +92,12 @@
 
       mkPkgs = pkgs: extraOverlays: import pkgs {
         inherit system;
-        config.allowUnfree = true;
+        config = {
+          allowUnfree = true;
+          permittedInsecurePackages = [
+            "mbedtls-2.28.10"
+          ];
+        };
         overlays = extraOverlays ++ (attrValues self.overlays) ++ [
           emacs-overlay.overlay
         ] ++ [

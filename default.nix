@@ -15,6 +15,7 @@ with inputs;
   environment.variables.DOTFILES = dotFilesDir;
 
   environment.variables.NIXPKGS_ALLOW_UNFREE = "1";
+  
   nix =
     let
       filteredInputs = filterAttrs (n: _: n != "self") inputs;

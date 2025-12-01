@@ -18,7 +18,7 @@ in
     user.packages = with pkgs; [
       gnupg
       tomb
-      pinentry
+      pinentry-gtk2
     ];
 
     # HACK Without this config file you get "No pinentry program" on 20.03.
@@ -27,7 +27,7 @@ in
     home.configFile."gnupg/gpg-agent.conf" = {
       text = ''
         default-cache-ttl ${toString cfg.cacheTTL}
-        pinentry-program ${pkgs.pinentry.gtk2}/bin/pinentry
+        pinentry-program ${pkgs.pinentry-gtk2}/bin/pinentry
       '';
     };
   };

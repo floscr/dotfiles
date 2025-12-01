@@ -225,7 +225,6 @@ with lib.my;
       org-bb-capture.enable = true;
       wireguard.enable = false;
       android.enable = true;
-      espanso.enable = false;
       screendrawing.enable = true;
       syncthing.enable = true;
       dunst.enable = true;

@@ -53,11 +53,10 @@
     enable32Bit = true;
     extraPackages = with pkgs; [
       # Intel
-      vaapiIntel
+      intel-vaapi-driver
       libvdpau-va-gl
       intel-media-driver
       # Vulkan
-      amdvlk
       vulkan-loader
     ];
   };

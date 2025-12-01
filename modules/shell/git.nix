@@ -22,12 +22,12 @@ in
       {
         user.packages = with pkgs; [
           git-lfs
-          gitAndTools.gh
-          gitAndTools.hub
-          gitAndTools.git-open
-          gitAndTools.diff-so-fancy
+          gh
+          hub
+          git-open
+          diff-so-fancy
           (mkIf config.modules.shell.gnupg.enable
-            gitAndTools.git-crypt)
+            git-crypt)
         ];
 
         home.configFile = {
@@ -39,7 +39,7 @@ in
       }
       (mkIf (cfg.difftastic != null && cfg.difftastic.enable) {
         user.packages = with pkgs; [
-          gitAndTools.difftastic
+          difftastic
         ];
       })
     ]);

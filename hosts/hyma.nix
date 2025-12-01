@@ -16,7 +16,7 @@
     playwrightPkgs.python313Packages.playwright
 
     poetry
-    python3Full
+    python3
     (pkgs.python3.withPackages (p: (with p; [
       python-lsp-server
       python-lsp-ruff

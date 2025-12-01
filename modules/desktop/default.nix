@@ -32,7 +32,7 @@ in
       (pkgs.writeScriptBin "dragon_downloads" ''
         #!${stdenv.shell}
         cd ~/Downloads
-        ls -t | head -n 15 | xargs -d '\n' bash -c '${xdragon}/bin/dragon --and-exit "$@"' _
+        ls -t | head -n 15 | xargs -d '\n' bash -c '${pkgs.dragon-drop}/bin/dragon --and-exit "$@"' _
       '')
       (
         let
@@ -68,7 +68,7 @@ in
           source-code-pro
           source-sans-pro
           source-serif-pro
-          ubuntu_font_family
+          ubuntu-classic
           ibm-plex
 
           # Unicode and Symbols

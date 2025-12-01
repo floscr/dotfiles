@@ -9,9 +9,9 @@ in
     enable = mkBoolOpt false;
   };
 
-  config = {
+  config = mkIf cfg.enable {
     user.packages = with pkgs; [
-      plasma5Packages.kdeconnect-kde
+      kdePackages.kdeconnect-kde
     ];
 
     networking.firewall.allowedTCPPortRanges = [{

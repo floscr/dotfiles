@@ -40,7 +40,7 @@ in
           ];
           config = (builtins.readFile "${configDir}/xmonad/xmonad.hs") + (
             let
-              bindings = (fold
+              bindings = (foldr
                 (cur: acc: if isNull cur.xmonadBinding then acc else ''${acc} , ("${cur.xmonadBinding}", spawn "${cur.command}")'') ""
                 config.modules.bindings.items);
             in

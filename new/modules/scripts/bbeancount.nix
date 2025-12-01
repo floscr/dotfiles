@@ -14,7 +14,7 @@ in
       pkg
       unpaper
       tesseractg
-      poppler_utils # pdfunite
+      poppler-utils # pdfunite
     ];
   };
 }

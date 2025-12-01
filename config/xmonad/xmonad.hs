@@ -792,7 +792,7 @@ defaults pipe =
       , layoutHook         = myLayoutHook
       , manageHook         = myManageHook
       , startupHook        = myStartupHook <+> Ewmh.ewmhDesktopsStartup <+> addEWMHFullscreen
-      , handleEventHook    = def
+      , handleEventHook    = mempty
                              <+> refocusLastWhen isFloat
                              <+> Ewmh.ewmhDesktopsEventHook
                              <+> Ewmh.fullscreenEventHook

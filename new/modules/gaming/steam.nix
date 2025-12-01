@@ -33,7 +33,7 @@ in
           # For some reason this file prevents steam from launching
           rm -rf ~/.local/share/Steam/bootstrap.tar.xz;
 
-          HOME="${cfg.libDir}" exec ${unstable.steam-run-native}/bin/steam-run "$@"
+          HOME="${cfg.libDir}" exec ${unstable.steam-run}/bin/steam-run "$@"
         '')
         (pkgs.makeDesktopItem {
           name = "steam";

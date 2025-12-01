@@ -12,7 +12,6 @@ in
   config = mkIf cfg.enable {
     user.packages = with pkgs; [
       nodePackages.typescript
-      nodePackages.ts-node
       nodePackages.typescript-language-server
       nodePackages.eslint_d
 
