@@ -25,7 +25,7 @@ in
             sed -i -e 's|load-module module-esound-protocol-unix|# ...|' "$out/default.pa"
           '';
       in
-      mkIf config.hardware.pulseaudio.enable
+      mkIf config.services.pulseaudio.enable
         "${paConfigFile}/default.pa";
 
     user.extraGroups = [ "audio" ];
