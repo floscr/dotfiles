@@ -203,7 +203,7 @@ with lib.my;
       };
       browsers = {
         default = "firefox";
-        psd = true;
+        customOpener = "browser_open";
         chromium.enable = true;
         firefox.enable = true;
       };
