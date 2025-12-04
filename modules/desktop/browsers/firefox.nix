@@ -4,7 +4,8 @@ with lib;
 with lib.my;
 let
   cfg = config.modules.desktop.browsers.firefox;
-  firefoxWrapped = pkgs.wrapFirefox pkgs.firefox-unwrapped {
+  firefoxWrapped = pkgs.wrapFirefox pkgs.firefox-devedition-unwrapped {
+    applicationName = "firefox-devedition";
     extraPolicies = {
       CaptivePortal = false;
       DisableFirefoxStudies = true;
@@ -52,48 +53,60 @@ in
         })
       ];
 
-      home-manager.users.${config.user.name}.programs.firefox = {
-        enable = true;
-        package = firefoxWrapped;
-        profiles.${cfg.profileName} = {
-          extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
-            vimium
-            ublock-origin
-          ];
-        };
-      };
-
       # Prevent auto-creation of ~/Desktop. The trailing slash is necessary; see
       # https://bugzilla.mozilla.org/show_bug.cgi?id=1082717
       env.XDG_DESKTOP_DIR = "$HOME/";
 
+      # Don't require a separate profile for DevEdition, just use the default one.
+      home-manager.users.${config.user.name} = {
+        home.file.".mozilla/firefox/ignore-dev-edition-profile".text = "";
+
+        programs.firefox = {
+          enable = true;
+          package = firefoxWrapped;
+          profiles.${cfg.profileName} = {
+            extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
+              vimium
+              ublock-origin
+            ];
+            settings = cfg.settings;
+            extraConfig = cfg.extraConfig;
+            userChrome = cfg.userChrome;
+            userContent = cfg.userContent;
+          };
+        };
+      };
+
       modules.desktop.browsers.firefox.settings = {
+        # UI ---------------------------------------------------------------------------
+
+        "general.smoothScroll" = true;
         "devtools.theme" = "dark";
+
+        # Features ---------------------------------------------------------------------
+
+        # Allow unsigned extensions (for custom dev extensions)
+        "xpinstall.signatures.required" = false;
+
         # Enable userContent.css and userChrome.css for our theme modules
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         # Don't use the built-in password manager
         "signon.rememberSignons" = false;
         # Do not check if Firefox is the default browser
         "browser.shell.checkDefaultBrowser" = false;
+
         # Disable the "new tab page" feature and show a blank tab instead
         # https://wiki.mozilla.org/Privacy/Reviews/New_Tab
         # https://support.mozilla.org/en-US/kb/new-tab-page-show-hide-and-customize-top-sites#w_how-do-i-turn-the-new-tab-page-off
         "browser.startup.homepage" = "about:blank";
         "browser.newtabpage.enabled" = false;
         "browser.newtab.url" = "about:blank";
-        # Disable Activity Stream
-        # https://wiki.mozilla.org/Firefox/Activity_Stream
-        "browser.newtabpage.activity-stream.enabled" = false;
         # Disable new tab tile ads & preload
-        # http://www.thewindowsclub.com/disable-remove-ad-tiles-from-firefox
-        # http://forums.mozillazine.org/viewtopic.php?p=13876331#p13876331
-        # https://wiki.mozilla.org/Tiles/Technical_Documentation#Ping
-        # https://gecko.readthedocs.org/en/latest/browser/browser/DirectoryLinksProvider.html#browser-newtabpage-directory-source
-        # https://gecko.readthedocs.org/en/latest/browser/browser/DirectoryLinksProvider.html#browser-newtabpage-directory-ping
         "browser.newtabpage.enhanced" = false;
         "browser.newtab.preload" = false;
         "browser.newtabpage.directory.ping" = "";
         "browser.newtabpage.directory.source" = "data:text/plain,{}";
+
         # Disable some not so useful functionality.
         "extensions.htmlaboutaddons.recommendations.enabled" = false;
         "extensions.htmlaboutaddons.discover.enabled" = false;
@@ -102,6 +115,13 @@ in
         "app.normandy.api_url" = "";
         "extensions.shield-recipe-client.enabled" = false;
         "app.shield.optoutstudies.enabled" = false;
+
+        # Tracking ---------------------------------------------------------------------
+
+        # Disable Activity Stream
+        # https://wiki.mozilla.org/Firefox/Activity_Stream
+        "browser.newtabpage.activity-stream.enabled" = false;
+
         # Disable battery API
         # https://developer.mozilla.org/en-US/docs/Web/API/BatteryManager
         # https://bugzilla.mozilla.org/show_bug.cgi?id=1313580
@@ -112,13 +132,10 @@ in
         # Disable pinging URIs specified in HTML <a> ping= attributes
         # http://kb.mozillazine.org/Browser.send_pings
         "browser.send_pings" = false;
-        # Disable gamepad API to prevent USB device enumeration
-        # https://www.w3.org/TR/gamepad/
-        # https://trac.torproject.org/projects/tor/ticket/13023
-        "dom.gamepad.enabled" = false;
         # Don't try to guess domain names when entering an invalid domain name in URL bar
         # http://www-archive.mozilla.org/docs/end-user/domain-guessing.html
         "browser.fixup.alternate.enabled" = false;
+
         # Disable telemetry
         # https://wiki.mozilla.org/Platform/Features/Telemetry
         # https://wiki.mozilla.org/Privacy/Reviews/Telemetry
@@ -136,55 +153,20 @@ in
         "experiments.supported" = false;
         "experiments.enabled" = false;
         "experiments.manifest.uri" = "";
+
         # Disable health reports (basically more telemetry)
         # https://support.mozilla.org/en-US/kb/firefox-health-report-understand-your-browser-perf
         # https://gecko.readthedocs.org/en/latest/toolkit/components/telemetry/telemetry/preferences.html
         "datareporting.healthreport.uploadEnabled" = false;
         "datareporting.healthreport.service.enabled" = false;
         "datareporting.policy.dataSubmissionEnabled" = false;
-        "general.smoothScroll" = false;
+
         # Disable search suggestions and trending searches
         "browser.search.suggest.enabled" = false;
         "browser.urlbar.suggest.searches" = false;
         "browser.urlbar.trending.featureGate" = false;
         "browser.urlbar.suggest.trending" = false;
       };
-
-      # Use a stable profile name so we can target it in themes
-      home.file = let cfgPath = ".mozilla/firefox"; in
-        {
-          "${cfgPath}/profiles.ini".text = ''
-            [Profile0]
-            Name=default
-            IsRelative=1
-            Path=${cfg.profileName}.default
-            Default=1
-
-            [General]
-            StartWithLastProfile=1
-            Version=2
-          '';
-
-          "${cfgPath}/${cfg.profileName}.default/user.js" =
-            mkIf (cfg.settings != { } || cfg.extraConfig != "") {
-              text = ''
-                ${concatStrings (mapAttrsToList (name: value: ''
-                  user_pref("${name}", ${builtins.toJSON value});
-                '') cfg.settings)}
-                ${cfg.extraConfig}
-              '';
-            };
-
-          "${cfgPath}/${cfg.profileName}.default/chrome/userChrome.css" =
-            mkIf (cfg.userChrome != "") {
-              text = cfg.userChrome;
-            };
-
-          "${cfgPath}/${cfg.profileName}.default/chrome/userContent.css" =
-            mkIf (cfg.userContent != "") {
-              text = cfg.userContent;
-            };
-        };
     }
   ]);
 }
