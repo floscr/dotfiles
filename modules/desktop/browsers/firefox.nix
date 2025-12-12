@@ -57,10 +57,17 @@ in
       # https://bugzilla.mozilla.org/show_bug.cgi?id=1082717
       env.XDG_DESKTOP_DIR = "$HOME/";
 
+      modules.shell.zsh =
+        {
+          aliases = {
+            firefox = "${firefoxWrapped}/bin/firefox-devedition";
+          };
+        };
+
+
       # Don't require a separate profile for DevEdition, just use the default one.
       home-manager.users.${config.user.name} = {
         home.file.".mozilla/firefox/ignore-dev-edition-profile".text = "";
-
         programs.firefox = {
           enable = true;
           package = firefoxWrapped;
