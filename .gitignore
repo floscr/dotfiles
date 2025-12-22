@@ -5,3 +5,4 @@ result
 /new/modules/scripts/src/lib/.spotify.env
 /.eca/
 /.context/
+/.worktrees/
