@@ -13,7 +13,7 @@ in
     user.packages = with pkgs; [
       # Clojure
       clojure
-      openjdk17
+      openjdk21
 
       # Editing
       unstable.clojure-lsp
