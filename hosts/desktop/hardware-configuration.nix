@@ -17,13 +17,21 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # LUKS encryption
+  boot.initrd.luks.devices = {
+    cryptroot = {
+      device = "/dev/disk/by-uuid/1a04b632-0291-45e7-a2c0-54799e73ffa4";
+      preLVM = true;
+    };
+  };
+
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/c16ca1e5-c859-4010-923d-c36d0937550f";
+    device = "/dev/disk/by-uuid/3b3103bb-0bf0-47f3-bfc0-427a3dcca901";
     fsType = "ext4";
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/4E2E-9B9D";
+    device = "/dev/disk/by-uuid/F77D-675B";
     fsType = "vfat";
     options = [ "fmask=0022" "dmask=0022" ];
   };
