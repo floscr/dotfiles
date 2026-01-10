@@ -43,14 +43,8 @@
     enable = true;
     enable32Bit = true; # For Steam/gaming
     extraPackages = with pkgs; [
-      # Vulkan
-      amdvlk
       vulkan-loader
-      # VA-API
       libva
-    ];
-    extraPackages32 = with pkgs.driversi686Linux; [
-      amdvlk
     ];
   };
 
