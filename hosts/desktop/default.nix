@@ -8,6 +8,9 @@ with lib.my;
     ../personal.nix
   ];
 
+  # Disable pipewire (conflicts with pulseaudio from hardware.audio module)
+  services.pipewire.enable = lib.mkForce false;
+
   networking.firewall = {
     allowedTCPPorts = [
       9630
