@@ -20,13 +20,13 @@
   # LUKS encryption
   boot.initrd.luks.devices = {
     cryptroot = {
-      device = "/dev/disk/by-uuid/1a04b632-0291-45e7-a2c0-54799e73ffa4";
+      device = "/dev/disk/by-uuid/1a04b632-8291-45e7-a2c0-54799e73ffa4";
       preLVM = true;
     };
   };
 
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/3b3103bb-0bf0-47f3-bfc0-427a3dcca901";
+    device = "/dev/disk/by-uuid/3b3183bb-8bf0-47f3-bfc0-427a3dcca901";
     fsType = "ext4";
   };
 
