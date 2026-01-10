@@ -7,6 +7,7 @@ in
 {
   options.modules.desktop.xmonad = {
     enable = mkBoolOpt false;
+    showBattery = mkBoolOpt true;
   };
 
   config = mkIf cfg.enable {
@@ -55,6 +56,35 @@ in
       };
     };
 
-    home.configFile."xmobar/xmobarrc".source = "${configDir}/xmonad/xmobar.hs";
+    home.configFile."xmobar/xmobarrc".text = let
+      baseConfig = builtins.readFile "${configDir}/xmonad/xmobar.hs";
+      batteryCommands = ''
+                , Run Battery [
+                        "--template" , "<acstatus>"
+                        , "--Low"      , "25"
+                        , "--High"     , "50"
+                        , "--"
+                        --battery specific options
+                        -- discharging
+                        , "-o" , "<leftipat> <left>%"
+                        -- AC
+                        , "-O" , "<leftipat> <left>%"
+                        , "-i" , "<leftipat> <left>%"
+                        , "--off-icon-pattern"  , ""
+                        , "--lows"              , ""
+                        , "--mediums"           , ""
+                        , "--highs"             , ""
+                        , "--on-icon-pattern"   , ""
+                        , "--idle-icon-pattern" , ""
+                        , "-A" , "5"
+                        , "-a" , "dunstify -u critical -a Battery \"Battery Low\" \"Your computer will turn of soon\" > /tmp/battery_notification_id"
+                ] 50
+      '';
+      configWithoutBattery = builtins.replaceStrings
+        [ batteryCommands "%battery%" ]
+        [ "" "" ]
+        baseConfig;
+    in
+      if cfg.showBattery then baseConfig else configWithoutBattery;
   };
 }

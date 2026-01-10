@@ -113,6 +113,7 @@ with lib.my;
     };
     desktop = {
       xmonad.enable = true;
+      xmonad.showBattery = false;
       mime.enable = true;
       gtk-emacs-bindings.enable = true;
       gtk.enable = true;
