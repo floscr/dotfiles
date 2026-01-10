@@ -89,7 +89,7 @@
     path))
 
 (defn capture-animated! [{:keys [opts]}]
-  (let [{:keys [countdown screenkey]
+  (let [{:keys [countdown screenkey audio]
          :or {countdown 1}} opts
         ext "mp4"
         path (or (:file opts)
@@ -101,16 +101,31 @@
         safe-height (-> (- (min (+ y height) (dec (:height resolution))) y)
                         (divisible-by-two))
         _ (spit "/tmp/my-screen-capture-rect" (format "Rectangle %d %d %d %d" x y safe-width safe-height))
-        cmd ["ffmpeg"
-             "-xerror"
-             "-y" ; Ignore globals
-             "-f" "x11grab"
-             "-show_region" "1"
-             "-s" (format "%dx%d" safe-width safe-height)
-             "-i" (format ":0.0+%d,%d" x y)
-             "-framerate" "30"
-             "-vf" "format=yuv420p"
-             path]]
+        cmd (vec (concat ["ffmpeg"
+                          "-xerror"
+                          "-y"] ; Ignore globals
+                         ;; Audio input (if enabled) - must come BEFORE video input
+                         (when audio
+                           ["-f" "pulse"
+                            "-i" "default"])
+                         ;; Video input
+                         ["-f" "x11grab"
+                          "-show_region" "1"
+                          "-s" (format "%dx%d" safe-width safe-height)
+                          "-i" (format ":0.0+%d,%d" x y)
+                          "-framerate" "30"]
+                         ;; Codec options
+                         ["-c:v" "libx264"
+                          "-preset" "ultrafast"
+                          "-crf" "23"
+                          "-vf" "format=yuv420p"]
+                         ;; Audio codec (if audio is enabled)
+                         (when audio
+                           ["-c:a" "aac"
+                            "-b:a" "128k"
+                            "-ac" "2"])  ; Stereo audio
+                         [path]))
+        _ (spit "/tmp/my-screen-capture-cmd" (str/join " " cmd))]
     (when width
       (when (pos? countdown)
         (notification-countdown! countdown))
@@ -180,25 +195,72 @@
   "Toggling ffmpeg with a shortcut will never result in a 0 exit code, so we accept `255` exit code."
   #{0 255})
 
+(defn interactive-terminal?
+  "Check if we're running in an interactive terminal (TTY).
+  Checks stdout (fd 1) instead of stdin since stdin might not be connected in bb scripts."
+  []
+  (or 
+   ;; Check if stdout is a TTY
+   (-> (bp/sh {:continue true} "test -t 1")
+       :exit
+       zero?)
+   ;; Fallback: check if we have a TERM environment variable and no DISPLAY-less environment
+   (and (System/getenv "TERM")
+        (not= (System/getenv "TERM") "dumb"))))
+
+(defn wait-for-keypress-async!
+  "Start a background thread that waits for user to press 'q' or ESC to stop recording.
+  When key is pressed, kills the process by PID."
+  [pid]
+  (future
+    (try
+      (bp/shell "stty -icanon -echo")
+      (loop []
+        (let [k (.read System/in)
+              char (case k
+                     27 :esc      ; ESC key
+                     113 \q       ; 'q' key
+                     nil)]
+          (if (#{:esc \q} char)
+            (do
+              (bp/shell "stty icanon echo")
+              (bp/shell {:continue true} "kill" "-2" pid)
+              (println "\n⏹️  Stopping recording..."))
+            (recur))))
+      (catch Exception e
+        (bp/shell "stty icanon echo")
+        (println "Error waiting for keypress:" (.getMessage e))))))
+
 (defn toggle-capture-animated! [{:keys [opts] :as args}]
   (when-not (remove-stop-file!)
     (let [{:keys [path process] :as _result} (capture-animated! args)
           pid (some-> (:proc process)
                       (.pid)
-                      (str))]
+                      (str))
+          interactive? (interactive-terminal?)]
+      (spit "/tmp/my-screen-capture-debug" (format "interactive: %s, pid: %s, process: %s" interactive? pid (some? process)))
       (when process
         (fs/write-lines stop-file [pid])
+        ;; If interactive terminal, start background thread to listen for 'q' keypress
+        (when interactive?
+          (println "\n🔴 Recording in progress...")
+          (println "Press 'q' or ESC to stop, or run 'screen_capture toggle' again.\n")
+          (wait-for-keypress-async! pid))
         (let [{:keys [exit err]} @process
               success? (get ffmpeg-success-exit-codes exit)]
           (if success?
             (do
               (when (:screenkey opts)
                 (trim-ending-shortcut-length! path))
-              (bp/shell (format "notify-send 'Recording saved to %s\nCopied path to clipboard!'" path))
+              (if interactive?
+                (println (format "✅ Recording saved to %s\nCopied path to clipboard!" path))
+                (bp/shell (format "notify-send 'Recording saved to %s\nCopied path to clipboard!'" path)))
               (set-clip path))
             (let [err-file (fs/create-temp-file)]
               (spit (str err-file) (slurp err))
-              (bp/shell "notify-send" "-u" "critical" "ERROR during recording" (str "Error output saved to: " err-file))))
+              (if interactive?
+                (println (format "❌ ERROR during recording\nError output saved to: %s" err-file))
+                (bp/shell "notify-send" "-u" "critical" "ERROR during recording" (str "Error output saved to: " err-file)))))
           ;; Keep at end, otherwise it kills the whole process?
           (when (:screenkey opts)
             (bp/sh "pkill -f screenkey")))))))
@@ -221,7 +283,19 @@
    "\n"
 
    "record: Record a screen region\n"
-   "mp4: Capture mp4\n"))
+   "mp4: Capture mp4\n"
+   "toggle: Toggle recording on/off\n"
+   "\n"
+
+   (lib.sh/bold "FLAGS (for record/mp4/toggle)\n")
+   "--audio: Include audio capture from default microphone\n"
+   "--screenkey: Show keyboard input overlay\n"
+   "--countdown <seconds>: Countdown before starting (default: 1)\n"
+   "\n"
+
+   (lib.sh/bold "STOPPING RECORDINGS\n")
+   "Interactive mode (CLI): Press 'q' or ESC to stop and save\n"
+   "Toggle mode (rofi/launcher): Call the command again to stop\n"))
 
 ;; Main ------------------------------------------------------------------------
 
@@ -230,9 +304,24 @@
    {:cmds ["png"] :args->opts [:file] :exec-args {:extension "png"} :fn capture-static!}
    {:cmds ["jpg"] :args->opts [:file] :exec-args {:extension "jpg"} :fn capture-static!}
 
-   {:cmds ["record"] :args->opts [:file] :fn toggle-capture-animated!}
-   {:cmds ["toggle"] :args->opts [:file] :fn toggle-capture-animated!}
-   {:cmds ["mp4"] :args->opts [:file] :fn toggle-capture-animated!}
+   {:cmds ["record"] 
+    :args->opts [:file] 
+    :opts {:audio {:coerce :boolean}
+           :screenkey {:coerce :boolean}
+           :countdown {:coerce :long :default 1}}
+    :fn toggle-capture-animated!}
+   {:cmds ["toggle"] 
+    :args->opts [:file] 
+    :opts {:audio {:coerce :boolean}
+           :screenkey {:coerce :boolean}
+           :countdown {:coerce :long :default 1}}
+    :fn toggle-capture-animated!}
+   {:cmds ["mp4"] 
+    :args->opts [:file] 
+    :opts {:audio {:coerce :boolean}
+           :screenkey {:coerce :boolean}
+           :countdown {:coerce :long :default 1}}
+    :fn toggle-capture-animated!}
 
    {:cmds [] :fn help}])
 

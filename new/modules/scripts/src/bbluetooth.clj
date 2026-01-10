@@ -43,6 +43,28 @@
     (and (str/includes? (str/lower profile) "hfp")
          (not (str/includes? (str/lower profile) "a2dp")))))
 
+(defn unmute-bluetooth-device!
+  "Unmute all sinks associated with a bluetooth device."
+  [device-id]
+  (let [card-name (get-card-name-for-device device-id)]
+    (try
+      ;; Get all sinks
+      (let [result (bp/sh ["pactl" "list" "sinks" "short"])]
+        (when (zero? (:exit result))
+          (let [output (:out result)
+                ;; Find sink IDs that match the bluetooth card
+                sink-lines (str/lines output)
+                matching-sinks (->> sink-lines
+                                    (filter #(str/includes? % card-name))
+                                    (map #(first (str/split % #"\s+")))
+                                    (remove str/blank?))]
+            ;; Unmute each matching sink
+            (doseq [sink-id matching-sinks]
+              (bp/sh ["pactl" "set-sink-mute" sink-id "0"])
+              (println (str "  ✓ Unmuted sink: " sink-id))))))
+      (catch Exception e
+        (println (str "  ⚠ Could not unmute device: " (.getMessage e)))))))
+
 (defn set-a2dp-profile!
   "Force A2DP profile for a bluetooth device. Tries multiple profile names."
   [device-id]
@@ -70,7 +92,9 @@
         "default-agent"
         "connect 04:52:C7:C6:1B:68"]
        (mapv #(bp/sh ["bluetoothctl" %])))
-  (set-a2dp-profile! "04:52:C7:C6:1B:68"))
+  (set-a2dp-profile! "04:52:C7:C6:1B:68")
+  (Thread/sleep 500)
+  (unmute-bluetooth-device! "04:52:C7:C6:1B:68"))
 
 (defn split-device-info [device-str]
   (let [[_ id name] (re-find #"Device (\S+) (.+)$" device-str)]
@@ -146,6 +170,9 @@
             (do
               (when (> attempt 1)
                 (notifications/show (str "A2DP established on attempt " attempt)))
+              ;; Unmute the device after successful connection
+              (Thread/sleep 500) ; Brief wait for sinks to be ready
+              (unmute-bluetooth-device! id)
               result)))))))
 
 (defn device-connect! [{:keys [name id] :as device}]
