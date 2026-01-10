@@ -63,3 +63,4 @@ config.codekit
 
 .aider.*
 .crush/*
+/.worktrees/
