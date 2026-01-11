@@ -20,18 +20,18 @@
   # LUKS encryption
   boot.initrd.luks.devices = {
     cryptroot = {
-      device = "/dev/disk/by-uuid/1a04b632-8291-45e7-a2c0-54799e73ffa4";
+      device = "/dev/disk/by-uuid/f1bb52a2-082b-417b-84c2-fdb411dc712f";
       preLVM = true;
     };
   };
 
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/3b3183bb-8bf0-47f3-bfc0-427a3dcca901";
+    device = "/dev/disk/by-uuid/55695e4d-29d0-4122-867f-b6148132c053";
     fsType = "ext4";
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/F77D-675B";
+    device = "/dev/disk/by-uuid/21E7-74C0";
     fsType = "vfat";
     options = [ "fmask=0022" "dmask=0022" ];
   };
