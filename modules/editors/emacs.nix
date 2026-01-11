@@ -145,5 +145,11 @@ in
       extra-dicts en-computers.rws
       add-extra-dicts en_US-science.rws
     '';
+
+    # Clone Doom Emacs and config if they don't exist
+    modules.shell.git-clone.repos = [
+      { url = "https://github.com/doomemacs/doomemacs"; dir = "~/.config/emacs"; depth = 1; }
+      { url = "git@github.com:floscr/emacs.d.git"; dir = "~/.config/doom"; }
+    ];
   };
 }
