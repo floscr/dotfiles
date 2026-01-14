@@ -57,6 +57,12 @@
        (filter fs/exists?)
        (first)))
 
+(defn find-registry-index-js []
+  (->> ["./node_modules/playwright/node_modules/playwright-core/lib/server/registry/index.js"
+        "./node_modules/playwright-core/lib/server/registry/index.js"]
+       (filter fs/exists?)
+       (first)))
+
 (defn fix-playwright-chromium-version!
   "Playwright doesn't allow setting a chrome executable and also not passing a custom config...
   So we override the playwright browsers config to fit the Nixos browser version."
@@ -84,9 +90,31 @@
   (find-playwright-chromium-executable "/nix/store/i0cxsz5wc9y7jagjb2yrj2w90kz857p7-playwright-browsers")
   ,)
 
+(defn fix-playwright-executable-paths!
+  "Fix the EXECUTABLE_PATHS in Playwright's registry/index.js.
+  NixOS provides chromium at chrome-linux/ but Playwright expects chrome-linux64/ on x64.
+  Also fixes chromium-headless-shell which expects chrome-headless-shell-linux64/chrome-headless-shell
+  but NixOS provides chrome-linux/headless_shell."
+  []
+  (when-let [index-js-path (find-registry-index-js)]
+    (let [content (slurp index-js-path)
+          ;; Fix chromium paths: chrome-linux64 -> chrome-linux
+          ;; Fix chromium-headless-shell paths: the whole array entry needs fixing
+          fixed-content (-> content
+                            ;; Regular chromium: ["chrome-linux64", "chrome"] -> ["chrome-linux", "chrome"]
+                            (str/replace "\"chrome-linux64\", \"chrome\"]"
+                                         "\"chrome-linux\", \"chrome\"]")
+                            ;; Headless shell: ["chrome-headless-shell-linux64", "chrome-headless-shell"] -> ["chrome-linux", "headless_shell"]
+                            (str/replace "\"chrome-headless-shell-linux64\", \"chrome-headless-shell\"]"
+                                         "\"chrome-linux\", \"headless_shell\"]"))]
+      (when (not= content fixed-content)
+        (spit index-js-path fixed-content)
+        (println "Patched EXECUTABLE_PATHS in" index-js-path)))))
+
 (defn nixos-fix-playwright! []
   (-> (nixos-find-playwright-chromium-executable)
-      (fix-playwright-chromium-version!)))
+      (fix-playwright-chromium-version!))
+  (fix-playwright-executable-paths!))
 
 ;; Commands --------------------------------------------------------------------
 
@@ -103,11 +131,13 @@
                   "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD" "1"}
         cmd (str/join " " args)]
 
-    (println "Using browser executable:" (str executable))
-    (println "Environment variables:" env-vars)
-    (println "Running command:" cmd)
-
-    (bp/shell {:extra-env env-vars} cmd)))
+    (let [full-env (merge env-vars
+                          {"PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH" (str executable)
+                           "CHROME_PATH" (str executable)})]
+      (println "Using browser executable:" (str executable))
+      (println "Environment variables:" full-env)
+      (println "Running command:" cmd)
+      (bp/shell {:extra-env full-env} cmd))))
 
 ;; Main ------------------------------------------------------------------------
 
