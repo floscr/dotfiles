@@ -73,6 +73,11 @@ in
           ${concatStringsSep "\n" aliasLines}
           ${concatMapStrings (path: "source '${path}'\n") cfg.rcFiles}
           ${cfg.rcInit}
+
+          # Alt+x to run 'my run'
+          my-run-widget() { my run }
+          zle -N my-run-widget
+          bindkey '\ex' my-run-widget
         '';
 
       "wget" = {
