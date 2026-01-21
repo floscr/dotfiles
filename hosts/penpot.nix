@@ -51,4 +51,13 @@ with lib.my;
 
   networking.firewall.allowedTCPPorts = [ 80 443 5432 ];
 
+  security.sudo.extraRules = [{
+    users = [ "floscr" ];
+    commands = [
+      { command = "/run/current-system/sw/bin/systemctl stop postgresql"; options = [ "NOPASSWD" ]; }
+      { command = "/run/current-system/sw/bin/systemctl start postgresql"; options = [ "NOPASSWD" ]; }
+      { command = "/run/current-system/sw/bin/systemctl restart postgresql"; options = [ "NOPASSWD" ]; }
+    ];
+  }];
+
 }
