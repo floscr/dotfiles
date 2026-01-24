@@ -50,6 +50,7 @@ autoload -U zmv
 take() {
   mkdir "$1" && cd "$1";
 }; compdef take=mkdir
+alias mkcd=take
 
 emptytrash() {
   rm -rf ~/.Trash
