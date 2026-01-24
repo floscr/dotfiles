@@ -23,6 +23,8 @@ in
       docker-compose
     ];
 
+    networking.firewall.trustedInterfaces = [ "docker0" ];
+
     environment.shellAliases = {
       docker-killall = "docker stop $(docker ps -q)";
     };
