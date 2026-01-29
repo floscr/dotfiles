@@ -11,15 +11,6 @@ with lib.my;
   # Disable pipewire (conflicts with pulseaudio from hardware.audio module)
   services.pipewire.enable = lib.mkForce false;
 
-  # Static network configuration (disable NetworkManager from personal.nix)
-  networking.networkmanager.enable = lib.mkForce false;
-  networking.interfaces.enp6s0.ipv4.addresses = [{
-    address = "192.168.0.171";
-    prefixLength = 24;
-  }];
-  networking.defaultGateway = "192.168.0.1";
-  networking.nameservers = [ "8.8.8.8" "8.8.4.4" ];
-
   # SSH access
   services.openssh.enable = true;
 
