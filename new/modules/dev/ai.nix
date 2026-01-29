@@ -18,7 +18,7 @@ in
 
   config = mkIf cfg.enable (mkMerge [
     {
-      user.packages = with pkgs; [ gvisor ];
+      user.packages = with pkgs; [ gvisor ollama ];
 
       modules.bindings.items = [
         {
