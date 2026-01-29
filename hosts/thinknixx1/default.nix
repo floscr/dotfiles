@@ -18,9 +18,7 @@ with lib.my;
 
   networking.firewall = {
     allowedTCPPorts = [
-      9630
-      1280
-      1290
+      3001
     ];
     allowedUDPPorts = [
       # 51820
