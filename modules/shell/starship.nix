@@ -27,7 +27,11 @@ in
           success_symbol = "[λ](bold yellow)";
           error_symbol = "[λ](bold yellow)";
         };
-        format = "$directory$git_branch\n$character";
+        hostname = {
+          ssh_only = true;
+          format = "[$hostname](bold red) ";
+        };
+        format = "$hostname$directory$git_branch\n$character";
       };
     };
   };
