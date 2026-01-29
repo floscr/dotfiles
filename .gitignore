@@ -6,3 +6,4 @@ result
 /.eca/
 /.context/
 /.worktrees/
+/.clj-kondo/
