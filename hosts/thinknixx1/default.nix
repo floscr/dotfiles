@@ -65,7 +65,6 @@ with lib.my;
     ncspot
     pins.nix-search-cli
     s-tui
-    scdl
     sox
     textsnatcher
     timer
