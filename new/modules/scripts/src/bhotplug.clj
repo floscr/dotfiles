@@ -98,15 +98,12 @@
     (cond
       (outputs "DP-3")
       (do (connect-lg!)
-          (bp/sh "systemctl --user stop picom.service")
           (println "Connecting to LG External Display."))
       (outputs "HDMI-1")
       (do (connect-hdmi-tv!)
-          (bp/sh "systemctl --user stop picom.service")
           (println "Connecting to HDMI TV for video playback."))
       :else
       (do (connect-internal!)
-          (bp/sh "systemctl --user start picom.service")
           (println "Disconnecting displays, activating internal display.")))
     (on-connect!)))
 

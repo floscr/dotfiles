@@ -229,7 +229,7 @@ with lib.my;
       hotplug.enable = true;
       flameshot.enable = true;
       network-monitoring.enable = true;
-      picom.enable = true;
+      picom.enable = false;
       opensnitch.enable = false;
       kdeconnect.enable = true;
       photoprism = {
