@@ -220,7 +220,8 @@ with lib.my;
     services = {
       ios.enable = false;
       org-bb-capture.enable = true;
-      wireguard.enable = false;
+      wireguard.enable = true;
+      wireguard.hetzner.enable = true;
       android.enable = true;
       screendrawing.enable = true;
       syncthing.enable = true;
