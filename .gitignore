@@ -7,3 +7,4 @@ result
 /.context/
 /.worktrees/
 /.clj-kondo/
+/.claude/
