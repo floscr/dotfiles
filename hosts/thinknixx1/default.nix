@@ -166,8 +166,7 @@ with lib.my;
       clojure.enable = true;
       rust.enable = true;
       ai.enable = true;
-      ai.antigravity.enable = true;
-      ai.gemini.enable = true;
+      ai.anthropic.enable = true;
     };
     desktop = {
       xmonad.enable = true;

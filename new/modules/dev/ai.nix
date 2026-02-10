@@ -31,7 +31,22 @@ in
       user.packages = with pkgs; [ antigravity ];
     })
     (mkIf (cfg.gemini.enable) { })
-    (mkIf (cfg.anthropic.enable) { })
+    (mkIf (cfg.anthropic.enable) {
+      home.file.".claude/CLAUDE.md".text = ''
+        # Custom rules
+
+        - Always read the AGENTS.md.
+        - NEVER add co-authored by claude when comitting, creating PR description or similar.
+        - NEVER add generated with claude (or similar) to any text
+
+        ## Skills
+
+        Reusable instruction sets for common tasks. Before starting scaffolding work (CLI tools, servers, frontends, docs), check if a skill exists.
+
+        - **List skills**: `skill list`
+        - **Load a skill**: `skill load <name>` (read the output into context before starting work)
+      '';
+    })
     (mkIf (cfg.codex.enable) {
       env.CODEX_HOME = "$XDG_CONFIG_HOME/codex";
     })
