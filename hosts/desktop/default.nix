@@ -100,6 +100,7 @@ with lib.my;
         autoMount.enable = true;
       };
       sensors.enable = true;
+      openrgb.enable = true;
     };
     dev = {
       docker.enable = true;
