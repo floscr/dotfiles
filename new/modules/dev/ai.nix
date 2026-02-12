@@ -45,6 +45,15 @@ in
 
         - **List skills**: `skill list`
         - **Load a skill**: `skill load <name>` (read the output into context before starting work)
+
+        ### System Specifics
+
+        #### Playwright workaround
+
+        I'm running nixos where playwright doesnt work out of the box.
+        Use the `bplaywright` cli wrapper to run playwright commands/scripts/etc.
+        This fixes the binary in node_modules to point to the installed chromium instances.
+        E.g.: `bplaywright run-wrapped npm run e2e:ui`
       '';
     })
     (mkIf (cfg.codex.enable) {
