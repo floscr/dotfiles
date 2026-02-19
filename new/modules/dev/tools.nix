@@ -15,6 +15,7 @@ in
       jq
       jless
       watchexec
+      unzip
     ];
   };
 }

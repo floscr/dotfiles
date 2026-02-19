@@ -18,7 +18,11 @@ in
 
   config = mkIf cfg.enable (mkMerge [
     {
-      user.packages = with pkgs; [ gvisor ollama ];
+      user.packages = with pkgs; [
+        gvisor
+        ollama
+        google-chrome # Used for MCP
+      ];
 
       modules.bindings.items = [
         {

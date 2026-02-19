@@ -24,7 +24,6 @@ with lib.my;
   };
 
   user.packages = with pkgs; [
-
   ] ++ flake-packages;
 
   hardware.logitech.wireless.enable = true;
