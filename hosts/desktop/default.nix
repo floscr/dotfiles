@@ -142,6 +142,9 @@ with lib.my;
         customOpener = "browser_open";
         chromium.enable = true;
         firefox.enable = true;
+        firefox.settings = {
+          "layout.css.devPixelsPerPx" = "1.25";
+        };
       };
       term = {
         default = "alacritty";
@@ -170,6 +173,7 @@ with lib.my;
       kdeconnect.enable = true;
     };
     theme.active = "opera";
+    theme.fonts.terminal.size = lib.mkForce 12;
   };
 
   console = {
