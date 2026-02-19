@@ -2,4 +2,5 @@ let key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDetq/NjvtvZ46agj6d4mBkjlCR0j+Xz
 in {
   "mullvad.age".publicKeys = [ key ];
   "wg-hetzner.age".publicKeys = [ key ];
+  "tailscale-auth-key.age".publicKeys = [ key ];
 }

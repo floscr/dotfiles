@@ -117,6 +117,11 @@ with lib.my;
     };
   };
 
+  myTailscale = {
+    enable = true;
+    authKeyFile = config.age.secrets.tailscale-auth-key.path;
+  };
+
   modules = {
     bindings.enable = true;
     shell = {
@@ -220,7 +225,7 @@ with lib.my;
       ios.enable = false;
       org-bb-capture.enable = true;
       wireguard.enable = true;
-      wireguard.hetzner.enable = true;
+      wireguard.hetzner.enable = false;
       android.enable = true;
       screendrawing.enable = true;
       syncthing.enable = true;

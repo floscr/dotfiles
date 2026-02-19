@@ -35,6 +35,10 @@
       # secrets = { url = "/etc/dotfiles-private"; flake = false; };
       nur.url = "github:nix-community/NUR";
 
+      tailscale-module = {
+        url = "git+ssh://floscr@gitea.florianschroedl.com/floscr/tailscale-module.git";
+      };
+
       flake-utils.url = "github:ursi/flake-utils/d939d2e5d73cd3468a05661e4471838b64547e6b";
       org_print_scan.url = "github:floscr/org_print_scan";
       nim-utils.url = "github:floscr/nim-utils";

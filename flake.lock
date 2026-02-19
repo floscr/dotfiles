@@ -771,7 +771,8 @@
         "playwright-pkgs": "playwright-pkgs",
         "rofi_cmder": "rofi_cmder",
         "rofi_org_bookmarks": "rofi_org_bookmarks",
-        "scanner-pkgs": "scanner-pkgs"
+        "scanner-pkgs": "scanner-pkgs",
+        "tailscale-module": "tailscale-module"
       }
     },
     "scanner-pkgs": {
@@ -803,6 +804,21 @@
         "owner": "nix-systems",
         "repo": "default",
         "type": "github"
+      }
+    },
+    "tailscale-module": {
+      "locked": {
+        "lastModified": 1770891070,
+        "narHash": "sha256-KZf8wPU+PDhh4ENflnLIafTiDnanUbikKfG0jxlW8lA=",
+        "ref": "refs/heads/master",
+        "rev": "062a13e15961802c09f593ec460da54266786e03",
+        "revCount": 5,
+        "type": "git",
+        "url": "ssh://floscr@gitea.florianschroedl.com/floscr/tailscale-module.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://floscr@gitea.florianschroedl.com/floscr/tailscale-module.git"
       }
     }
   },

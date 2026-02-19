@@ -7,6 +7,7 @@ with inputs;
   imports =
     [
       home-manager.nixosModules.home-manager
+      tailscale-module.nixosModules.default
     ]
     ++ (mapModulesRec' (toString ./modules) import)
     ++ (mapModulesRec' (toString ./new/modules) import);
