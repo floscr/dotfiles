@@ -21,11 +21,13 @@ in
       after = [ "openrgb.service" ];
       wants = [ "openrgb.service" ];
       wantedBy = [ "multi-user.target" ];
+      environment.QT_QPA_PLATFORM = "offscreen";
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
-        ExecStart = "${pkgs.openrgb}/bin/openrgb --mode static --color 000000";
-        ExecStop = "${pkgs.openrgb}/bin/openrgb --mode static --color 000000";
+        ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
+        ExecStart = "${pkgs.openrgb}/bin/openrgb --client --mode off";
+        ExecStop = "${pkgs.openrgb}/bin/openrgb --client --mode off";
       };
     };
 
