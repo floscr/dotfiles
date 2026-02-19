@@ -83,6 +83,7 @@
          :or {extension "png"}} opts
         path (or (:file opts)
                  (filename (:static default-dirs) extension))]
+    (fs/create-dirs (fs/parent path))
     (bp/shell {:out path} "maim --delay=0.1 --hidecursor --select --quiet")
     (bp/shell "notify-send" "Screenshot saved" (format "Copied to clipboard\n%s" path))
     (bp/shell "xclip -selection clipboard -t" (format "image/%s" extension) path)
@@ -94,6 +95,7 @@
         ext "mp4"
         path (or (:file opts)
                  (filename (:animated default-dirs) ext))
+        _ (fs/create-dirs (fs/parent path))
         {:keys [width height x y] :as rect} (get-x-rect)
         resolution (lib.x11/display-resolution)
         safe-width (-> (- (min (+ x width) (dec (:width resolution))) x)
