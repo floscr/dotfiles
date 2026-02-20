@@ -165,7 +165,7 @@ with lib.my;
       docker.enable = true;
       playwright.enable = false;
       tools.enable = true;
-      godot.enable = false;
+      godot.enable = true;
       node.enable = true;
       nix.enable = true;
       clojure.enable = true;
