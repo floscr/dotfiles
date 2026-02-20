@@ -69,22 +69,22 @@ with lib.my;
         {
           binding = "{ XF86AudioLowerVolume, super + alt + j }";
           xmonadBinding = "<XF86AudioLowerVolume>";
-          command = "pactl set-sink-volume @DEFAULT_SINK@ -10%";
+          command = "${pkgs.pulseaudio}/bin/pactl set-sink-volume @DEFAULT_SINK@ -10%";
           description = "Volume: -10%";
         }
         {
           xmonadBinding = "M-M1-j";
-          command = "pactl set-sink-volume @DEFAULT_SINK@ -10%";
+          command = "${pkgs.pulseaudio}/bin/pactl set-sink-volume @DEFAULT_SINK@ -10%";
         }
         {
           binding = "{ XF86AudioRaiseVolume, super + alt + k }";
           xmonadBinding = "<XF86AudioRaiseVolume>";
-          command = "pactl set-sink-volume @DEFAULT_SINK@ +10%";
+          command = "${pkgs.pulseaudio}/bin/pactl set-sink-volume @DEFAULT_SINK@ +10%";
           description = "Volume: +10%";
         }
         {
           xmonadBinding = "M-M1-k";
-          command = "pactl set-sink-volume @DEFAULT_SINK@ +10%";
+          command = "${pkgs.pulseaudio}/bin/pactl set-sink-volume @DEFAULT_SINK@ +10%";
         }
       ])
       [

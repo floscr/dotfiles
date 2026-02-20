@@ -8,8 +8,32 @@ with lib.my;
     ../personal.nix
   ];
 
-  # Disable pipewire (conflicts with pulseaudio from hardware.audio module)
-  services.pipewire.enable = lib.mkForce false;
+  # Use PipeWire instead of PulseAudio on this machine
+  services.pulseaudio.enable = lib.mkForce false;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    wireplumber = {
+      enable = true;
+      extraConfig."51-c920-mic" = {
+        "monitor.alsa.rules" = [{
+          matches = [{ "node.name" = "~alsa_input.usb-046d_HD_Pro_Webcam_C920.*"; }];
+          actions.update-props = {
+            "api.alsa.disable-mmap" = true;
+            "session.suspend-timeout-seconds" = 0;
+          };
+        }];
+      };
+    };
+    extraConfig.pipewire."51-clock-rates" = {
+      "context.properties" = {
+        "default.clock.rate" = 48000;
+        "default.clock.allowed-rates" = [ 32000 44100 48000 ];
+      };
+    };
+  };
 
   # SSH access
   services.openssh.enable = true;
@@ -24,7 +48,16 @@ with lib.my;
   };
 
   user.packages = with pkgs; [
+    tig
+    pwvucontrol
+    pulseaudio # pactl CLI for volume/bluetooth bindings (works with PipeWire)
   ] ++ flake-packages;
+
+  services.ollama = {
+    enable = true;
+    acceleration = "rocm";
+    rocmOverrideGfx = "10.3.0";
+  };
 
   hardware.logitech.wireless.enable = true;
   hardware.logitech.wireless.enableGraphical = true;
