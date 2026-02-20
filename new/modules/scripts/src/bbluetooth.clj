@@ -138,7 +138,7 @@
     (catch Exception _e false)))
 
 (defn bluetooth-enable! [on?]
-  (bp/sh ["bluetooth" (if on? "on" "off")]))
+  (bp/sh ["bluetoothctl" "power" (if on? "on" "off")]))
 
 (defn device-disconnect!
   "Disconnect a bluetooth device."
