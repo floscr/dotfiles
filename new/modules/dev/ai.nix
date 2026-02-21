@@ -42,6 +42,7 @@ in
         - Always read the AGENTS.md.
         - NEVER add co-authored by claude when comitting, creating PR description or similar.
         - NEVER add generated with claude (or similar) to any text
+        - When the user prompts to update or create docs ALWAYS write to the docs in the repo instead of just writing to claude memory
 
         ## Skills
 
