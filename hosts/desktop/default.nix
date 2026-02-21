@@ -77,6 +77,11 @@ with lib.my;
 
   services.atd.enable = true;
 
+  myTailscale = {
+    enable = true;
+    authKeyFile = config.age.secrets.tailscale-auth-key.path;
+  };
+
   modules-new = {
     scripts = {
       shell_history.enable = true;
