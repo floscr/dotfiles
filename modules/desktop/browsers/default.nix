@@ -40,6 +40,30 @@ in
       then cfg.customOpener
       else cfg.default;
 
+    # When a custom opener is set, create browser-launcher.desktop so
+    # xdg-open routes through it (mimeapps.list references this name).
+    user.packages = mkIf (cfg.customOpener != null) [
+      (pkgs.makeDesktopItem {
+        name = "browser-launcher";
+        desktopName = "Browser Launcher";
+        genericName = "Web Browser";
+        exec = "${cfg.customOpener} %U";
+        icon = "web-browser";
+        categories = [ "Network" "WebBrowser" ];
+        mimeTypes = [
+          "text/html"
+          "text/xml"
+          "application/xhtml+xml"
+          "x-scheme-handler/http"
+          "x-scheme-handler/https"
+          "x-scheme-handler/about"
+          "x-scheme-handler/unknown"
+          "x-scheme-handler/mailto"
+          "image/svg+xml"
+        ];
+      })
+    ];
+
     home.configFile = {
       "browser/home.html".text = ''
         <html>
