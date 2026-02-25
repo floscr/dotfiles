@@ -106,7 +106,10 @@
                                          "\"chrome-linux\", \"chrome\"]")
                             ;; Headless shell: ["chrome-headless-shell-linux64", "chrome-headless-shell"] -> ["chrome-linux", "headless_shell"]
                             (str/replace "\"chrome-headless-shell-linux64\", \"chrome-headless-shell\"]"
-                                         "\"chrome-linux\", \"headless_shell\"]"))]
+                                         "\"chrome-linux\", \"headless_shell\"]")
+                            ;; Remove noisy "Skipping host requirements validation" stdout message
+                            (str/replace "process.stderr.write('Skipping host requirements validation logic because `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS` env variable is set.\\n');"
+                                         ""))]
       (when (not= content fixed-content)
         (spit index-js-path fixed-content)
         (println "Patched EXECUTABLE_PATHS in" index-js-path)))))
