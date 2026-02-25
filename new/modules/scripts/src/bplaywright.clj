@@ -124,29 +124,31 @@
 (defn run-wrapped-cmd
   "Fix playwright and then run the provided command with the necessary environment variables"
   [{:keys [opts args]}]
-  (println "Fixing playwright...")
-  (nixos-fix-playwright!)
+  (let [debug? (:debug opts)]
+    (when debug? (println "Fixing playwright..."))
+    (nixos-fix-playwright!)
 
-  (println "Running command with playwright environment variables...")
-  (let [browser-config (nixos-find-playwright-chromium-executable)
-        executable (:executable browser-config)
-        env-vars {"PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS" "1"
-                  "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD" "1"}
-        cmd (str/join " " args)]
-
-    (let [full-env (merge env-vars
+    (when debug? (println "Running command with playwright environment variables..."))
+    (let [browser-config (nixos-find-playwright-chromium-executable)
+          executable (:executable browser-config)
+          env-vars {"PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS" "1"
+                    "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD" "1"}
+          cmd (str/join " " args)
+          full-env (merge env-vars
                           {"PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH" (str executable)
                            "CHROME_PATH" (str executable)})]
-      (println "Using browser executable:" (str executable))
-      (println "Environment variables:" full-env)
-      (println "Running command:" cmd)
+      (when debug?
+        (println "Using browser executable:" (str executable))
+        (println "Environment variables:" full-env)
+        (println "Running command:" cmd))
       (bp/shell {:extra-env full-env} cmd))))
 
 ;; Main ------------------------------------------------------------------------
 
 (def table
   [{:cmds ["fix"] :fn (fn [_] (nixos-fix-playwright!))}
-   {:cmds ["run-wrapped"] :fn run-wrapped-cmd}])
+   {:cmds ["run-wrapped"] :fn run-wrapped-cmd
+    :spec {:debug {:coerce :boolean :desc "Print debug output"}}}])
 
 (defn dispatch [& args]
   (try

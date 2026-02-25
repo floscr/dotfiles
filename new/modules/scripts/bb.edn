@@ -9,4 +9,6 @@
         lambdaisland/uri {:mvn/version "1.13.95"}
         honeysql/honeysql {:mvn/version "1.0.444"}
         tick/tick {:git/url "https://github.com/juxt/tick.git"
-                   :sha "f64344801839ed1428db01d012bcd6d3a30093e6"}}}
+                   :sha "f64344801839ed1428db01d012bcd6d3a30093e6"}}
+ :tasks {gen-bin {:doc "Generate dev-bin/ wrapper scripts for all bb scripts"
+                  :task (load-file "tasks/gen_bin.clj")}}}
