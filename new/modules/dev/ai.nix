@@ -60,6 +60,7 @@ in
         This fixes the binary in node_modules to point to the installed chromium instances.
         E.g.: `bplaywright run-wrapped npm run e2e:ui`
       '';
+      env.CLAUDE_CODE_MAX_OUTPUT_TOKENS = "64000";
     })
     (mkIf (cfg.codex.enable) {
       env.CODEX_HOME = "$XDG_CONFIG_HOME/codex";
