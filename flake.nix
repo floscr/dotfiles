@@ -39,6 +39,11 @@
         url = "git+ssh://floscr@gitea.florianschroedl.com/floscr/tailscale-module.git";
       };
 
+      llm-agents = {
+        url = "github:numtide/llm-agents.nix";
+        inputs.nixpkgs.follows = "nixpkgs";
+      };
+
       flake-utils.url = "github:ursi/flake-utils/d939d2e5d73cd3468a05661e4471838b64547e6b";
       org_print_scan.url = "github:floscr/org_print_scan";
       nim-utils.url = "github:floscr/nim-utils";
@@ -143,6 +148,7 @@
           unstable = uPkgs;
           scannerPkgs = scannerPkgs;
           playwrightPkgs = playwrightPkgs;
+          llm-agents = inputs.llm-agents.packages.${system};
           user = self.packages."${system}";
         };
 

@@ -32,8 +32,8 @@ in
       environment.etc."X11/keymap.xkb".source = pkgs.writeText "keymap.xkb" cfg.xkbKeyMap;
 
       environment.systemPackages = with pkgs; [
-        xorg.xkbcomp
-        xorg.xmodmap
+        xkbcomp
+        xmodmap
         xcape
       ];
 
@@ -62,9 +62,9 @@ in
           killall
           xcape
           xdotool
-          xorg.xkbcomp
-          xorg.xmodmap
-          xorg.xset
+          xkbcomp
+          xmodmap
+          xset
         ];
         serviceConfig = {
           Type = "oneshot";

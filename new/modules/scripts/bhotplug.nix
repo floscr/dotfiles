@@ -26,7 +26,7 @@ in
             systemd
             xorg.xrandr
             xorg.xsetroot
-            xorg.xrdb
+            xrdb
             # Use the emacsclient from the custom Emacs package
             (lib.mkIf config.modules.editors.emacs.enable config.modules.editors.emacs.package)
           ];

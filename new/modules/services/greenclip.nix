@@ -15,7 +15,7 @@ in
     {
       user.packages = with pkgs; [
         greenclip
-        xorg.libXdmcp
+        libxdmcp
         (
           let
             rofi = "${pkgs.rofi}/bin/rofi";

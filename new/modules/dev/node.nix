@@ -16,7 +16,6 @@ in
       nodePackages.eslint_d
 
       nodejs_24
-      corepack
       nodePackages.prettier
       deno
 

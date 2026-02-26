@@ -24,7 +24,7 @@ in
         packages.metalogical = with pkgs.vimPlugins; {
           start = [
             vim-airline
-            fzfWrapper
+            fzf-wrapper
             fzf-vim
           ];
           opt = [ ];

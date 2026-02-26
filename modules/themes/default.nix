@@ -114,7 +114,7 @@ in
     # Read xresources files in ~/.config/xtheme/* to allow modular
     # configuration of Xresources.
     (
-      let xrdb = ''${pkgs.xorg.xrdb}/bin/xrdb -merge "$XDG_CONFIG_HOME"/xtheme/*'';
+      let xrdb = ''${pkgs.xrdb}/bin/xrdb -merge "$XDG_CONFIG_HOME"/xtheme/*'';
       in
       {
         services.xserver.displayManager.sessionCommands = xrdb;
