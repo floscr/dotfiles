@@ -26,8 +26,8 @@ in
         Type = "oneshot";
         RemainAfterExit = true;
         ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
-        ExecStart = "${pkgs.openrgb}/bin/openrgb --client --mode off";
-        ExecStop = "${pkgs.openrgb}/bin/openrgb --client --mode off";
+        ExecStart = "${pkgs.openrgb}/bin/openrgb --client --mode Off";
+        ExecStop = "${pkgs.openrgb}/bin/openrgb --client --mode Off";
       };
     };
 
