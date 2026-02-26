@@ -808,11 +808,11 @@
     },
     "tailscale-module": {
       "locked": {
-        "lastModified": 1770891070,
-        "narHash": "sha256-KZf8wPU+PDhh4ENflnLIafTiDnanUbikKfG0jxlW8lA=",
+        "lastModified": 1772042142,
+        "narHash": "sha256-s/s24L/C39W5648pW4b/Cm1fIAlSAKMdQ/ogw9dnQOY=",
         "ref": "refs/heads/master",
-        "rev": "062a13e15961802c09f593ec460da54266786e03",
-        "revCount": 5,
+        "rev": "c1f5adc0f937ca6c08a2d5caf337d10588e36fe8",
+        "revCount": 8,
         "type": "git",
         "url": "ssh://floscr@gitea.florianschroedl.com/floscr/tailscale-module.git"
       },
