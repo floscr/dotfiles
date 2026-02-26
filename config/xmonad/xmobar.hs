@@ -46,7 +46,7 @@ Config { font = "xft:Iosevka Mono-10:medium"
                         , "--on-icon-pattern"   , ""
                         , "--idle-icon-pattern" , ""
                         , "-A" , "5"
-                        , "-a" , "dunstify -u critical -a Battery \"Battery Low\" \"Your computer will turn of soon\" > /tmp/battery_notification_id"
+                        , "-a" , "battery-notify"
                 ] 50
         ]
         , sepChar = "%"
