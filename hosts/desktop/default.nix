@@ -149,6 +149,7 @@ with lib.my;
       rust.enable = true;
       ai.enable = true;
       ai.anthropic.enable = true;
+      pi.enable = true;
     };
     desktop = {
       xmonad.enable = true;
